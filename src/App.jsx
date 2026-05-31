@@ -356,176 +356,88 @@ export default function App() {
     const date=new Date().toLocaleDateString("ko-KR");
     const growthTxt=(birth&&heightVal&&weightVal)?`키 ${heightVal}cm · 몸무게 ${weightVal}kg · 만 ${parseInt(birth)}세`:"";
 
-    const html=`<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>피지컬333 Test · ${result.sub} ${result.code}</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:#f0ede8;font-family:'Noto Sans KR',sans-serif;padding:20px;}
-.page-break{page-break-after:always;margin-bottom:30px;}
-.card1{width:420px;margin:0 auto;background:linear-gradient(145deg,#0d1b3e 0%,#1a2d5a 50%,#0a1428 100%);border-radius:20px;overflow:hidden;position:relative;border:2px solid #c9a84c;box-shadow:0 20px 60px rgba(0,0,0,0.4);}
-.c1-top{padding:24px 24px 20px;position:relative;z-index:1;}
-.logo-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
-.logo-left{display:flex;flex-direction:column;}
-.logo-brand{font-family:'Noto Serif KR',serif;color:#c9a84c;font-size:9px;letter-spacing:4px;font-weight:700;}
-.logo-small{font-size:11px;font-weight:900;letter-spacing:2px;color:#e8c76a;}
-.logo-test{font-size:26px;font-weight:900;letter-spacing:1px;background:linear-gradient(135deg,#c9a84c,#e8c76a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.logo-sub{color:rgba(201,168,76,0.4);font-size:8px;letter-spacing:2px;margin-top:1px;}
-.shield{width:50px;height:50px;background:linear-gradient(135deg,#c9a84c,#e8c76a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 16px rgba(201,168,76,0.5);}
-.divg{height:1px;background:linear-gradient(90deg,transparent,#c9a84c,transparent);margin:0 0 18px;}
-.code-wrap{text-align:center;margin-bottom:18px;}
-.code-big{display:inline-block;background:linear-gradient(135deg,#c9a84c,#e8c76a);color:#0d1b3e;font-size:40px;font-weight:900;letter-spacing:12px;padding:10px 24px;border-radius:12px;box-shadow:0 6px 20px rgba(201,168,76,0.4);margin-bottom:12px;}
-.type-row{display:flex;align-items:center;justify-content:center;gap:10px;}
-.m-tag{background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);color:#c9a84c;font-size:11px;padding:3px 12px;border-radius:20px;font-weight:700;}
-.s-name{font-family:'Noto Serif KR',serif;font-size:24px;font-weight:900;color:#f0f4ff;}
-.s-emoji{font-size:26px;}
-.wit-box{background:rgba(255,255,255,0.05);border-left:4px solid #c9a84c;padding:12px 14px;border-radius:0 10px 10px 0;margin-bottom:14px;}
-.wit{font-family:'Noto Serif KR',serif;color:#f0f4ff;font-size:13px;line-height:1.8;margin-bottom:6px;}
-.tip{color:#e8c76a;font-size:12px;font-weight:700;}
-.axes{display:flex;gap:1px;border-radius:10px;overflow:hidden;margin-bottom:12px;}
-.ax{flex:1;padding:10px 4px;text-align:center;}
-.ax-l{font-size:9px;letter-spacing:1px;margin-bottom:3px;opacity:0.6;}
-.ax-d{font-size:13px;letter-spacing:1px;}
-.ax-n{font-size:9px;font-weight:700;margin-top:2px;}
-.growth{text-align:center;color:rgba(201,168,76,0.5);font-size:10px;margin-bottom:14px;}
-.link-box{text-align:center;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:10px;}
-.link-title{color:#e8c76a;font-size:11px;font-weight:700;margin-bottom:2px;}
-.link-url{color:rgba(201,168,76,0.5);font-size:10px;}
-.c1-foot{background:rgba(0,0,0,0.3);padding:12px 24px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(201,168,76,0.2);}
-.f-date{color:rgba(201,168,76,0.4);font-size:9px;}
-.f-url{color:#c9a84c;font-size:10px;font-weight:700;letter-spacing:1px;}
-.corner{position:absolute;width:12px;height:12px;border-color:#c9a84c;border-style:solid;opacity:0.35;}
-.tl{top:8px;left:8px;border-width:2px 0 0 2px;}
-.tr{top:8px;right:8px;border-width:2px 2px 0 0;}
-.bl{bottom:8px;left:8px;border-width:0 0 2px 2px;}
-.br{bottom:8px;right:8px;border-width:0 2px 2px 0;}
-.card2{width:420px;margin:0 auto;background:#fff;border-radius:20px;overflow:hidden;border:2px solid #c9a84c;box-shadow:0 20px 60px rgba(0,0,0,0.15);}
-.c2-head{background:linear-gradient(135deg,#0d1b3e,#1a2d5a);padding:18px 22px;display:flex;align-items:center;justify-content:space-between;}
-.c2-brand{font-family:'Noto Serif KR',serif;color:#c9a84c;font-size:10px;letter-spacing:2px;font-weight:700;}
-.c2-sub{color:rgba(201,168,76,0.4);font-size:8px;margin-top:2px;letter-spacing:1px;}
-.c2-badge{background:linear-gradient(135deg,#c9a84c,#e8c76a);color:#0d1b3e;font-size:18px;font-weight:900;letter-spacing:4px;padding:6px 16px;border-radius:8px;}
-.c2-body{padding:20px 22px;}
-.st{font-size:10px;font-weight:700;color:#c9a84c;letter-spacing:2px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
-.st::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,0.3),transparent);}
-.item{display:flex;gap:7px;align-items:flex-start;padding:4px 0;}
-.bul{color:#c9a84c;font-size:10px;margin-top:2px;flex-shrink:0;}
-.itxt{color:#2a3550;font-size:11px;line-height:1.6;}
-.ex-stack{display:flex;height:20px;border-radius:6px;overflow:hidden;gap:1px;margin:6px 0 8px;}
-.ex-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
-.ex-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0;}
-.ex-lbl{font-size:10px;color:#3a4a60;flex:1;}
-.ex-pct{font-size:10px;font-weight:700;}
-.plus-box{background:#f8f6f0;border-left:3px solid #c9a84c;padding:9px 12px;border-radius:0 8px 8px 0;margin-bottom:14px;}
-.plus-txt{color:#2a3550;font-size:11px;line-height:1.7;}
-.warn-box{background:linear-gradient(135deg,rgba(13,27,62,0.04),rgba(201,168,76,0.04));border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:10px;text-align:center;margin-bottom:0;}
-.warn-txt{color:#8a7040;font-size:10px;line-height:1.6;}
-.c2-foot{background:linear-gradient(135deg,#0d1b3e,#1a2d5a);padding:14px 22px;display:flex;align-items:center;justify-content:space-between;}
-.stamp{width:46px;height:46px;border-radius:50%;border:2px solid rgba(201,168,76,0.4);display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-12deg);}
-.stamp div{color:#c9a84c;font-size:6px;font-weight:700;letter-spacing:1px;line-height:1.5;}
-.stamp .mid{font-size:9px;font-weight:900;}
-.tag{color:rgba(201,168,76,0.4);font-size:8px;letter-spacing:1px;margin-top:3px;}
-</style></head><body>
+    // 카드 HTML 생성 후 html2canvas로 이미지 캡처
+    const cardDiv = document.createElement("div");
+    cardDiv.style.cssText = "position:fixed;left:-9999px;top:0;width:400px;font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;";
+    cardDiv.innerHTML = `
+      <div style="width:400px;background:linear-gradient(145deg,#0d1b3e 0%,#1a2d5a 50%,#0a1428 100%);border-radius:20px;overflow:hidden;border:2px solid #c9a84c;padding:24px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <div>
+            <div style="color:#c9a84c;font-size:9px;letter-spacing:4px;font-weight:700;">PHYSICAL UP</div>
+            <div style="font-size:22px;font-weight:900;color:#e8c76a;letter-spacing:2px;">333TEST</div>
+            <div style="color:rgba(201,168,76,0.4);font-size:8px;letter-spacing:2px;">YOUTH SPORTS CLUB</div>
+          </div>
+          <div style="width:48px;height:48px;background:linear-gradient(135deg,#c9a84c,#e8c76a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;">⚾</div>
+        </div>
+        <div style="height:1px;background:linear-gradient(90deg,transparent,#c9a84c,transparent);margin-bottom:16px;"></div>
+        <div style="text-align:center;margin-bottom:16px;">
+          <div style="display:inline-block;background:linear-gradient(135deg,#c9a84c,#e8c76a);color:#0d1b3e;font-size:36px;font-weight:900;letter-spacing:10px;padding:10px 22px;border-radius:12px;margin-bottom:12px;">${result.code}</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
+            <span style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);color:#c9a84c;font-size:11px;padding:3px 12px;border-radius:20px;font-weight:700;">${result.main}</span>
+            <span style="font-size:24px;">${si.emoji}</span>
+            <span style="font-size:22px;font-weight:900;color:#f0f4ff;">${result.sub}</span>
+          </div>
+        </div>
+        <div style="background:rgba(255,255,255,0.05);border-left:4px solid #c9a84c;padding:12px 14px;border-radius:0 10px 10px 0;margin-bottom:14px;">
+          <div style="color:#f0f4ff;font-size:13px;line-height:1.8;margin-bottom:6px;">"${ment.wit}"</div>
+          <div style="color:#e8c76a;font-size:12px;font-weight:700;">💡 ${ment.tip}</div>
+        </div>
+        <div style="display:flex;gap:1px;border-radius:10px;overflow:hidden;margin-bottom:12px;">
+          <div style="flex:1;padding:10px 4px;text-align:center;background:rgba(79,207,160,0.12);">
+            <div style="color:rgba(79,207,160,0.6);font-size:9px;margin-bottom:3px;">흡수력</div>
+            <div style="color:#4fcfa0;font-size:13px;">${bar(result.scores.absorb)}</div>
+            <div style="color:#4fcfa0;font-size:9px;font-weight:700;margin-top:2px;">${result.scores.absorb}/3</div>
+          </div>
+          <div style="flex:1;padding:10px 4px;text-align:center;background:rgba(247,149,79,0.12);">
+            <div style="color:rgba(247,149,79,0.6);font-size:9px;margin-bottom:3px;">연소력</div>
+            <div style="color:#f7954f;font-size:13px;">${bar(result.scores.burn)}</div>
+            <div style="color:#f7954f;font-size:9px;font-weight:700;margin-top:2px;">${result.scores.burn}/3</div>
+          </div>
+          <div style="flex:1;padding:10px 4px;text-align:center;background:rgba(247,111,142,0.12);">
+            <div style="color:rgba(247,111,142,0.6);font-size:9px;margin-bottom:3px;">축적력</div>
+            <div style="color:#f76f8e;font-size:13px;">${bar(result.scores.store)}</div>
+            <div style="color:#f76f8e;font-size:9px;font-weight:700;margin-top:2px;">${result.scores.store}/3</div>
+          </div>
+        </div>
+        ${growthTxt?`<div style="text-align:center;color:rgba(201,168,76,0.5);font-size:10px;margin-bottom:12px;">📏 ${growthTxt}</div>`:""}
+        <div style="text-align:center;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:10px;margin-bottom:14px;">
+          <div style="color:#e8c76a;font-size:11px;font-weight:700;margin-bottom:2px;">체질 상세 검사 · 맞춤 솔루션</div>
+          <div style="color:rgba(201,168,76,0.5);font-size:10px;">pu333.kr</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(201,168,76,0.2);padding-top:12px;">
+          <div style="color:rgba(201,168,76,0.4);font-size:9px;">${date}</div>
+          <div style="color:#c9a84c;font-size:10px;font-weight:700;letter-spacing:1px;">pu333.kr</div>
+        </div>
+      </div>`;
+    document.body.appendChild(cardDiv);
 
-<div class="card1 page-break">
-  <div class="corner tl"></div><div class="corner tr"></div>
-  <div class="corner bl"></div><div class="corner br"></div>
-  <div class="c1-top">
-    <div class="logo-row">
-      <div class="logo-left">
-        <div class="logo-brand">PHYSICAL UP</div>
-        <div class="logo-test">333TEST</div>
-        <div class="logo-sub">YOUTH SPORTS CLUB</div>
-      </div>
-      <div class="shield">⚾</div>
-    </div>
-    <div class="divg"></div>
-    <div class="code-wrap">
-      <div class="code-big">${result.code}</div>
-      <div class="type-row">
-        <div class="m-tag">${result.main}</div>
-        <div class="s-emoji">${si.emoji}</div>
-        <div class="s-name">${result.sub}</div>
-      </div>
-    </div>
-    <div class="wit-box">
-      <div class="wit">"${ment.wit}"</div>
-      <div class="tip">💡 ${ment.tip}</div>
-    </div>
-    <div class="axes">
-      <div class="ax" style="background:rgba(79,207,160,0.12)">
-        <div class="ax-l" style="color:#4fcfa0">흡수력</div>
-        <div class="ax-d" style="color:#4fcfa0">${bar(result.scores.absorb)}</div>
-        <div class="ax-n" style="color:#4fcfa0">${result.scores.absorb}/3</div>
-      </div>
-      <div class="ax" style="background:rgba(247,149,79,0.12)">
-        <div class="ax-l" style="color:#f7954f">연소력</div>
-        <div class="ax-d" style="color:#f7954f">${bar(result.scores.burn)}</div>
-        <div class="ax-n" style="color:#f7954f">${result.scores.burn}/3</div>
-      </div>
-      <div class="ax" style="background:rgba(247,111,142,0.12)">
-        <div class="ax-l" style="color:#f76f8e">축적력</div>
-        <div class="ax-d" style="color:#f76f8e">${bar(result.scores.store)}</div>
-        <div class="ax-n" style="color:#f76f8e">${result.scores.store}/3</div>
-      </div>
-    </div>
-    ${growthTxt?`<div class="growth">📏 ${growthTxt}</div>`:""}
-    <div class="link-box">
-      <div class="link-title">체질 상세 검사 · 맞춤 솔루션</div>
-      <div class="link-url">pu333.kr</div>
-    </div>
-  </div>
-  <div class="c1-foot">
-    <div class="f-date">${date}</div>
-    <div class="f-url">pu333.kr</div>
-  </div>
-</div>
-
-<div class="card2">
-  <div class="c2-head">
-    <div>
-      <div class="c2-brand">PHYSICAL UP · 체질 상세 결과</div>
-      <div class="c2-sub">PHYSICAL 333TEST · OFFICIAL</div>
-    </div>
-    <div class="c2-badge">${result.code}</div>
-  </div>
-  <div class="c2-body">
-    <div class="st">🥗 음식 대책</div>
-    ${mi.food.map(f=>`<div class="item"><span class="bul">▸</span><span class="itxt">${f}</span></div>`).join("")}
-    <div style="margin-bottom:12px"></div>
-    <div class="st">💊 영양제 대책</div>
-    ${mi.supplement.map(s=>`<div class="item"><span class="bul">▸</span><span class="itxt">${s}</span></div>`).join("")}
-    <div style="margin-bottom:12px"></div>
-    <div class="st">🏃 추천 운동 비율</div>
-    <div class="ex-stack">
-      ${mi.exercise.ratio.map(r=>`<div style="width:${r.pct}%;background:${r.color};display:flex;align-items:center;justify-content:center;min-width:${r.pct>0?2:0}px"><span style="color:#0d1b3e;font-size:7px;font-weight:900">${r.pct>=14?r.pct+"%":""}</span></div>`).join("")}
-    </div>
-    ${mi.exercise.ratio.map(r=>`<div class="ex-row"><div class="ex-dot" style="background:${r.color}"></div><span class="ex-lbl">${r.name.replace("\n","·")}</span><span class="ex-pct" style="color:${r.color}">${r.pct}%</span></div>`).join("")}
-    <div style="margin-bottom:12px"></div>
-    <div class="st">✨ ${result.sub} 맞춤 포인트</div>
-    <div class="plus-box"><div class="plus-txt">${si.plus}</div></div>
-    <div class="warn-box"><div class="warn-txt">⚠️ ${mi.caution}</div></div>
-  </div>
-  <div class="c2-foot">
-    <div>
-      <div style="color:rgba(201,168,76,0.6);font-size:9px;margin-bottom:2px;">검사일 ${date} · 발급처 피지컬업 PHYSICAL UP</div>
-      <div style="color:#c9a84c;font-size:10px;font-weight:700;letter-spacing:1px;">pu333.kr</div>
-      <div class="tag">#피지컬333테스트 #피지컬업 #체질코드</div>
-    </div>
-    <div class="stamp">
-      <div>PHYSICAL</div><div class="mid">UP</div><div>OFFICIAL</div>
-    </div>
-  </div>
-</div>
-</body></html>`;
-
-    const blob=new Blob([html],{type:"text/html;charset=utf-8"});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement("a");
-    a.href=url;a.download=`피지컬333_${result.sub}_${result.code}.html`;
-    document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
-    setTimeout(()=>setDownloading(false),1500);
+    import("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js").then(()=>{
+      window.html2canvas(cardDiv.firstElementChild, {
+        scale:2, useCORS:true, backgroundColor:null,
+        logging:false
+      }).then(canvas=>{
+        document.body.removeChild(cardDiv);
+        canvas.toBlob(blob=>{
+          const url=URL.createObjectURL(blob);
+          const a=document.createElement("a");
+          a.href=url;
+          a.download=`피지컬333_${result.sub}_${result.code}.png`;
+          document.body.appendChild(a);a.click();
+          document.body.removeChild(a);URL.revokeObjectURL(url);
+          setDownloading(false);
+        },"image/png");
+      }).catch(()=>{
+        document.body.removeChild(cardDiv);
+        setDownloading(false);
+        alert("이미지 저장에 실패했습니다. 스크린샷을 이용해주세요.");
+      });
+    }).catch(()=>{
+      document.body.removeChild(cardDiv);
+      setDownloading(false);
+      alert("라이브러리 로드 실패. 스크린샷을 이용해주세요.");
+    });
   }
+
 
   // ── 공통 스타일 ──
   const cardStyle={background:"rgba(13,27,62,0.6)",borderRadius:16,padding:"18px",marginBottom:12,border:`1px solid rgba(201,168,76,0.15)`};
@@ -1030,7 +942,7 @@ body{background:#f0ede8;font-family:'Noto Sans KR',sans-serif;padding:20px;}
                 {!downloading&&<div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${GOLD},${GOLD2},${GOLD})`}}/>}
                 {downloading?"✅ 저장 중!":"🏆 검사지 저장"}<br/>
                 <span style={{fontSize:9,fontWeight:600,opacity:0.7,letterSpacing:0.5}}>
-                  {downloading?"다운로드 완료!":"인스타·카톡 공유용 카드"}
+                  {downloading?"이미지 생성 중...":"PNG 이미지로 저장"}
                 </span>
               </button>
 
