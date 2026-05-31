@@ -321,40 +321,6 @@ export default function App() {
     const si=subType[result.sub]||subType["항온형"];
     const ment=codeMents[result.code]||{wit:"나만의 특별한 체질",tip:"피지컬333 Test로 맞춤 관리 시작!"};
     const bar=n=>"●".repeat(n)+"○".repeat(3-n);
-    const growthTxt=(birth&&heightVal&&weightVal)?`\n키 ${heightVal}cm · 몸무게 ${weightVal}kg`:"";
-    const txt=`⚾ 피지컬333 Test 결과\n━━━━━━━━━━━━━━━━\nPHYSICAL UP · 피지컬업\n\n${si.emoji} ${result.sub} · ${result.code}\n${result.main}${growthTxt}\n\n"${ment.wit}"\n\n💡 ${ment.tip}\n\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}\n━━━━━━━━━━━━━━━━\n${new Date().toLocaleDateString("ko-KR")} · pu333.kr`;
-
-    const doShare = () => {
-      try {
-        if(!window.Kakao.isInitialized()){
-          window.Kakao.init('8cbfe9e0fb8445c74c55151ad8376feb');
-        }
-        window.Kakao.Share.sendDefault({
-          objectType:"feed",
-          content:{
-            title:`${si.emoji} ${result.sub} · ${result.code} | 피지컬333 TEST`,
-            description:`"${ment.wit}"\n💡 ${ment.tip}`,
-            imageUrl:"https://pu333.kr/og.png",
-            link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}
-          },
-          buttons:[{title:"우리 아이 체질 검사하기",link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}}]
-        });
-      } catch(e){
-        // 실패시 클립보드 복사
-        navigator.clipboard.writeText(txt).catch(()=>{
-          const el=document.createElement("textarea");
-          el.value=txt;document.body.appendChild(el);
-          el.select();document.execCommand("copy");document.body.removeChild(el);
-        });
-        setCopied(true);setTimeout(()=>setCopied(false),3000);
-      }
-    };
-
-  async function handleShare(){
-    if(!result) return;
-    const si=subType[result.sub]||subType["항온형"];
-    const ment=codeMents[result.code]||{wit:"나만의 특별한 체질",tip:"피지컬333 Test로 맞춤 관리 시작!"};
-    const bar=n=>"●".repeat(n)+"○".repeat(3-n);
     const growthTxt=(birth&&heightVal&&weightVal)?`\n📏 키 ${heightVal}cm · 몸무게 ${weightVal}kg · 만 ${parseInt(birth)}세`:"";
 
     const txt=
@@ -1160,6 +1126,7 @@ window.onload = function(){ window.print(); }
           <p style={{color:"#1a2a3a",fontSize:11,textAlign:"center",marginTop:14,lineHeight:1.7}}>본 결과는 참고용이며 의학적 진단을 대체하지 않습니다.<br/>성장곡선이 지속 하락 시 소아과 진료를 권장합니다.</p>
         </div>
       </div>
+    </div>
     );
   }
   return null;
