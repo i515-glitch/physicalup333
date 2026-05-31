@@ -322,28 +322,42 @@ export default function App() {
     const ment=codeMents[result.code]||{wit:"나만의 특별한 체질",tip:"피지컬333 Test로 맞춤 관리 시작!"};
     const bar=n=>"●".repeat(n)+"○".repeat(3-n);
     const growthTxt=(birth&&heightVal&&weightVal)?`\n키 ${heightVal}cm · 몸무게 ${weightVal}kg`:"";
-    const txt=`⚾ 피지컬333 Test 결과\n━━━━━━━━━━━━━━━━\nPHYSICAL UP · 피지컬업\n\n${si.emoji} ${result.sub} · ${result.code}\n${result.main}${growthTxt}\n\n"${ment.wit}"\n\n💡 ${ment.tip}\n\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}\n━━━━━━━━━━━━━━━━\n${new Date().toLocaleDateString("ko-KR")} · pu333.kr`;
 
-    // 클립보드 복사
-    try{await navigator.clipboard.writeText(txt);}
-    catch(e){
-      const el=document.createElement("textarea");
-      el.value=txt;document.body.appendChild(el);
-      el.select();document.execCommand("copy");
-      document.body.removeChild(el);
-    }
+    const doKakaoShare = () => {
+      try {
+        if(!window.Kakao.isInitialized()){
+          window.Kakao.init('8cbfe9e0fb8445c74c55151ad8376feb');
+        }
+        window.Kakao.Share.sendDefault({
+          objectType:"feed",
+          content:{
+            title:`${si.emoji} ${result.sub} · ${result.code} | 피지컬333 TEST`,
+            description:`"${ment.wit}" 💡 ${ment.tip}`,
+            imageUrl:"https://pu333.kr/og.png",
+            link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}
+          },
+          buttons:[{title:"우리 아이 체질 검사하기",link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}}]
+        });
+      } catch(e){
+        const txt=`⚾ 피지컬333 Test 결과\n━━━━━━━━━━━━━━━━\nPHYSICAL UP · 피지컬업\n\n${si.emoji} ${result.sub} · ${result.code}\n${result.main}${growthTxt}\n\n"${ment.wit}"\n\n💡 ${ment.tip}\n\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}\n━━━━━━━━━━━━━━━━\n${new Date().toLocaleDateString("ko-KR")} · pu333.kr`;
+        navigator.clipboard.writeText(txt).catch(()=>{
+          const el=document.createElement("textarea");
+          el.value=txt;document.body.appendChild(el);
+          el.select();document.execCommand("copy");document.body.removeChild(el);
+        });
+        setCopied(true);setTimeout(()=>setCopied(false),3000);
+      }
+    };
 
-    // 카카오톡 열기 (모바일)
-    const encodedTxt = encodeURIComponent(txt);
-    const kakaoUrl = `kakaolink://send?msg=${encodedTxt}`;
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if(isMobile){
-      window.location.href = kakaoUrl;
-      setTimeout(()=>{
-        // 앱 없으면 카톡 다운로드 페이지
-      }, 1500);
+    if(window.Kakao){
+      doKakaoShare();
+    } else {
+      const script=document.createElement("script");
+      script.src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js";
+      script.onload=doKakaoShare;
+      script.onerror=()=>{ setCopied(true);setTimeout(()=>setCopied(false),3000); };
+      document.head.appendChild(script);
     }
-    setCopied(true);setTimeout(()=>setCopied(false),3000);
   }
 
   function handleDownload(){
