@@ -533,7 +533,7 @@ function analyze(pAns, kAns) {
   };
   const code = `${norm(a)}${norm(b)}${norm(c)}`;
   const sub = codeMap[code] || "항온형";
-  const main = subType[sub].main;
+  const main = (subType[sub] && subType[sub].main) || "클린업";
   return {
     code, sub, main,
     scores: { absorb: norm(a), burn: norm(b), store: norm(c) },
@@ -1143,12 +1143,12 @@ export default function App() {
 
   // ── RESULT ──
   if(step==="result"&&result) {
-    const mi = mainType[result.main];
-    const si = subType[result.sub];
+    const mi = mainType[result.main] || mainType["클린업"];
+    const si = subType[result.sub] || subType["항온형"];
     const axes = [
-      {label:"흡수력",val:result.scores.absorb,color:"#4fcfa0",desc:["낮음","보통","높음"]},
-      {label:"연소력",val:result.scores.burn,color:"#f7954f",desc:["낮음","보통","높음"]},
-      {label:"축적력",val:result.scores.store,color:"#f76f8e",desc:["낮음","보통","높음"]},
+      {label:"흡수력",val:result.scores?.absorb||2,color:"#4fcfa0",desc:["낮음","보통","높음"]},
+      {label:"연소력",val:result.scores?.burn||2,color:"#f7954f",desc:["낮음","보통","높음"]},
+      {label:"축적력",val:result.scores?.store||2,color:"#f76f8e",desc:["낮음","보통","높음"]},
     ];
 
     return (
