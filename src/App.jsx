@@ -322,8 +322,27 @@ export default function App() {
     const si=subType[result.sub]||subType["항온형"];
     const ment=codeMents[result.code]||{wit:"나만의 특별한 체질",tip:"피지컬333 Test로 맞춤 관리 시작!"};
     const bar=n=>"●".repeat(n)+"○".repeat(3-n);
-    const growthTxt=(birth?.length===6&&heightVal&&weightVal)?`\n키 ${heightVal}cm · 몸무게 ${weightVal}kg`:"";
-    const txt=`⚾ 피지컬333 Test 결과\n━━━━━━━━━━━━━━━━\nPHYSICAL UP · 피지컬업\n\n${si.emoji} ${result.sub} · ${result.code}\n${result.main}${growthTxt}\n\n"${ment.wit}"\n\n💡 ${ment.tip}\n\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}\n━━━━━━━━━━━━━━━━\n${new Date().toLocaleDateString("ko-KR")} · physicalup.kr`;
+
+    // 카카오 공유 시도
+    try {
+      if(window.Kakao && window.Kakao.isInitialized()) {
+        window.Kakao.Share.sendDefault({
+          objectType:"feed",
+          content:{
+            title:`${si.emoji} ${result.sub} · ${result.code} | 피지컬333 TEST`,
+            description:`"${ment.wit}"\n💡 ${ment.tip}\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}`,
+            imageUrl:"https://pu333.kr/og-image.png",
+            link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}
+          },
+          buttons:[{title:"우리 아이 체질 검사하기",link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}}]
+        });
+        return;
+      }
+    } catch(e){}
+
+    // 카카오 실패시 클립보드 복사 fallback
+    const growthTxt=(birth&&heightVal&&weightVal)?`\n키 ${heightVal}cm · 몸무게 ${weightVal}kg`:"";
+    const txt=`⚾ 피지컬333 Test 결과\n━━━━━━━━━━━━━━━━\nPHYSICAL UP · 피지컬업\n\n${si.emoji} ${result.sub} · ${result.code}\n${result.main}${growthTxt}\n\n"${ment.wit}"\n\n💡 ${ment.tip}\n\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}\n━━━━━━━━━━━━━━━━\n${new Date().toLocaleDateString("ko-KR")} · pu333.kr`;
     try{await navigator.clipboard.writeText(txt);}
     catch(e){const el=document.createElement("textarea");el.value=txt;document.body.appendChild(el);el.select();document.execCommand("copy");document.body.removeChild(el);}
     setCopied(true);setTimeout(()=>setCopied(false),3000);
@@ -455,12 +474,12 @@ body{background:#f0ede8;font-family:'Noto Sans KR',sans-serif;padding:20px;}
     ${growthTxt?`<div class="growth">📏 ${growthTxt}</div>`:""}
     <div class="link-box">
       <div class="link-title">체질 상세 검사 · 맞춤 솔루션</div>
-      <div class="link-url">physicalup.kr</div>
+      <div class="link-url">pu333.kr</div>
     </div>
   </div>
   <div class="c1-foot">
     <div class="f-date">${date}</div>
-    <div class="f-url">physicalup.kr</div>
+    <div class="f-url">pu333.kr</div>
   </div>
 </div>
 
@@ -492,7 +511,7 @@ body{background:#f0ede8;font-family:'Noto Sans KR',sans-serif;padding:20px;}
   <div class="c2-foot">
     <div>
       <div style="color:rgba(201,168,76,0.6);font-size:9px;margin-bottom:2px;">검사일 ${date} · 발급처 피지컬업 PHYSICAL UP</div>
-      <div style="color:#c9a84c;font-size:10px;font-weight:700;letter-spacing:1px;">physicalup.kr</div>
+      <div style="color:#c9a84c;font-size:10px;font-weight:700;letter-spacing:1px;">pu333.kr</div>
       <div class="tag">#피지컬333테스트 #피지컬업 #체질코드</div>
     </div>
     <div class="stamp">
