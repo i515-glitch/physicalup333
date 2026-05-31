@@ -350,18 +350,38 @@ export default function App() {
       }
     };
 
-    if(window.Kakao){
-      doShare();
-    } else {
-      const script=document.createElement("script");
-      script.src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js";
-      script.onload=doShare;
-      script.onerror=()=>{
-        navigator.clipboard.writeText(txt).catch(()=>{});
-        setCopied(true);setTimeout(()=>setCopied(false),3000);
-      };
-      document.head.appendChild(script);
+  async function handleShare(){
+    if(!result) return;
+    const si=subType[result.sub]||subType["항온형"];
+    const ment=codeMents[result.code]||{wit:"나만의 특별한 체질",tip:"피지컬333 Test로 맞춤 관리 시작!"};
+    const bar=n=>"●".repeat(n)+"○".repeat(3-n);
+    const growthTxt=(birth&&heightVal&&weightVal)?`\n📏 키 ${heightVal}cm · 몸무게 ${weightVal}kg · 만 ${parseInt(birth)}세`:"";
+
+    const txt=
+`⚾ 피지컬333 TEST
+━━━━━━━━━━━━━━━━
+PHYSICAL UP · 피지컬업
+
+${si.emoji} ${result.sub} · ${result.code} · ${result.main}${growthTxt}
+
+"${ment.wit}"
+
+💡 ${ment.tip}
+
+흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}
+━━━━━━━━━━━━━━━━
+우리 아이 체질 코드 찾기 👇
+https://pu333.kr
+━━━━━━━━━━━━━━━━`;
+
+    try{ await navigator.clipboard.writeText(txt); }
+    catch(e){
+      const el=document.createElement("textarea");
+      el.value=txt;document.body.appendChild(el);
+      el.select();document.execCommand("copy");
+      document.body.removeChild(el);
     }
+    setCopied(true);setTimeout(()=>setCopied(false),4000);
   }
 
   function handleDownload(){
@@ -372,106 +392,207 @@ export default function App() {
     const ment=codeMents[result.code]||{wit:"나만의 특별한 체질 코드",tip:"피지컬333 Test로 맞춤 관리 시작!"};
     const bar=n=>"●".repeat(n)+"○".repeat(3-n);
     const date=new Date().toLocaleDateString("ko-KR");
-    const growthTxt=(birth&&heightVal&&weightVal)?`키 ${heightVal}cm · 몸무게 ${weightVal}kg · 만 ${parseInt(birth)}세`:"";
+    const growthSection=(birth&&heightVal&&weightVal)?`
+      <div class="section">
+        <div class="section-title">📏 성장 지표</div>
+        <div class="info-row">
+          <span>만 ${parseInt(birth)}세 · 키 <strong>${heightVal}cm</strong> · 몸무게 <strong>${weightVal}kg</strong></span>
+        </div>
+      </div>` : "";
 
-    // 카드 HTML 생성 후 html2canvas로 이미지 캡처
-    const cardDiv = document.createElement("div");
-    cardDiv.style.cssText = "position:fixed;left:-9999px;top:0;width:400px;font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;";
-    cardDiv.innerHTML = `
-      <div style="width:400px;background:linear-gradient(145deg,#0d1b3e 0%,#1a2d5a 50%,#0a1428 100%);border-radius:20px;overflow:hidden;border:2px solid #c9a84c;padding:24px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-          <div>
-            <div style="color:#c9a84c;font-size:9px;letter-spacing:4px;font-weight:700;">PHYSICAL UP</div>
-            <div style="font-size:22px;font-weight:900;color:#e8c76a;letter-spacing:2px;">333TEST</div>
-            <div style="color:rgba(201,168,76,0.4);font-size:8px;letter-spacing:2px;">YOUTH SPORTS CLUB</div>
-          </div>
-          <div style="width:48px;height:48px;background:linear-gradient(135deg,#c9a84c,#e8c76a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;">⚾</div>
-        </div>
-        <div style="height:1px;background:linear-gradient(90deg,transparent,#c9a84c,transparent);margin-bottom:16px;"></div>
-        <div style="text-align:center;margin-bottom:16px;">
-          <div style="display:inline-block;background:linear-gradient(135deg,#c9a84c,#e8c76a);color:#0d1b3e;font-size:36px;font-weight:900;letter-spacing:10px;padding:10px 22px;border-radius:12px;margin-bottom:12px;">${result.code}</div>
-          <div style="display:flex;align-items:center;justify-content:center;gap:10px;">
-            <span style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);color:#c9a84c;font-size:11px;padding:3px 12px;border-radius:20px;font-weight:700;">${result.main}</span>
-            <span style="font-size:24px;">${si.emoji}</span>
-            <span style="font-size:22px;font-weight:900;color:#f0f4ff;">${result.sub}</span>
-          </div>
-        </div>
-        <div style="background:rgba(255,255,255,0.05);border-left:4px solid #c9a84c;padding:12px 14px;border-radius:0 10px 10px 0;margin-bottom:14px;">
-          <div style="color:#f0f4ff;font-size:13px;line-height:1.8;margin-bottom:6px;">"${ment.wit}"</div>
-          <div style="color:#e8c76a;font-size:12px;font-weight:700;">💡 ${ment.tip}</div>
-        </div>
-        <div style="display:flex;gap:1px;border-radius:10px;overflow:hidden;margin-bottom:12px;">
-          <div style="flex:1;padding:10px 4px;text-align:center;background:rgba(79,207,160,0.12);">
-            <div style="color:rgba(79,207,160,0.6);font-size:9px;margin-bottom:3px;">흡수력</div>
-            <div style="color:#4fcfa0;font-size:13px;">${bar(result.scores.absorb)}</div>
-            <div style="color:#4fcfa0;font-size:9px;font-weight:700;margin-top:2px;">${result.scores.absorb}/3</div>
-          </div>
-          <div style="flex:1;padding:10px 4px;text-align:center;background:rgba(247,149,79,0.12);">
-            <div style="color:rgba(247,149,79,0.6);font-size:9px;margin-bottom:3px;">연소력</div>
-            <div style="color:#f7954f;font-size:13px;">${bar(result.scores.burn)}</div>
-            <div style="color:#f7954f;font-size:9px;font-weight:700;margin-top:2px;">${result.scores.burn}/3</div>
-          </div>
-          <div style="flex:1;padding:10px 4px;text-align:center;background:rgba(247,111,142,0.12);">
-            <div style="color:rgba(247,111,142,0.6);font-size:9px;margin-bottom:3px;">축적력</div>
-            <div style="color:#f76f8e;font-size:13px;">${bar(result.scores.store)}</div>
-            <div style="color:#f76f8e;font-size:9px;font-weight:700;margin-top:2px;">${result.scores.store}/3</div>
-          </div>
-        </div>
-        ${growthTxt?`<div style="text-align:center;color:rgba(201,168,76,0.5);font-size:10px;margin-bottom:12px;">📏 ${growthTxt}</div>`:""}
-        <div style="text-align:center;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:10px;margin-bottom:14px;">
-          <div style="color:#e8c76a;font-size:11px;font-weight:700;margin-bottom:2px;">체질 상세 검사 · 맞춤 솔루션</div>
-          <div style="color:rgba(201,168,76,0.5);font-size:10px;">pu333.kr</div>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(201,168,76,0.2);padding-top:12px;">
-          <div style="color:rgba(201,168,76,0.4);font-size:9px;">${date}</div>
-          <div style="color:#c9a84c;font-size:10px;font-weight:700;letter-spacing:1px;">pu333.kr</div>
-        </div>
-      </div>`;
-    document.body.appendChild(cardDiv);
+    const html=`<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>피지컬333 Test · ${result.sub} ${result.code}</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;}
+.page{max-width:600px;margin:0 auto;}
 
-    const doCapture = () => {
-      if(!window.html2canvas){
-        document.body.removeChild(cardDiv);
-        setDownloading(false);
-        alert("라이브러리 로드 실패. 스크린샷을 이용해주세요.");
-        return;
-      }
-      window.html2canvas(cardDiv.firstElementChild, {
-        scale:2, useCORS:true, backgroundColor:"#0d1b3e",
-        logging:false, allowTaint:true
-      }).then(canvas=>{
-        document.body.removeChild(cardDiv);
-        // 모바일/PC 공통 다운로드
-        const dataUrl = canvas.toDataURL("image/png");
-        const a=document.createElement("a");
-        a.href=dataUrl;
-        a.download=`피지컬333_${result.sub}_${result.code}.png`;
-        a.style.display="none";
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(()=>{ document.body.removeChild(a); },100);
-        setDownloading(false);
-      }).catch(err=>{
-        document.body.removeChild(cardDiv);
-        setDownloading(false);
-        alert("이미지 저장 실패. 스크린샷을 이용해주세요.");
-      });
-    };
+/* 헤더 카드 */
+.header-card{background:linear-gradient(145deg,#0d1b3e,#1a2d5a);border-radius:16px;padding:28px;margin-bottom:16px;border:2px solid #c9a84c;position:relative;overflow:hidden;}
+.header-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#c9a84c,#e8c76a,#c9a84c);}
+.brand-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.brand{color:#c9a84c;font-size:10px;letter-spacing:4px;font-weight:700;}
+.test-name{font-size:20px;font-weight:900;color:#e8c76a;letter-spacing:2px;}
+.seal{width:44px;height:44px;background:linear-gradient(135deg,#c9a84c,#e8c76a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.divider{height:1px;background:linear-gradient(90deg,transparent,#c9a84c,transparent);margin:16px 0;}
+.code-wrap{text-align:center;margin-bottom:16px;}
+.code-badge{display:inline-block;background:linear-gradient(135deg,#c9a84c,#e8c76a);color:#0d1b3e;font-size:44px;font-weight:900;letter-spacing:12px;padding:10px 24px;border-radius:12px;margin-bottom:12px;}
+.type-row{display:flex;align-items:center;justify-content:center;gap:12px;}
+.main-tag{background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);color:#c9a84c;font-size:12px;padding:4px 14px;border-radius:20px;font-weight:700;}
+.sub-name{font-family:'Noto Serif KR',serif;font-size:26px;font-weight:900;color:#f0f4ff;}
+.wit-box{background:rgba(255,255,255,0.06);border-left:4px solid #c9a84c;padding:12px 16px;border-radius:0 10px 10px 0;margin-bottom:14px;}
+.wit{font-family:'Noto Serif KR',serif;color:#f0f4ff;font-size:14px;line-height:1.8;margin-bottom:6px;}
+.tip{color:#e8c76a;font-size:13px;font-weight:700;}
+.axes{display:flex;gap:2px;border-radius:10px;overflow:hidden;margin-bottom:14px;}
+.ax{flex:1;padding:10px 6px;text-align:center;}
+.ax-l{font-size:10px;letter-spacing:1px;margin-bottom:4px;opacity:0.6;}
+.ax-d{font-size:14px;letter-spacing:2px;}
+.ax-n{font-size:10px;font-weight:700;margin-top:3px;}
+.footer-row{display:flex;justify-content:space-between;align-items:center;}
+.footer-date{color:rgba(201,168,76,0.4);font-size:10px;}
+.footer-url{color:#c9a84c;font-size:12px;font-weight:700;letter-spacing:1px;}
 
-    // html2canvas 이미 로드됐으면 바로, 아니면 script 태그로 로드
-    if(window.html2canvas){
-      doCapture();
-    } else {
-      const script = document.createElement("script");
-      script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
-      script.onload = doCapture;
-      script.onerror = ()=>{
-        document.body.removeChild(cardDiv);
-        setDownloading(false);
-        alert("라이브러리 로드 실패. 스크린샷을 이용해주세요.");
-      };
-      document.head.appendChild(script);
-    }
+/* 상세 카드 */
+.detail-card{background:#fff;border-radius:16px;padding:24px;margin-bottom:16px;border:1px solid #e8e4dc;box-shadow:0 2px 12px rgba(0,0,0,0.06);}
+.detail-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #c9a84c;}
+.detail-title{font-family:'Noto Serif KR',serif;color:#0d1b3e;font-size:15px;font-weight:700;letter-spacing:1px;}
+.detail-badge{background:linear-gradient(135deg,#c9a84c,#e8c76a);color:#0d1b3e;font-size:14px;font-weight:900;letter-spacing:3px;padding:4px 14px;border-radius:8px;}
+.section{margin-bottom:18px;}
+.section-title{font-size:11px;font-weight:700;color:#c9a84c;letter-spacing:2px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,0.3),transparent);}
+.item{display:flex;gap:8px;margin-bottom:7px;align-items:flex-start;}
+.bullet{color:#c9a84c;font-size:11px;margin-top:3px;flex-shrink:0;}
+.item-text{color:#2a3550;font-size:12px;line-height:1.7;}
+.info-row{color:#2a3550;font-size:13px;line-height:1.8;}
+.info-row strong{color:#0d1b3e;}
+
+/* 운동 비율 */
+.ex-stack{display:flex;height:22px;border-radius:6px;overflow:hidden;gap:1px;margin:8px 0 10px;}
+.ex-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.ex-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+.ex-lbl{font-size:11px;color:#3a4a60;flex:1;}
+.ex-pct{font-size:11px;font-weight:700;}
+
+/* 포인트 박스 */
+.point-box{background:#f8f5f0;border-left:3px solid #c9a84c;padding:12px 14px;border-radius:0 8px 8px 0;margin-bottom:14px;}
+.point-txt{color:#2a3550;font-size:12px;line-height:1.8;}
+.warn-box{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:10px 14px;text-align:center;}
+.warn-txt{color:#8a7040;font-size:11px;line-height:1.6;}
+
+/* 하단 */
+.bottom-card{background:linear-gradient(135deg,#0d1b3e,#1a2d5a);border-radius:12px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;}
+.stamp{width:48px;height:48px;border-radius:50%;border:2px solid rgba(201,168,76,0.4);display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-12deg);}
+.stamp div{color:#c9a84c;font-size:6px;font-weight:700;letter-spacing:1px;line-height:1.5;}
+.stamp .mid{font-size:9px;font-weight:900;}
+.hashtag{color:rgba(201,168,76,0.4);font-size:9px;letter-spacing:1px;margin-top:3px;}
+
+@media print{
+  body{background:white;padding:10px;}
+  .page{max-width:100%;}
+}
+</style></head><body>
+<div class="page">
+
+<!-- 헤더 카드 -->
+<div class="header-card">
+  <div class="brand-row">
+    <div>
+      <div class="brand">PHYSICAL UP</div>
+      <div class="test-name">333TEST</div>
+      <div style="color:rgba(201,168,76,0.4);font-size:8px;letter-spacing:2px;">YOUTH SPORTS CLUB</div>
+    </div>
+    <div class="seal">⚾</div>
+  </div>
+  <div class="divider"></div>
+  <div class="code-wrap">
+    <div class="code-badge">${result.code}</div>
+    <div class="type-row">
+      <div class="main-tag">${result.main}</div>
+      <span style="font-size:26px;">${si.emoji}</span>
+      <div class="sub-name">${result.sub}</div>
+    </div>
+  </div>
+  <div class="wit-box">
+    <div class="wit">"${ment.wit}"</div>
+    <div class="tip">💡 ${ment.tip}</div>
+  </div>
+  <div class="axes">
+    <div class="ax" style="background:rgba(79,207,160,0.12)">
+      <div class="ax-l" style="color:#4fcfa0">흡수력</div>
+      <div class="ax-d" style="color:#4fcfa0">${bar(result.scores.absorb)}</div>
+      <div class="ax-n" style="color:#4fcfa0">${result.scores.absorb}/3</div>
+    </div>
+    <div class="ax" style="background:rgba(247,149,79,0.12)">
+      <div class="ax-l" style="color:#f7954f">연소력</div>
+      <div class="ax-d" style="color:#f7954f">${bar(result.scores.burn)}</div>
+      <div class="ax-n" style="color:#f7954f">${result.scores.burn}/3</div>
+    </div>
+    <div class="ax" style="background:rgba(247,111,142,0.12)">
+      <div class="ax-l" style="color:#f76f8e">축적력</div>
+      <div class="ax-d" style="color:#f76f8e">${bar(result.scores.store)}</div>
+      <div class="ax-n" style="color:#f76f8e">${result.scores.store}/3</div>
+    </div>
+  </div>
+  <div class="footer-row">
+    <div class="footer-date">${date}</div>
+    <div class="footer-url">pu333.kr</div>
+  </div>
+</div>
+
+<!-- 상세 카드 -->
+<div class="detail-card">
+  <div class="detail-header">
+    <div class="detail-title">체질 상세 결과 확인서</div>
+    <div class="detail-badge">${result.code}</div>
+  </div>
+
+  ${growthSection}
+
+  <div class="section">
+    <div class="section-title">🥗 음식 대책</div>
+    ${mi.food.map(f=>`<div class="item"><span class="bullet">▸</span><span class="item-text">${f}</span></div>`).join("")}
+  </div>
+
+  <div class="section">
+    <div class="section-title">💊 영양제 대책</div>
+    ${mi.supplement.map(s=>`<div class="item"><span class="bullet">▸</span><span class="item-text">${s}</span></div>`).join("")}
+  </div>
+
+  <div class="section">
+    <div class="section-title">🏃 추천 운동 비율</div>
+    <div class="ex-stack">
+      ${mi.exercise.ratio.map(r=>`<div style="width:${r.pct}%;background:${r.color};display:flex;align-items:center;justify-content:center;min-width:${r.pct>0?2:0}px"><span style="color:#0d1b3e;font-size:8px;font-weight:900">${r.pct>=14?r.pct+"%":""}</span></div>`).join("")}
+    </div>
+    ${mi.exercise.ratio.map(r=>`<div class="ex-row"><div class="ex-dot" style="background:${r.color}"></div><span class="ex-lbl">${r.name.replace("\n","·")}</span><span class="ex-pct" style="color:${r.color}">${r.pct}%</span></div>`).join("")}
+    <div style="margin-top:8px;padding:8px 12px;background:rgba(201,168,76,0.05);border-radius:8px;border:1px solid rgba(201,168,76,0.15);">
+      <span style="color:#8a7040;font-size:11px;">${mi.exercise.caution}</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">✨ ${result.sub} 맞춤 포인트</div>
+    <div class="point-box"><div class="point-txt">${si.plus}</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">✅ 생활 습관</div>
+    ${mi.life.map(l=>`<div class="item"><span class="bullet">▸</span><span class="item-text">${l}</span></div>`).join("")}
+  </div>
+
+  <div class="warn-box">
+    <div class="warn-txt">⚠️ ${mi.caution}</div>
+  </div>
+</div>
+
+<!-- 하단 -->
+<div class="bottom-card">
+  <div>
+    <div style="color:rgba(201,168,76,0.6);font-size:10px;margin-bottom:2px;">검사일 ${date} · 발급처 피지컬업 PHYSICAL UP</div>
+    <div style="color:#c9a84c;font-size:12px;font-weight:700;letter-spacing:1px;">pu333.kr</div>
+    <div class="hashtag">#피지컬333테스트 #피지컬업 #체질코드</div>
+  </div>
+  <div class="stamp">
+    <div>PHYSICAL</div><div class="mid">UP</div><div>OFFICIAL</div>
+  </div>
+</div>
+
+</div>
+
+<script>
+window.onload = function(){ window.print(); }
+</script>
+</body></html>`;
+
+    const blob=new Blob([html],{type:"text/html;charset=utf-8"});
+    const url=URL.createObjectURL(blob);
+    window.open(url,"_blank");
+    setTimeout(()=>{
+      URL.revokeObjectURL(url);
+      setDownloading(false);
+    },3000);
   }
 
 
@@ -976,9 +1097,9 @@ export default function App() {
                 transition:"all 0.3s",position:"relative",overflow:"hidden"
               }}>
                 {!downloading&&<div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${GOLD},${GOLD2},${GOLD})`}}/>}
-                {downloading?"✅ 저장 중!":"🏆 검사지 저장"}<br/>
+                {downloading?"✅ 열리는 중!":"🏆 검사지 저장"}<br/>
                 <span style={{fontSize:9,fontWeight:600,opacity:0.7,letterSpacing:0.5}}>
-                  {downloading?"이미지 생성 중...":"PNG 이미지로 저장"}
+                  {downloading?"인쇄창에서 PDF 저장":"PDF 저장·보관·공유"}
                 </span>
               </button>
 
@@ -1000,9 +1121,12 @@ export default function App() {
 
             {/* 카톡 붙여넣기 안내 */}
             {copied&&(
-              <div style={{padding:"10px 14px",borderRadius:10,marginBottom:10,background:"rgba(254,229,0,0.06)",border:"1px solid rgba(254,229,0,0.2)",textAlign:"center"}}>
-                <div style={{color:"#f9e000",fontSize:12,fontWeight:700,marginBottom:3}}>💬 결과가 복사됐어요!</div>
-                <div style={{color:MUTED,fontSize:11}}>카카오톡 → 채팅창 → 길게 누르기 → 붙여넣기</div>
+              <div style={{padding:"12px 14px",borderRadius:10,marginBottom:10,background:"rgba(254,229,0,0.06)",border:"1px solid rgba(254,229,0,0.2)",textAlign:"center"}}>
+                <div style={{color:"#f9e000",fontSize:13,fontWeight:700,marginBottom:4}}>✅ 결과가 복사됐어요!</div>
+                <div style={{color:MUTED,fontSize:11,lineHeight:1.7}}>
+                  카카오톡 → 채팅창 → 길게 누르기 → 붙여넣기<br/>
+                  <span style={{color:GOLD,fontSize:11}}>pu333.kr 링크가 미리보기로 자동으로 뜨게 됩니다!</span>
+                </div>
               </div>
             )}
 
