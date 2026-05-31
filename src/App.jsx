@@ -411,31 +411,49 @@ export default function App() {
       </div>`;
     document.body.appendChild(cardDiv);
 
-    import("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js").then(()=>{
-      window.html2canvas(cardDiv.firstElementChild, {
-        scale:2, useCORS:true, backgroundColor:null,
-        logging:false
-      }).then(canvas=>{
-        document.body.removeChild(cardDiv);
-        canvas.toBlob(blob=>{
-          const url=URL.createObjectURL(blob);
-          const a=document.createElement("a");
-          a.href=url;
-          a.download=`피지컬333_${result.sub}_${result.code}.png`;
-          document.body.appendChild(a);a.click();
-          document.body.removeChild(a);URL.revokeObjectURL(url);
-          setDownloading(false);
-        },"image/png");
-      }).catch(()=>{
+    const doCapture = () => {
+      if(!window.html2canvas){
         document.body.removeChild(cardDiv);
         setDownloading(false);
-        alert("이미지 저장에 실패했습니다. 스크린샷을 이용해주세요.");
+        alert("라이브러리 로드 실패. 스크린샷을 이용해주세요.");
+        return;
+      }
+      window.html2canvas(cardDiv.firstElementChild, {
+        scale:2, useCORS:true, backgroundColor:"#0d1b3e",
+        logging:false, allowTaint:true
+      }).then(canvas=>{
+        document.body.removeChild(cardDiv);
+        // 모바일/PC 공통 다운로드
+        const dataUrl = canvas.toDataURL("image/png");
+        const a=document.createElement("a");
+        a.href=dataUrl;
+        a.download=`피지컬333_${result.sub}_${result.code}.png`;
+        a.style.display="none";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(()=>{ document.body.removeChild(a); },100);
+        setDownloading(false);
+      }).catch(err=>{
+        document.body.removeChild(cardDiv);
+        setDownloading(false);
+        alert("이미지 저장 실패. 스크린샷을 이용해주세요.");
       });
-    }).catch(()=>{
-      document.body.removeChild(cardDiv);
-      setDownloading(false);
-      alert("라이브러리 로드 실패. 스크린샷을 이용해주세요.");
-    });
+    };
+
+    // html2canvas 이미 로드됐으면 바로, 아니면 script 태그로 로드
+    if(window.html2canvas){
+      doCapture();
+    } else {
+      const script = document.createElement("script");
+      script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+      script.onload = doCapture;
+      script.onerror = ()=>{
+        document.body.removeChild(cardDiv);
+        setDownloading(false);
+        alert("라이브러리 로드 실패. 스크린샷을 이용해주세요.");
+      };
+      document.head.appendChild(script);
+    }
   }
 
 
