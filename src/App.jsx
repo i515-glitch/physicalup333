@@ -318,33 +318,31 @@ export default function App() {
 
   async function handleShare(){
     if(!result) return;
-    const mi=mainType[result.main]||mainType["클린업"];
     const si=subType[result.sub]||subType["항온형"];
     const ment=codeMents[result.code]||{wit:"나만의 특별한 체질",tip:"피지컬333 Test로 맞춤 관리 시작!"};
     const bar=n=>"●".repeat(n)+"○".repeat(3-n);
-
-    // 카카오 공유 시도
-    try {
-      if(window.Kakao && window.Kakao.isInitialized()) {
-        window.Kakao.Share.sendDefault({
-          objectType:"feed",
-          content:{
-            title:`${si.emoji} ${result.sub} · ${result.code} | 피지컬333 TEST`,
-            description:`"${ment.wit}"\n💡 ${ment.tip}\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}`,
-            imageUrl:"https://pu333.kr/og-image.png",
-            link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}
-          },
-          buttons:[{title:"우리 아이 체질 검사하기",link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}}]
-        });
-        return;
-      }
-    } catch(e){}
-
-    // 카카오 실패시 클립보드 복사 fallback
     const growthTxt=(birth&&heightVal&&weightVal)?`\n키 ${heightVal}cm · 몸무게 ${weightVal}kg`:"";
     const txt=`⚾ 피지컬333 Test 결과\n━━━━━━━━━━━━━━━━\nPHYSICAL UP · 피지컬업\n\n${si.emoji} ${result.sub} · ${result.code}\n${result.main}${growthTxt}\n\n"${ment.wit}"\n\n💡 ${ment.tip}\n\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}\n━━━━━━━━━━━━━━━━\n${new Date().toLocaleDateString("ko-KR")} · pu333.kr`;
+
+    // 클립보드 복사
     try{await navigator.clipboard.writeText(txt);}
-    catch(e){const el=document.createElement("textarea");el.value=txt;document.body.appendChild(el);el.select();document.execCommand("copy");document.body.removeChild(el);}
+    catch(e){
+      const el=document.createElement("textarea");
+      el.value=txt;document.body.appendChild(el);
+      el.select();document.execCommand("copy");
+      document.body.removeChild(el);
+    }
+
+    // 카카오톡 열기 (모바일)
+    const encodedTxt = encodeURIComponent(txt);
+    const kakaoUrl = `kakaolink://send?msg=${encodedTxt}`;
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if(isMobile){
+      window.location.href = kakaoUrl;
+      setTimeout(()=>{
+        // 앱 없으면 카톡 다운로드 페이지
+      }, 1500);
+    }
     setCopied(true);setTimeout(()=>setCopied(false),3000);
   }
 
@@ -1047,7 +1045,7 @@ body{background:#f0ede8;font-family:'Noto Sans KR',sans-serif;padding:20px;}
               }}>
                 {copied?"✅ 복사됨!":"💬 카톡 공유"}<br/>
                 <span style={{fontSize:9,fontWeight:600,opacity:0.7}}>
-                  {copied?"카톡에 붙여넣기!":"결과 텍스트 복사"}
+                  {copied?"카톡 열고 붙여넣기!":"복사+카톡 자동실행"}
                 </span>
               </button>
             </div>
