@@ -8,8 +8,8 @@ const font="'Apple SD Gothic Neo','Noto Sans KR',sans-serif";
 
 // ─── 대분류 ───────────────────────────────────────────────────────────────────
 const mainType = {
-  교타자: {
-    emoji:"🏏", color:"#4fcfa0",
+  소비형: {
+    emoji:"🚀", color:"#4fcfa0",
     goal:"목표 — 찌우기 · 흡수력 높이기",
     direction:"찌는 음식 · 소화효소 · 유산균 중심",
     food:["칼로리 밀도 높은 음식 위주 (견과류·아보카도·달걀·치즈)","따뜻하고 부드러운 찌는 음식 (죽·찜·국밥)","소량씩 자주 먹이기 — 하루 5~6회","차가운 음식·기름진 음식·밀가루 줄이기","소화 잘 되는 단백질 (두부·달걀찜·흰살생선)"],
@@ -17,19 +17,21 @@ const mainType = {
     exercise:{title:"소화 돕고 근육 쌓기 중심",caution:"격렬한 유산소 금물! 운동 후 30분 내 고칼로리 간식 필수!",ratio:[{name:"스트레칭",pct:40,color:"#4fcfa0",desc:"소화기 자극·식욕 촉진. 식후 10~15분 가벼운 스트레칭이 흡수율을 높입니다."},{name:"소근육\n근력",pct:35,color:"#4f8ef7",desc:"팔굽혀펴기·철봉·밴드운동. 작은 근육부터 단계적으로 쌓습니다."},{name:"벌크업",pct:20,color:"#f7d24f",desc:"스쿼트·런지 가볍게. 살이 붙을 근육 자극이 목적입니다."},{name:"유산소",pct:5,color:"#f76f8e",desc:"산책 수준만. 에너지 소모를 최소화하는 게 핵심입니다."}]},
     life:["무리한 운동은 금물 — 에너지 소모 줄이기","식사 분위기를 따뜻하고 편안하게","강요 없이 즐거운 식사 환경 만들기"],
     caution:"강제로 많이 먹이면 역효과! 흡수력을 먼저 키우는 게 순서입니다.",
+    tag:"찌우기 필요",
   },
-  클린업: {
-    emoji:"⚾", color:"#4f8ef7",
-    goal:"목표 — 지금 이 상태 유지하기",
+  균형형: {
+    emoji:"⚖️", color:"#4f8ef7",
+    goal:"목표 — 현상태 관리",
     direction:"균형 식단 · 영양제로 컨디션 관리",
     food:["규칙적인 3끼 + 건강한 간식 유지","단백질·탄수화물·지방의 균형 잡힌 식단","다양한 색깔의 채소·과일 매일 섭취","잡곡밥·고구마 등 복합 탄수화물 위주","가공식품·인스턴트 줄이기"],
     supplement:["종합비타민 — 전반적 균형 유지","오메가3 — 두뇌 발달·집중력","비타민 D — 뼈 성장·면역","유산균 — 장 건강 예방적 관리","마그네슘 — 수면·근육 회복"],
     exercise:{title:"균형 잡힌 전신 컨디션 유지",caution:"주 3~4회, 40~60분이 이상적. 운동 후 충분한 수면으로 성장호르몬 극대화!",ratio:[{name:"스트레칭",pct:25,color:"#4fcfa0",desc:"준비·마무리 철저히. 유연성 유지가 부상 예방과 성장에 모두 도움됩니다."},{name:"소근육\n근력",pct:30,color:"#4f8ef7",desc:"코어·균형감 중심. 전신 근육을 고르게 자극해 균형 잡힌 성장을 만듭니다."},{name:"벌크업",pct:20,color:"#f7d24f",desc:"전신 복합 운동으로 근육 밀도 높이기. 지금 체형을 탄탄하게 유지합니다."},{name:"유산소",pct:25,color:"#f76f8e",desc:"심폐 기능 유지. 땀 흘리는 활동을 꾸준히 해줘야 이 균형이 지속됩니다."}]},
     life:["규칙적인 운동으로 현재 상태 유지","충분한 수면 — 성장호르몬 분비 핵심","수분 섭취 충분히"],
     caution:"지금 상태가 가장 이상적입니다. 과도한 영양제나 다이어트는 오히려 균형을 깹니다.",
+    tag:"현상태 관리",
   },
-  슬러거: {
-    emoji:"💪", color:"#f76f8e",
+  저장형: {
+    emoji:"🏦", color:"#f76f8e",
     goal:"목표 — 대사 높이기 · 체지방 관리",
     direction:"유산소 운동 · 저탄고단 · 대사 촉진",
     food:["정제 탄수화물 줄이고 잡곡으로 교체","고단백 저지방 위주 식단 (닭가슴살·두부·달걀)","포만감 높은 채소·식이섬유 먼저 먹기","야식·간식 시간대 조절 (저녁 7시 이후 금지)","천천히 꼭꼭 씹어 먹기 — 20분 이상"],
@@ -37,20 +39,21 @@ const mainType = {
     exercise:{title:"대사 높이고 체지방 태우기 중심",caution:"주 5회 이상, 하루 40분 이상 땀 흘릴 강도로. 쉬는 날도 산책 30분은 필수!",ratio:[{name:"스트레칭",pct:10,color:"#4fcfa0",desc:"준비·마무리만 간단히. 유산소와 근력에 시간을 더 투자하세요."},{name:"소근육\n근력",pct:15,color:"#4f8ef7",desc:"코어 강화 위주. 기초대사량을 올려 쉬는 동안에도 칼로리가 소모되게 합니다."},{name:"벌크업",pct:10,color:"#f7d24f",desc:"체지방 관리 우선. 과도한 근비대는 지금 단계에서 불필요합니다."},{name:"유산소",pct:65,color:"#f76f8e",desc:"인터벌 트레이닝 효과적. 빠르게 1분 + 쉬기 1분 반복으로 대사를 끌어올리세요."}]},
     life:["유산소 운동 강화 — 걷기·수영·자전거·줄넘기","하루 30분 이상 땀 흘리는 활동","엘리베이터 대신 계단, 생활 속 활동량 늘리기"],
     caution:"성장기 아이에게 무리한 식이 제한은 금물! 질 좋은 음식으로 배를 채우는 방향으로 접근하세요.",
+    tag:"살빼기 필요",
   },
 };
 
 // ─── 세분류 ───────────────────────────────────────────────────────────────────
 const subType = {
-  결핍형: {emoji:"🫙",color:"#94a3b8",main:"교타자",codes:["111","112","121","211"],shortDesc:"흡수·연소·축적 세 축 모두 낮음",desc:"영양이 들어오는 양 자체가 부족합니다.",plus:"소화효소를 최우선으로 — 영양이 들어올 통로부터 열어야 합니다."},
-  버너형: {emoji:"🔥",color:"#f97316",main:"교타자",codes:["331","231","321"],shortDesc:"흡수↑ 연소↑↑ 축적↓ — 빠르게 태워버리는 체질",desc:"흡수는 잘 되지만 에너지를 너무 빠르게 태워버려 살이 붙지 않습니다.",plus:"고칼로리 간식을 하루 2~3회 추가 — 태워도 남을 만큼 넣어줘야 합니다."},
-  역류형: {emoji:"🌀",color:"#a78bfa",main:"교타자",codes:["131","132","133"],shortDesc:"흡수↓ 연소·축적 불안정",desc:"흡수가 안 되니 연소도 축적도 불안정합니다.",plus:"유산균·소화효소 집중 — 장 환경 개선이 최우선입니다."},
-  빈그릇형: {emoji:"🏺",color:"#67e8f9",main:"교타자",codes:["311","312"],shortDesc:"흡수↑ 연소↓ 축적↓ — 흡수는 되는데 어디로 가는지 모름",desc:"흡수는 잘 되는데 연소도 축적도 안 됩니다.",plus:"비타민 B군 집중 — 흡수된 영양이 에너지로 전환되도록 대사 경로를 열어줍니다."},
-  항온형: {emoji:"🌿",color:"#4ade80",main:"클린업",codes:["222","221","212","122"],shortDesc:"세 축 모두 보통 — 가장 안정적인 균형 체질",desc:"흡수·연소·축적이 모두 균형 잡혀 있습니다.",plus:"지금 이 상태가 이상적입니다. 규칙적인 식사와 수면만 잘 지켜주세요."},
-  엔진형: {emoji:"⚡",color:"#fbbf24",main:"클린업",codes:["333","323"],shortDesc:"흡수↑ 연소↑ 축적↑ — 세 축 모두 활발",desc:"흡수·연소·축적이 모두 강합니다. 성장기에 가장 이상적인 체질입니다.",plus:"활동량에 맞는 충분한 식사량이 핵심입니다."},
-  활화산형: {emoji:"🌋",color:"#fb923c",main:"클린업",codes:["332","322","232"],shortDesc:"흡수·연소 강 축적 보통 — 건강한 마름 경계",desc:"흡수와 연소가 강하고 축적은 보통입니다.",plus:"고칼로리 간식을 규칙적으로 추가 — 의식적으로 더 먹어야 균형이 유지됩니다."},
-  저장고형: {emoji:"🏦",color:"#f472b6",main:"슬러거",codes:["113","213","313"],shortDesc:"연소↓ 축적↑↑ — 조금 먹어도 잘 찜",desc:"흡수력에 관계없이 축적력이 매우 강합니다.",plus:"식이섬유·유산균 집중 — 장내 환경을 개선해 과도한 축적을 조절합니다."},
-  둑형: {emoji:"🌊",color:"#38bdf8",main:"슬러거",codes:["233","223","123"],shortDesc:"연소↓ 축적↑ — 먹은 게 그대로 쌓임",desc:"연소가 낮고 축적이 강합니다. 먹은 것이 그대로 체지방으로 쌓입니다.",plus:"유산소 운동이 최우선 — 낮은 연소력을 운동으로 끌어올리는 것이 핵심입니다."},
+  결핍형: {emoji:"🫙",color:"#94a3b8",main:"소비형",codes:["111","112","121","211"],shortDesc:"흡수·연소·축적 세 축 모두 낮음",desc:"영양이 들어오는 양 자체가 부족합니다.",plus:"소화효소를 최우선으로 — 영양이 들어올 통로부터 열어야 합니다."},
+  버너형: {emoji:"🔥",color:"#f97316",main:"소비형",codes:["331","231","321"],shortDesc:"흡수↑ 연소↑↑ 축적↓ — 빠르게 태워버리는 체질",desc:"흡수는 잘 되지만 에너지를 너무 빠르게 태워버려 살이 붙지 않습니다.",plus:"고칼로리 간식을 하루 2~3회 추가 — 태워도 남을 만큼 넣어줘야 합니다."},
+  역류형: {emoji:"🌀",color:"#a78bfa",main:"소비형",codes:["131","132","133"],shortDesc:"흡수↓ 연소·축적 불안정",desc:"흡수가 안 되니 연소도 축적도 불안정합니다.",plus:"유산균·소화효소 집중 — 장 환경 개선이 최우선입니다."},
+  빈그릇형: {emoji:"🏺",color:"#67e8f9",main:"소비형",codes:["311","312"],shortDesc:"흡수↑ 연소↓ 축적↓ — 흡수는 되는데 어디로 가는지 모름",desc:"흡수는 잘 되는데 연소도 축적도 안 됩니다.",plus:"비타민 B군 집중 — 흡수된 영양이 에너지로 전환되도록 대사 경로를 열어줍니다."},
+  항온형: {emoji:"🌿",color:"#4ade80",main:"균형형",codes:["222","221","212","122"],shortDesc:"세 축 모두 보통 — 가장 안정적인 균형 체질",desc:"흡수·연소·축적이 모두 균형 잡혀 있습니다.",plus:"지금 이 상태가 이상적입니다. 규칙적인 식사와 수면만 잘 지켜주세요."},
+  엔진형: {emoji:"⚡",color:"#fbbf24",main:"균형형",codes:["333","323"],shortDesc:"흡수↑ 연소↑ 축적↑ — 세 축 모두 활발",desc:"흡수·연소·축적이 모두 강합니다. 성장기에 가장 이상적인 체질입니다.",plus:"활동량에 맞는 충분한 식사량이 핵심입니다."},
+  활화산형: {emoji:"🌋",color:"#fb923c",main:"균형형",codes:["332","322","232"],shortDesc:"흡수·연소 강 축적 보통 — 건강한 마름 경계",desc:"흡수와 연소가 강하고 축적은 보통입니다.",plus:"고칼로리 간식을 규칙적으로 추가 — 의식적으로 더 먹어야 균형이 유지됩니다."},
+  저장고형: {emoji:"🏦",color:"#f472b6",main:"저장형",codes:["113","213","313"],shortDesc:"연소↓ 축적↑↑ — 조금 먹어도 잘 찜",desc:"흡수력에 관계없이 축적력이 매우 강합니다.",plus:"식이섬유·유산균 집중 — 장내 환경을 개선해 과도한 축적을 조절합니다."},
+  둑형: {emoji:"🌊",color:"#38bdf8",main:"저장형",codes:["233","223","123"],shortDesc:"연소↓ 축적↑ — 먹은 게 그대로 쌓임",desc:"연소가 낮고 축적이 강합니다. 먹은 것이 그대로 체지방으로 쌓입니다.",plus:"유산소 운동이 최우선 — 낮은 연소력을 운동으로 끌어올리는 것이 핵심입니다."},
 };
 
 // ─── 코드 매핑 ────────────────────────────────────────────────────────────────
@@ -70,33 +73,33 @@ for(let a=1;a<=3;a++) for(let b=1;b<=3;b++) for(let c=1;c<=3;c++){
 
 // ─── 27가지 멘트 ──────────────────────────────────────────────────────────────
 const codeMents = {
-  "111":{wit:"먹어도 먹어도 어디 가는지 모름. 몸이 블랙홀",tip:"소화효소 하나로 흡수 문 열면 게임 체인저!"},
-  "112":{wit:"먹는 건 취미. 살 찌는 건 남 얘기",tip:"유산균으로 장 깨우면 영양 흡수 신세계 등극!"},
-  "121":{wit:"식욕도 없고 소화도 안 됨. 위장이 휴가 중",tip:"아연 하나로 식욕 스위치 켜면 별세계 진입!"},
-  "211":{wit:"잘 먹는 척하지만 몸은 아무것도 못 받음",tip:"따뜻한 음식 습관만으로 흡수력 최강 등극!"},
-  "331":{wit:"살? 그런 거 모름. 먹으면 바로 연기됨 🔥",tip:"고칼로리 간식 하루 3번이면 근육맨 등극!"},
-  "231":{wit:"잘 흡수하고 바로 태움. 몸이 24시간 난로",tip:"견과류·아보카도로 칼로리 올리면 파워업 완성!"},
-  "321":{wit:"많이 먹어도 날씬. 친구들이 제일 부러워하는 타입",tip:"근력 운동 더하면 최강 스포츠 체질 완성!"},
-  "131":{wit:"들어오기 싫다는 영양소와 매일 협상 중",tip:"유산균+소화효소 세트면 장 환경 혁명 가능!"},
-  "132":{wit:"소화기가 파업 선언. 먹어도 흡수 거부",tip:"식전 따뜻한 물 한 컵으로 소화기 레벨업!"},
-  "133":{wit:"먹는 족족 그냥 통과. 위장이 고속도로",tip:"꼭꼭 씹기만 해도 흡수율 폭발적으로 올라감!"},
-  "311":{wit:"흡수는 천재. 저장은 꽝. 에너지 행방불명",tip:"비타민 B군으로 에너지 전환 경로 열면 최강!"},
-  "312":{wit:"잘 받아들이는데 쌓이질 않음. 모래성 체질",tip:"단백질 식사 후 스쿼트 10개면 근육 장착 시작!"},
-  "222":{wit:"딱 평균. 근데 그게 제일 어려운 거임 💪",tip:"종합비타민 하나로 이미 상위 1% 관리 중!"},
-  "221":{wit:"균형의 신. 먹는 것도 쓰는 것도 딱 맞음",tip:"오메가3 더하면 두뇌까지 완전체 등극!"},
-  "212":{wit:"몸이 알아서 다 조절함. 자동관리 체질",tip:"수면만 지키면 성장호르몬이 알아서 최강 만들어줌!"},
-  "122":{wit:"조금 덜 받아도 잘 버팀. 효율의 달인",tip:"비타민 D 하나면 면역까지 무적 체질 완성!"},
-  "333":{wit:"먹고 쓰고 쌓고. 다 잘함. 그냥 인간 엔진 ⚡",tip:"충분히 먹기만 해도 이미 운동선수 체질 완성!"},
-  "323":{wit:"흡수·연소·축적 풀옵션. 운동선수 기본 스펙",tip:"칼슘+비타민 D 추가하면 뼈까지 철갑 완성!"},
-  "332":{wit:"에너지 넘치는데 살은 안 찜. 인간 화로 🌋",tip:"운동 후 30분 내 단백질 간식으로 근육맨 등극!"},
-  "322":{wit:"잘 먹고 잘 태움. 체중계 숫자가 안 변함",tip:"마그네슘으로 회복 속도 올리면 슈퍼 선수 등극!"},
-  "232":{wit:"보통으로 받아서 확 태움. 몸이 항상 웜업 중",tip:"고칼로리 간식으로 연료 채우면 무한 에너지 등극!"},
-  "113":{wit:"조금만 먹어도 몸이 저장함. 절약 본능 만렙 🏦",tip:"유산소+식이섬유로 대사 깨우면 체지방 관리 고수!"},
-  "213":{wit:"흡수 보통인데 저장은 프로. 알뜰 체질",tip:"잡곡밥으로만 바꿔도 대사 혁명 시작!"},
-  "313":{wit:"잘 흡수하고 꽁꽁 쌓음. 몸이 냉동창고",tip:"줄넘기 20분이면 냉동창고에서 화덕으로 레벨업!"},
-  "233":{wit:"먹은 게 어디 안 감. 몸이 다 기억함 🌊",tip:"유산소 주 5회면 기억력 좋은 몸도 태울 수 있음!"},
-  "223":{wit:"태우기 싫어하는 몸. 에너지 저축왕",tip:"천천히 먹기+야식 금지만으로 체질 개조 가능!"},
-  "123":{wit:"흡수는 적은데 저장은 철저. 알뜰의 끝판왕",tip:"단백질 식단으로 체지방 대신 근육 채우면 역대급!"},
+  "111":{emoji:"🫙",nick:"텅빈창고",wit:"먹어도 먹어도 어디 가는지 모름. 몸이 블랙홀",tip:"소화효소 하나로 흡수 문 열면 게임 체인저!"},
+  "112":{emoji:"🍃",nick:"깃털몸매",wit:"먹는 건 취미. 살 찌는 건 남 얘기",tip:"유산균으로 장 깨우면 영양 흡수 신세계 등극!"},
+  "121":{emoji:"😶",nick:"식욕실종",wit:"식욕도 없고 소화도 안 됨. 위장이 휴가 중",tip:"아연 하나로 식욕 스위치 켜면 별세계 진입!"},
+  "211":{emoji:"💸",nick:"지출본능",wit:"잘 먹는 척하지만 몸은 아무것도 못 받음",tip:"따뜻한 음식 습관만으로 흡수력 최강 등극!"},
+  "331":{emoji:"🚀",nick:"소비대왕",wit:"살? 그런 거 모름. 먹으면 바로 연기됨 🔥",tip:"고칼로리 간식 하루 3번이면 근육맨 등극!"},
+  "231":{emoji:"💨",nick:"연기체질",wit:"잘 흡수하고 바로 태움. 몸이 24시간 난로",tip:"견과류·아보카도로 칼로리 올리면 파워업 완성!"},
+  "321":{emoji:"🪄",nick:"천생날씬",wit:"많이 먹어도 날씬. 친구들이 제일 부러워하는 타입",tip:"근력 운동 더하면 최강 스포츠 체질 완성!"},
+  "131":{emoji:"🌪️",nick:"영양미로",wit:"들어오기 싫다는 영양소와 매일 협상 중",tip:"유산균+소화효소 세트면 장 환경 혁명 가능!"},
+  "132":{emoji:"🤢",nick:"소화파업",wit:"소화기가 파업 선언. 먹어도 흡수 거부",tip:"식전 따뜻한 물 한 컵으로 소화기 레벨업!"},
+  "133":{emoji:"🚄",nick:"무사통과",wit:"먹는 족족 그냥 통과. 위장이 고속도로",tip:"꼭꼭 씹기만 해도 흡수율 폭발적으로 올라감!"},
+  "311":{emoji:"🕳️",nick:"새는구멍",wit:"흡수는 천재. 저장은 꽝. 에너지 행방불명",tip:"비타민 B군으로 에너지 전환 경로 열면 최강!"},
+  "312":{emoji:"🏜️",nick:"모래성몸",wit:"잘 받아들이는데 쌓이질 않음. 모래성 체질",tip:"단백질 식사 후 스쿼트 10개면 근육 장착 시작!"},
+  "222":{emoji:"⚖️",nick:"완벽균형",wit:"딱 평균. 근데 그게 제일 어려운 거임 💪",tip:"종합비타민 하나로 이미 상위 1% 관리 중!"},
+  "221":{emoji:"🎯",nick:"딱맞춤형",wit:"균형의 신. 먹는 것도 쓰는 것도 딱 맞음",tip:"오메가3 더하면 두뇌까지 완전체 등극!"},
+  "212":{emoji:"🔄",nick:"자동조절",wit:"몸이 알아서 다 조절함. 자동관리 체질",tip:"수면만 지키면 성장호르몬이 알아서 최강 만들어줌!"},
+  "122":{emoji:"🌿",nick:"효율달인",wit:"조금 덜 받아도 잘 버팀. 효율의 달인",tip:"비타민 D 하나면 면역까지 무적 체질 완성!"},
+  "333":{emoji:"⚙️",nick:"인간엔진",wit:"먹고 쓰고 쌓고. 다 잘함. 그냥 인간 엔진 ⚡",tip:"충분히 먹기만 해도 이미 운동선수 체질 완성!"},
+  "323":{emoji:"🏆",nick:"선수체질",wit:"흡수·연소·축적 풀옵션. 운동선수 기본 스펙",tip:"칼슘+비타민 D 추가하면 뼈까지 철갑 완성!"},
+  "332":{emoji:"🌡️",nick:"인간화로",wit:"에너지 넘치는데 살은 안 찜. 인간 화로 🌋",tip:"운동 후 30분 내 단백질 간식으로 근육맨 등극!"},
+  "322":{emoji:"🎽",nick:"균형운동",wit:"잘 먹고 잘 태움. 체중계 숫자가 안 변함",tip:"마그네슘으로 회복 속도 올리면 슈퍼 선수 등극!"},
+  "232":{emoji:"🔋",nick:"항상웜업",wit:"보통으로 받아서 확 태움. 몸이 항상 웜업 중",tip:"고칼로리 간식으로 연료 채우면 무한 에너지 등극!"},
+  "113":{emoji:"🏦",nick:"절약본능",wit:"조금만 먹어도 몸이 저장함. 절약 본능 만렙 🏦",tip:"유산소+식이섬유로 대사 깨우면 체지방 관리 고수!"},
+  "213":{emoji:"🪣",nick:"알뜰체질",wit:"흡수 보통인데 저장은 프로. 알뜰 체질",tip:"잡곡밥으로만 바꿔도 대사 혁명 시작!"},
+  "313":{emoji:"🧊",nick:"냉동창고",wit:"잘 흡수하고 꽁꽁 쌓음. 몸이 냉동창고",tip:"줄넘기 20분이면 냉동창고에서 화덕으로 레벨업!"},
+  "233":{emoji:"📦",nick:"적재본능",wit:"먹은 게 어디 안 감. 몸이 다 기억함 🌊",tip:"유산소 주 5회면 기억력 좋은 몸도 태울 수 있음!"},
+  "223":{emoji:"🛢️",nick:"저축대왕",wit:"태우기 싫어하는 몸. 에너지 저축왕",tip:"천천히 먹기+야식 금지만으로 체질 개조 가능!"},
+  "123":{emoji:"🔒",nick:"철벽저장",wit:"흡수는 적은데 저장은 철저. 알뜰의 끝판왕",tip:"단백질 식단으로 체지방 대신 근육 채우면 역대급!"},
 };
 
 // ─── 성장 기준치 ──────────────────────────────────────────────────────────────
@@ -216,13 +219,13 @@ function analyze(pAns,kAns) {
   const norm=v=>v<=-thr?1:v>=thr?3:v<0?1:v===0?2:3;
   const code=`${norm(a)}${norm(b)}${norm(c)}`;
   const sub=codeMap[code]||"항온형";
-  const main=(subType[sub]&&subType[sub].main)||"클린업";
+  const main=(subType[sub]&&subType[sub].main)||"균형형";
   return {code,sub,main,scores:{absorb:norm(a),burn:norm(b),store:norm(c)}};
 }
 
 // ─── 분포 데이터 ──────────────────────────────────────────────────────────────
 const distData={"111":3,"112":2,"121":3,"211":2,"331":5,"231":4,"321":4,"131":3,"132":2,"133":2,"311":3,"312":2,"222":8,"221":5,"212":4,"122":4,"333":5,"323":4,"332":5,"322":4,"232":3,"113":3,"213":2,"313":2,"233":5,"223":4,"123":3};
-const codeColor=code=>{const s=codeMap[code],m=subType[s]?.main;return m==="교타자"?"#4fcfa0":m==="클린업"?GOLD:"#f76f8e";};
+const codeColor=code=>{const s=codeMap[code],m=subType[s]?.main;return m==="소비형"?"#4fcfa0":m==="균형형"?GOLD:"#f76f8e";};
 const distGrid=[["111","112","113","121","122","123","131","132","133"],["211","212","213","221","222","223","231","232","233"],["311","312","313","321","322","323","331","332","333"]];
 
 // ─── AI 호출 ─────────────────────────────────────────────────────────────────
@@ -328,8 +331,9 @@ export default function App() {
     const si=subType[result.sub]||subType["항온형"];
     const ment=codeMents[result.code]||{wit:"나만의 특별한 체질",tip:"피지컬333 Test로 맞춤 관리 시작!"};
     const bar=n=>"●".repeat(n)+"○".repeat(3-n);
-    const growthTxt=(birth&&heightVal&&weightVal)?`\n키 ${heightVal}cm · 몸무게 ${weightVal}kg · 만 ${parseInt(birth)}세`:"";
-    const txt=`${si.emoji} ${result.sub} ${result.code} | 피지컬333 TEST\n${result.main} · PHYSICAL UP\n\n"${ment.wit}"\n💡 ${ment.tip}\n\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}${growthTxt}\n\n👉 pu333.kr`;
+    const ageInfo=birth.length===6?calcAgeFromShort(birth):null;
+    const growthTxt=(ageInfo&&heightVal&&weightVal)?`\n키 ${heightVal}cm · 몸무게 ${weightVal}kg · ${ageInfo.display}`:"";
+    const txt=`        PHYSICAL UP\n          333TEST\n\n${ment.emoji} ${result.code} ${result.main} ${result.sub}\n\n"${ment.wit}"\n💡 ${ment.tip}\n\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}${growthTxt}\n\n          👉 pu333.kr`;
 
     try{ await navigator.clipboard.writeText(txt); }
     catch(e){
@@ -348,7 +352,7 @@ export default function App() {
   function handleDownload(){
     if(!result) return;
     setDownloading(true);
-    const mi=mainType[result.main]||mainType["클린업"];
+    const mi=mainType[result.main]||mainType["균형형"];
     const si=subType[result.sub]||subType["항온형"];
     const ment=codeMents[result.code]||{wit:"나만의 특별한 체질 코드",tip:"피지컬333 Test로 맞춤 관리 시작!"};
     const bar=n=>"●".repeat(n)+"○".repeat(3-n);
@@ -591,9 +595,13 @@ function saveHtml(){
 
     const blob=new Blob([html],{type:"text/html;charset=utf-8"});
     const url=URL.createObjectURL(blob);
-    setDownloading(false);
-    // 같은 탭에서 열기 - 모바일에서 가장 확실한 방법
-    window.location.href=url;
+    const a=document.createElement("a");
+    a.href=url;
+    a.download=`피지컬333_${result.sub}_${result.code}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(()=>{URL.revokeObjectURL(url);setDownloading(false);},1000);
   }
 
 
@@ -807,7 +815,7 @@ function saveHtml(){
 
   // ── RESULT ─────────────────────────────────────────────────────────────────
   if(step==="result"&&result){
-    const mi=mainType[result.main]||mainType["클린업"];
+    const mi=mainType[result.main]||mainType["균형형"];
     const si=subType[result.sub]||subType["항온형"];
     const ment=codeMents[result.code]||{wit:"나만의 특별한 체질 코드",tip:"피지컬333 Test로 맞춤 관리 시작!"};
     const bar=n=>"●".repeat(n)+"○".repeat(3-n);
@@ -821,8 +829,8 @@ function saveHtml(){
     const ageDisplay = ageInfo ? ageInfo.display : "";
     const nameDisplay = childName ? `${childName} 선수` : "우리 아이";
     const hTarget=90;
-    const wTarget=result.main==="슬러거"?15:result.main==="교타자"?85:90;
-    const wTargetLabel=result.main==="슬러거"?"상위15%관리":result.main==="교타자"?"상위15%목표":"상위10%목표";
+    const wTarget=result.main==="저장형"?15:result.main==="소비형"?85:90;
+    const wTargetLabel=result.main==="저장형"?"상위15%관리":result.main==="소비형"?"상위15%목표":"상위10%목표";
     const bands=[{l:"3",p:3},{l:"10",p:10},{l:"25",p:25},{l:"50",p:50},{l:"75",p:75},{l:"90",p:90},{l:"97",p:97}];
 
     return (
@@ -862,10 +870,14 @@ function saveHtml(){
             </div>
             {/* 대분류+세분류 붙여서 */}
             <div style={{marginBottom:10}}>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginBottom:6}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginBottom:8}}>
                 <span style={{fontSize:20}}>{mi.emoji}</span>
                 <span style={{color:GOLD2,fontSize:20,fontWeight:800}}>{result.main}</span>
                 <span style={{color:si.color,fontSize:20,fontWeight:800}}>{si.emoji} {result.sub.endsWith('형')?result.sub:result.sub+'형'}</span>
+              </div>
+              {/* 4글자 별명 배지 */}
+              <div style={{display:"inline-block",padding:"4px 18px",borderRadius:20,background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.3)"}}>
+                <span style={{color:GOLD,fontSize:13,fontWeight:700,letterSpacing:2}}>{ment.emoji} {ment.nick}</span>
               </div>
             </div>
             <p style={{color:MUTED,fontSize:13,lineHeight:1.7,margin:0}}>{si.shortDesc}</p>
@@ -879,7 +891,7 @@ function saveHtml(){
 
               {[
                 {label:"키",value:parseFloat(heightVal),unit:"cm",avg:gd.stdH,mine:parseFloat(heightVal),target:gd.targetH,color:"#4fcfa0",isSlug:false},
-                {label:"몸무게",value:parseFloat(weightVal),unit:"kg",avg:gd.stdW,mine:parseFloat(weightVal),target:result.main==="슬러거"?gd.targetW15:result.main==="교타자"?gd.targetW85:gd.targetW90,color:"#4f8ef7",isSlug:result.main==="슬러거"}
+                {label:"몸무게",value:parseFloat(weightVal),unit:"kg",avg:gd.stdW,mine:parseFloat(weightVal),target:result.main==="저장형"?gd.targetW15:result.main==="소비형"?gd.targetW85:gd.targetW90,color:"#4f8ef7",isSlug:result.main==="저장형"}
               ].map(ax=>{
                 // 3개 값을 정렬해서 위치 계산
                 const vals=[ax.avg,ax.mine,ax.target];
@@ -958,7 +970,7 @@ function saveHtml(){
             <div style={{color:GOLD,fontSize:11,marginBottom:6,fontWeight:700,letterSpacing:1}}>📊 또래 아이들 체질 분포도</div>
             <div style={{color:MUTED,fontSize:10,marginBottom:14}}>⭐ 표시가 우리 아이 위치입니다</div>
             <div style={{display:"flex",gap:10,marginBottom:12,justifyContent:"center"}}>
-              {[["교타자","#4fcfa0"],["클린업",GOLD],["슬러거","#f76f8e"]].map(([n,c])=>(
+              {[["소비형","#4fcfa0"],["균형형",GOLD],["저장형","#f76f8e"]].map(([n,c])=>(
                 <div key={n} style={{display:"flex",alignItems:"center",gap:4}}>
                   <div style={{width:8,height:8,borderRadius:2,background:c}}/>
                   <span style={{color:MUTED,fontSize:10}}>{n}</span>
@@ -1096,9 +1108,9 @@ function saveHtml(){
               position:"relative",overflow:"hidden",transition:"all 0.3s"
             }}>
               {!downloading&&<div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${GOLD},${GOLD2},${GOLD})`}}/>}
-              {downloading?"✅ 열리는 중!":"🏆 검사지 저장"}<br/>
+              {downloading?"✅ 저장 중!":"🏆 검사지 저장"}<br/>
               <span style={{fontSize:10,fontWeight:600,opacity:0.7}}>
-                {downloading?"새 탭에서 확인하세요":"상세 결과 새 탭으로 보기"}
+                {downloading?"다운로드 확인하세요":"상세결과 HTML 저장"}
               </span>
             </button>
 
