@@ -1126,7 +1126,6 @@ window.onload = function(){ window.print(); }
           <p style={{color:"#1a2a3a",fontSize:11,textAlign:"center",marginTop:14,lineHeight:1.7}}>본 결과는 참고용이며 의학적 진단을 대체하지 않습니다.<br/>성장곡선이 지속 하락 시 소아과 진료를 권장합니다.</p>
         </div>
       </div>
-    </div>
     );
   }
   return null;
