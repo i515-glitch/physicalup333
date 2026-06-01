@@ -678,8 +678,8 @@ function saveHtml(){
             </div>
             <div style={{height:1,background:"linear-gradient(90deg,transparent,#c9a84c,transparent)",marginBottom:14}}/>
             <div style={{textAlign:"center",marginBottom:14}}>
-              <div style={{display:"inline-block",padding:"8px 24px",borderRadius:24,background:"rgba(201,168,76,0.1)",border:"1.5px solid rgba(201,168,76,0.5)",marginBottom:10}}>
-                <span style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:30,fontWeight:900,letterSpacing:8,textDecoration:"none"}}>{result.code}</span>
+              <div style={{display:"inline-block",padding:"8px 24px",borderRadius:24,background:"rgba(201,168,76,0.1)",border:"1.5px solid rgba(201,168,76,0.5)",marginBottom:10,textDecoration:"none"}}>
+                <span style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:30,fontWeight:900,letterSpacing:8,textDecoration:"none",display:"block"}}>{result.code}</span>
               </div>
               <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8,marginBottom:6}}>
                 <span style={{fontSize:16}}>{mi.emoji}</span>
@@ -1337,8 +1337,8 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
               📅 검사일 {new Date().toLocaleDateString("ko-KR")}
             </div>
             {/* 코드 배지 - 투명 + 골드 테두리 */}
-            <div style={{display:"inline-block",padding:"10px 32px",borderRadius:24,marginBottom:16,background:"rgba(201,168,76,0.08)",border:"1.5px solid rgba(201,168,76,0.5)",boxShadow:"0 4px 20px rgba(201,168,76,0.15)"}}>
-              <span style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:32,fontWeight:900,letterSpacing:8,textDecoration:"none"}}>{result.code}</span>
+            <div style={{display:"inline-block",padding:"10px 32px",borderRadius:24,marginBottom:16,background:"rgba(201,168,76,0.08)",border:"1.5px solid rgba(201,168,76,0.5)",boxShadow:"0 4px 20px rgba(201,168,76,0.15)",textDecoration:"none"}}>
+              <span style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:32,fontWeight:900,letterSpacing:8,textDecoration:"none",display:"block"}}>{result.code}</span>
             </div>
             {/* 이모지+4글자 + 대분류 나란히 */}
             <div style={{marginBottom:10}}>
