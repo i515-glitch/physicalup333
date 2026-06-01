@@ -340,9 +340,11 @@ export default function App() {
         window.Kakao.Share.sendDefault({
           objectType:"feed",
           content:{
-            title:`${ment.emoji} ${result.code} ${mi.emoji}${result.main} · ${ment.nick}`,
-            description:`"${shortWit}"\n💡${shortTip}`,
+            title:`${ment.emoji} ${result.code} ${mi.emoji}${result.main} · ${ment.nick} | 피지컬업 333TEST`,
+            description:`"${shortWit}" 💡${shortTip}`,
             imageUrl:"https://pu333.kr/og.png",
+            imageWidth:1200,
+            imageHeight:630,
             link:{
               mobileWebUrl:"https://pu333.kr",
               webUrl:"https://pu333.kr"
@@ -354,8 +356,7 @@ export default function App() {
               mobileWebUrl:"https://pu333.kr",
               webUrl:"https://pu333.kr"
             }
-          }],
-          installTalk:true
+          }]
         });
         return;
       }
