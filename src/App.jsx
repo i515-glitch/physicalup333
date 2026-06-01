@@ -333,8 +333,8 @@ export default function App() {
     const bar=n=>"●".repeat(n)+"○".repeat(3-n);
     const ageInfo=birth.length===6?calcAgeFromShort(birth):null;
     const growthTxt=(ageInfo&&heightVal&&weightVal)?`\n키 ${heightVal}cm · 몸무게 ${weightVal}kg · ${ageInfo.display}`:"";
-    const shortWit=ment.wit.length>20?ment.wit.slice(0,20)+'..':ment.wit;
-    const shortTip=ment.tip.length>20?ment.tip.slice(0,20)+'..':ment.tip;
+    const shortWit=ment.wit.length>16?ment.wit.slice(0,16)+'..':ment.wit;
+    const shortTip=ment.tip.length>16?ment.tip.slice(0,16)+'..':ment.tip;
     const txt=`피지컬업 333TEST\n\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\n"${shortWit}"\n💡${shortTip}${growthTxt}\n\nwww.pu333.kr`;
 
     try{ await navigator.clipboard.writeText(txt); }
@@ -564,7 +564,7 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
 <script>
 function shareKakao(){
-  const txt="피지컬업 333TEST\\n\\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\\n\\"${ment.wit.slice(0,20)}${ment.wit.length>20?'..':''}\\"\\n💡${ment.tip.slice(0,20)}${ment.tip.length>20?'..':''}\\n\\nwww.pu333.kr";
+  const txt="피지컬업 333TEST\\n\\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\\n\\"${ment.wit.slice(0,16)}${ment.wit.length>16?'..':''}\\"\\n💡${ment.tip.slice(0,16)}${ment.tip.length>16?'..':''}\\n\\nwww.pu333.kr";
   if(navigator.clipboard){
     navigator.clipboard.writeText(txt).then(()=>{
       document.getElementById('kakao-msg').style.display='block';
