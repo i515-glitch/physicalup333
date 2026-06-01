@@ -560,23 +560,50 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
 
 </div>
 
+<div style="max-width:600px;margin:20px auto;padding:0 20px 40px;">
+  <button onclick="shareKakao()" style="width:100%;padding:16px;border-radius:12px;background:rgba(254,229,0,0.1);color:#f9e000;font-size:15px;font-weight:800;border:1.5px solid rgba(254,229,0,0.4);cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-bottom:10px;">
+    💬 카톡으로 공유하기<br/>
+    <span style="font-size:11px;opacity:0.7;font-weight:600">결과 + pu333.kr 링크 전송</span>
+  </button>
+  <button onclick="window.print()" style="width:100%;padding:14px;border-radius:12px;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.4);font-size:13px;font-weight:600;border:1px solid rgba(255,255,255,0.1);cursor:pointer;font-family:'Noto Sans KR',sans-serif;">
+    🖨️ 인쇄 / PDF 저장
+  </button>
+</div>
+
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
 <script>
-window.onload = function(){ window.print(); }
+window.addEventListener('load',function(){
+  if(window.Kakao&&!window.Kakao.isInitialized()){
+    window.Kakao.init('8cbfe9e0fb8445c74c55151ad8376feb');
+  }
+});
+function shareKakao(){
+  try{
+    if(!window.Kakao.isInitialized()) window.Kakao.init('8cbfe9e0fb8445c74c55151ad8376feb');
+    window.Kakao.Share.sendDefault({
+      objectType:"feed",
+      content:{
+        title:"${si.emoji} ${result.sub} · ${result.code} | 피지컬333 TEST",
+        description:'"${ment.wit}" 💡 ${ment.tip}',
+        imageUrl:"https://pu333.kr/og.png",
+        link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}
+      },
+      buttons:[{title:"우리 아이도 검사하기 →",link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}}]
+    });
+  }catch(e){
+    alert("카카오톡 공유 실패. 스크린샷으로 공유해주세요.");
+  }
+}
 </script>
 </body></html>`;
 
     const blob=new Blob([html],{type:"text/html;charset=utf-8"});
     const url=URL.createObjectURL(blob);
-    const a=document.createElement("a");
-    a.href=url;
-    a.download=`피지컬333_${result.sub}_${result.code}.html`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    window.open(url,"_blank");
     setTimeout(()=>{
       URL.revokeObjectURL(url);
       setDownloading(false);
-    },2000);
+    },3000);
   }
 
 
@@ -833,6 +860,27 @@ window.onload = function(){ window.print(); }
             <div style={{color:MUTED,fontSize:13,marginTop:4}}>의 체질 코드 분석 결과입니다 ⚾</div>
           </div>
 
+          {/* 코드 메인 카드 */}
+          <div style={{textAlign:"center",padding:"26px 20px",background:"linear-gradient(160deg,#0d1b3e,#0f2050)",border:`1px solid rgba(201,168,76,0.35)`,borderRadius:20,marginBottom:12,boxShadow:"0 8px 40px rgba(201,168,76,0.15)"}}>
+            {/* 검사 날짜 */}
+            <div style={{color:MUTED,fontSize:11,marginBottom:12,letterSpacing:1}}>
+              📅 검사일 {new Date().toLocaleDateString("ko-KR")}
+            </div>
+            {/* 코드 배지 - 투명 + 골드 테두리 */}
+            <div style={{display:"inline-block",padding:"10px 32px",borderRadius:24,marginBottom:16,background:"rgba(201,168,76,0.08)",border:"1.5px solid rgba(201,168,76,0.5)",boxShadow:"0 4px 20px rgba(201,168,76,0.15)"}}>
+              <span style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:32,fontWeight:900,letterSpacing:8}}>{result.code}</span>
+            </div>
+            {/* 대분류+세분류 붙여서 */}
+            <div style={{marginBottom:10}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginBottom:6}}>
+                <span style={{fontSize:20}}>{mi.emoji}</span>
+                <span style={{color:GOLD2,fontSize:20,fontWeight:800}}>{result.main}</span>
+                <span style={{color:si.color,fontSize:20,fontWeight:800}}>{si.emoji} {result.sub}형</span>
+              </div>
+            </div>
+            <p style={{color:MUTED,fontSize:13,lineHeight:1.7,margin:0}}>{si.shortDesc}</p>
+          </div>
+
           {/* 성장 지표 */}
           {gd&&(
             <div style={{...cardStyle,border:"1px solid rgba(201,168,76,0.3)",boxShadow:"0 4px 20px rgba(201,168,76,0.1)"}}>
@@ -898,27 +946,6 @@ window.onload = function(){ window.print(); }
               })}
             </div>
           )}
-
-          {/* 코드 메인 카드 */}
-          <div style={{textAlign:"center",padding:"26px 20px",background:"linear-gradient(160deg,#0d1b3e,#0f2050)",border:`1px solid rgba(201,168,76,0.35)`,borderRadius:20,marginBottom:12,boxShadow:"0 8px 40px rgba(201,168,76,0.15)"}}>
-            {/* 검사 날짜 */}
-            <div style={{color:MUTED,fontSize:11,marginBottom:12,letterSpacing:1}}>
-              📅 검사일 {new Date().toLocaleDateString("ko-KR")}
-            </div>
-            {/* 코드 배지 - 투명 + 골드 테두리 */}
-            <div style={{display:"inline-block",padding:"10px 32px",borderRadius:24,marginBottom:16,background:"rgba(201,168,76,0.08)",border:"1.5px solid rgba(201,168,76,0.5)",boxShadow:"0 4px 20px rgba(201,168,76,0.15)"}}>
-              <span style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:32,fontWeight:900,letterSpacing:8}}>{result.code}</span>
-            </div>
-            {/* 대분류+세분류 붙여서 */}
-            <div style={{marginBottom:10}}>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginBottom:6}}>
-                <span style={{fontSize:20}}>{mi.emoji}</span>
-                <span style={{color:GOLD2,fontSize:20,fontWeight:800}}>{result.main}</span>
-                <span style={{color:si.color,fontSize:20,fontWeight:800}}>{si.emoji} {result.sub}형</span>
-              </div>
-            </div>
-            <p style={{color:MUTED,fontSize:13,lineHeight:1.7,margin:0}}>{si.shortDesc}</p>
-          </div>
 
           {/* 3축 게이지 */}
           <div style={cardStyle}>
@@ -1066,54 +1093,39 @@ window.onload = function(){ window.print(); }
             {loading?<div style={{display:"flex",alignItems:"center",gap:8}}><div style={{width:8,height:8,borderRadius:"50%",background:GOLD}}/><span style={{color:MUTED,fontSize:13}}>3축 데이터 분석 중...</span></div>:<p style={{color:"#8aa8c8",fontSize:13,lineHeight:1.9,margin:0}}>{aiAdvice}</p>}
           </div>
 
-          {/* 저장·공유 버튼 */}
+          {/* 공유 버튼 */}
           <div style={{marginBottom:16}}>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}}>
+            {/* 검사지 저장 */}
+            <button onClick={handleDownload} style={{
+              width:"100%",padding:"16px",borderRadius:12,marginBottom:10,
+              background:downloading?"rgba(79,207,160,0.15)":"linear-gradient(145deg,#0d1b3e,#1a2d5a)",
+              color:downloading?"#4fcfa0":GOLD2,
+              fontSize:14,fontWeight:800,
+              border:downloading?"1.5px solid #4fcfa0":`1.5px solid ${GOLD}`,
+              cursor:"pointer",lineHeight:1.5,
+              position:"relative",overflow:"hidden",transition:"all 0.3s"
+            }}>
+              {!downloading&&<div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${GOLD},${GOLD2},${GOLD})`}}/>}
+              {downloading?"✅ 열리는 중!":"🏆 검사지 저장"}<br/>
+              <span style={{fontSize:10,fontWeight:600,opacity:0.7}}>
+                {downloading?"새 탭에서 확인하세요":"상세 결과 새 탭으로 보기"}
+              </span>
+            </button>
 
-              {/* 검사지 저장 - 상장 느낌 */}
-              <button onClick={handleDownload} style={{
-                padding:"16px 8px",borderRadius:12,
-                background:downloading?"rgba(79,207,160,0.15)":"linear-gradient(145deg,#0d1b3e,#1a2d5a)",
-                color:downloading?"#4fcfa0":GOLD2,
-                fontSize:13,fontWeight:800,
-                border:downloading?"1.5px solid #4fcfa0":`1.5px solid ${GOLD}`,
-                cursor:"pointer",lineHeight:1.5,
-                boxShadow:downloading?"none":"0 4px 16px rgba(13,27,62,0.6)",
-                transition:"all 0.3s",position:"relative",overflow:"hidden"
-              }}>
-                {!downloading&&<div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${GOLD},${GOLD2},${GOLD})`}}/>}
-                {downloading?"✅ 열리는 중!":"🏆 검사지 저장"}<br/>
-                <span style={{fontSize:9,fontWeight:600,opacity:0.7,letterSpacing:0.5}}>
-                  {downloading?"인쇄창에서 PDF 저장":"PDF 저장·보관·공유"}
-                </span>
-              </button>
-
-              {/* 카톡 공유 */}
-              <button onClick={handleShare} style={{
-                padding:"16px 8px",borderRadius:12,
-                background:"rgba(254,229,0,0.1)",
-                color:"#f9e000",
-                fontSize:13,fontWeight:800,
-                border:"1.5px solid rgba(254,229,0,0.35)",
-                cursor:"pointer",lineHeight:1.5,transition:"all 0.3s"
-              }}>
-                💬 카톡 공유<br/>
-                <span style={{fontSize:9,fontWeight:600,opacity:0.7}}>
-                  이미지+링크 카톡 전송
-                </span>
-              </button>
-            </div>
-
-            {/* 카톡 붙여넣기 안내 */}
-            {copied&&(
-              <div style={{padding:"12px 14px",borderRadius:10,marginBottom:10,background:"rgba(254,229,0,0.06)",border:"1px solid rgba(254,229,0,0.2)",textAlign:"center"}}>
-                <div style={{color:"#f9e000",fontSize:13,fontWeight:700,marginBottom:4}}>📸 이미지 저장 중!</div>
-                <div style={{color:MUTED,fontSize:11,lineHeight:1.7}}>
-                  다운로드 폴더에서 이미지 확인 후<br/>
-                  <span style={{color:GOLD,fontSize:11}}>카카오톡 → 사진 첨부로 공유하세요!</span>
-                </div>
-              </div>
-            )}
+            {/* 카톡 공유 */}
+            <button onClick={handleShare} style={{
+              width:"100%",padding:"16px",borderRadius:12,marginBottom:12,
+              background:"rgba(254,229,0,0.1)",
+              color:"#f9e000",
+              fontSize:14,fontWeight:800,
+              border:"1.5px solid rgba(254,229,0,0.35)",
+              cursor:"pointer",lineHeight:1.5,transition:"all 0.3s"
+            }}>
+              💬 카톡 공유<br/>
+              <span style={{fontSize:10,fontWeight:600,opacity:0.7}}>
+                결과 이미지 + pu333.kr 링크 전송
+              </span>
+            </button>
 
             {/* 유료회원 전환 배너 */}
             <div style={{
