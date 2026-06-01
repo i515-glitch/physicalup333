@@ -679,7 +679,19 @@ function saveHtml(){
 
           {/* 카톡공유 + 저장 버튼 */}
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
-            <button onClick={handleShare} style={{padding:"14px 8px",borderRadius:12,background:"#FEE500",color:"#000",fontSize:13,fontWeight:800,border:"none",cursor:"pointer",lineHeight:1.5}}>
+            <button onClick={async()=>{
+              const shortWit=ment.wit.length>16?ment.wit.slice(0,16)+'..':ment.wit;
+              const shortTip=ment.tip.length>16?ment.tip.slice(0,16)+'..':ment.tip;
+              const txt=`피지컬업 333TEST\n\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\n"${shortWit}"\n💡${shortTip}\n\nwww.pu333.kr`;
+              try{await navigator.clipboard.writeText(txt);}
+              catch(e){
+                const el=document.createElement("textarea");
+                el.value=txt;document.body.appendChild(el);
+                el.select();document.execCommand("copy");
+                document.body.removeChild(el);
+              }
+              alert("✅ 복사됐어요!\n카톡 채팅창에 붙여넣기 하세요!");
+            }} style={{padding:"14px 8px",borderRadius:12,background:"#FEE500",color:"#000",fontSize:13,fontWeight:800,border:"none",cursor:"pointer",lineHeight:1.5}}>
               💬 카톡 공유<br/><span style={{fontSize:10,opacity:0.7}}>꾸욱 눌러 복사</span>
             </button>
             <button onClick={()=>{
