@@ -459,7 +459,7 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
     <div class="type-row">
       <div class="main-tag">${result.main}</div>
       <span style="font-size:26px;">${si.emoji}</span>
-      <div class="sub-name">${result.sub.replace(/형$/, '')}</div>
+      <div class="sub-name">${ment.nick}</div>
     </div>
   </div>
   <div class="wit-box">
@@ -534,7 +534,7 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
   </div>
 
   <div class="section">
-    <div class="section-title">✨ ${result.sub} 맞춤 포인트</div>
+    <div class="section-title">✨ ${ment.emoji} {ment.nick} 맞춤 포인트</div>
     <div class="point-box"><div class="point-txt">${si.plus}</div></div>
   </div>
 
@@ -873,7 +873,7 @@ function saveHtml(){
               <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginBottom:8}}>
                 <span style={{fontSize:20}}>{mi.emoji}</span>
                 <span style={{color:GOLD2,fontSize:20,fontWeight:800}}>{result.main}</span>
-                <span style={{color:si.color,fontSize:20,fontWeight:800}}>{si.emoji} {result.sub.endsWith('형')?result.sub:result.sub+'형'}</span>
+                <span style={{color:si.color,fontSize:20,fontWeight:800}}>{ment.nick}</span>
               </div>
               {/* 4글자 별명 배지 */}
               <div style={{display:"inline-block",padding:"4px 18px",borderRadius:20,background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.3)"}}>
@@ -995,7 +995,7 @@ function saveHtml(){
               </div>
             ))}
             <div style={{marginTop:12,padding:"10px",borderRadius:8,background:"rgba(201,168,76,0.05)",border:"1px solid rgba(201,168,76,0.1)"}}>
-              <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:3}}><span style={{color:GOLD2,fontSize:12}}>⭐</span><span style={{color:GOLD2,fontSize:12,fontWeight:700}}>우리 아이 — {result.code} {result.sub}</span></div>
+              <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:3}}><span style={{color:GOLD2,fontSize:12}}>⭐</span><span style={{color:GOLD2,fontSize:12,fontWeight:700}}>우리 아이 — {result.code} {ment.emoji} {ment.nick}</span></div>
               <div style={{color:MUTED,fontSize:11,lineHeight:1.6}}>또래 100명 중 약 <span style={{color:GOLD2,fontWeight:700}}>{distData[result.code]||2}명</span>이 같은 체질 코드예요.{(distData[result.code]||2)>=6?" 가장 흔한 체질 그룹에 속합니다.":(distData[result.code]||2)>=4?" 비교적 일반적인 체질입니다.":" 비교적 드문 체질 유형입니다."}</div>
             </div>
           </div>
@@ -1051,7 +1051,7 @@ function saveHtml(){
           <div style={{...cardStyle,border:`1px solid ${si.color}25`}}>
             <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
               <span style={{fontSize:16}}>{si.emoji}</span>
-              <span style={{color:si.color,fontSize:12,fontWeight:700}}>{result.sub} 맞춤 포인트</span>
+              <span style={{color:si.color,fontSize:12,fontWeight:700}}>{ment.emoji} {ment.nick} 맞춤 포인트</span>
             </div>
             <p style={{color:MUTED,fontSize:13,lineHeight:1.7,margin:0}}>{si.plus}</p>
           </div>
