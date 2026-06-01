@@ -329,14 +329,37 @@ export default function App() {
   async function handleShare(){
     if(!result) return;
     const si=subType[result.sub]||subType["항온형"];
-    const ment=codeMents[result.code]||{wit:"나만의 특별한 체질",tip:"피지컬333 Test로 맞춤 관리 시작!"};
-    const bar=n=>"●".repeat(n)+"○".repeat(3-n);
+    const mi=mainType[result.main]||mainType["균형형"];
+    const ment=codeMents[result.code]||{emoji:"⚖️",nick:"완벽균형",wit:"나만의 특별한 체질",tip:"피지컬333 Test로 맞춤 관리 시작!"};
+    const shortWit=ment.wit.length>20?ment.wit.slice(0,20)+'..':ment.wit;
+    const shortTip=ment.tip.length>20?ment.tip.slice(0,20)+'..':ment.tip;
+
+    // 카카오 SDK 방식 시도
+    try{
+      if(window.Kakao&&window.Kakao.isInitialized()){
+        window.Kakao.Share.sendDefault({
+          objectType:"feed",
+          content:{
+            title:`${ment.emoji} ${result.code} ${mi.emoji}${result.main} · ${ment.nick}`,
+            description:`"${shortWit}"\n💡${shortTip}`,
+            imageUrl:"https://pu333.kr/og.png",
+            link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}
+          },
+          buttons:[{
+            title:"우리 아이 체질 코드 찾기 →",
+            link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}
+          }]
+        });
+        return;
+      }
+    }catch(e){
+      console.log("카카오 SDK 실패, 텍스트 복사로 전환");
+    }
+
+    // 폴백: 텍스트 복사
     const ageInfo=birth.length===6?calcAgeFromShort(birth):null;
     const growthTxt=(ageInfo&&heightVal&&weightVal)?`\n키 ${heightVal}cm · 몸무게 ${weightVal}kg · ${ageInfo.display}`:"";
-    const shortWit=ment.wit.length>16?ment.wit.slice(0,16)+'..':ment.wit;
-    const shortTip=ment.tip.length>16?ment.tip.slice(0,16)+'..':ment.tip;
     const txt=`피지컬업 333TEST\n\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\n"${shortWit}"\n💡${shortTip}${growthTxt}\n\nwww.pu333.kr`;
-
     try{ await navigator.clipboard.writeText(txt); }
     catch(e){
       const el=document.createElement("textarea");
@@ -636,7 +659,7 @@ function saveHtml(){
         <div style={{maxWidth:480,margin:"0 auto"}}>
 
           {/* 헤더 카드 */}
-          <div style={{background:"linear-gradient(145deg,#0d1b3e,#1a2d5a)",borderRadius:16,padding:"24px",marginBottom:12,border:"2px solid #c9a84c",position:"relative",overflow:"hidden"}}>
+          <div id="result-card" style={{background:"linear-gradient(145deg,#0d1b3e,#1a2d5a)",borderRadius:16,padding:"24px",marginBottom:12,border:"2px solid #c9a84c",position:"relative",overflow:"hidden"}}>
             <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:"linear-gradient(90deg,#c9a84c,#e8c76a,#c9a84c)"}}/>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
               <div>
@@ -680,19 +703,42 @@ function saveHtml(){
           {/* 카톡공유 + 저장 버튼 */}
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
             <button onClick={async()=>{
-              const shortWit=ment.wit.length>16?ment.wit.slice(0,16)+'..':ment.wit;
-              const shortTip=ment.tip.length>16?ment.tip.slice(0,16)+'..':ment.tip;
-              const txt=`피지컬업 333TEST\n\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\n"${shortWit}"\n💡${shortTip}\n\nwww.pu333.kr`;
-              try{await navigator.clipboard.writeText(txt);}
-              catch(e){
-                const el=document.createElement("textarea");
-                el.value=txt;document.body.appendChild(el);
-                el.select();document.execCommand("copy");
-                document.body.removeChild(el);
+              try{
+                if(!window.html2canvas){
+                  await new Promise((res,rej)=>{
+                    const s=document.createElement('script');
+                    s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                    s.onload=res;s.onerror=rej;
+                    document.head.appendChild(s);
+                  });
+                }
+                const card=document.getElementById('result-card');
+                const canvas=await window.html2canvas(card,{backgroundColor:'#0d1b3e',scale:2,useCORS:true,logging:false});
+                canvas.toBlob(async(blob)=>{
+                  const file=new File([blob],'피지컬333결과.png',{type:'image/png'});
+                  if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+                    await navigator.share({files:[file],text:'www.pu333.kr'});
+                  } else {
+                    const url=URL.createObjectURL(blob);
+                    const a=document.createElement('a');
+                    a.href=url;a.download='피지컬333결과.png';
+                    a.click();URL.revokeObjectURL(url);
+                    alert('이미지 저장됐어요!\n카톡에서 이미지로 공유해주세요 😊');
+                  }
+                },'image/png');
+              }catch(e){
+                const shortWit=ment.wit.length>16?ment.wit.slice(0,16)+'..':ment.wit;
+                const shortTip=ment.tip.length>16?ment.tip.slice(0,16)+'..':ment.tip;
+                const txt=`피지컬업 333TEST\n\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\n"${shortWit}"\n💡${shortTip}\n\nwww.pu333.kr`;
+                try{await navigator.clipboard.writeText(txt);}catch(e2){
+                  const el=document.createElement('textarea');el.value=txt;
+                  document.body.appendChild(el);el.select();
+                  document.execCommand('copy');document.body.removeChild(el);
+                }
+                alert('✅ 복사됐어요!\n카톡 채팅창에 붙여넣기 하세요!');
               }
-              alert("✅ 복사됐어요!\n카톡 채팅창에 붙여넣기 하세요!");
             }} style={{padding:"14px 8px",borderRadius:12,background:"#FEE500",color:"#000",fontSize:13,fontWeight:800,border:"none",cursor:"pointer",lineHeight:1.5}}>
-              💬 카톡 공유<br/><span style={{fontSize:10,opacity:0.7}}>꾸욱 눌러 복사</span>
+              💬 카톡 공유<br/><span style={{fontSize:10,opacity:0.7}}>결과 이미지 공유</span>
             </button>
             <button onClick={()=>{
               const el=document.createElement("a");
