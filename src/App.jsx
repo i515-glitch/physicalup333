@@ -328,39 +328,21 @@ export default function App() {
     const si=subType[result.sub]||subType["항온형"];
     const ment=codeMents[result.code]||{wit:"나만의 특별한 체질",tip:"피지컬333 Test로 맞춤 관리 시작!"};
     const bar=n=>"●".repeat(n)+"○".repeat(3-n);
+    const growthTxt=(birth&&heightVal&&weightVal)?`\n키 ${heightVal}cm · 몸무게 ${weightVal}kg · 만 ${parseInt(birth)}세`:"";
+    const txt=`⚾ 피지컬333 TEST 결과\n━━━━━━━━━━━━━━━━\nPHYSICAL UP · 피지컬업\n\n${si.emoji} ${result.sub} · ${result.code} · ${result.main}${growthTxt}\n\n"${ment.wit}"\n\n💡 ${ment.tip}\n\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}\n━━━━━━━━━━━━━━━━\n우리 아이 체질 코드 찾기 👇\nhttps://pu333.kr\n━━━━━━━━━━━━━━━━`;
 
-    const doKakao = () => {
-      try {
-        if(!window.Kakao.isInitialized()){
-          window.Kakao.init('8cbfe9e0fb8445c74c55151ad8376feb');
-        }
-        window.Kakao.Share.sendDefault({
-          objectType:"feed",
-          content:{
-            title:`${si.emoji} ${result.sub} · ${result.code} | 피지컬333 TEST`,
-            description:`"${ment.wit}"\n💡 ${ment.tip}\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}`,
-            imageUrl:"https://pu333.kr/og.png",
-            link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}
-          },
-          buttons:[{
-            title:"우리 아이도 검사하기 →",
-            link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}
-          }]
-        });
-      } catch(e){
-        alert("카카오 공유 오류: "+e.message);
-      }
-    };
-
-    if(window.Kakao){
-      doKakao();
-    } else {
-      const script=document.createElement("script");
-      script.src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js";
-      script.onload=doKakao;
-      script.onerror=()=>alert("카카오 SDK 로드 실패");
-      document.head.appendChild(script);
+    try{ await navigator.clipboard.writeText(txt); }
+    catch(e){
+      const el=document.createElement("textarea");
+      el.value=txt;document.body.appendChild(el);
+      el.select();document.execCommand("copy");
+      document.body.removeChild(el);
     }
+    setCopied(true);
+    setTimeout(()=>{
+      window.location.href="kakaotalk://";
+    },300);
+    setTimeout(()=>setCopied(false),4000);
   }
 
   function handleDownload(){
@@ -411,7 +393,7 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
 .ax-d{font-size:14px;letter-spacing:2px;}
 .ax-n{font-size:10px;font-weight:700;margin-top:3px;}
 .btn-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
-.btn-kakao{padding:14px 8px;border-radius:12px;background:rgba(254,229,0,0.1);color:#f9e000;font-size:13px;font-weight:800;border:1.5px solid rgba(254,229,0,0.35);cursor:pointer;font-family:'Noto Sans KR',sans-serif;line-height:1.5;width:100%;}
+.btn-kakao{padding:14px 8px;border-radius:12px;background:#FEE500;color:#000000;font-size:13px;font-weight:800;border:none;cursor:pointer;font-family:'Noto Sans KR',sans-serif;line-height:1.5;width:100%;}
 .btn-save{padding:14px 8px;border-radius:12px;background:linear-gradient(145deg,#0d1b3e,#1a2d5a);color:#e8c76a;font-size:13px;font-weight:800;border:1.5px solid #c9a84c;cursor:pointer;font-family:'Noto Sans KR',sans-serif;line-height:1.5;position:relative;overflow:hidden;width:100%;}
 .btn-save::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#c9a84c,#e8c76a,#c9a84c);}
 
@@ -507,12 +489,16 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
 <div class="btn-wrap">
   <button class="btn-kakao" onclick="shareKakao()">
     💬 카톡 공유<br/>
-    <span style="font-size:10px;opacity:0.7;font-weight:600">이미지+링크 전송</span>
+    <span style="font-size:10px;font-weight:600">복사 후 카톡 열기</span>
   </button>
   <button class="btn-save" onclick="saveHtml()">
     💾 검사지 저장<br/>
-    <span style="font-size:10px;opacity:0.7;font-weight:600">HTML 파일로 보관</span>
+    <span style="font-size:10px;opacity:0.7;font-weight:600">HTML 파일 보관</span>
   </button>
+</div>
+<div id="kakao-msg" style="display:none;background:#FEE500;border-radius:10px;padding:10px 14px;margin-bottom:16px;text-align:center;font-size:12px;font-weight:700;color:#000;font-family:'Noto Sans KR',sans-serif;">
+  ✅ 결과가 복사됐어요!<br/>
+  <span style="font-size:11px;font-weight:500">카카오톡 → 채팅창 → 길게 누르기 → 붙여넣기</span>
 </div>
 <div class="detail-card">
   <div class="detail-header">
@@ -574,27 +560,22 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
 
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
 <script>
-window.addEventListener('load',function(){
-  if(window.Kakao&&!window.Kakao.isInitialized()){
-    window.Kakao.init('8cbfe9e0fb8445c74c55151ad8376feb');
-  }
-});
 function shareKakao(){
-  try{
-    if(!window.Kakao.isInitialized()) window.Kakao.init('8cbfe9e0fb8445c74c55151ad8376feb');
-    window.Kakao.Share.sendDefault({
-      objectType:"feed",
-      content:{
-        title:"${si.emoji} ${result.sub} · ${result.code} | 피지컬333 TEST",
-        description:'"${ment.wit}" 💡 ${ment.tip}',
-        imageUrl:"https://pu333.kr/og.png",
-        link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}
-      },
-      buttons:[{title:"우리 아이도 검사하기 →",link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}}]
-    });
-  }catch(e){
-    alert("카카오톡 공유 실패. 스크린샷으로 공유해주세요.");
-  }
+  const txt="⚾ 피지컬333 TEST 결과\\n━━━━━━━━━━━━━━━━\\nPHYSICAL UP · 피지컬업\\n\\n${si.emoji} ${result.sub} · ${result.code} · ${result.main}\\n\\n\\"${ment.wit}\\"\\n\\n💡 ${ment.tip}\\n\\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}\\n━━━━━━━━━━━━━━━━\\n우리 아이 체질 코드 찾기 👇\\nhttps://pu333.kr\\n━━━━━━━━━━━━━━━━";
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(txt).then(()=>{
+      document.getElementById('kakao-msg').style.display='block';
+      setTimeout(()=>{ window.location.href='kakaotalk://'; },300);
+    }).catch(()=>{ fallbackCopy(txt); });
+  } else { fallbackCopy(txt); }
+}
+function fallbackCopy(txt){
+  const el=document.createElement('textarea');
+  el.value=txt; document.body.appendChild(el);
+  el.select(); document.execCommand('copy');
+  document.body.removeChild(el);
+  document.getElementById('kakao-msg').style.display='block';
+  setTimeout(()=>{ window.location.href='kakaotalk://'; },300);
 }
 function saveHtml(){
   const blob=new Blob([document.documentElement.outerHTML],{type:"text/html;charset=utf-8"});
@@ -1124,15 +1105,15 @@ function saveHtml(){
             {/* 카톡 공유 */}
             <button onClick={handleShare} style={{
               width:"100%",padding:"16px",borderRadius:12,marginBottom:12,
-              background:"rgba(254,229,0,0.1)",
-              color:"#f9e000",
+              background:"#FEE500",
+              color:"#000000",
               fontSize:14,fontWeight:800,
-              border:"1.5px solid rgba(254,229,0,0.35)",
+              border:"none",
               cursor:"pointer",lineHeight:1.5,transition:"all 0.3s"
             }}>
-              💬 카톡 공유<br/>
+              {copied?"✅ 복사됨! 카톡 여세요":"💬 카톡 공유"}<br/>
               <span style={{fontSize:10,fontWeight:600,opacity:0.7}}>
-                결과 이미지 + pu333.kr 링크 전송
+                {copied?"채팅창에 붙여넣기 하세요!":"결과 복사 + 카카오톡 열기"}
               </span>
             </button>
 
