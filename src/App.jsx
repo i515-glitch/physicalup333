@@ -343,9 +343,6 @@ export default function App() {
       document.body.removeChild(el);
     }
     setCopied(true);
-    setTimeout(()=>{
-      window.location.href="kakaotalk://";
-    },300);
     setTimeout(()=>setCopied(false),4000);
   }
 
@@ -1111,7 +1108,7 @@ function saveHtml(){
               {!downloading&&<div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${GOLD},${GOLD2},${GOLD})`}}/>}
               {downloading?"✅ 저장 중!":"🏆 검사지 저장"}<br/>
               <span style={{fontSize:10,fontWeight:600,opacity:0.7}}>
-                {downloading?"다운로드 확인하세요":"상세결과 HTML 저장"}
+                {downloading?"다운로드 폴더 확인":"다운로드 폴더에 HTML파일로 저장"}
               </span>
             </button>
 
@@ -1124,9 +1121,9 @@ function saveHtml(){
               border:"none",
               cursor:"pointer",lineHeight:1.5,transition:"all 0.3s"
             }}>
-              {copied?"✅ 복사됨! 카톡 여세요":"💬 카톡 공유"}<br/>
+              {copied?"✅ 복사됨! 카톡에 붙여넣기":"💬 카톡 공유"}<br/>
               <span style={{fontSize:10,fontWeight:600,opacity:0.7}}>
-                {copied?"채팅창에 붙여넣기 하세요!":"결과 복사 + 카카오톡 열기"}
+                {copied?"카톡 채팅창에 붙여넣기!":"꾸욱 눌러 결과 텍스트 복사"}
               </span>
             </button>
 
