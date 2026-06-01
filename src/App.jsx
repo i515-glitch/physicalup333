@@ -710,16 +710,19 @@ function saveHtml(){
       {/* 네비게이션 */}
       <nav style={{position:"sticky",top:0,zIndex:100,background:"rgba(6,10,20,0.95)",backdropFilter:"blur(10px)",borderBottom:"1px solid rgba(201,168,76,0.15)",padding:"0 20px"}}>
         <div style={{maxWidth:800,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",height:56}}>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <div style={{width:32,height:32,borderRadius:"50%",background:"linear-gradient(135deg,#c9a84c,#e8c76a)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16}}>⚾</div>
+          <a href="/landing.html" style={{display:"flex",alignItems:"center",gap:8,textDecoration:"none"}}>
+            <img src="/logo.png" alt="PHYSICAL UP" style={{width:32,height:32,objectFit:"contain",borderRadius:"50%"}}/>
             <div>
               <div style={{color:GOLD,fontSize:12,fontWeight:900,letterSpacing:2,lineHeight:1}}>PHYSICAL UP</div>
               <div style={{color:MUTED,fontSize:9,letterSpacing:1}}>YOUTH SPORTS CLUB</div>
             </div>
+          </a>
+          <div style={{display:"flex",alignItems:"center",gap:4}}>
+            <a href="/landing.html#about" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>도움드리는일</a>
+            <a href="/landing.html#worry" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>아이체격고민</a>
+            <a href="/app?start=test" style={{color:GOLD,fontSize:11,padding:"5px 10px",borderRadius:6,textDecoration:"none",border:`1px solid ${GOLD}`,fontWeight:700}}>⚾ 무료체질TEST</a>
+            <a href="/shop.html" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>맞춤제품추천</a>
           </div>
-          <button onClick={()=>setStep("intro")} style={{padding:"8px 18px",borderRadius:20,background:"linear-gradient(135deg,#c9a84c,#e8c76a)",color:NAVY,fontSize:12,fontWeight:800,border:"none",cursor:"pointer"}}>
-            333TEST 시작 →
-          </button>
         </div>
       </nav>
 
