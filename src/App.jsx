@@ -564,13 +564,10 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
 <script>
 function shareKakao(){
-  const shortWit=ment.wit.length>20?ment.wit.slice(0,20)+'..':ment.wit;
-  const shortTip=ment.tip.length>20?ment.tip.slice(0,20)+'..':ment.tip;
-  const txt="피지컬업 333TEST\\n\\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\\n\\""+shortWit+"\\"\\n💡"+shortTip+"\\n\\nwww.pu333.kr";
+  const txt="피지컬업 333TEST\\n\\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\\n\\"${ment.wit.slice(0,20)}${ment.wit.length>20?'..':''}\\"\\n💡${ment.tip.slice(0,20)}${ment.tip.length>20?'..':''}\\n\\nwww.pu333.kr";
   if(navigator.clipboard){
     navigator.clipboard.writeText(txt).then(()=>{
       document.getElementById('kakao-msg').style.display='block';
-      setTimeout(()=>{ window.location.href='kakaotalk://'; },300);
     }).catch(()=>{ fallbackCopy(txt); });
   } else { fallbackCopy(txt); }
 }
@@ -580,7 +577,6 @@ function fallbackCopy(txt){
   el.select(); document.execCommand('copy');
   document.body.removeChild(el);
   document.getElementById('kakao-msg').style.display='block';
-  setTimeout(()=>{ window.location.href='kakaotalk://'; },300);
 }
 function saveHtml(){
   const blob=new Blob([document.documentElement.outerHTML],{type:"text/html;charset=utf-8"});
