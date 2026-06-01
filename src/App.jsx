@@ -329,7 +329,7 @@ export default function App() {
     const ment=codeMents[result.code]||{wit:"나만의 특별한 체질",tip:"피지컬333 Test로 맞춤 관리 시작!"};
     const bar=n=>"●".repeat(n)+"○".repeat(3-n);
     const growthTxt=(birth&&heightVal&&weightVal)?`\n키 ${heightVal}cm · 몸무게 ${weightVal}kg · 만 ${parseInt(birth)}세`:"";
-    const txt=`⚾ 피지컬333 TEST 결과\n━━━━━━━━━━━━━━━━\nPHYSICAL UP · 피지컬업\n\n${si.emoji} ${result.sub} · ${result.code} · ${result.main}${growthTxt}\n\n"${ment.wit}"\n\n💡 ${ment.tip}\n\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}\n━━━━━━━━━━━━━━━━\n우리 아이 체질 코드 찾기 👇\nhttps://pu333.kr\n━━━━━━━━━━━━━━━━`;
+    const txt=`${si.emoji} ${result.sub} ${result.code} | 피지컬333 TEST\n${result.main} · PHYSICAL UP\n\n"${ment.wit}"\n💡 ${ment.tip}\n\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}${growthTxt}\n\n👉 pu333.kr`;
 
     try{ await navigator.clipboard.writeText(txt); }
     catch(e){
@@ -561,7 +561,7 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
 <script>
 function shareKakao(){
-  const txt="⚾ 피지컬333 TEST 결과\\n━━━━━━━━━━━━━━━━\\nPHYSICAL UP · 피지컬업\\n\\n${si.emoji} ${result.sub} · ${result.code} · ${result.main}\\n\\n\\"${ment.wit}\\"\\n\\n💡 ${ment.tip}\\n\\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}\\n━━━━━━━━━━━━━━━━\\n우리 아이 체질 코드 찾기 👇\\nhttps://pu333.kr\\n━━━━━━━━━━━━━━━━";
+  const txt="${si.emoji} ${result.sub} ${result.code} | 피지컬333 TEST\\n${result.main} · PHYSICAL UP\\n\\n\\"${ment.wit}\\"\\n💡 ${ment.tip}\\n\\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}\\n\\n👉 pu333.kr";
   if(navigator.clipboard){
     navigator.clipboard.writeText(txt).then(()=>{
       document.getElementById('kakao-msg').style.display='block';
