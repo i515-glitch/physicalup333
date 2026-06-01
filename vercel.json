@@ -2,7 +2,7 @@
   "routes": [
     { "src": "/app", "dest": "/app.html" },
     { "src": "/app/(.*)", "dest": "/app.html" },
-    { "src": "/", "dest": "/public/landing.html" },
+    { "src": "/", "dest": "/landing.html" },
     { "src": "/(.*)", "dest": "/$1" }
   ]
 }
