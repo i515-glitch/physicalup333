@@ -244,7 +244,8 @@ async function callAI(pAns,kAns,res,setAiAdvice,setLoading) {
 // ─── 메인 컴포넌트 ────────────────────────────────────────────────────────────
 export default function App() {
   // ── 모든 state는 여기에 ──
-  const [step,setStep]=useState("home");
+  const initStep = new URLSearchParams(window.location.search).get('start') === 'test' ? 'intro' : 'home';
+  const [step,setStep]=useState(initStep);
   const [pIdx,setPIdx]=useState(0);
   const [kIdx,setKIdx]=useState(0);
   const [pAns,setPAns]=useState({});
