@@ -244,8 +244,7 @@ async function callAI(pAns,kAns,res,setAiAdvice,setLoading) {
 // ─── 메인 컴포넌트 ────────────────────────────────────────────────────────────
 export default function App() {
   // ── 모든 state는 여기에 ──
-  const initStep = new URLSearchParams(window.location.search).get('start') === 'test' ? 'intro' : 'home';
-  const [step,setStep]=useState(initStep);
+  const [step,setStep]=useState("intro");
   const [pIdx,setPIdx]=useState(0);
   const [kIdx,setKIdx]=useState(0);
   const [pAns,setPAns]=useState({});
@@ -310,7 +309,7 @@ export default function App() {
   }
 
   function reset(){
-    setStep("home");setPIdx(0);setKIdx(0);
+    setStep("intro");setPIdx(0);setKIdx(0);
     setPAns({});setKAns({});setResult(null);setAiAdvice("");
     setSaved(false);setCopied(false);setDownloading(false);setShowAll(false);
     // 이름·생년월일·키·몸무게는 유지 (다음에도 쓸 수 있게)
