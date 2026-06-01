@@ -596,13 +596,8 @@ function saveHtml(){
 
     const blob=new Blob([html],{type:"text/html;charset=utf-8"});
     const url=URL.createObjectURL(blob);
-    const a=document.createElement("a");
-    a.href=url;
-    a.download=`피지컬333_${result.sub}_${result.code}.html`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(()=>{URL.revokeObjectURL(url);setDownloading(false);},1000);
+    setDownloading(false);
+    window.location.href=url;
   }
 
 
@@ -1097,9 +1092,8 @@ function saveHtml(){
             {loading?<div style={{display:"flex",alignItems:"center",gap:8}}><div style={{width:8,height:8,borderRadius:"50%",background:GOLD}}/><span style={{color:MUTED,fontSize:13}}>3축 데이터 분석 중...</span></div>:<p style={{color:"#8aa8c8",fontSize:13,lineHeight:1.9,margin:0}}>{aiAdvice}</p>}
           </div>
 
-          {/* 공유 버튼 */}
+          {/* 버튼 */}
           <div style={{marginBottom:16}}>
-            {/* 검사지 저장 */}
             <button onClick={handleDownload} style={{
               width:"100%",padding:"16px",borderRadius:12,marginBottom:10,
               background:downloading?"rgba(79,207,160,0.15)":"linear-gradient(145deg,#0d1b3e,#1a2d5a)",
@@ -1110,24 +1104,9 @@ function saveHtml(){
               position:"relative",overflow:"hidden",transition:"all 0.3s"
             }}>
               {!downloading&&<div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${GOLD},${GOLD2},${GOLD})`}}/>}
-              {downloading?"✅ 저장 중!":"🏆 검사지 저장"}<br/>
+              {downloading?"✅ 열리는 중!":"🏆 결과지 보기"}<br/>
               <span style={{fontSize:10,fontWeight:600,opacity:0.7}}>
-                {downloading?"다운로드 폴더 확인":"다운로드 폴더에 HTML파일로 저장"}
-              </span>
-            </button>
-
-            {/* 카톡 공유 */}
-            <button onClick={handleShare} style={{
-              width:"100%",padding:"16px",borderRadius:12,marginBottom:12,
-              background:"#FEE500",
-              color:"#000000",
-              fontSize:14,fontWeight:800,
-              border:"none",
-              cursor:"pointer",lineHeight:1.5,transition:"all 0.3s"
-            }}>
-              {copied?"✅ 복사됨! 카톡에 붙여넣기":"💬 카톡 공유"}<br/>
-              <span style={{fontSize:10,fontWeight:600,opacity:0.7}}>
-                {copied?"카톡 채팅창에 붙여넣기!":"꾸욱 눌러 결과 텍스트 복사"}
+                {downloading?"뒤로가기로 돌아오세요":"카톡공유·저장은 결과지에서"}
               </span>
             </button>
 
