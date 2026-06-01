@@ -849,6 +849,11 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
     ${mi.life.map(l=>`<div class="item"><span class="bullet">▸</span><span class="item-text">${l}</span></div>`).join('')}
   </div>
   <div class="caution">⚠️ ${mi.caution}</div>
+
+  <div style="margin-top:16px;text-align:center;">
+    <a href="https://pu333.kr" style="display:inline-block;padding:14px 32px;border-radius:12px;background:linear-gradient(135deg,#c9a84c,#e8c76a);color:#0d1b3e;font-size:14px;font-weight:900;text-decoration:none;font-family:'Noto Sans KR',sans-serif;">⚾ 우리 아이도 체질 코드 찾기 →</a>
+    <p style="margin-top:8px;color:#3a5070;font-size:11px;font-family:'Noto Sans KR',sans-serif;">pu333.kr · 무료 · 약 5분</p>
+  </div>
 </div>
 </body></html>`;
               const blob=new Blob([html],{type:"text/html;charset=utf-8"});
