@@ -343,12 +343,19 @@ export default function App() {
             title:`${ment.emoji} ${result.code} ${mi.emoji}${result.main} · ${ment.nick}`,
             description:`"${shortWit}"\n💡${shortTip}`,
             imageUrl:"https://pu333.kr/og.png",
-            link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}
+            link:{
+              mobileWebUrl:"https://pu333.kr",
+              webUrl:"https://pu333.kr"
+            }
           },
           buttons:[{
             title:"우리 아이 체질 코드 찾기 →",
-            link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}
-          }]
+            link:{
+              mobileWebUrl:"https://pu333.kr",
+              webUrl:"https://pu333.kr"
+            }
+          }],
+          installTalk:true
         });
         return;
       }
