@@ -601,6 +601,27 @@ function saveHtml(){
   // ── 공통 스타일 ──
   const cardStyle={background:"rgba(13,27,62,0.6)",borderRadius:16,padding:"18px",marginBottom:12,border:`1px solid rgba(201,168,76,0.15)`};
 
+  // ── 공통 네비바 ──
+  const NavBar=()=>(
+    <nav style={{position:"sticky",top:0,zIndex:100,background:"rgba(6,10,20,0.96)",backdropFilter:"blur(12px)",borderBottom:"1px solid rgba(201,168,76,0.12)",padding:"0 20px"}}>
+      <div style={{maxWidth:800,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",height:56}}>
+        <a href="/landing.html" style={{display:"flex",alignItems:"center",gap:8,textDecoration:"none"}}>
+          <img src="/logo.png" alt="PHYSICAL UP" style={{width:32,height:32,objectFit:"contain",borderRadius:"50%"}}/>
+          <div>
+            <div style={{color:GOLD,fontSize:12,fontWeight:900,letterSpacing:2,lineHeight:1}}>PHYSICAL UP</div>
+            <div style={{color:MUTED,fontSize:9,letterSpacing:1}}>YOUTH SPORTS CLUB</div>
+          </div>
+        </a>
+        <div style={{display:"flex",alignItems:"center",gap:4}}>
+          <a href="/landing.html#about" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>도움드리는일</a>
+          <a href="/worry.html" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>아이체격고민</a>
+          <a href="/app" style={{color:GOLD,fontSize:11,padding:"5px 10px",borderRadius:6,textDecoration:"none",border:`1px solid ${GOLD}`,fontWeight:700}}>⚾ 무료체질TEST</a>
+          <a href="/shop.html" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>맞춤제품추천</a>
+        </div>
+      </div>
+    </nav>
+  );
+
   // ── REPORT ─────────────────────────────────────────────────────────────────
   if(step==="report"&&result){
     const mi=mainType[result.main]||mainType["균형형"];
@@ -867,7 +888,9 @@ function saveHtml(){
     </div>
   );
   if(step==="intro") return (
-    <div style={{minHeight:"100vh",background:bg,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"28px",fontFamily:font}}>
+    <div style={{minHeight:"100vh",background:bg,fontFamily:font}}>
+      <NavBar/>
+      <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"28px",paddingTop:40}}>
       <div style={{maxWidth:400,width:"100%",textAlign:"center"}}>
         <div style={{marginBottom:20,textAlign:"center"}}>
           <div style={{display:"inline-block",padding:"10px 52px",borderRadius:24,background:"rgba(201,168,76,0.08)",border:"1.5px solid rgba(201,168,76,0.5)",boxShadow:"0 4px 24px rgba(201,168,76,0.15)"}}>
@@ -989,6 +1012,7 @@ function saveHtml(){
         </button>
         <p style={{color:MUTED,fontSize:11,opacity:0.5}}>총 24문항 · 약 5~7분 소요</p>
       </div>
+      </div>
     </div>
   );
 
@@ -996,7 +1020,9 @@ function saveHtml(){
   if(step==="partA"){
     const prog=Math.round((Object.keys(pAns).length/parentQuestions.length)*100);
     return (
-      <div style={{minHeight:"100vh",background:bg,display:"flex",flexDirection:"column",alignItems:"center",padding:"24px",fontFamily:font}}>
+      <div style={{minHeight:"100vh",background:bg,fontFamily:font}}>
+        <NavBar/>
+        <div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"24px"}}>
         <div style={{maxWidth:400,width:"100%"}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
             <div style={{background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:20,padding:"4px 14px",color:GOLD,fontSize:11,fontWeight:700}}>👀 PART A · 부모 관찰</div>
@@ -1017,13 +1043,16 @@ function saveHtml(){
           </div>
           {pIdx>0&&<button onClick={()=>setPIdx(pIdx-1)} style={{marginTop:18,background:"none",border:"none",color:MUTED,fontSize:13,cursor:"pointer"}}>← 이전</button>}
         </div>
+        </div>
       </div>
     );
   }
 
   // ── BRIDGE ─────────────────────────────────────────────────────────────────
   if(step==="bridge") return (
-    <div style={{minHeight:"100vh",background:bg,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"28px",fontFamily:font}}>
+    <div style={{minHeight:"100vh",background:bg,fontFamily:font}}>
+      <NavBar/>
+      <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"28px"}}>
       <div style={{maxWidth:400,width:"100%",textAlign:"center"}}>
         <div style={{width:70,height:70,borderRadius:"50%",margin:"0 auto 18px",background:"linear-gradient(135deg,#c9a84c,#e8c76a)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:32,boxShadow:"0 0 30px rgba(201,168,76,0.4)"}}>🎉</div>
         <h2 style={{color:WHITE,fontSize:20,fontWeight:800,marginBottom:8}}>PART A 완료!</h2>
@@ -1038,6 +1067,7 @@ function saveHtml(){
         </div>
         <p style={{color:MUTED,fontSize:11,opacity:0.5}}>아이 설문 건너뛰면 정확도가 낮아질 수 있어요</p>
       </div>
+      </div>
     </div>
   );
 
@@ -1045,7 +1075,9 @@ function saveHtml(){
   if(step==="partB"){
     const prog=Math.round((Object.keys(kAns).length/kidQuestions.length)*100);
     return (
-      <div style={{minHeight:"100vh",background:bg,display:"flex",flexDirection:"column",alignItems:"center",padding:"24px",fontFamily:font}}>
+      <div style={{minHeight:"100vh",background:bg,fontFamily:font}}>
+        <NavBar/>
+        <div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"24px"}}>
         <div style={{maxWidth:400,width:"100%"}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
             <div style={{background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:20,padding:"4px 14px",color:GOLD,fontSize:11,fontWeight:700}}>🙋 PART B · 아이 자가체크</div>
@@ -1066,6 +1098,7 @@ function saveHtml(){
           </div>
           {kIdx>0&&<button onClick={()=>setKIdx(kIdx-1)} style={{marginTop:18,background:"none",border:"none",color:MUTED,fontSize:13,cursor:"pointer"}}>← 이전</button>}
         </div>
+        </div>
       </div>
     );
   }
@@ -1077,6 +1110,7 @@ function saveHtml(){
     const ment=codeMents[result.code]||{wit:"나만의 특별한 체질 코드",tip:"피지컬333 Test로 맞춤 관리 시작!"};
     const bar=n=>"●".repeat(n)+"○".repeat(3-n);
     const axes=[{label:"흡수력",val:result.scores.absorb,color:"#4fcfa0"},{label:"연소력",val:result.scores.burn,color:"#f7954f"},{label:"축적력",val:result.scores.store,color:"#f76f8e"}];
+    // NavBar는 결과 화면 최상단에
     const maxDist=Math.max(...Object.values(distData));
 
     // 성장 데이터
@@ -1091,7 +1125,9 @@ function saveHtml(){
     const bands=[{l:"3",p:3},{l:"10",p:10},{l:"25",p:25},{l:"50",p:50},{l:"75",p:75},{l:"90",p:90},{l:"97",p:97}];
 
     return (
-      <div style={{minHeight:"100vh",background:bg,display:"flex",flexDirection:"column",alignItems:"center",padding:"20px 20px 60px",fontFamily:font}}>
+      <div style={{minHeight:"100vh",background:bg,fontFamily:font}}>
+        <NavBar/>
+        <div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"20px 20px 60px"}}>
         <div style={{maxWidth:400,width:"100%"}}>
 
           {/* 브랜드 */}
@@ -1394,6 +1430,7 @@ function saveHtml(){
           <button onClick={()=>setStep("shop")} style={{width:"100%",padding:"14px",borderRadius:12,background:`linear-gradient(135deg,${GOLD},${GOLD2})`,color:NAVY,fontSize:14,fontWeight:800,border:"none",cursor:"pointer",marginBottom:10,boxShadow:"0 4px 16px rgba(201,168,76,0.3)"}}>🛒 내 체질 맞춤 제품 보기</button>
           <button onClick={reset} style={{width:"100%",padding:"14px",borderRadius:12,background:"rgba(201,168,76,0.06)",color:MUTED,fontSize:14,border:"1px solid rgba(201,168,76,0.2)",cursor:"pointer",marginBottom:4}}>🔄 처음부터 다시하기</button>
           <p style={{color:"#1a2a3a",fontSize:11,textAlign:"center",marginTop:14,lineHeight:1.7}}>본 결과는 참고용이며 의학적 진단을 대체하지 않습니다.<br/>성장곡선이 지속 하락 시 소아과 진료를 권장합니다.</p>
+        </div>
         </div>
       </div>
     );
