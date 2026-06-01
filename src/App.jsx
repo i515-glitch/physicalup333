@@ -9,7 +9,7 @@ const font="'Apple SD Gothic Neo','Noto Sans KR',sans-serif";
 // ─── 대분류 ───────────────────────────────────────────────────────────────────
 const mainType = {
   소비형: {
-    emoji:"🚀", color:"#4fcfa0",
+    emoji:"🏃", color:"#4fcfa0",
     goal:"목표 — 찌우기 · 흡수력 높이기",
     direction:"찌는 음식 · 소화효소 · 유산균 중심",
     food:["칼로리 밀도 높은 음식 위주 (견과류·아보카도·달걀·치즈)","따뜻하고 부드러운 찌는 음식 (죽·찜·국밥)","소량씩 자주 먹이기 — 하루 5~6회","차가운 음식·기름진 음식·밀가루 줄이기","소화 잘 되는 단백질 (두부·달걀찜·흰살생선)"],
@@ -20,7 +20,7 @@ const mainType = {
     tag:"찌우기 필요",
   },
   균형형: {
-    emoji:"⚖️", color:"#4f8ef7",
+    emoji:"💪", color:"#4f8ef7",
     goal:"목표 — 현상태 관리",
     direction:"균형 식단 · 영양제로 컨디션 관리",
     food:["규칙적인 3끼 + 건강한 간식 유지","단백질·탄수화물·지방의 균형 잡힌 식단","다양한 색깔의 채소·과일 매일 섭취","잡곡밥·고구마 등 복합 탄수화물 위주","가공식품·인스턴트 줄이기"],
@@ -31,7 +31,7 @@ const mainType = {
     tag:"현상태 관리",
   },
   저장형: {
-    emoji:"🏦", color:"#f76f8e",
+    emoji:"🏋️", color:"#f76f8e",
     goal:"목표 — 대사 높이기 · 체지방 관리",
     direction:"유산소 운동 · 저탄고단 · 대사 촉진",
     food:["정제 탄수화물 줄이고 잡곡으로 교체","고단백 저지방 위주 식단 (닭가슴살·두부·달걀)","포만감 높은 채소·식이섬유 먼저 먹기","야식·간식 시간대 조절 (저녁 7시 이후 금지)","천천히 꼭꼭 씹어 먹기 — 20분 이상"],
@@ -333,7 +333,7 @@ export default function App() {
     const bar=n=>"●".repeat(n)+"○".repeat(3-n);
     const ageInfo=birth.length===6?calcAgeFromShort(birth):null;
     const growthTxt=(ageInfo&&heightVal&&weightVal)?`\n키 ${heightVal}cm · 몸무게 ${weightVal}kg · ${ageInfo.display}`:"";
-    const txt=`        PHYSICAL UP\n          333TEST\n\n${ment.emoji} ${result.code} ${result.main} ${result.sub}\n\n"${ment.wit}"\n💡 ${ment.tip}\n\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}${growthTxt}\n\n          👉 pu333.kr`;
+    const txt=`        PHYSICAL UP\n          333TEST\n\n${ment.emoji} ${result.code} ${mi.emoji}${result.main} ${ment.nick}\n\n"${ment.wit}"\n💡 ${ment.tip}\n\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}${growthTxt}\n\n👉 우리 아이 체질 코드 찾기\npu333.kr`;
 
     try{ await navigator.clipboard.writeText(txt); }
     catch(e){
@@ -565,7 +565,7 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
 <script>
 function shareKakao(){
-  const txt="${si.emoji} ${result.sub} ${result.code} | 피지컬333 TEST\\n${result.main} · PHYSICAL UP\\n\\n\\"${ment.wit}\\"\\n💡 ${ment.tip}\\n\\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}\\n\\n👉 pu333.kr";
+  const txt="        PHYSICAL UP\\n          333TEST\\n\\n${ment.emoji} ${result.code} ${mi.emoji}${result.main} ${ment.nick}\\n\\n\\"${ment.wit}\\"\\n💡 ${ment.tip}\\n\\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}\\n\\n👉 우리 아이 체질 코드 찾기\\npu333.kr";
   if(navigator.clipboard){
     navigator.clipboard.writeText(txt).then(()=>{
       document.getElementById('kakao-msg').style.display='block';
@@ -868,16 +868,17 @@ function saveHtml(){
             <div style={{display:"inline-block",padding:"10px 32px",borderRadius:24,marginBottom:16,background:"rgba(201,168,76,0.08)",border:"1.5px solid rgba(201,168,76,0.5)",boxShadow:"0 4px 20px rgba(201,168,76,0.15)"}}>
               <span style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:32,fontWeight:900,letterSpacing:8}}>{result.code}</span>
             </div>
-            {/* 대분류+세분류 붙여서 */}
+            {/* 이모지+4글자 + 대분류 나란히 */}
             <div style={{marginBottom:10}}>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginBottom:8}}>
-                <span style={{fontSize:20}}>{mi.emoji}</span>
-                <span style={{color:GOLD2,fontSize:20,fontWeight:800}}>{result.main}</span>
-                <span style={{color:si.color,fontSize:20,fontWeight:800}}>{ment.nick}</span>
-              </div>
-              {/* 4글자 별명 배지 */}
-              <div style={{display:"inline-block",padding:"4px 18px",borderRadius:20,background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.3)"}}>
-                <span style={{color:GOLD,fontSize:13,fontWeight:700,letterSpacing:2}}>{ment.emoji} {ment.nick}</span>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,flexWrap:"wrap"}}>
+                <div style={{display:"flex",alignItems:"center",gap:4}}>
+                  <span style={{fontSize:18}}>{mi.emoji}</span>
+                  <span style={{color:GOLD2,fontSize:18,fontWeight:800}}>{result.main}</span>
+                </div>
+                <div style={{width:1,height:20,background:"rgba(201,168,76,0.3)"}}/>
+                <div style={{display:"inline-block",padding:"4px 16px",borderRadius:20,background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.3)"}}>
+                  <span style={{color:GOLD,fontSize:15,fontWeight:800,letterSpacing:1}}>{ment.emoji} {ment.nick}</span>
+                </div>
               </div>
             </div>
             <p style={{color:MUTED,fontSize:13,lineHeight:1.7,margin:0}}>{si.shortDesc}</p>
