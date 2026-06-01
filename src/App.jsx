@@ -379,7 +379,7 @@ export default function App() {
     setTimeout(()=>setCopied(false),4000);
   }
 
-  function handleDownload(){
+  async function handleDownload(){
     if(!result) return;
     setDownloading(true);
     const mi=mainType[result.main]||mainType["균형형"];
@@ -387,11 +387,12 @@ export default function App() {
     const ment=codeMents[result.code]||{wit:"나만의 특별한 체질 코드",tip:"피지컬333 Test로 맞춤 관리 시작!"};
     const bar=n=>"●".repeat(n)+"○".repeat(3-n);
     const date=new Date().toLocaleDateString("ko-KR");
-    const growthSection=(birth&&heightVal&&weightVal)?`
+    const ageInfo=birth.length===6?calcAgeFromShort(birth):null;
+    const growthSection=(ageInfo&&heightVal&&weightVal)?`
       <div class="section">
         <div class="section-title">📏 성장 지표</div>
         <div class="info-row">
-          <span>만 ${parseInt(birth)}세 · 키 <strong>${heightVal}cm</strong> · 몸무게 <strong>${weightVal}kg</strong></span>
+          <span>${ageInfo.display} · 키 <strong>${heightVal}cm</strong> · 몸무게 <strong>${weightVal}kg</strong></span>
         </div>
       </div>` : "";
 
