@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>체질별 맞춤 제품 · PHYSICAL UP</title>
+<meta name="description" content="소비형·균형형·저장형 체질별 맞춤 영양제·식품 추천. 333TEST 결과에 맞는 제품을 찾아보세요."/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#060a14;--navy2:#0d1b3e;
+  --gold:#c9a84c;--gold2:#e8c76a;
+  --white:#f0f4ff;--muted:#4a6080;
+  --green:#4fcfa0;--pink:#f76f8e;--blue:#4f8ef7;
+}
+body{background:var(--navy);font-family:'Noto Sans KR',sans-serif;color:var(--white);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.12);}
+.nav-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 20px;}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.logo img{width:32px;height:32px;object-fit:contain;}
+.logo-text .b1{color:var(--gold);font-size:12px;font-weight:900;letter-spacing:3px;line-height:1;}
+.logo-text .b2{color:var(--muted);font-size:8px;letter-spacing:2px;}
+.nav-btn{padding:7px 16px;border-radius:16px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy2);font-size:12px;font-weight:900;text-decoration:none;}
+
+.hero{padding:88px 20px 40px;max-width:720px;margin:0 auto;text-align:center;}
+.sec-label{color:var(--gold);font-size:10px;letter-spacing:4px;margin-bottom:8px;}
+.hero h1{font-size:22px;font-weight:900;margin-bottom:8px;}
+.hero p{color:var(--muted);font-size:13px;line-height:1.9;margin-bottom:20px;}
+
+/* 탭 */
+.tabs{display:flex;gap:8px;justify-content:center;margin-bottom:32px;flex-wrap:wrap;}
+.tab{padding:9px 20px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;border:1px solid;transition:all 0.2s;text-decoration:none;}
+.tab.active-green{background:rgba(79,207,160,0.15);border-color:#4fcfa0;color:#4fcfa0;}
+.tab.active-gold{background:rgba(201,168,76,0.15);border-color:var(--gold);color:var(--gold2);}
+.tab.active-pink{background:rgba(247,111,142,0.15);border-color:#f76f8e;color:#f76f8e;}
+.tab.inactive{background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.08);color:var(--muted);}
+
+/* 섹션 */
+.section{max-width:720px;margin:0 auto;padding:0 20px 60px;}
+.type-header{border-radius:14px;padding:20px 20px;margin-bottom:20px;border:1px solid;position:relative;overflow:hidden;}
+.type-header::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.type-header .emoji{font-size:32px;margin-bottom:8px;}
+.type-header .name{font-size:20px;font-weight:900;margin-bottom:4px;}
+.type-header .tag{font-size:11px;font-weight:700;letter-spacing:1px;opacity:0.7;margin-bottom:8px;}
+.type-header .desc{font-size:12px;line-height:1.7;opacity:0.65;}
+
+.products{display:flex;flex-direction:column;gap:10px;margin-bottom:40px;}
+.product{background:rgba(13,27,62,0.5);border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.06);transition:all 0.2s;}
+.product:hover{border-color:rgba(201,168,76,0.2);}
+.product .pname{color:var(--white);font-size:14px;font-weight:700;margin-bottom:3px;}
+.product .pdesc{color:var(--muted);font-size:12px;margin-bottom:10px;line-height:1.6;}
+.product .links{display:flex;gap:6px;flex-wrap:wrap;}
+.link-btn{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;text-decoration:none;transition:all 0.2s;}
+.link-btn:hover{opacity:0.8;}
+.link-coupang{background:rgba(229,48,42,0.15);border:1px solid rgba(229,48,42,0.3);color:#ff7070;}
+.link-naver{background:rgba(3,199,90,0.12);border:1px solid rgba(3,199,90,0.25);color:#4fcfa0;}
+.link-olive{background:rgba(165,0,52,0.12);border:1px solid rgba(165,0,52,0.25);color:#f76f8e;}
+
+.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.12),transparent);margin:40px 0;}
+
+/* TEST 유도 */
+.test-cta{background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(13,27,62,0.7));border-radius:16px;padding:28px;border:1px solid rgba(201,168,76,0.2);text-align:center;margin:0 20px 60px;max-width:720px;margin-left:auto;margin-right:auto;position:relative;overflow:hidden;}
+.test-cta::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.start-btn{display:inline-block;margin-top:14px;padding:13px 32px;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy2);font-size:14px;font-weight:900;text-decoration:none;}
+
+footer{border-top:1px solid rgba(201,168,76,0.1);padding:24px 20px;text-align:center;}
+footer .fb{color:var(--gold);font-size:11px;font-weight:700;letter-spacing:3px;margin-bottom:3px;}
+footer .fi{color:var(--muted);font-size:10px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/landing.html" class="logo">
+      <img src="/logo.png" alt="PHYSICAL UP"/>
+      <div class="logo-text">
+        <div class="b1">PHYSICAL UP</div>
+        <div class="b2">YOUTH SPORTS CLUB</div>
+      </div>
+    </a>
+    <div style="display:flex;align-items:center;gap:4px;">
+      <a href="/landing.html#about" style="color:var(--muted);font-size:11px;padding:5px 8px;border-radius:6px;text-decoration:none;">도움드리는일</a>
+      <a href="/landing.html#worry" style="color:var(--muted);font-size:11px;padding:5px 8px;border-radius:6px;text-decoration:none;">아이체격고민</a>
+      <a href="/app?start=test" style="color:var(--gold);font-size:11px;padding:5px 10px;border-radius:6px;text-decoration:none;border:1px solid var(--gold);font-weight:700;">⚾ 무료체질TEST</a>
+      <a href="/shop.html" style="color:var(--white);font-size:11px;padding:5px 8px;border-radius:6px;text-decoration:none;font-weight:700;">맞춤제품추천</a>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="sec-label">SHOPPING</div>
+  <h1>🛒 체질별 맞춤 제품</h1>
+  <p>체질 코드를 알면 더 정확하게,<br/>몰라도 체형별로 바로 찾아볼 수 있어요</p>
+  <div class="tabs">
+    <a href="#소비형" class="tab active-green">🏃 소비형 · 찌우기</a>
+    <a href="#균형형" class="tab active-gold">💪 균형형 · 유지</a>
+    <a href="#저장형" class="tab active-pink">🏋️ 저장형 · 빼기</a>
+  </div>
+</div>
+
+<div class="section">
+
+  <!-- 소비형 -->
+  <div id="소비형">
+    <div class="type-header" style="background:rgba(79,207,160,0.07);border-color:rgba(79,207,160,0.2);">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#4fcfa0,transparent);"></div>
+      <div class="emoji">🏃</div>
+      <div class="name" style="color:#4fcfa0;">소비형</div>
+      <div class="tag" style="color:#4fcfa0;">찌우기 필요 · 흡수력 높이기</div>
+      <div class="desc" style="color:#4fcfa0;">먹어도 살이 안 찌는 체질. 소화·흡수 기능을 먼저 키워야 합니다.</div>
+    </div>
+    <div class="products">
+      <div class="product">
+        <div class="pname">소화효소제</div>
+        <div class="pdesc">식사 직전 복용 · 흡수력 향상 핵심 · 소비형 1순위</div>
+        <div class="links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+      <div class="product">
+        <div class="pname">아연</div>
+        <div class="pdesc">식욕 증진 · 성장 호르몬 활성화 · 미각 정상화</div>
+        <div class="links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-olive">올리브영 →</a>
+        </div>
+      </div>
+      <div class="product">
+        <div class="pname">유산균</div>
+        <div class="pdesc">장 흡수력 개선 · 면역 강화 · 소화 환경 조성</div>
+        <div class="links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+      <div class="product">
+        <div class="pname">비타민 B군</div>
+        <div class="pdesc">에너지 대사 보조 · 식욕 촉진 · 신경 안정</div>
+        <div class="links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-olive">올리브영 →</a>
+        </div>
+      </div>
+      <div class="product">
+        <div class="pname">무가당 땅콩버터</div>
+        <div class="pdesc">고칼로리 밀도 간식 · 부담 없는 증량 필수템</div>
+        <div class="links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+      <div class="product">
+        <div class="pname">마그네슘</div>
+        <div class="pdesc">근육·신경 안정 · 숙면 유도 · 성장호르몬 분비 촉진</div>
+        <div class="links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-olive">올리브영 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 균형형 -->
+  <div id="균형형">
+    <div class="type-header" style="background:rgba(201,168,76,0.07);border-color:rgba(201,168,76,0.2);">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
+      <div class="emoji">💪</div>
+      <div class="name" style="color:var(--gold2);">균형형</div>
+      <div class="tag" style="color:var(--gold2);">현상태 관리 · 컨디션 유지</div>
+      <div class="desc" style="color:var(--gold2);">균형 잡힌 이상적 체질. 지금 상태를 유지하며 성장 극대화.</div>
+    </div>
+    <div class="products">
+      <div class="product">
+        <div class="pname">종합비타민</div>
+        <div class="pdesc">전반적 균형 유지 · 컨디션 관리 · 균형형 기본</div>
+        <div class="links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-olive">올리브영 →</a>
+        </div>
+      </div>
+      <div class="product">
+        <div class="pname">오메가3</div>
+        <div class="pdesc">두뇌 발달 · 집중력 향상 · 염증 억제</div>
+        <div class="links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+      <div class="product">
+        <div class="pname">비타민 D</div>
+        <div class="pdesc">뼈 성장 · 면역 강화 · 칼슘 흡수 촉진</div>
+        <div class="links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-olive">올리브영 →</a>
+        </div>
+      </div>
+      <div class="product">
+        <div class="pname">유산균</div>
+        <div class="pdesc">장 건강 예방적 관리 · 면역 유지</div>
+        <div class="links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+      <div class="product">
+        <div class="pname">마그네슘</div>
+        <div class="pdesc">수면 · 근육 회복 · 성장호르몬 분비</div>
+        <div class="links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-olive">올리브영 →</a>
+        </div>
+      </div>
+      <div class="product">
+        <div class="pname">칼슘</div>
+        <div class="pdesc">뼈 성장 · 골격 강화 · 키 성장 지원</div>
+        <div class="links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-olive">올리브영 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 저장형 -->
+  <div id="저장형">
+    <div class="type-header" style="background:rgba(247,111,142,0.07);border-color:rgba(247,111,142,0.2);">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#f76f8e,transparent);"></div>
+      <div class="emoji">🏋️</div>
+      <div class="name" style="color:#f76f8e;">저장형</div>
+      <div class="tag" style="color:#f76f8e;">살빼기 필요 · 대사 촉진</div>
+      <div class="desc" style="color:#f76f8e;">조금만 먹어도 찌는 체질. 대사를 높이고 체지방을 관리합니다.</div>
+    </div>
+    <div class="products">
+      <div class="product">
+        <div class="pname">식이섬유</div>
+        <div class="pdesc">포만감 · 혈당 조절 · 장 건강 · 저장형 1순위</div>
+        <div class="links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-olive">올리브영 →</a>
+        </div>
+      </div>
+      <div class="product">
+        <div class="pname">마그네슘</div>
+        <div class="pdesc">인슐린 감수성 개선 · 대사 활성화</div>
+        <div class="links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+      <div class="product">
+        <div class="pname">비타민 D</div>
+        <div class="pdesc">대사 기능 활성화 · 체중 관리 보조</div>
+        <div class="links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-olive">올리브영 →</a>
+        </div>
+      </div>
+      <div class="product">
+        <div class="pname">유산균</div>
+        <div class="pdesc">장내 미생물 균형 · 체중 조절 보조</div>
+        <div class="links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+      <div class="product">
+        <div class="pname">오메가3</div>
+        <div class="pdesc">체지방 분해 보조 · 염증 억제 · 대사 개선</div>
+        <div class="links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-olive">올리브영 →</a>
+        </div>
+      </div>
+      <div class="product">
+        <div class="pname">아연</div>
+        <div class="pdesc">대사 효소 활성화 · 면역 강화 · 정상 식욕 회복</div>
+        <div class="links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<footer>
+  <div class="fb">PHYSICAL UP · 피지컬업</div>
+  <div class="fi">YOUTH SPORTS CLUB · pu333.kr</div>
+</footer>
+
+</body>
+</html>
