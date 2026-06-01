@@ -599,11 +599,9 @@ function shareKakao(){
 
     const blob=new Blob([html],{type:"text/html;charset=utf-8"});
     const url=URL.createObjectURL(blob);
-    window.open(url,"_blank");
-    setTimeout(()=>{
-      URL.revokeObjectURL(url);
-      setDownloading(false);
-    },3000);
+    setDownloading(false);
+    // 같은 탭에서 열기 - 모바일에서 가장 확실한 방법
+    window.location.href=url;
   }
 
 
