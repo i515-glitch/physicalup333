@@ -251,13 +251,20 @@ export default function App() {
   const [loading,setLoading]=useState(false);
   const [selP,setSelP]=useState(null);
   const [selK,setSelK]=useState(null);
-  const [birth,setBirth]=useState("");
-  const [heightVal,setHeightVal]=useState("");
-  const [weightVal,setWeightVal]=useState("");
+  const [childName,setChildName]=useState(()=>{try{return localStorage.getItem("pu333_name")||"";}catch{return "";}});
+  const [birth,setBirth]=useState(()=>{try{return localStorage.getItem("pu333_birth")||"";}catch{return "";}});
+  const [heightVal,setHeightVal]=useState(()=>{try{return localStorage.getItem("pu333_height")||"";}catch{return "";}});
+  const [weightVal,setWeightVal]=useState(()=>{try{return localStorage.getItem("pu333_weight")||"";}catch{return "";}});
   const [saved,setSaved]=useState(false);
   const [copied,setCopied]=useState(false);
   const [downloading,setDownloading]=useState(false);
   const [showAll,setShowAll]=useState(false);
+
+  // 입력값 변경시 자동 저장
+  const updateName=v=>{setChildName(v);try{localStorage.setItem("pu333_name",v);}catch{}};
+  const updateBirth=v=>{setBirth(v);try{localStorage.setItem("pu333_birth",v);}catch{}};
+  const updateHeight=v=>{setHeightVal(v);try{localStorage.setItem("pu333_height",v);}catch{}};
+  const updateWeight=v=>{setWeightVal(v);try{localStorage.setItem("pu333_weight",v);}catch{}};
 
   const pQ=parentQuestions[pIdx];
   const kQ=kidQuestions[kIdx];
@@ -301,8 +308,8 @@ export default function App() {
   function reset(){
     setStep("intro");setPIdx(0);setKIdx(0);
     setPAns({});setKAns({});setResult(null);setAiAdvice("");
-    setBirth("");setHeightVal("");setWeightVal("");
     setSaved(false);setCopied(false);setDownloading(false);setShowAll(false);
+    // 이름·생년월일·키·몸무게는 유지 (다음에도 쓸 수 있게)
   }
 
   function handleSave(){
@@ -321,33 +328,39 @@ export default function App() {
     const si=subType[result.sub]||subType["항온형"];
     const ment=codeMents[result.code]||{wit:"나만의 특별한 체질",tip:"피지컬333 Test로 맞춤 관리 시작!"};
     const bar=n=>"●".repeat(n)+"○".repeat(3-n);
-    const growthTxt=(birth&&heightVal&&weightVal)?`\n📏 키 ${heightVal}cm · 몸무게 ${weightVal}kg · 만 ${parseInt(birth)}세`:"";
 
-    const txt=
-`⚾ 피지컬333 TEST
-━━━━━━━━━━━━━━━━
-PHYSICAL UP · 피지컬업
+    const doKakao = () => {
+      try {
+        if(!window.Kakao.isInitialized()){
+          window.Kakao.init('8cbfe9e0fb8445c74c55151ad8376feb');
+        }
+        window.Kakao.Share.sendDefault({
+          objectType:"feed",
+          content:{
+            title:`${si.emoji} ${result.sub} · ${result.code} | 피지컬333 TEST`,
+            description:`"${ment.wit}"\n💡 ${ment.tip}\n흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}`,
+            imageUrl:"https://pu333.kr/og.png",
+            link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}
+          },
+          buttons:[{
+            title:"우리 아이도 검사하기 →",
+            link:{mobileWebUrl:"https://pu333.kr",webUrl:"https://pu333.kr"}
+          }]
+        });
+      } catch(e){
+        alert("카카오 공유 오류: "+e.message);
+      }
+    };
 
-${si.emoji} ${result.sub} · ${result.code} · ${result.main}${growthTxt}
-
-"${ment.wit}"
-
-💡 ${ment.tip}
-
-흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}
-━━━━━━━━━━━━━━━━
-우리 아이 체질 코드 찾기 👇
-https://pu333.kr
-━━━━━━━━━━━━━━━━`;
-
-    try{ await navigator.clipboard.writeText(txt); }
-    catch(e){
-      const el=document.createElement("textarea");
-      el.value=txt;document.body.appendChild(el);
-      el.select();document.execCommand("copy");
-      document.body.removeChild(el);
+    if(window.Kakao){
+      doKakao();
+    } else {
+      const script=document.createElement("script");
+      script.src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js";
+      script.onload=doKakao;
+      script.onerror=()=>alert("카카오 SDK 로드 실패");
+      document.head.appendChild(script);
     }
-    setCopied(true);setTimeout(()=>setCopied(false),4000);
   }
 
   function handleDownload(){
@@ -556,15 +569,14 @@ window.onload = function(){ window.print(); }
     const url=URL.createObjectURL(blob);
     const a=document.createElement("a");
     a.href=url;
-    a.target="_blank";
-    a.rel="noopener";
+    a.download=`피지컬333_${result.sub}_${result.code}.html`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     setTimeout(()=>{
       URL.revokeObjectURL(url);
       setDownloading(false);
-    },3000);
+    },2000);
   }
 
 
@@ -575,29 +587,25 @@ window.onload = function(){ window.print(); }
   if(step==="intro") return (
     <div style={{minHeight:"100vh",background:bg,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"28px",fontFamily:font}}>
       <div style={{maxWidth:400,width:"100%",textAlign:"center"}}>
-        <div style={{marginBottom:6}}>
-          <div style={{display:"inline-flex",alignItems:"baseline",gap:4,background:"linear-gradient(135deg,#c9a84c,#e8c76a,#c9a84c)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",whiteSpace:"nowrap"}}>
-            <span style={{fontSize:15,fontWeight:700,letterSpacing:3}}>PHYSICAL</span>
-            <span style={{fontSize:34,fontWeight:900,letterSpacing:2}}>333TEST</span>
+        <div style={{marginBottom:20,textAlign:"center"}}>
+          <div style={{display:"inline-block",padding:"10px 52px",borderRadius:24,background:"rgba(201,168,76,0.08)",border:"1.5px solid rgba(201,168,76,0.5)",boxShadow:"0 4px 24px rgba(201,168,76,0.15)"}}>
+            <div style={{color:GOLD,fontSize:13,fontWeight:700,letterSpacing:4,marginBottom:2}}>PHYSICAL UP</div>
+            <div style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:36,fontWeight:900,letterSpacing:4}}>333TEST</div>
           </div>
         </div>
-        <div style={{display:"inline-block",padding:"3px 16px",borderRadius:20,background:"rgba(201,168,76,0.12)",border:"1px solid rgba(201,168,76,0.35)",color:GOLD,fontSize:11,letterSpacing:2,marginBottom:20}}>PHYSICAL UP · 피지컬업</div>
         <h1 style={{color:WHITE,fontSize:21,fontWeight:800,lineHeight:1.5,marginBottom:8}}>우리 아이 체질 코드 찾기</h1>
         <p style={{color:MUTED,fontSize:13,lineHeight:2,marginBottom:20}}>흡수력 · 연소력 · 축적력<br/>3축 점수로 체질 코드를 산출합니다</p>
-
-        {/* 3축 설명 - 점수표 왼쪽 + 박스 오른쪽 */}
         <div style={{background:"rgba(201,168,76,0.05)",borderRadius:14,padding:"14px",marginBottom:16,border:"1px solid rgba(201,168,76,0.15)"}}>
           <div style={{color:GOLD,fontSize:11,marginBottom:12,textAlign:"center",fontWeight:700,letterSpacing:1}}>⚾ 체질 코드 읽는 법</div>
-          <div style={{display:"flex",gap:8,alignItems:"stretch"}}>
+          <div style={{display:"flex",gap:8,alignItems:"flex-end"}}>
 
-            {/* 왼쪽: 점수표 3층 */}
-            <div style={{display:"flex",flexDirection:"column",gap:3,width:62,flexShrink:0}}>
+            {/* 왼쪽: 점수표 3층 - 고정 높이 */}
+            <div style={{display:"flex",flexDirection:"column",gap:3,width:62,flexShrink:0,height:90}}>
               {[{score:"3점 높음",color:"#4fcfa0"},{score:"2점 보통",color:GOLD},{score:"1점 낮음",color:"#f76f8e"}].map(s=>(
                 <div key={s.score} style={{
                   textAlign:"center",padding:"0 4px",borderRadius:6,
                   background:`${s.color}10`,border:`1px solid ${s.color}30`,
                   flex:1,display:"flex",alignItems:"center",justifyContent:"center",
-                  minHeight:0
                 }}>
                   <div style={{color:s.color,fontSize:10,fontWeight:800,whiteSpace:"nowrap"}}>{s.score}</div>
                 </div>
@@ -612,12 +620,12 @@ window.onload = function(){ window.print(); }
                   <div key={l} style={{textAlign:"center",color:["#4fcfa0","#f7954f","#f76f8e"][i],fontSize:9,fontWeight:700,lineHeight:1.2}}>{l}</div>
                 ))}
               </div>
-              {/* 박스 3개 — flex:1로 나머지 공간 채움 */}
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:3,flex:1}}>
+              {/* 박스 3개 - 높이 90px 고정 */}
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:3,height:90}}>
                 {[{name:"흡수력",desc:"음식 흡수력",color:"#4fcfa0"},{name:"연소력",desc:"에너지 소모",color:"#f7954f"},{name:"축적력",desc:"영양 저장력",color:"#f76f8e"}].map(ax=>(
                   <div key={ax.name} style={{
                     background:`${ax.color}12`,border:`1.5px solid ${ax.color}50`,
-                    borderRadius:10,padding:"8px 4px",textAlign:"center",
+                    borderRadius:10,padding:"6px 4px",textAlign:"center",
                     display:"flex",flexDirection:"column",
                     alignItems:"center",justifyContent:"center"
                   }}>
@@ -630,62 +638,53 @@ window.onload = function(){ window.print(); }
           </div>
         </div>
 
-        {/* 대분류 미리보기 - 체질코드 아래로 이동 */}
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:16}}>
-          {[{n:"교타자",e:"🏏",c:"#4fcfa0",s:"찌우기"},{n:"클린업",e:"⚾",c:GOLD,s:"유지"},{n:"슬러거",e:"💪",c:"#f76f8e",s:"빼기"}].map(t=>(
-            <div key={t.n} style={{background:`${t.c}10`,border:`1px solid ${t.c}30`,borderRadius:14,padding:"12px 6px",textAlign:"center"}}>
-              <div style={{fontSize:20,marginBottom:4}}>{t.e}</div>
-              <div style={{color:t.c,fontSize:12,fontWeight:700}}>{t.n}</div>
-              <div style={{color:MUTED,fontSize:10,marginTop:2}}>{t.s}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* 신체 정보 - 박스 3개 나란히 */}
+        {/* 신체 정보 - 이름+생년월일+키+몸무게 */}
         <div style={{background:"rgba(201,168,76,0.05)",borderRadius:14,padding:"14px",marginBottom:16,border:"1px solid rgba(201,168,76,0.15)"}}>
-          <div style={{color:GOLD,fontSize:11,fontWeight:700,marginBottom:12,letterSpacing:1}}>📏 아이 신체 정보 입력 (선택)</div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
+          <div style={{color:GOLD,fontSize:11,fontWeight:700,marginBottom:12,letterSpacing:1}}>📏 아이 정보 입력 (선택 · 자동저장)</div>
 
-            {/* 만 나이 스크롤 */}
-            <div style={{background:"rgba(13,27,62,0.6)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
-              <div style={{color:MUTED,fontSize:10,marginBottom:8}}>만 나이</div>
-              <select
-                value={birth}
-                onChange={e=>setBirth(e.target.value)}
-                style={{width:"100%",background:"transparent",border:"none",color:birth?GOLD2:MUTED,fontSize:13,fontWeight:700,textAlign:"center",outline:"none",cursor:"pointer",appearance:"none",WebkitAppearance:"none"}}>
-                <option value="" style={{background:"#0d1b3e",color:MUTED}}>선택</option>
-                {Array.from({length:17},(_,i)=>i+2).map(age=>(
-                  <option key={age} value={String(age).padStart(2,"0")} style={{background:"#0d1b3e",color:WHITE}}>{age}세</option>
-                ))}
-              </select>
-              {birth&&<div style={{color:GOLD,fontSize:10,marginTop:4}}>만 {parseInt(birth)}세</div>}
+          {/* 이름 + 생년월일 */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
+            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${childName?"rgba(201,168,76,0.6)":"rgba(201,168,76,0.3)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
+              <div style={{color:MUTED,fontSize:10,marginBottom:6}}>이름</div>
+              <input type="text" value={childName} onChange={e=>updateName(e.target.value)} placeholder="홍길동"
+                style={{width:"100%",background:"transparent",border:"none",color:childName?GOLD2:MUTED,fontSize:14,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
             </div>
+            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${birth.length===6?"rgba(201,168,76,0.6)":"rgba(201,168,76,0.3)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
+              <div style={{color:MUTED,fontSize:10,marginBottom:6}}>생년월일 <span style={{fontSize:9}}>(YYMMDD)</span></div>
+              <input type="text" value={birth} onChange={e=>updateBirth(e.target.value.replace(/\D/g,"").slice(0,6))} placeholder="190523" maxLength={6}
+                style={{width:"100%",background:"transparent",border:"none",color:birth.length===6?GOLD2:MUTED,fontSize:14,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box",letterSpacing:2}}/>
+              {birth.length===6&&(()=>{
+                const age=calcAgeFromShort(birth);
+                return age
+                  ? <div style={{color:GOLD,fontSize:9,marginTop:3}}>✓ {age.display}</div>
+                  : <div style={{color:"#f76f8e",fontSize:9,marginTop:3}}>날짜 확인</div>;
+              })()}
+            </div>
+          </div>
 
-            {/* 키 */}
-            <div style={{background:"rgba(13,27,62,0.6)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
-              <div style={{color:MUTED,fontSize:10,marginBottom:8}}>키 (cm)</div>
-              <input type="number" value={heightVal} onChange={e=>setHeightVal(e.target.value)} placeholder="115"
+          {/* 키 + 몸무게 */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${heightVal?"rgba(201,168,76,0.6)":"rgba(201,168,76,0.3)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
+              <div style={{color:MUTED,fontSize:10,marginBottom:6}}>키 (cm)</div>
+              <input type="number" value={heightVal} onChange={e=>updateHeight(e.target.value)} placeholder="115"
                 style={{width:"100%",background:"transparent",border:"none",color:heightVal?GOLD2:MUTED,fontSize:16,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
-              {heightVal&&<div style={{color:MUTED,fontSize:10,marginTop:4}}>{heightVal}cm</div>}
             </div>
-
-            {/* 몸무게 */}
-            <div style={{background:"rgba(13,27,62,0.6)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
-              <div style={{color:MUTED,fontSize:10,marginBottom:8}}>몸무게 (kg)</div>
-              <input type="number" value={weightVal} onChange={e=>setWeightVal(e.target.value)} placeholder="20"
+            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${weightVal?"rgba(201,168,76,0.6)":"rgba(201,168,76,0.3)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
+              <div style={{color:MUTED,fontSize:10,marginBottom:6}}>몸무게 (kg)</div>
+              <input type="number" value={weightVal} onChange={e=>updateWeight(e.target.value)} placeholder="20"
                 style={{width:"100%",background:"transparent",border:"none",color:weightVal?GOLD2:MUTED,fontSize:16,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
-              {weightVal&&<div style={{color:MUTED,fontSize:10,marginTop:4}}>{weightVal}kg</div>}
             </div>
           </div>
 
           {/* 미리보기 */}
-          {birth&&heightVal&&weightVal&&(()=>{
-            const ageMonths=parseInt(birth)*12;
-            const gd=getGrowthData(ageMonths,parseFloat(heightVal),parseFloat(weightVal));
+          {birth.length===6&&heightVal&&weightVal&&(()=>{
+            const age=calcAgeFromShort(birth);
+            if(!age) return null;
+            const gd=getGrowthData(age.months,parseFloat(heightVal),parseFloat(weightVal));
             if(!gd) return null;
             const hp=getPctLabel(gd.hPct),wp=getPctLabel(gd.wPct);
-            return <div style={{marginTop:12,padding:"10px",borderRadius:8,background:"rgba(13,27,62,0.6)",border:"1px solid rgba(201,168,76,0.2)"}}>
-              <div style={{color:GOLD,fontSize:11,fontWeight:700,marginBottom:6}}>📊 만 {parseInt(birth)}세 미리보기</div>
+            return <div style={{marginTop:10,padding:"10px",borderRadius:8,background:"rgba(13,27,62,0.6)",border:"1px solid rgba(201,168,76,0.2)"}}>
+              <div style={{color:GOLD,fontSize:11,fontWeight:700,marginBottom:6}}>📊 {age.display} 미리보기</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
                 <div style={{textAlign:"center"}}><div style={{color:MUTED,fontSize:10,marginBottom:2}}>키</div><div style={{color:hp.color,fontSize:16,fontWeight:900}}>{hp.label}</div><div style={{color:MUTED,fontSize:10}}>평균 {gd.stdH}cm</div></div>
                 <div style={{textAlign:"center"}}><div style={{color:MUTED,fontSize:10,marginBottom:2}}>몸무게</div><div style={{color:wp.color,fontSize:16,fontWeight:900}}>{wp.label}</div><div style={{color:MUTED,fontSize:10}}>평균 {gd.stdW}kg</div></div>
@@ -799,9 +798,11 @@ window.onload = function(){ window.print(); }
     const maxDist=Math.max(...Object.values(distData));
 
     // 성장 데이터
-    const ageMonths = birth ? parseInt(birth)*12 : null;
+    const ageInfo = birth.length===6 ? calcAgeFromShort(birth) : null;
+    const ageMonths = ageInfo?.months || null;
     const gd=(ageMonths&&heightVal&&weightVal)?getGrowthData(ageMonths,parseFloat(heightVal),parseFloat(weightVal)):null;
-    const ageDisplay = birth ? `만 ${parseInt(birth)}세` : "";
+    const ageDisplay = ageInfo ? ageInfo.display : "";
+    const nameDisplay = childName ? `${childName} 선수` : "우리 아이";
     const hTarget=90;
     const wTarget=result.main==="슬러거"?15:result.main==="교타자"?85:90;
     const wTargetLabel=result.main==="슬러거"?"상위15%관리":result.main==="교타자"?"상위15%목표":"상위10%목표";
@@ -816,93 +817,105 @@ window.onload = function(){ window.print(); }
             <div style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a,#c9a84c)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:13,fontWeight:900,letterSpacing:3}}>PHYSICAL UP · 피지컬업</div>
           </div>
 
+          {/* 인사말 */}
+          <div style={{
+            textAlign:"center",padding:"16px 20px",marginBottom:14,
+            background:"linear-gradient(135deg,rgba(201,168,76,0.08),rgba(13,27,62,0.6))",
+            borderRadius:14,border:"1px solid rgba(201,168,76,0.25)",
+            position:"relative",overflow:"hidden"
+          }}>
+            <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${GOLD},${GOLD2},${GOLD})`}}/>
+            <div style={{color:MUTED,fontSize:12,marginBottom:4}}>안녕하세요! 👋</div>
+            <div style={{color:WHITE,fontSize:16,fontWeight:800,lineHeight:1.6}}>
+              <span style={{color:GOLD2}}>{nameDisplay}</span>
+              {ageInfo&&<span style={{color:MUTED,fontSize:13,fontWeight:600}}> ({ageInfo.display})</span>}
+            </div>
+            <div style={{color:MUTED,fontSize:13,marginTop:4}}>의 체질 코드 분석 결과입니다 ⚾</div>
+          </div>
+
           {/* 성장 지표 */}
           {gd&&(
             <div style={{...cardStyle,border:"1px solid rgba(201,168,76,0.3)",boxShadow:"0 4px 20px rgba(201,168,76,0.1)"}}>
               <div style={{color:GOLD,fontSize:12,fontWeight:700,marginBottom:4,letterSpacing:1}}>📏 성장 지표 분석</div>
               <div style={{color:MUTED,fontSize:11,marginBottom:14,borderBottom:"1px solid rgba(201,168,76,0.1)",paddingBottom:10}}>{ageDisplay} · BMI {gd.bmi}</div>
-              {[{label:"키",value:heightVal,unit:"cm",pos:Math.min(99,Math.max(1,gd.hPct)),color:"#4fcfa0",diff:gd.diffH,std:gd.stdH,tPos:hTarget,tVal:gd.targetH,tLabel:"상위10%목표"},
-                {label:"몸무게",value:weightVal,unit:"kg",pos:Math.min(99,Math.max(1,gd.wPct)),color:"#4f8ef7",diff:gd.diffW,std:gd.stdW,tPos:wTarget,tVal:result.main==="슬러거"?gd.targetW15:result.main==="교타자"?gd.targetW85:gd.targetW90,tLabel:wTargetLabel}
+
+              {[
+                {label:"키",value:parseFloat(heightVal),unit:"cm",avg:gd.stdH,mine:parseFloat(heightVal),target:gd.targetH,color:"#4fcfa0",isSlug:false},
+                {label:"몸무게",value:parseFloat(weightVal),unit:"kg",avg:gd.stdW,mine:parseFloat(weightVal),target:result.main==="슬러거"?gd.targetW15:result.main==="교타자"?gd.targetW85:gd.targetW90,color:"#4f8ef7",isSlug:result.main==="슬러거"}
               ].map(ax=>{
-                const hp=getPctLabel(ax.pos);
-                const myVal=parseFloat(ax.value),tVal=parseFloat(ax.tVal);
-                const isSlug=result.main==="슬러거"&&ax.unit==="kg";
-                const reached=isSlug?myVal<=tVal:myVal>=tVal;
-                const gap=Math.abs(tVal-myVal).toFixed(1);
+                // 3개 값을 정렬해서 위치 계산
+                const vals=[ax.avg,ax.mine,ax.target];
+                const minV=Math.min(...vals)*0.97;
+                const maxV=Math.max(...vals)*1.03;
+                const toPos=v=>Math.round(((v-minV)/(maxV-minV))*100);
+                const avgPos=toPos(ax.avg);
+                const minePos=toPos(ax.mine);
+                const targetPos=toPos(ax.target);
+                const reached=ax.isSlug?ax.mine<=ax.target:ax.mine>=ax.target;
+
                 return (
-                  <div key={ax.label} style={{marginBottom:18}}>
-                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
-                      <div style={{display:"flex",alignItems:"center",gap:6}}>
-                        <span style={{color:WHITE,fontSize:12,fontWeight:700}}>{ax.label}</span>
-                        <span style={{background:`${ax.color}20`,border:`1px solid ${ax.color}40`,borderRadius:10,padding:"1px 8px",color:ax.color,fontSize:11,fontWeight:800}}>{ax.value}{ax.unit}</span>
-                      </div>
-                      <div style={{display:"flex",alignItems:"center",gap:8}}>
-                        <div style={{display:"flex",alignItems:"center",gap:4,background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:10,padding:"1px 8px"}}>
-                          <span style={{color:GOLD,fontSize:9}}>🎯</span>
-                          <span style={{color:GOLD,fontSize:10,fontWeight:700}}>{ax.tVal}{ax.unit}</span>
-                        </div>
-                        <span style={{color:hp.color,fontSize:13,fontWeight:900}}>{hp.label}</span>
-                      </div>
+                  <div key={ax.label} style={{marginBottom:20}}>
+                    {/* 타이틀 */}
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+                      <span style={{color:WHITE,fontSize:13,fontWeight:700}}>{ax.label}</span>
+                      {reached
+                        ? <span style={{color:"#4fcfa0",fontSize:11,fontWeight:700}}>🏆 목표 달성!</span>
+                        : <span style={{color:GOLD,fontSize:11,fontWeight:700}}>🎯 {Math.abs(ax.target-ax.mine).toFixed(1)}{ax.unit} {ax.isSlug?"감량 필요":"더 필요"}</span>
+                      }
                     </div>
-                    {/* 그래프 트랙 */}
-                    <div style={{position:"relative",height:48,marginBottom:4}}>
-                      <div style={{position:"absolute",top:20,left:0,right:0,height:10,borderRadius:5,background:"linear-gradient(90deg,#f76f8e 0%,#f7d24f 25%,#4fcfa0 50%,#4f8ef7 75%,#a78bfa 100%)",opacity:0.2}}/>
-                      {bands.map(b=><div key={b.l} style={{position:"absolute",top:18,left:`${b.p}%`,width:1,height:14,background:"rgba(255,255,255,0.12)",transform:"translateX(-50%)"}}/>)}
-                      <div style={{position:"absolute",top:16,left:"50%",width:2,height:18,background:"rgba(255,255,255,0.25)",borderRadius:1,transform:"translateX(-50%)"}}/>
-                      {/* 목표 마커 */}
-                      <div style={{position:"absolute",bottom:0,left:`${ax.tPos}%`,transform:"translateX(-50%)",display:"flex",flexDirection:"column",alignItems:"center",zIndex:8}}>
-                        <div style={{width:0,height:0,borderLeft:"5px solid transparent",borderRight:"5px solid transparent",borderBottom:`7px solid ${GOLD}`}}/>
-                        <div style={{width:2,height:12,background:GOLD,borderRadius:1}}/>
-                        <div style={{width:7,height:7,background:GOLD,transform:"rotate(45deg)",boxShadow:`0 0 8px ${GOLD}`}}/>
+
+                    {/* 그래프 영역 */}
+                    <div style={{position:"relative",height:80,marginBottom:8}}>
+                      {/* 베이스 라인 */}
+                      <div style={{position:"absolute",bottom:28,left:0,right:0,height:2,background:"rgba(255,255,255,0.08)",borderRadius:1}}/>
+
+                      {/* 평균 선 */}
+                      <div style={{position:"absolute",bottom:16,left:`${avgPos}%`,transform:"translateX(-50%)",display:"flex",flexDirection:"column",alignItems:"center",zIndex:7}}>
+                        <div style={{color:MUTED,fontSize:10,fontWeight:700,marginBottom:3,whiteSpace:"nowrap"}}>평균</div>
+                        <div style={{width:2,height:36,background:"rgba(255,255,255,0.3)",borderRadius:1}}/>
+                        <div style={{width:6,height:6,borderRadius:"50%",background:"rgba(255,255,255,0.4)",marginTop:2}}/>
+                        <div style={{color:MUTED,fontSize:10,fontWeight:600,marginTop:3,whiteSpace:"nowrap"}}>{ax.avg}{ax.unit}</div>
                       </div>
-                      {/* 내 아이 마커 */}
-                      <div style={{position:"absolute",top:0,left:`${ax.pos}%`,transform:"translateX(-50%)",display:"flex",flexDirection:"column",alignItems:"center",zIndex:10}}>
-                        <div style={{width:0,height:0,borderLeft:"6px solid transparent",borderRight:"6px solid transparent",borderTop:`8px solid ${ax.color}`}}/>
-                        <div style={{width:2,height:14,background:ax.color,borderRadius:1}}/>
-                        <div style={{width:8,height:8,borderRadius:"50%",background:ax.color,boxShadow:`0 0 8px ${ax.color}`}}/>
+
+                      {/* 내 아이 선 */}
+                      <div style={{position:"absolute",bottom:16,left:`${minePos}%`,transform:"translateX(-50%)",display:"flex",flexDirection:"column",alignItems:"center",zIndex:9}}>
+                        <div style={{color:ax.color,fontSize:11,fontWeight:900,marginBottom:3,whiteSpace:"nowrap"}}>내 아이</div>
+                        <div style={{width:3,height:36,background:ax.color,borderRadius:1,boxShadow:`0 0 8px ${ax.color}`}}/>
+                        <div style={{width:8,height:8,borderRadius:"50%",background:ax.color,marginTop:2,boxShadow:`0 0 8px ${ax.color}`}}/>
+                        <div style={{color:ax.color,fontSize:11,fontWeight:900,marginTop:3,whiteSpace:"nowrap"}}>{ax.mine}{ax.unit}</div>
                       </div>
-                    </div>
-                    {/* 라벨 */}
-                    <div style={{position:"relative",height:22}}>
-                      {bands.map(b=><div key={b.l} style={{position:"absolute",left:`${b.p}%`,transform:"translateX(-50%)",color:"rgba(255,255,255,0.18)",fontSize:8}}>{b.l}</div>)}
-                      <div style={{position:"absolute",left:`${ax.pos}%`,transform:"translateX(-50%)",color:ax.color,fontSize:9,fontWeight:800,whiteSpace:"nowrap",top:9}}>★ {ax.value}{ax.unit}</div>
-                      <div style={{position:"absolute",left:`${ax.tPos}%`,transform:"translateX(-50%)",color:GOLD,fontSize:8,fontWeight:700,whiteSpace:"nowrap",top:0,textShadow:`0 0 6px ${GOLD}`}}>🎯{ax.tVal}{ax.unit}</div>
-                    </div>
-                    {/* 달성 여부 */}
-                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:8,padding:"8px 12px",borderRadius:8,background:reached?"rgba(79,207,160,0.08)":"rgba(201,168,76,0.06)",border:reached?"1px solid rgba(79,207,160,0.2)":"1px solid rgba(201,168,76,0.15)"}}>
-                      <div>
-                        <span style={{color:MUTED,fontSize:11}}>또래 평균 {ax.std}{ax.unit}</span>
-                        <span style={{color:parseFloat(ax.diff)>=0?"#4fcfa0":"#f76f8e",fontSize:11,fontWeight:700,marginLeft:8}}>{parseFloat(ax.diff)>=0?"+":""}{ax.diff}{ax.unit}</span>
+
+                      {/* 목표 선 */}
+                      <div style={{position:"absolute",bottom:16,left:`${targetPos}%`,transform:"translateX(-50%)",display:"flex",flexDirection:"column",alignItems:"center",zIndex:8}}>
+                        <div style={{color:GOLD,fontSize:10,fontWeight:700,marginBottom:3,whiteSpace:"nowrap"}}>🎯목표</div>
+                        <div style={{width:2,height:36,background:GOLD,borderRadius:1,boxShadow:`0 0 6px ${GOLD}`}}/>
+                        <div style={{width:7,height:7,background:GOLD,transform:"rotate(45deg)",marginTop:2,boxShadow:`0 0 6px ${GOLD}`}}/>
+                        <div style={{color:GOLD,fontSize:10,fontWeight:700,marginTop:3,whiteSpace:"nowrap"}}>{ax.target}{ax.unit}</div>
                       </div>
-                      {reached?<span style={{color:"#4fcfa0",fontSize:11,fontWeight:700}}>🏆 목표 달성!</span>:<span style={{color:GOLD,fontSize:11,fontWeight:700}}>🎯 {gap}{ax.unit} {isSlug?"감량 필요":"더 필요"}</span>}
                     </div>
                   </div>
                 );
               })}
-              {/* 선수 목표 요약 */}
-              <div style={{padding:"10px 12px",borderRadius:8,background:"rgba(201,168,76,0.06)",border:"1px solid rgba(201,168,76,0.15)"}}>
-                <div style={{color:GOLD,fontSize:11,fontWeight:700,marginBottom:6}}>⚾ 운동선수 성장 기대치</div>
-                {[{l:`📐 키 목표 ${gd.targetH}cm (상위 10%)`,ok:parseFloat(heightVal)>=gd.targetH,gap:(gd.targetH-parseFloat(heightVal)).toFixed(1),unit:"cm"},
-                  {l:`⚖️ 몸무게 목표 ${result.main==="슬러거"?gd.targetW15:result.main==="교타자"?gd.targetW85:gd.targetW90}kg (${wTargetLabel})`,ok:result.main==="슬러거"?parseFloat(weightVal)<=gd.targetW15:parseFloat(weightVal)>=(result.main==="교타자"?gd.targetW85:gd.targetW90),gap:Math.abs((result.main==="슬러거"?gd.targetW15:result.main==="교타자"?gd.targetW85:gd.targetW90)-parseFloat(weightVal)).toFixed(1),unit:"kg",isSlug:result.main==="슬러거"}
-                ].map((item,i)=>(
-                  <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:i===0?5:0}}>
-                    <span style={{color:MUTED,fontSize:11}}>{item.l}</span>
-                    {item.ok?<span style={{color:"#4fcfa0",fontSize:11,fontWeight:700}}>🏆 달성!</span>:<span style={{color:GOLD,fontSize:11,fontWeight:700}}>🎯 {item.gap}{item.unit} {item.isSlug?"감량":"더 필요"}</span>}
-                  </div>
-                ))}
-              </div>
             </div>
           )}
 
           {/* 코드 메인 카드 */}
           <div style={{textAlign:"center",padding:"26px 20px",background:"linear-gradient(160deg,#0d1b3e,#0f2050)",border:`1px solid rgba(201,168,76,0.35)`,borderRadius:20,marginBottom:12,boxShadow:"0 8px 40px rgba(201,168,76,0.15)"}}>
-            <div style={{display:"inline-block",padding:"8px 28px",borderRadius:12,marginBottom:16,background:"linear-gradient(135deg,#c9a84c,#e8c76a)",boxShadow:"0 4px 16px rgba(201,168,76,0.4)"}}>
-              <span style={{color:NAVY,fontSize:28,fontWeight:900,letterSpacing:8}}>{result.code}</span>
+            {/* 검사 날짜 */}
+            <div style={{color:MUTED,fontSize:11,marginBottom:12,letterSpacing:1}}>
+              📅 검사일 {new Date().toLocaleDateString("ko-KR")}
             </div>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:12,marginBottom:10}}>
-              <div><div style={{color:MUTED,fontSize:10,marginBottom:2,letterSpacing:1}}>대분류</div><div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:22}}>{mi.emoji}</span><span style={{color:GOLD2,fontSize:20,fontWeight:800}}>{result.main}</span></div></div>
-              <div style={{width:1,height:36,background:"rgba(201,168,76,0.2)"}}/>
-              <div><div style={{color:MUTED,fontSize:10,marginBottom:2,letterSpacing:1}}>세분류</div><div style={{display:"flex",alignItems:"center",gap:6}}><span style={{fontSize:18}}>{si.emoji}</span><span style={{color:si.color,fontSize:18,fontWeight:800}}>{result.sub}</span></div></div>
+            {/* 코드 배지 - 투명 + 골드 테두리 */}
+            <div style={{display:"inline-block",padding:"10px 32px",borderRadius:24,marginBottom:16,background:"rgba(201,168,76,0.08)",border:"1.5px solid rgba(201,168,76,0.5)",boxShadow:"0 4px 20px rgba(201,168,76,0.15)"}}>
+              <span style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:32,fontWeight:900,letterSpacing:8}}>{result.code}</span>
+            </div>
+            {/* 대분류+세분류 붙여서 */}
+            <div style={{marginBottom:10}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginBottom:6}}>
+                <span style={{fontSize:20}}>{mi.emoji}</span>
+                <span style={{color:GOLD2,fontSize:20,fontWeight:800}}>{result.main}</span>
+                <span style={{color:si.color,fontSize:20,fontWeight:800}}>{si.emoji} {result.sub}형</span>
+              </div>
             </div>
             <p style={{color:MUTED,fontSize:13,lineHeight:1.7,margin:0}}>{si.shortDesc}</p>
           </div>
@@ -1078,15 +1091,15 @@ window.onload = function(){ window.print(); }
               {/* 카톡 공유 */}
               <button onClick={handleShare} style={{
                 padding:"16px 8px",borderRadius:12,
-                background:copied?"rgba(79,207,160,0.15)":"rgba(254,229,0,0.1)",
-                color:copied?"#4fcfa0":"#f9e000",
+                background:"rgba(254,229,0,0.1)",
+                color:"#f9e000",
                 fontSize:13,fontWeight:800,
-                border:copied?"1.5px solid #4fcfa0":"1.5px solid rgba(254,229,0,0.35)",
+                border:"1.5px solid rgba(254,229,0,0.35)",
                 cursor:"pointer",lineHeight:1.5,transition:"all 0.3s"
               }}>
-                {copied?"✅ 복사됨!":"💬 카톡 공유"}<br/>
+                💬 카톡 공유<br/>
                 <span style={{fontSize:9,fontWeight:600,opacity:0.7}}>
-                  {copied?"카톡 열고 붙여넣기!":"복사+카톡 자동실행"}
+                  이미지+링크 카톡 전송
                 </span>
               </button>
             </div>
@@ -1094,10 +1107,10 @@ window.onload = function(){ window.print(); }
             {/* 카톡 붙여넣기 안내 */}
             {copied&&(
               <div style={{padding:"12px 14px",borderRadius:10,marginBottom:10,background:"rgba(254,229,0,0.06)",border:"1px solid rgba(254,229,0,0.2)",textAlign:"center"}}>
-                <div style={{color:"#f9e000",fontSize:13,fontWeight:700,marginBottom:4}}>✅ 결과가 복사됐어요!</div>
+                <div style={{color:"#f9e000",fontSize:13,fontWeight:700,marginBottom:4}}>📸 이미지 저장 중!</div>
                 <div style={{color:MUTED,fontSize:11,lineHeight:1.7}}>
-                  카카오톡 → 채팅창 → 길게 누르기 → 붙여넣기<br/>
-                  <span style={{color:GOLD,fontSize:11}}>pu333.kr 링크가 미리보기로 자동으로 뜨게 됩니다!</span>
+                  다운로드 폴더에서 이미지 확인 후<br/>
+                  <span style={{color:GOLD,fontSize:11}}>카카오톡 → 사진 첨부로 공유하세요!</span>
                 </div>
               </div>
             )}
