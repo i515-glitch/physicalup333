@@ -244,7 +244,7 @@ async function callAI(pAns,kAns,res,setAiAdvice,setLoading) {
 // ─── 메인 컴포넌트 ────────────────────────────────────────────────────────────
 export default function App() {
   // ── 모든 state는 여기에 ──
-  const [step,setStep]=useState("intro");
+  const [step,setStep]=useState("home");
   const [pIdx,setPIdx]=useState(0);
   const [kIdx,setKIdx]=useState(0);
   const [pAns,setPAns]=useState({});
@@ -261,7 +261,7 @@ export default function App() {
   const [saved,setSaved]=useState(false);
   const [copied,setCopied]=useState(false);
   const [downloading,setDownloading]=useState(false);
-  const [showAll,setShowAll]=useState(false);
+  const [shopTab,setShopTab]=useState(null);
 
   // 입력값 변경시 자동 저장
   const updateName=v=>{setChildName(v);try{localStorage.setItem("pu333_name",v);}catch{}};
@@ -309,7 +309,7 @@ export default function App() {
   }
 
   function reset(){
-    setStep("intro");setPIdx(0);setKIdx(0);
+    setStep("home");setPIdx(0);setKIdx(0);
     setPAns({});setKAns({});setResult(null);setAiAdvice("");
     setSaved(false);setCopied(false);setDownloading(false);setShowAll(false);
     // 이름·생년월일·키·몸무게는 유지 (다음에도 쓸 수 있게)
@@ -592,17 +592,277 @@ function saveHtml(){
 
     const blob=new Blob([html],{type:"text/html;charset=utf-8"});
     const url=URL.createObjectURL(blob);
-    setTimeout(()=>{
-      window.location.href=url;
-      setDownloading(false);
-    },100);
+    setDownloading(false);
+    // iOS 대응 - 앱 안 결과지 화면으로 전환
+    setStep("report");
   }
 
 
   // ── 공통 스타일 ──
   const cardStyle={background:"rgba(13,27,62,0.6)",borderRadius:16,padding:"18px",marginBottom:12,border:`1px solid rgba(201,168,76,0.15)`};
 
-  // ── INTRO ──────────────────────────────────────────────────────────────────
+  // ── REPORT ─────────────────────────────────────────────────────────────────
+  if(step==="report"&&result){
+    const mi=mainType[result.main]||mainType["균형형"];
+    const si=subType[result.sub]||subType["항온형"];
+    const ment=codeMents[result.code]||{emoji:"⚖️",nick:"완벽균형",wit:"나만의 체질",tip:"피지컬333 Test로 맞춤 관리 시작!"};
+    const bar=n=>"●".repeat(n)+"○".repeat(3-n);
+    const date=new Date().toLocaleDateString("ko-KR");
+    const ageInfo=birth.length===6?calcAgeFromShort(birth):null;
+
+    return (
+      <div style={{minHeight:"100vh",background:"#f5f3ef",fontFamily:font,padding:"20px 16px 60px"}}>
+        <div style={{maxWidth:480,margin:"0 auto"}}>
+
+          {/* 헤더 카드 */}
+          <div style={{background:"linear-gradient(145deg,#0d1b3e,#1a2d5a)",borderRadius:16,padding:"24px",marginBottom:12,border:"2px solid #c9a84c",position:"relative",overflow:"hidden"}}>
+            <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:"linear-gradient(90deg,#c9a84c,#e8c76a,#c9a84c)"}}/>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
+              <div>
+                <div style={{color:GOLD,fontSize:10,letterSpacing:4,fontWeight:700}}>PHYSICAL UP</div>
+                <div style={{fontSize:18,fontWeight:900,color:GOLD2,letterSpacing:2}}>333TEST</div>
+              </div>
+              <div style={{width:40,height:40,background:"linear-gradient(135deg,#c9a84c,#e8c76a)",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>⚾</div>
+            </div>
+            <div style={{height:1,background:"linear-gradient(90deg,transparent,#c9a84c,transparent)",marginBottom:14}}/>
+            <div style={{textAlign:"center",marginBottom:14}}>
+              <div style={{display:"inline-block",padding:"8px 24px",borderRadius:24,background:"rgba(201,168,76,0.1)",border:"1.5px solid rgba(201,168,76,0.5)",marginBottom:10}}>
+                <span style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:30,fontWeight:900,letterSpacing:8}}>{result.code}</span>
+              </div>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8,marginBottom:6}}>
+                <span style={{fontSize:16}}>{mi.emoji}</span>
+                <span style={{color:GOLD2,fontSize:16,fontWeight:800}}>{result.main}</span>
+                <span style={{color:"rgba(255,255,255,0.2)"}}>|</span>
+                <span style={{color:GOLD,fontSize:14,fontWeight:700,background:"rgba(201,168,76,0.1)",padding:"2px 12px",borderRadius:12,border:"1px solid rgba(201,168,76,0.3)"}}>{ment.emoji} {ment.nick}</span>
+              </div>
+              {ageInfo&&<div style={{color:"rgba(201,168,76,0.5)",fontSize:11,marginBottom:6}}>{ageInfo.display}{heightVal?` · 키 ${heightVal}cm`:""}{weightVal?` · 몸무게 ${weightVal}kg`:""}</div>}
+            </div>
+            <div style={{background:"rgba(255,255,255,0.05)",borderLeft:"3px solid #c9a84c",padding:"10px 14px",borderRadius:"0 8px 8px 0",marginBottom:12}}>
+              <div style={{color:"#f0f4ff",fontSize:13,lineHeight:1.8,marginBottom:4}}>"{ment.wit}"</div>
+              <div style={{color:GOLD2,fontSize:12,fontWeight:700}}>💡 {ment.tip}</div>
+            </div>
+            <div style={{display:"flex",gap:2,borderRadius:8,overflow:"hidden",marginBottom:12}}>
+              {[{l:"흡수력",v:result.scores.absorb,c:"#4fcfa0"},{l:"연소력",v:result.scores.burn,c:"#f7954f"},{l:"축적력",v:result.scores.store,c:"#f76f8e"}].map(ax=>(
+                <div key={ax.l} style={{flex:1,padding:"8px 4px",textAlign:"center",background:`${ax.c}12`}}>
+                  <div style={{color:`${ax.c}99`,fontSize:9,letterSpacing:1,marginBottom:2}}>{ax.l}</div>
+                  <div style={{color:ax.c,fontSize:12,letterSpacing:1}}>{bar(ax.v)}</div>
+                  <div style={{color:ax.c,fontSize:9,fontWeight:700,marginTop:1}}>{ax.v}/3</div>
+                </div>
+              ))}
+            </div>
+            <div style={{display:"flex",justifyContent:"space-between"}}>
+              <span style={{color:"rgba(201,168,76,0.4)",fontSize:10}}>{date}</span>
+              <span style={{color:GOLD,fontSize:11,fontWeight:700}}>pu333.kr</span>
+            </div>
+          </div>
+
+          {/* 카톡공유 + 저장 버튼 */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
+            <button onClick={handleShare} style={{padding:"14px 8px",borderRadius:12,background:"#FEE500",color:"#000",fontSize:13,fontWeight:800,border:"none",cursor:"pointer",lineHeight:1.5}}>
+              💬 카톡 공유<br/><span style={{fontSize:10,opacity:0.7}}>꾸욱 눌러 복사</span>
+            </button>
+            <button onClick={()=>{
+              const el=document.createElement("a");
+              el.href="data:text/html;charset=utf-8,"+encodeURIComponent(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>피지컬333 결과</title></head><body style="background:#f5f3ef;font-family:sans-serif;padding:20px;"><h2 style="color:#0d1b3e;">${result.code} · ${result.main} · ${ment.nick}</h2><p>"${ment.wit}"</p><p>💡 ${ment.tip}</p><p>흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}</p><p>${date} · pu333.kr</p></body></html>`);
+              el.download=`피지컬333_${result.code}.html`;
+              el.click();
+            }} style={{padding:"14px 8px",borderRadius:12,background:"linear-gradient(145deg,#0d1b3e,#1a2d5a)",color:GOLD2,fontSize:13,fontWeight:800,border:`1.5px solid ${GOLD}`,cursor:"pointer",lineHeight:1.5,position:"relative",overflow:"hidden"}}>
+              <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${GOLD},${GOLD2},${GOLD})`}}/>
+              💾 저장<br/><span style={{fontSize:10,opacity:0.7}}>HTML 파일</span>
+            </button>
+          </div>
+
+          {/* 상세 결과 */}
+          <div style={{background:"#fff",borderRadius:16,padding:"20px",marginBottom:12,border:"1px solid #e8e4dc"}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14,paddingBottom:12,borderBottom:"2px solid #c9a84c"}}>
+              <span style={{color:"#0d1b3e",fontSize:14,fontWeight:700}}>체질 상세 결과 확인서</span>
+              <span style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",color:"#0d1b3e",fontSize:13,fontWeight:900,padding:"3px 12px",borderRadius:8}}>{result.code}</span>
+            </div>
+            {[{title:"🥗 음식 대책",items:mi.food},{title:"💊 영양제 대책",items:mi.supplement},{title:"✅ 생활 습관",items:mi.life}].map(s=>(
+              <div key={s.title} style={{marginBottom:16}}>
+                <div style={{color:"#c9a84c",fontSize:11,fontWeight:700,letterSpacing:2,marginBottom:8}}>{s.title}</div>
+                {s.items.map((item,i)=>(
+                  <div key={i} style={{display:"flex",gap:8,marginBottom:6}}>
+                    <span style={{color:"#c9a84c",fontSize:10,marginTop:3,flexShrink:0}}>▸</span>
+                    <span style={{color:"#2a3550",fontSize:12,lineHeight:1.7}}>{item}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+            <div style={{background:"rgba(201,168,76,0.06)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:8,padding:"10px 12px",textAlign:"center"}}>
+              <span style={{color:"#8a7040",fontSize:11}}>⚠️ {mi.caution}</span>
+            </div>
+          </div>
+
+          <button onClick={()=>setStep("result")} style={{width:"100%",padding:"14px",borderRadius:12,background:"rgba(201,168,76,0.06)",color:MUTED,fontSize:14,border:"1px solid rgba(201,168,76,0.2)",cursor:"pointer"}}>
+            ← 결과로 돌아가기
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ── HOME ──────────────────────────────────────────────────────────────────
+  if(step==="home") return (
+    <div style={{minHeight:"100vh",background:bg,fontFamily:font,color:WHITE}}>
+
+      {/* 네비게이션 */}
+      <nav style={{position:"sticky",top:0,zIndex:100,background:"rgba(6,10,20,0.95)",backdropFilter:"blur(10px)",borderBottom:"1px solid rgba(201,168,76,0.15)",padding:"0 20px"}}>
+        <div style={{maxWidth:800,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",height:56}}>
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <div style={{width:32,height:32,borderRadius:"50%",background:"linear-gradient(135deg,#c9a84c,#e8c76a)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16}}>⚾</div>
+            <div>
+              <div style={{color:GOLD,fontSize:12,fontWeight:900,letterSpacing:2,lineHeight:1}}>PHYSICAL UP</div>
+              <div style={{color:MUTED,fontSize:9,letterSpacing:1}}>YOUTH SPORTS CLUB</div>
+            </div>
+          </div>
+          <button onClick={()=>setStep("intro")} style={{padding:"8px 18px",borderRadius:20,background:"linear-gradient(135deg,#c9a84c,#e8c76a)",color:NAVY,fontSize:12,fontWeight:800,border:"none",cursor:"pointer"}}>
+            333TEST 시작 →
+          </button>
+        </div>
+      </nav>
+
+      {/* 히어로 */}
+      <div style={{textAlign:"center",padding:"60px 24px 50px",background:"linear-gradient(180deg,rgba(201,168,76,0.05) 0%,transparent 100%)"}}>
+        <div style={{marginBottom:20}}>
+          <div style={{display:"inline-block",padding:"10px 52px",borderRadius:24,background:"rgba(201,168,76,0.08)",border:"1.5px solid rgba(201,168,76,0.5)",marginBottom:16}}>
+            <div style={{color:GOLD,fontSize:12,fontWeight:700,letterSpacing:4,marginBottom:2}}>PHYSICAL UP</div>
+            <div style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:34,fontWeight:900,letterSpacing:4}}>333TEST</div>
+          </div>
+        </div>
+        <h1 style={{color:WHITE,fontSize:24,fontWeight:900,lineHeight:1.5,marginBottom:12,maxWidth:360,margin:"0 auto 12px"}}>
+          체격은 타고나는 유전이 아니라<br/>
+          <span style={{color:GOLD2}}>철저하게 계산된 데이터 과학</span>입니다
+        </h1>
+        <p style={{color:MUTED,fontSize:14,lineHeight:1.9,marginBottom:28,maxWidth:360,margin:"0 auto 28px"}}>
+          흡수력 · 연소력 · 축적력<br/>3축 분석으로 우리 아이 체질 코드를 찾아보세요
+        </p>
+        <button onClick={()=>setStep("intro")} style={{
+          padding:"16px 40px",borderRadius:14,
+          background:"linear-gradient(135deg,#c9a84c,#e8c76a)",
+          color:NAVY,fontSize:16,fontWeight:900,border:"none",cursor:"pointer",
+          boxShadow:"0 8px 32px rgba(201,168,76,0.4)",letterSpacing:1
+        }}>
+          ⚾ 무료 체질 검사 시작하기
+        </button>
+        <p style={{color:MUTED,fontSize:11,marginTop:10}}>약 5분 · 27가지 체질 코드 · 무료</p>
+      </div>
+
+      {/* 3가지 체질 */}
+      <div style={{padding:"40px 20px",maxWidth:480,margin:"0 auto"}}>
+        <div style={{textAlign:"center",marginBottom:24}}>
+          <div style={{color:GOLD,fontSize:11,letterSpacing:3,marginBottom:6}}>BODY TYPE SYSTEM</div>
+          <div style={{color:WHITE,fontSize:18,fontWeight:800}}>3가지 대분류 체질</div>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12}}>
+          {[
+            {emoji:"🏃",name:"소비형",tag:"찌우기 필요",desc:"먹어도 살이 안 찌는 체질",color:"#4fcfa0"},
+            {emoji:"💪",name:"균형형",tag:"현상태 관리",desc:"균형 잡힌 이상적 체질",color:GOLD},
+            {emoji:"🏋️",name:"저장형",tag:"살빼기 필요",desc:"조금만 먹어도 찌는 체질",color:"#f76f8e"},
+          ].map(t=>(
+            <div key={t.name} style={{background:`${t.color}10`,border:`1px solid ${t.color}30`,borderRadius:14,padding:"16px 8px",textAlign:"center"}}>
+              <div style={{fontSize:28,marginBottom:6}}>{t.emoji}</div>
+              <div style={{color:t.color,fontSize:13,fontWeight:800,marginBottom:4}}>{t.name}</div>
+              <div style={{color:`${t.color}90`,fontSize:9,marginBottom:6}}>{t.tag}</div>
+              <div style={{color:MUTED,fontSize:10,lineHeight:1.5}}>{t.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 회사소개 */}
+      <div style={{padding:"40px 20px",maxWidth:480,margin:"0 auto"}}>
+        <div style={{background:"rgba(13,27,62,0.6)",borderRadius:20,padding:"28px 24px",border:"1px solid rgba(201,168,76,0.2)",position:"relative",overflow:"hidden"}}>
+          <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:"linear-gradient(90deg,#c9a84c,#e8c76a,#c9a84c)"}}/>
+          <div style={{color:GOLD,fontSize:10,letterSpacing:4,marginBottom:8}}>ABOUT US</div>
+          <div style={{color:WHITE,fontSize:18,fontWeight:800,marginBottom:16,lineHeight:1.5}}>피지컬업<br/><span style={{color:GOLD2}}>Physical-Up</span></div>
+          <p style={{color:MUTED,fontSize:13,lineHeight:1.9,marginBottom:16}}>
+            무작정 많이 먹이는 일방적인 방식이 아닌,<br/>
+            <span style={{color:GOLD2,fontWeight:700}}>생체 데이터 분석</span>을 통해 영양을 온전히<br/>
+            흡수하는 '진짜 살찌는 몸'의 로드맵을 설계하는
+          </p>
+          <p style={{color:WHITE,fontSize:13,lineHeight:1.9,marginBottom:20}}>
+            유소년 엘리트 선수 전문<br/>
+            <span style={{color:GOLD,fontWeight:800}}>증량 테크 플랫폼</span>입니다.
+          </p>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            {[
+              {icon:"🧬",title:"체질 분석",desc:"3축 생체 데이터 기반"},
+              {icon:"📊",title:"데이터 관리",desc:"24시간 성장 추적"},
+              {icon:"🥗",title:"맞춤 영양",desc:"체질별 식단 설계"},
+              {icon:"🏆",title:"엘리트 선수",desc:"유소년 스포츠 특화"},
+            ].map(i=>(
+              <div key={i.title} style={{background:"rgba(255,255,255,0.04)",borderRadius:10,padding:"12px"}}>
+                <div style={{fontSize:18,marginBottom:4}}>{i.icon}</div>
+                <div style={{color:GOLD2,fontSize:12,fontWeight:700,marginBottom:2}}>{i.title}</div>
+                <div style={{color:MUTED,fontSize:11}}>{i.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* 유튜브 20강 */}
+      <div style={{padding:"40px 20px",maxWidth:480,margin:"0 auto"}}>
+        <div style={{textAlign:"center",marginBottom:24}}>
+          <div style={{color:GOLD,fontSize:11,letterSpacing:3,marginBottom:6}}>YOUTUBE CONTENT</div>
+          <div style={{color:WHITE,fontSize:18,fontWeight:800,marginBottom:8}}>📺 피지컬업 20강 커리큘럼</div>
+          <div style={{color:MUTED,fontSize:13}}>유소년 선수 증량의 모든 것</div>
+        </div>
+        {[
+          {theme:"🛑 테마1",title:"현타 — 현실 고발과 공감",lectures:["1강: \"살만 찌면 바로 주전인데요\" 감독님의 잔인한 진실"]},
+          {theme:"🧪 테마2",title:"체질변화 — 영양 흡수기 리셋",lectures:["2강: 우리 아이는 왜 살이 안 찌는 체질일까?","3강: 비싼 고기 다 설사로 버리시나요?"]},
+          {theme:"⏰ 테마3",title:"성장을 위한 식사 시간",lectures:["4강: 기상 직후 10분 — 위장 보일러 켜기","5강: 취침 2시간 전 마감 — 차 안이 마지막 식사"]},
+          {theme:"🚀 테마4",title:"식습관 개조",lectures:["6강: 오래 씹는 버릇의 함정","7강: 눈으로 먹지 말고 그릇을 비워라","8강: 뱃구레를 키우는 항아리 법칙","9강: 냉장고 꽉 채워주세요"]},
+          {theme:"🥩 테마5",title:"필드 영양학",lectures:["10강: 얼음물이 피지컬 성장을 막는다","11강: 시합 날 비밀 파우치 TOP4","12강: 삼겹살 회식의 배신","13강: 홍삼과 녹용의 역효과"]},
+          {theme:"📈 테마6",title:"성장 가속 및 데이터 관리",lectures:["14강: 땅콩버터 한 스푼의 기적","15강: 살이 쪄야 키가 큽니다","16강: 가짜 입맛 치료법","17강: 숫자로 찌우는 법","18강: 정체기 돌파의 과학","19강: 인바디의 과학","20강: 목표 달성 후 홈케어 로드맵"]},
+        ].map((t,i)=>(
+          <div key={i} style={{marginBottom:12,background:"rgba(13,27,62,0.4)",borderRadius:12,border:"1px solid rgba(201,168,76,0.1)",overflow:"hidden"}}>
+            <div style={{padding:"12px 16px",background:"rgba(201,168,76,0.05)",borderBottom:"1px solid rgba(201,168,76,0.1)"}}>
+              <div style={{color:GOLD,fontSize:11,fontWeight:700}}>{t.theme} · {t.title}</div>
+            </div>
+            <div style={{padding:"10px 16px"}}>
+              {t.lectures.map((l,j)=>(
+                <div key={j} style={{display:"flex",gap:8,alignItems:"flex-start",marginBottom:j<t.lectures.length-1?8:0}}>
+                  <span style={{color:GOLD,fontSize:10,marginTop:3,flexShrink:0}}>▸</span>
+                  <span style={{color:MUTED,fontSize:12,lineHeight:1.6}}>{l}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+        <div style={{textAlign:"center",marginTop:16}}>
+          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" style={{display:"inline-block",padding:"12px 28px",borderRadius:12,background:"rgba(255,0,0,0.15)",border:"1px solid rgba(255,0,0,0.3)",color:"#ff6b6b",fontSize:13,fontWeight:700,textDecoration:"none"}}>
+            📺 유튜브 채널 바로가기 →
+          </a>
+        </div>
+      </div>
+
+      {/* CTA */}
+      <div style={{padding:"40px 20px 60px",textAlign:"center",maxWidth:480,margin:"0 auto"}}>
+        <div style={{background:"linear-gradient(135deg,rgba(201,168,76,0.1),rgba(13,27,62,0.8))",borderRadius:20,padding:"32px 24px",border:"1px solid rgba(201,168,76,0.3)",position:"relative",overflow:"hidden"}}>
+          <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:"linear-gradient(90deg,#c9a84c,#e8c76a,#c9a84c)"}}/>
+          <div style={{fontSize:32,marginBottom:12}}>⚾</div>
+          <div style={{color:WHITE,fontSize:18,fontWeight:800,marginBottom:8}}>지금 바로 체질 코드 찾기</div>
+          <div style={{color:MUTED,fontSize:13,marginBottom:20}}>5분 · 무료 · 27가지 체질 분석</div>
+          <button onClick={()=>setStep("intro")} style={{
+            padding:"16px 40px",borderRadius:14,
+            background:"linear-gradient(135deg,#c9a84c,#e8c76a)",
+            color:NAVY,fontSize:15,fontWeight:900,border:"none",cursor:"pointer",
+            boxShadow:"0 8px 32px rgba(201,168,76,0.4)",width:"100%"
+          }}>
+            무료 333TEST 시작하기 →
+          </button>
+        </div>
+      </div>
+
+      {/* 푸터 */}
+      <div style={{borderTop:"1px solid rgba(201,168,76,0.1)",padding:"20px",textAlign:"center"}}>
+        <div style={{color:GOLD,fontSize:11,fontWeight:700,letterSpacing:2,marginBottom:4}}>PHYSICAL UP · 피지컬업</div>
+        <div style={{color:MUTED,fontSize:10}}>YOUTH SPORTS CLUB · pu333.kr</div>
+      </div>
+    </div>
+  );
   if(step==="intro") return (
     <div style={{minHeight:"100vh",background:bg,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"28px",fontFamily:font}}>
       <div style={{maxWidth:400,width:"100%",textAlign:"center"}}>
@@ -1128,8 +1388,124 @@ function saveHtml(){
             </div>
           </div>
 
+          <button onClick={()=>setStep("shop")} style={{width:"100%",padding:"14px",borderRadius:12,background:`linear-gradient(135deg,${GOLD},${GOLD2})`,color:NAVY,fontSize:14,fontWeight:800,border:"none",cursor:"pointer",marginBottom:10,boxShadow:"0 4px 16px rgba(201,168,76,0.3)"}}>🛒 내 체질 맞춤 제품 보기</button>
           <button onClick={reset} style={{width:"100%",padding:"14px",borderRadius:12,background:"rgba(201,168,76,0.06)",color:MUTED,fontSize:14,border:"1px solid rgba(201,168,76,0.2)",cursor:"pointer",marginBottom:4}}>🔄 처음부터 다시하기</button>
           <p style={{color:"#1a2a3a",fontSize:11,textAlign:"center",marginTop:14,lineHeight:1.7}}>본 결과는 참고용이며 의학적 진단을 대체하지 않습니다.<br/>성장곡선이 지속 하락 시 소아과 진료를 권장합니다.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ── SHOP ──────────────────────────────────────────────────────────────────
+  if(step==="shop"&&result){
+    const mi=mainType[result.main]||mainType["균형형"];
+    const ment=codeMents[result.code]||{emoji:"⚖️",nick:"완벽균형"};
+
+    const shopData={
+      소비형:{
+        tag:"찌우기 필요",color:"#4fcfa0",
+        products:[
+          {name:"소화효소제",desc:"식사 직전 복용 · 흡수력 향상 핵심",links:[{shop:"쿠팡",url:"#"},{shop:"네이버",url:"#"}]},
+          {name:"아연",desc:"식욕 증진 · 성장 호르몬 활성화",links:[{shop:"쿠팡",url:"#"},{shop:"올리브영",url:"#"}]},
+          {name:"유산균",desc:"장 흡수력 개선 · 면역 강화",links:[{shop:"쿠팡",url:"#"},{shop:"네이버",url:"#"}]},
+          {name:"비타민 B군",desc:"에너지 대사 보조 · 식욕 촉진",links:[{shop:"쿠팡",url:"#"},{shop:"올리브영",url:"#"}]},
+          {name:"무가당 땅콩버터",desc:"고칼로리 밀도 간식 · 증량 필수템",links:[{shop:"쿠팡",url:"#"},{shop:"네이버",url:"#"}]},
+          {name:"마그네슘",desc:"근육·신경 안정 · 숙면 유도",links:[{shop:"쿠팡",url:"#"},{shop:"올리브영",url:"#"}]},
+        ]
+      },
+      균형형:{
+        tag:"현상태 관리",color:"#4f8ef7",
+        products:[
+          {name:"종합비타민",desc:"전반적 균형 유지 · 컨디션 관리",links:[{shop:"쿠팡",url:"#"},{shop:"올리브영",url:"#"}]},
+          {name:"오메가3",desc:"두뇌 발달 · 집중력 향상",links:[{shop:"쿠팡",url:"#"},{shop:"네이버",url:"#"}]},
+          {name:"비타민 D",desc:"뼈 성장 · 면역 강화",links:[{shop:"쿠팡",url:"#"},{shop:"올리브영",url:"#"}]},
+          {name:"유산균",desc:"장 건강 예방적 관리",links:[{shop:"쿠팡",url:"#"},{shop:"네이버",url:"#"}]},
+          {name:"마그네슘",desc:"수면 · 근육 회복 · 성장호르몬",links:[{shop:"쿠팡",url:"#"},{shop:"올리브영",url:"#"}]},
+          {name:"칼슘",desc:"뼈 성장 · 골격 강화",links:[{shop:"쿠팡",url:"#"},{shop:"올리브영",url:"#"}]},
+        ]
+      },
+      저장형:{
+        tag:"살빼기 필요",color:"#f76f8e",
+        products:[
+          {name:"식이섬유",desc:"포만감 · 혈당 조절 · 장 건강",links:[{shop:"쿠팡",url:"#"},{shop:"올리브영",url:"#"}]},
+          {name:"마그네슘",desc:"인슐린 감수성 개선 · 대사 활성화",links:[{shop:"쿠팡",url:"#"},{shop:"네이버",url:"#"}]},
+          {name:"비타민 D",desc:"대사 기능 활성화 · 체중 관리",links:[{shop:"쿠팡",url:"#"},{shop:"올리브영",url:"#"}]},
+          {name:"유산균",desc:"장내 미생물 균형 · 체중 조절",links:[{shop:"쿠팡",url:"#"},{shop:"네이버",url:"#"}]},
+          {name:"오메가3",desc:"체지방 분해 보조 · 염증 억제",links:[{shop:"쿠팡",url:"#"},{shop:"올리브영",url:"#"}]},
+          {name:"아연",desc:"대사 효소 활성화 · 면역 강화",links:[{shop:"쿠팡",url:"#"},{shop:"네이버",url:"#"}]},
+        ]
+      }
+    };
+
+    const shopColor={쿠팡:"#e5302a",네이버:"#03c75a",올리브영:"#a50034"};
+    const current=shopData[shopTab||result.main]||shopData["균형형"];
+
+    return (
+      <div style={{minHeight:"100vh",background:bg,display:"flex",flexDirection:"column",alignItems:"center",padding:"20px 20px 60px",fontFamily:font}}>
+        <div style={{maxWidth:400,width:"100%"}}>
+
+          {/* 헤더 */}
+          <div style={{textAlign:"center",marginBottom:16}}>
+            <div style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a,#c9a84c)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:13,fontWeight:900,letterSpacing:3,marginBottom:8}}>PHYSICAL UP · 피지컬업</div>
+            <div style={{color:WHITE,fontSize:18,fontWeight:800,marginBottom:4}}>🛒 내 체질 맞춤 제품</div>
+            <div style={{display:"inline-flex",alignItems:"center",gap:8,padding:"6px 16px",borderRadius:20,background:`${current.color}18`,border:`1px solid ${current.color}40`}}>
+              <span style={{color:current.color,fontSize:13,fontWeight:700}}>{mi.emoji} {result.main}</span>
+              <span style={{color:"rgba(255,255,255,0.3)"}}>|</span>
+              <span style={{color:GOLD,fontSize:13,fontWeight:700}}>{ment.emoji} {ment.nick}</span>
+            </div>
+          </div>
+
+          {/* 제품 목록 */}
+          <div style={{...cardStyle,border:`1px solid ${current.color}30`}}>
+            <div style={{color:current.color,fontSize:12,fontWeight:700,marginBottom:4,letterSpacing:1}}>{mi.emoji} {result.main} · {current.tag}</div>
+            <div style={{color:MUTED,fontSize:11,marginBottom:16,borderBottom:"1px solid rgba(255,255,255,0.06)",paddingBottom:10}}>
+              체질에 맞는 추천 제품이에요. 링크를 눌러 확인해보세요!
+            </div>
+            {current.products.map((p,i)=>(
+              <div key={i} style={{marginBottom:16,paddingBottom:16,borderBottom:i<current.products.length-1?"1px solid rgba(255,255,255,0.05)":"none"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}>
+                  <div>
+                    <div style={{color:WHITE,fontSize:14,fontWeight:700,marginBottom:2}}>{p.name}</div>
+                    <div style={{color:MUTED,fontSize:12}}>{p.desc}</div>
+                  </div>
+                </div>
+                <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                  {p.links.map((l,j)=>(
+                    <a key={j} href={l.url} target="_blank" rel="noopener noreferrer" style={{
+                      padding:"6px 14px",borderRadius:8,
+                      background:`${shopColor[l.shop]}20`,
+                      border:`1px solid ${shopColor[l.shop]}50`,
+                      color:shopColor[l.shop],
+                      fontSize:12,fontWeight:700,
+                      textDecoration:"none",
+                      display:"inline-block"
+                    }}>{l.shop} →</a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* 다른 체질 보기 */}
+          <div style={{...cardStyle}}>
+            <div style={{color:GOLD,fontSize:11,fontWeight:700,marginBottom:12,letterSpacing:1}}>다른 체질 제품도 보기</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
+              {Object.entries(shopData).map(([name,data])=>(
+                <button key={name} onClick={()=>setShopTab(name)} style={{
+                  padding:"10px 6px",borderRadius:10,textAlign:"center",
+                  background:(shopTab||result.main)===name?`${data.color}20`:"rgba(255,255,255,0.03)",
+                  border:`1px solid ${(shopTab||result.main)===name?data.color:"rgba(255,255,255,0.07)"}`,
+                  color:(shopTab||result.main)===name?data.color:MUTED,
+                  fontSize:11,fontWeight:(shopTab||result.main)===name?800:400,cursor:"pointer"
+                }}>
+                  {mainType[name]?.emoji}<br/>{name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 뒤로가기 */}
+          <button onClick={()=>setStep("result")} style={{width:"100%",padding:"14px",borderRadius:12,background:"rgba(201,168,76,0.06)",color:MUTED,fontSize:14,border:"1px solid rgba(201,168,76,0.2)",cursor:"pointer"}}>← 결과로 돌아가기</button>
         </div>
       </div>
     );
