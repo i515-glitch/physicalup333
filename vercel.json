@@ -1,8 +1,20 @@
 {
   "rewrites": [
-    { "source": "/app", "destination": "/index.html" },
-    { "source": "/app/(.*)", "destination": "/index.html" },
-    { "source": "/", "destination": "/landing.html" },
-    { "source": "/((?!index.html|assets/.*).*)", "destination": "/$1" }
+    {
+      "source": "/app",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/app/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/",
+      "destination": "/landing.html"
+    },
+    {
+      "source": "/((?!index.html|assets|logo.png|og.png|landing.html|shop.html|youtube.html|worry.html).*)",
+      "destination": "/index.html"
+    }
   ]
 }
