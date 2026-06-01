@@ -410,9 +410,11 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
 .ax-l{font-size:10px;letter-spacing:1px;margin-bottom:4px;opacity:0.6;}
 .ax-d{font-size:14px;letter-spacing:2px;}
 .ax-n{font-size:10px;font-weight:700;margin-top:3px;}
-.footer-row{display:flex;justify-content:space-between;align-items:center;}
-.footer-date{color:rgba(201,168,76,0.4);font-size:10px;}
-.footer-url{color:#c9a84c;font-size:12px;font-weight:700;letter-spacing:1px;}
+.btn-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.btn-kakao{padding:14px 8px;border-radius:12px;background:rgba(254,229,0,0.1);color:#f9e000;font-size:13px;font-weight:800;border:1.5px solid rgba(254,229,0,0.35);cursor:pointer;font-family:'Noto Sans KR',sans-serif;line-height:1.5;width:100%;}
+.btn-save{padding:14px 8px;border-radius:12px;background:linear-gradient(145deg,#0d1b3e,#1a2d5a);color:#e8c76a;font-size:13px;font-weight:800;border:1.5px solid #c9a84c;cursor:pointer;font-family:'Noto Sans KR',sans-serif;line-height:1.5;position:relative;overflow:hidden;width:100%;}
+.btn-save::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#c9a84c,#e8c76a,#c9a84c);}
+
 
 /* 상세 카드 */
 .detail-card{background:#fff;border-radius:16px;padding:24px;margin-bottom:16px;border:1px solid #e8e4dc;box-shadow:0 2px 12px rgba(0,0,0,0.06);}
@@ -471,7 +473,7 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
     <div class="type-row">
       <div class="main-tag">${result.main}</div>
       <span style="font-size:26px;">${si.emoji}</span>
-      <div class="sub-name">${result.sub}</div>
+      <div class="sub-name">${result.sub.replace(/형$/, '')}</div>
     </div>
   </div>
   <div class="wit-box">
@@ -501,7 +503,17 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
   </div>
 </div>
 
-<!-- 상세 카드 -->
+<!-- 버튼 두 개 -->
+<div class="btn-wrap">
+  <button class="btn-kakao" onclick="shareKakao()">
+    💬 카톡 공유<br/>
+    <span style="font-size:10px;opacity:0.7;font-weight:600">이미지+링크 전송</span>
+  </button>
+  <button class="btn-save" onclick="saveHtml()">
+    💾 검사지 저장<br/>
+    <span style="font-size:10px;opacity:0.7;font-weight:600">HTML 파일로 보관</span>
+  </button>
+</div>
 <div class="detail-card">
   <div class="detail-header">
     <div class="detail-title">체질 상세 결과 확인서</div>
@@ -560,16 +572,6 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
 
 </div>
 
-<div style="max-width:600px;margin:20px auto;padding:0 20px 40px;">
-  <button onclick="shareKakao()" style="width:100%;padding:16px;border-radius:12px;background:rgba(254,229,0,0.1);color:#f9e000;font-size:15px;font-weight:800;border:1.5px solid rgba(254,229,0,0.4);cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-bottom:10px;">
-    💬 카톡으로 공유하기<br/>
-    <span style="font-size:11px;opacity:0.7;font-weight:600">결과 + pu333.kr 링크 전송</span>
-  </button>
-  <button onclick="window.print()" style="width:100%;padding:14px;border-radius:12px;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.4);font-size:13px;font-weight:600;border:1px solid rgba(255,255,255,0.1);cursor:pointer;font-family:'Noto Sans KR',sans-serif;">
-    🖨️ 인쇄 / PDF 저장
-  </button>
-</div>
-
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
 <script>
 window.addEventListener('load',function(){
@@ -593,6 +595,15 @@ function shareKakao(){
   }catch(e){
     alert("카카오톡 공유 실패. 스크린샷으로 공유해주세요.");
   }
+}
+function saveHtml(){
+  const blob=new Blob([document.documentElement.outerHTML],{type:"text/html;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="피지컬333_${result.sub}_${result.code}.html";
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);URL.revokeObjectURL(url);
 }
 </script>
 </body></html>`;
@@ -873,7 +884,7 @@ function shareKakao(){
               <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,marginBottom:6}}>
                 <span style={{fontSize:20}}>{mi.emoji}</span>
                 <span style={{color:GOLD2,fontSize:20,fontWeight:800}}>{result.main}</span>
-                <span style={{color:si.color,fontSize:20,fontWeight:800}}>{si.emoji} {result.sub}형</span>
+                <span style={{color:si.color,fontSize:20,fontWeight:800}}>{si.emoji} {result.sub.endsWith('형')?result.sub:result.sub+'형'}</span>
               </div>
             </div>
             <p style={{color:MUTED,fontSize:13,lineHeight:1.7,margin:0}}>{si.shortDesc}</p>
