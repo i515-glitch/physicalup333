@@ -624,8 +624,8 @@ function saveHtml(){
     const blob=new Blob([html],{type:"text/html;charset=utf-8"});
     const url=URL.createObjectURL(blob);
     setDownloading(false);
-    // iOS 대응 - 앱 안 결과지 화면으로 전환
     setStep("report");
+    window.scrollTo(0,0);
   }
 
 
@@ -674,12 +674,12 @@ function saveHtml(){
                 <div style={{color:GOLD,fontSize:10,letterSpacing:4,fontWeight:700}}>PHYSICAL UP</div>
                 <div style={{fontSize:18,fontWeight:900,color:GOLD2,letterSpacing:2}}>333TEST</div>
               </div>
-              <div style={{width:40,height:40,background:"linear-gradient(135deg,#c9a84c,#e8c76a)",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:18}}>⚾</div>
+              <img src="/logo.png" alt="PHYSICAL UP" style={{width:40,height:40,objectFit:"contain",borderRadius:"50%",border:"1px solid rgba(201,168,76,0.3)"}}/>
             </div>
             <div style={{height:1,background:"linear-gradient(90deg,transparent,#c9a84c,transparent)",marginBottom:14}}/>
             <div style={{textAlign:"center",marginBottom:14}}>
               <div style={{display:"inline-block",padding:"8px 24px",borderRadius:24,background:"rgba(201,168,76,0.1)",border:"1.5px solid rgba(201,168,76,0.5)",marginBottom:10}}>
-                <span style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:30,fontWeight:900,letterSpacing:8}}>{result.code}</span>
+                <span style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:30,fontWeight:900,letterSpacing:8,textDecoration:"none"}}>{result.code}</span>
               </div>
               <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8,marginBottom:6}}>
                 <span style={{fontSize:16}}>{mi.emoji}</span>
@@ -749,10 +749,115 @@ function saveHtml(){
               💬 카톡 공유<br/><span style={{fontSize:10,opacity:0.7}}>결과 이미지 공유</span>
             </button>
             <button onClick={()=>{
-              const el=document.createElement("a");
-              el.href="data:text/html;charset=utf-8,"+encodeURIComponent(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>피지컬333 결과</title></head><body style="background:#f5f3ef;font-family:sans-serif;padding:20px;"><h2 style="color:#0d1b3e;">${result.code} · ${result.main} · ${ment.nick}</h2><p>"${ment.wit}"</p><p>💡 ${ment.tip}</p><p>흡수 ${bar(result.scores.absorb)} 연소 ${bar(result.scores.burn)} 축적 ${bar(result.scores.store)}</p><p>${date} · pu333.kr</p></body></html>`);
-              el.download=`피지컬333_${result.code}.html`;
-              el.click();
+              const bar2=n=>"●".repeat(n)+"○".repeat(3-n);
+              const ageInfo2=birth.length===6?calcAgeFromShort(birth):null;
+              const html=`<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>피지컬333 결과 · ${result.code} ${ment.nick}</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padding:20px;min-height:100vh;}
+.card{max-width:420px;margin:0 auto;}
+.header{background:linear-gradient(145deg,#0d1b3e,#1a2d5a);border-radius:16px;padding:24px;margin-bottom:12px;border:2px solid #c9a84c;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#c9a84c,#e8c76a,transparent);}
+.brand{color:#c9a84c;font-size:10px;font-weight:700;letter-spacing:4px;margin-bottom:2px;}
+.brand2{font-size:16px;font-weight:900;color:#e8c76a;letter-spacing:2px;margin-bottom:14px;}
+.code-badge{display:inline-block;padding:8px 24px;border-radius:24px;background:rgba(201,168,76,0.1);border:1.5px solid rgba(201,168,76,0.5);margin-bottom:10px;}
+.code{font-size:28px;font-weight:900;color:#e8c76a;letter-spacing:8px;}
+.type-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;}
+.main-type{font-size:16px;font-weight:800;color:#e8c76a;}
+.nick-badge{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:12px;padding:3px 12px;color:#c9a84c;font-size:13px;font-weight:700;}
+.age-info{color:rgba(201,168,76,0.5);font-size:11px;margin-bottom:12px;}
+.ment-box{background:rgba(255,255,255,0.05);border-left:3px solid #c9a84c;padding:10px 14px;border-radius:0 8px 8px 0;margin-bottom:12px;}
+.wit{color:#f0f4ff;font-size:13px;line-height:1.8;margin-bottom:4px;}
+.tip{color:#e8c76a;font-size:12px;font-weight:700;}
+.axis-row{display:flex;gap:2px;border-radius:8px;overflow:hidden;margin-bottom:12px;}
+.axis{flex:1;padding:8px 4px;text-align:center;}
+.axis-label{font-size:9px;letter-spacing:1px;margin-bottom:2px;opacity:0.7;}
+.axis-bar{font-size:12px;letter-spacing:1px;}
+.axis-num{font-size:9px;font-weight:700;margin-top:1px;}
+.footer-row{display:flex;justify-content:space-between;}
+.date{color:rgba(201,168,76,0.4);font-size:10px;}
+.site{color:#c9a84c;font-size:11px;font-weight:700;}
+.section{background:rgba(13,27,62,0.6);border-radius:12px;padding:16px;margin-bottom:10px;border:1px solid rgba(201,168,76,0.1);}
+.section-title{color:#c9a84c;font-size:11px;font-weight:700;letter-spacing:2px;margin-bottom:10px;}
+.item{display:flex;gap:8px;margin-bottom:6px;}
+.bullet{color:#c9a84c;font-size:10px;margin-top:3px;flex-shrink:0;}
+.item-text{color:#3a5070;font-size:12px;line-height:1.7;}
+.rx-box{background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(13,27,62,0.6));border-radius:10px;padding:14px;border:1px solid rgba(201,168,76,0.25);margin-bottom:10px;}
+.rx-title{color:#c9a84c;font-size:11px;font-weight:800;letter-spacing:1px;margin-bottom:6px;}
+.rx-text{color:#e8d8a0;font-size:12px;line-height:1.9;}
+.caution{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:8px;padding:10px 12px;text-align:center;color:#8a7040;font-size:11px;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <div class="brand">PHYSICAL UP</div>
+    <div class="brand2">333TEST</div>
+    <div style="text-align:center;margin-bottom:12px;">
+      <div class="code-badge"><span class="code">${result.code}</span></div>
+      <div class="type-row">
+        <span class="main-type">${result.main}</span>
+        <span class="nick-badge">${ment.emoji} ${ment.nick}</span>
+      </div>
+      ${ageInfo2?`<div class="age-info">${ageInfo2.display}${heightVal?` · 키 ${heightVal}cm`:''}${weightVal?` · 몸무게 ${weightVal}kg`:''}</div>`:''}
+    </div>
+    <div class="ment-box">
+      <div class="wit">"${ment.wit}"</div>
+      <div class="tip">💡 ${ment.tip}</div>
+    </div>
+    <div class="axis-row">
+      <div class="axis" style="background:rgba(79,207,160,0.12);">
+        <div class="axis-label" style="color:#4fcfa099;">흡수력</div>
+        <div class="axis-bar" style="color:#4fcfa0;">${bar2(result.scores.absorb)}</div>
+        <div class="axis-num" style="color:#4fcfa0;">${result.scores.absorb}/3</div>
+      </div>
+      <div class="axis" style="background:rgba(247,149,79,0.12);">
+        <div class="axis-label" style="color:#f7954f99;">연소력</div>
+        <div class="axis-bar" style="color:#f7954f;">${bar2(result.scores.burn)}</div>
+        <div class="axis-num" style="color:#f7954f;">${result.scores.burn}/3</div>
+      </div>
+      <div class="axis" style="background:rgba(247,111,142,0.12);">
+        <div class="axis-label" style="color:#f76f8e99;">축적력</div>
+        <div class="axis-bar" style="color:#f76f8e;">${bar2(result.scores.store)}</div>
+        <div class="axis-num" style="color:#f76f8e;">${result.scores.store}/3</div>
+      </div>
+    </div>
+    <div class="footer-row">
+      <span class="date">${date}</span>
+      <span class="site">pu333.kr</span>
+    </div>
+  </div>
+
+  ${ment.rx?`<div class="rx-box"><div class="rx-title">⚡ 지금 당장 실천할 것</div><div class="rx-text">${ment.rx}</div></div>`:''}
+
+  <div class="section">
+    <div class="section-title">🥗 음식 대책</div>
+    ${mi.food.map(f=>`<div class="item"><span class="bullet">▸</span><span class="item-text">${f}</span></div>`).join('')}
+  </div>
+  <div class="section">
+    <div class="section-title">💊 영양제 대책</div>
+    ${mi.supplement.map(s=>`<div class="item"><span class="bullet">▸</span><span class="item-text">${s}</span></div>`).join('')}
+  </div>
+  <div class="section">
+    <div class="section-title">✅ 생활 습관</div>
+    ${mi.life.map(l=>`<div class="item"><span class="bullet">▸</span><span class="item-text">${l}</span></div>`).join('')}
+  </div>
+  <div class="caution">⚠️ ${mi.caution}</div>
+</div>
+</body></html>`;
+              const blob=new Blob([html],{type:"text/html;charset=utf-8"});
+              const url=URL.createObjectURL(blob);
+              const a=document.createElement("a");
+              a.href=url;a.download=`피지컬333_${result.code}_${ment.nick}.html`;
+              document.body.appendChild(a);a.click();
+              document.body.removeChild(a);
+              setTimeout(()=>URL.revokeObjectURL(url),1000);
             }} style={{padding:"14px 8px",borderRadius:12,background:"linear-gradient(145deg,#0d1b3e,#1a2d5a)",color:GOLD2,fontSize:13,fontWeight:800,border:`1.5px solid ${GOLD}`,cursor:"pointer",lineHeight:1.5,position:"relative",overflow:"hidden"}}>
               <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${GOLD},${GOLD2},${GOLD})`}}/>
               💾 저장<br/><span style={{fontSize:10,opacity:0.7}}>HTML 파일</span>
@@ -1233,7 +1338,7 @@ function saveHtml(){
             </div>
             {/* 코드 배지 - 투명 + 골드 테두리 */}
             <div style={{display:"inline-block",padding:"10px 32px",borderRadius:24,marginBottom:16,background:"rgba(201,168,76,0.08)",border:"1.5px solid rgba(201,168,76,0.5)",boxShadow:"0 4px 20px rgba(201,168,76,0.15)"}}>
-              <span style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:32,fontWeight:900,letterSpacing:8}}>{result.code}</span>
+              <span style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:32,fontWeight:900,letterSpacing:8,textDecoration:"none"}}>{result.code}</span>
             </div>
             {/* 이모지+4글자 + 대분류 나란히 */}
             <div style={{marginBottom:10}}>
