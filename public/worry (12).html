@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>아이 체격 고민 · PHYSICAL333</title>
+<meta name="description" content="잘 먹여도 살이 안 찌는 아이, 감독님의 체중 압박, 비싼 영양제 효과 없음. PHYSICAL333이 원인과 해답을 드립니다."/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Noto+Serif+KR:wght@700;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#080f28;--navy2:#0d1b3e;
+  --gold:#c9a84c;--gold2:#e8c76a;
+  --white:#f0f4ff;--muted:#4a6080;
+  --green:#4fcfa0;--pink:#f76f8e;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--navy);font-family:'Noto Sans KR',sans-serif;color:var(--white);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.12);}
+.nav-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 20px;}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.logo img{width:32px;height:32px;object-fit:contain;}
+.logo-text .b1{color:var(--gold);font-size:12px;font-weight:900;letter-spacing:3px;line-height:1;}
+.logo-text .b2{color:var(--muted);font-size:8px;letter-spacing:2px;}
+.nav-links{display:flex;align-items:center;gap:4px;}
+.nav-links a{color:var(--muted);font-size:9px;padding:4px 5px;border-radius:6px;text-decoration:none;transition:color 0.2s;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);}
+.nav-links a.active{color:var(--white);font-weight:700;}
+.nav-test{color:var(--gold)!important;border:1px solid var(--gold);font-weight:700!important;}
+
+.wrap{max-width:720px;margin:0 auto;padding:0 20px;}
+.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.15),transparent);}
+
+/* 히어로 */
+#hero{padding:90px 20px 60px;text-align:center;background:rgba(10,17,40,0.6);}
+#hero .label{color:var(--gold);font-size:10px;letter-spacing:4px;margin-bottom:12px;}
+#hero .quote{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;line-height:1.7;margin-bottom:10px;}
+#hero .quote em{color:var(--gold2);font-style:normal;}
+#hero .sub{color:var(--muted);font-size:13px;line-height:1.9;}
+
+/* 고민 카드 */
+#worries{padding:60px 0;background:rgba(13,27,62,0.3);}
+.worry-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px;}
+.worry-card{background:rgba(13,27,62,0.5);border-radius:14px;padding:20px 16px;border:1px solid rgba(201,168,76,0.1);transition:all 0.2s;}
+.worry-card:hover{border-color:rgba(201,168,76,0.3);transform:translateY(-2px);}
+.worry-card .q{font-size:22px;margin-bottom:8px;}
+.worry-card .t{color:var(--white);font-size:13px;font-weight:700;margin-bottom:6px;line-height:1.4;}
+.worry-card .d{color:var(--muted);font-size:12px;line-height:1.7;}
+
+/* 원인 */
+#cause{padding:60px 0;}
+.axis-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:20px;}
+.axis{border-radius:12px;padding:18px 12px;text-align:center;border:1px solid;}
+.axis .em{font-size:26px;margin-bottom:8px;}
+.axis .nm{font-size:13px;font-weight:900;margin-bottom:4px;}
+.axis .dc{font-size:11px;line-height:1.6;opacity:0.6;}
+
+/* 해결책 */
+#solution{padding:60px 0;background:rgba(13,27,62,0.3);}
+.sol-list{display:flex;flex-direction:column;gap:10px;margin-top:20px;}
+.sol-item{display:flex;gap:14px;align-items:flex-start;background:rgba(13,27,62,0.5);border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.05);}
+.sol-item .icon{font-size:20px;flex-shrink:0;margin-top:2px;}
+.sol-item .t{color:var(--gold2);font-size:13px;font-weight:700;margin-bottom:4px;}
+.sol-item .d{color:var(--muted);font-size:12px;line-height:1.7;}
+
+footer{border-top:1px solid rgba(201,168,76,0.1);padding:24px 20px;text-align:center;}
+footer .fb{color:var(--gold);font-size:11px;font-weight:700;letter-spacing:3px;margin-bottom:3px;}
+footer .fi{color:var(--muted);font-size:10px;}
+
+@media(max-width:480px){
+  .worry-grid{grid-template-columns:1fr;}
+  .axis-row{grid-template-columns:1fr 1fr 1fr;}
+}
+.theme{background:rgba(13,27,62,0.5);border-radius:12px;border:1px solid rgba(201,168,76,0.1);overflow:hidden;margin-bottom:10px;transition:all 0.2s;}
+.theme:hover{border-color:rgba(201,168,76,0.25);}
+.theme-header{padding:14px 18px;background:rgba(201,168,76,0.05);border-bottom:1px solid rgba(201,168,76,0.08);display:flex;align-items:center;gap:10px;}
+.theme-label{color:var(--gold);font-size:10px;font-weight:700;letter-spacing:1px;}
+.theme-title{color:var(--white);font-size:13px;font-weight:700;}
+.theme-body{padding:10px 18px;}
+.lecture{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.lecture:last-child{border-bottom:none;}
+.lecture .num{color:var(--gold);font-size:10px;font-weight:700;min-width:22px;margin-top:2px;flex-shrink:0;}
+.lecture .text{color:var(--muted);font-size:12px;line-height:1.6;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/landing.html" class="logo">
+      <img src="/logo.png" alt="PHYSICAL333"/>
+      <div class="logo-text">
+        <div class="b1">PHYSICAL333</div>
+        <div class="b2">ELITE SPORTS LAB</div>
+      </div>
+    </a>
+        <div class="nav-links">
+      <a href="/landing.html" >ABOUT</a>
+      <a href="/worry.html" class="active">LAB</a>
+      <a href="/shop.html" >SHOP</a>
+      <a href="/app?start=test" class="nav-test">TEST</a>
+    </div>
+  </div>
+</nav>
+
+<!-- 히어로 -->
+<div id="hero">
+  <div class="label">아이 체격 고민</div>
+  <p class="quote">"살만 찌면 바로 주전인데요"<br/><em>그 말이 얼마나 잔인한지 압니다.</em></p>
+  <p class="sub">체격은 의지로 되는 게 아닙니다.<br/>아이마다 다른 체질을 알아야 답이 나옵니다.</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- 고민 카드 -->
+<div id="worries">
+  <div class="wrap">
+    <div style="color:var(--gold);font-size:10px;letter-spacing:4px;margin-bottom:10px;">CONCERNS</div>
+    <div style="font-size:20px;font-weight:900;margin-bottom:6px;">혹시 이런 고민 있으신가요?</div>
+    <p style="color:var(--muted);font-size:13px;line-height:1.9;">원인을 알면 해답이 보입니다</p>
+    <div class="worry-grid">
+      <div class="worry-card"><div class="q">😮</div><div class="t">잘 먹이는데 살이 안 쪄요</div><div class="d">흡수력이 낮으면 아무리 먹어도 영양이 몸에 남지 않습니다. 먹이는 양이 아니라 흡수 환경이 문제입니다.</div></div>
+      <div class="worry-card"><div class="q">😔</div><div class="t">감독님이 체중 늘리라고 해요</div><div class="d">체급이 경기력과 직결됩니다. 방법을 모르면 의지만으론 한계가 있어요.</div></div>
+      <div class="worry-card"><div class="q">💸</div><div class="t">비싼 영양제 효과가 없어요</div><div class="d">체질에 맞지 않는 영양제는 돈만 버립니다. 순서와 종류가 핵심입니다.</div></div>
+      <div class="worry-card"><div class="q">😤</div><div class="t">먹으면 살이 너무 쉽게 쪄요</div><div class="d">저장형 체질은 적게 먹어도 찝니다. 대사를 높이는 방법이 따로 있어요.</div></div>
+      <div class="worry-card"><div class="q">🤢</div><div class="t">소화가 자주 안 돼요</div><div class="d">장 환경이 무너진 상태. 영양 흡수 공장부터 고쳐야 합니다.</div></div>
+      <div class="worry-card"><div class="q">📉</div><div class="t">또래보다 성장이 느려요</div><div class="d">에너지가 적자면 몸은 키 성장을 멈춥니다. 체중 고지 선점이 먼저입니다.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 원인 -->
+<div id="cause">
+  <div class="wrap">
+    <div style="color:var(--gold);font-size:10px;letter-spacing:4px;margin-bottom:10px;">WHY</div>
+    <div style="font-size:20px;font-weight:900;margin-bottom:6px;">왜 아이마다 결과가 다를까요?</div>
+    <p style="color:var(--muted);font-size:13px;line-height:1.9;margin-bottom:4px;">같은 음식을 먹어도 누구는 살이 찌고, 누구는 안 찝니다.<br/>흡수·연소·축적, 이 3가지 체질 축이 모두 다르기 때문입니다.</p>
+    <div class="axis-row">
+      <div class="axis" style="background:rgba(79,207,160,0.07);border-color:rgba(79,207,160,0.2);"><div class="em">🫙</div><div class="nm" style="color:#4fcfa0;">흡수력</div><div class="dc">먹은 영양이 몸에 얼마나 흡수되는가</div></div>
+      <div class="axis" style="background:rgba(247,149,79,0.07);border-color:rgba(247,149,79,0.2);"><div class="em">🔥</div><div class="nm" style="color:#f7954f;">연소력</div><div class="dc">흡수된 영양을 얼마나 빠르게 태우는가</div></div>
+      <div class="axis" style="background:rgba(247,111,142,0.07);border-color:rgba(247,111,142,0.2);"><div class="em">🏦</div><div class="nm" style="color:#f76f8e;">축적력</div><div class="dc">에너지를 얼마나 잘 저장하는가</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 해결책 -->
+<div id="solution">
+  <div class="wrap">
+    <div style="color:var(--gold);font-size:10px;letter-spacing:4px;margin-bottom:10px;">SOLUTION</div>
+    <div style="font-size:20px;font-weight:900;margin-bottom:6px;">PHYSICAL333이 드리는 것들</div>
+    <p style="color:var(--muted);font-size:13px;line-height:1.9;margin-bottom:4px;">체질을 알면 해답이 보입니다</p>
+    <div class="sol-list">
+      <div class="sol-item"><div class="icon">🧬</div><div><div class="t">체질 코드 분석</div><div class="d">흡수·연소·축적 3축으로 27가지 체질 코드를 산출합니다. 우리 아이가 왜 그런지 데이터로 설명해드립니다.</div></div></div>
+      <div class="sol-item"><div class="icon">🥗</div><div><div class="t">체질별 맞춤 식단·영양제</div><div class="d">소비형엔 소화효소·아연, 저장형엔 식이섬유·마그네슘. 체질에 맞는 것만 골라 드립니다.</div></div></div>
+      <div class="sol-item"><div class="icon">🏃</div><div><div class="t">체질별 운동 비율</div><div class="d">마른 아이에게 유산소는 독입니다. 체질에 따라 운동 비율이 완전히 달라집니다.</div></div></div>
+      <div class="sol-item"><div class="icon">📊</div><div><div class="t">성장 데이터 추적</div><div class="d">키·몸무게를 또래 평균과 비교하고 선수 목표치를 향한 로드맵을 제시합니다.</div></div></div>
+      <div class="sol-item"><div class="icon">📺</div><div><div class="t">유튜브 20강 무료 공개</div><div class="d">얼음물의 함정, 항아리 법칙, 정체기 돌파까지. 감독님도 몰랐던 피지컬 과학을 무료로 공개합니다.</div><a href="/youtube.html" style="display:inline-block;margin-top:6px;color:var(--gold);font-size:12px;font-weight:700;text-decoration:none;">📺 20강 커리큘럼 보기 →</a></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 유튜브 20강 -->
+<div style="padding:60px 0;">
+  <div class="wrap">
+    <div style="color:var(--gold);font-size:10px;letter-spacing:4px;margin-bottom:10px;">YOUTUBE 20강</div>
+    <div style="font-size:20px;font-weight:900;margin-bottom:6px;">📺 감독님도 몰랐던 피지컬 과학</div>
+    <p style="color:var(--muted);font-size:13px;line-height:1.9;margin-bottom:20px;">무료 공개 · 유소년 선수 증량의 모든 것</p>
+<div class="content">
+
+  <div class="theme">
+    <div class="theme-header">
+      <span class="theme-label">🛑 테마1</span>
+      <span class="theme-title">현타 — 현실 고발과 공감</span>
+    </div>
+    <div class="theme-body">
+      <div class="lecture"><span class="num">1강</span><span class="text">"살만 찌면 바로 주전인데요" 감독님의 그 한마디에 숨겨진 잔인한 진실</span></div>
+    </div>
+  </div>
+
+  <div class="theme">
+    <div class="theme-header">
+      <span class="theme-label">🧪 테마2</span>
+      <span class="theme-title">체질변화 — 영양 흡수기 리셋</span>
+    </div>
+    <div class="theme-body">
+      <div class="lecture"><span class="num">2강</span><span class="text">우리 아이는 왜 살이 안 찌는 체질일까? (마른 선수 3대 체질 분석)</span></div>
+      <div class="lecture"><span class="num">3강</span><span class="text">비싼 고기 다 설사로 버리시나요? 김치와 유산균으로 '영양 흡수 공장'부터 세우세요</span></div>
+    </div>
+  </div>
+
+  <div class="theme">
+    <div class="theme-header">
+      <span class="theme-label">⏰ 테마3</span>
+      <span class="theme-title">성장을 위한 식사 시간 관리</span>
+    </div>
+    <div class="theme-body">
+      <div class="lecture"><span class="num">4강</span><span class="text">기상 직후 10분 — 위장 보일러를 켜야 점심 급식이 살로 갑니다</span></div>
+      <div class="lecture"><span class="num">5강</span><span class="text">취침 2시간 전 마감 — 훈련 끝나고 차 안이 오늘 하루 마지막 식사입니다</span></div>
+    </div>
+  </div>
+
+  <div class="theme">
+    <div class="theme-header">
+      <span class="theme-label">🚀 테마4</span>
+      <span class="theme-title">식습관 개조 — 밥상머리 전쟁 끝</span>
+    </div>
+    <div class="theme-body">
+      <div class="lecture"><span class="num">6강</span><span class="text">한 입 물고 세월아 네월아… 오래 씹는 버릇의 느린 식사 함정</span></div>
+      <div class="lecture"><span class="num">7강</span><span class="text">눈으로 먹지 말고 그릇을 비워라! 밥상 위 절대 원칙</span></div>
+      <div class="lecture"><span class="num">8강</span><span class="text">뱃구레를 키우는 항아리 법칙 — 거짓배부름에 속지 마라</span></div>
+      <div class="lecture"><span class="num">9강</span><span class="text">"엄마, 냉장고 꽉 채워주세요!" 살찌는 아이들의 비밀</span></div>
+    </div>
+  </div>
+
+  <div class="theme">
+    <div class="theme-header">
+      <span class="theme-label">🥩 테마5</span>
+      <span class="theme-title">필드 영양학 — 극한의 훈련 서바이벌</span>
+    </div>
+    <div class="theme-body">
+      <div class="lecture"><span class="num">10강</span><span class="text">냉장고 속 얼음물이 아이의 피지컬 성장을 가로막고 있었습니다</span></div>
+      <div class="lecture"><span class="num">11강</span><span class="text">시합 날 밥 굶는 아이들을 위한 차 안의 '비밀 파우치' TOP4</span></div>
+      <div class="lecture"><span class="num">12강</span><span class="text">삼겹살 회식의 배신 — 잘못된 고기 조리법의 역습</span></div>
+      <div class="lecture"><span class="num">13강</span><span class="text">홍삼과 녹용을 먹였더니 아이 체중이 더 빠진 기가 막힌 이유</span></div>
+    </div>
+  </div>
+
+  <div class="theme">
+    <div class="theme-header">
+      <span class="theme-label">📈 테마6</span>
+      <span class="theme-title">성장 가속 및 데이터 관리</span>
+    </div>
+    <div class="theme-body">
+      <div class="lecture"><span class="num">14강</span><span class="text">땅콩버터 한 스푼이 바꾸는 유소년 선수의 체급과 타구 비거리</span></div>
+      <div class="lecture"><span class="num">15강</span><span class="text">살이 쪄야 키가 큽니다 — 마른 선수들의 성장 호르몬을 깨우는 영양 공식</span></div>
+      <div class="lecture"><span class="num">16강</span><span class="text">마라탕과 액상과당에 중독된 아이들의 가짜 입맛 치료법</span></div>
+      <div class="lecture"><span class="num">17강</span><span class="text">감독님도 놀란 피지컬 기록지 — 감이 아닌 숫자로 찌우는 법</span></div>
+      <div class="lecture"><span class="num">18강</span><span class="text">정체기 돌파의 과학 — 한 달째 제자리걸음인 아이를 위한 7일 시크릿</span></div>
+      <div class="lecture"><span class="num">19강</span><span class="text">인바디의 과학 — 단순한 살이 아니라 골격근량으로 체급 올리는 법</span></div>
+      <div class="lecture"><span class="num">20강</span><span class="text">최종 고지 달성, 그 이후의 홈케어 독학 로드맵</span></div>
+    </div>
+  </div>
+
+</div>
+
+    <div style="text-align:center;margin-top:16px;">
+      <a href="https://youtube.com" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;background:rgba(255,0,0,0.1);border:1px solid rgba(255,80,80,0.2);color:#ff7070;font-size:12px;font-weight:700;text-decoration:none;">📺 유튜브 채널 바로가기 →</a>
+    </div>
+  </div>
+</div>
+
+<footer>
