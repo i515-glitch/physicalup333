@@ -27,7 +27,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.96
 .nav-links{display:flex;align-items:center;gap:4px;}
 .nav-links a{color:var(--muted);font-size:11px;padding:5px 8px;border-radius:6px;text-decoration:none;}
 .nav-links a:hover{color:var(--gold);}
-.nav-test{color:var(--gold)!important;border:1px solid var(--gold);font-weight:700!important;padding:5px 10px!important;}
+.nav-links a.active{color:var(--white)!important;font-weight:700;}
+.nav-test{color:var(--gold)!important;border:1px solid var(--gold);font-weight:700!important;padding:5px 10px!important;border-radius:6px;}
 
 /* 헤더 */
 .hero{padding:80px 20px 32px;max-width:720px;margin:0 auto;text-align:center;}
@@ -81,7 +82,7 @@ footer .fb{color:var(--gold);font-size:11px;font-weight:700;letter-spacing:3px;m
 footer .fi{color:var(--muted);font-size:10px;}
 
 @media(max-width:480px){
-  .nav-links{display:none;}
+  .nav-links{display:flex;flex-wrap:wrap;gap:2px;}
   .product-grid{grid-template-columns:1fr 1fr;}
 }
 </style>
@@ -97,11 +98,11 @@ footer .fi{color:var(--muted);font-size:10px;}
         <div class="b2">ELITE SPORTS LAB</div>
       </div>
     </a>
-    <div class="nav-links">
-      <a href="/landing.html#about">도움드리는일</a>
-      <a href="/worry.html">아이체격고민</a>
-      <a href="/app?start=test" class="nav-test">⚾ 무료체질TEST</a>
-      <a href="/shop.html" style="color:var(--white);font-weight:700;">맞춤제품추천</a>
+        <div class="nav-links">
+      <a href="/landing.html" >ABOUT</a>
+      <a href="/worry.html" >LAB</a>
+      <a href="/shop.html" class="active">SHOP</a>
+      <a href="/app?start=test" class="nav-test">TEST</a>
     </div>
   </div>
 </nav>
