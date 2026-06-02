@@ -344,7 +344,7 @@ export default function App() {
           content:{
             title:`${ment.emoji} ${result.code} ${mi.emoji}${result.main} · ${ment.nick} | 피지컬업 333TEST`,
             description:`"${shortWit}" 💡${shortTip}`,
-            imageUrl:"https://www.333test.com/og.png",
+            imageUrl:"https://pu333.kr/og.png",
             imageWidth:1200,
             imageHeight:630,
             link:{
