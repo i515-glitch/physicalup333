@@ -344,7 +344,7 @@ export default function App() {
           content:{
             title:`${ment.emoji} ${result.code} ${mi.emoji}${result.main} · ${ment.nick} | PHYSICAL333 333TEST`,
             description:`"${shortWit}" 💡${shortTip}`,
-            imageUrl:"https://www.physical333.com/og.png",
+            imageUrl:"https://pu333.kr/og.png",
             imageWidth:1200,
             imageHeight:630,
             link:{
@@ -654,8 +654,8 @@ function saveHtml(){
         <div style={{display:"flex",alignItems:"center",gap:4}}>
           <a href="/landing.html" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>ABOUT</a>
           <a href="/worry.html" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>LAB</a>
-          <a href="/app" style={{color:GOLD,fontSize:11,padding:"5px 10px",borderRadius:6,textDecoration:"none",border:`1px solid ${GOLD}`,fontWeight:700}}>TEST</a>
           <a href="/shop.html" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>SHOP</a>
+          <a href="/app" style={{color:GOLD,fontSize:11,padding:"5px 10px",borderRadius:6,textDecoration:"none",border:`1px solid ${GOLD}`,fontWeight:700}}>TEST</a>
         </div>
       </div>
     </nav>
