@@ -358,10 +358,13 @@ export default function App() {
               mobileWebUrl:"https://pu333.kr",
               webUrl:"https://pu333.kr"
             }
-          }]
+          }],
+          installTalk:true,
+          callback:()=>{
+            setCopied(true);
+            setTimeout(()=>setCopied(false),4000);
+          }
         });
-        setCopied(true);
-        setTimeout(()=>setCopied(false),4000);
         return;
       }
     }catch(e){
