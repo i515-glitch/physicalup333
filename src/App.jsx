@@ -652,10 +652,10 @@ function saveHtml(){
           </div>
         </a>
         <div style={{display:"flex",alignItems:"center",gap:4}}>
-          <a href="/landing.html#about" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>도움드리는일</a>
-          <a href="/worry.html" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>아이체격고민</a>
-          <a href="/app" style={{color:GOLD,fontSize:11,padding:"5px 10px",borderRadius:6,textDecoration:"none",border:`1px solid ${GOLD}`,fontWeight:700}}>⚾ 무료체질TEST</a>
-          <a href="/shop.html" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>맞춤제품추천</a>
+          <a href="/landing.html" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>ABOUT</a>
+          <a href="/worry.html" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>LAB</a>
+          <a href="/app" style={{color:GOLD,fontSize:11,padding:"5px 10px",borderRadius:6,textDecoration:"none",border:`1px solid ${GOLD}`,fontWeight:700}}>TEST</a>
+          <a href="/shop.html" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>SHOP</a>
         </div>
       </div>
     </nav>
@@ -930,10 +930,10 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
             </div>
           </a>
           <div style={{display:"flex",alignItems:"center",gap:4}}>
-            <a href="/landing.html#about" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>도움드리는일</a>
-            <a href="/landing.html#worry" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>아이체격고민</a>
-            <a href="/app?start=test" style={{color:GOLD,fontSize:11,padding:"5px 10px",borderRadius:6,textDecoration:"none",border:`1px solid ${GOLD}`,fontWeight:700}}>⚾ 무료체질TEST</a>
-            <a href="/shop.html" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>맞춤제품추천</a>
+            <a href="/landing.html" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>ABOUT</a>
+            <a href="/landing.html#worry" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>LAB</a>
+            <a href="/app?start=test" style={{color:GOLD,fontSize:11,padding:"5px 10px",borderRadius:6,textDecoration:"none",border:`1px solid ${GOLD}`,fontWeight:700}}>TEST</a>
+            <a href="/shop.html" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>SHOP</a>
           </div>
         </div>
       </nav>
