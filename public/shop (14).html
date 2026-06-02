@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>맞춤 제품 추천 · PHYSICAL333</title>
+<meta name="description" content="소비형·균형형·저장형 체질별 맞춤 영양제·식품 추천"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --navy:#060a14;--navy2:#0d1b3e;
+  --gold:#c9a84c;--gold2:#e8c76a;
+  --white:#f0f4ff;--muted:#4a6080;
+  --green:#4fcfa0;--pink:#f76f8e;--blue:#4f8ef7;
+}
+html{scroll-behavior:smooth;}
+body{background:#050e18;font-family:'Noto Sans KR',sans-serif;color:var(--white);}
+
+/* 네비 */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.12);}
+.nav-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 20px;}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.logo img{width:32px;height:32px;object-fit:contain;}
+.logo-text .b1{color:var(--gold);font-size:12px;font-weight:900;letter-spacing:3px;line-height:1;}
+.logo-text .b2{color:var(--muted);font-size:8px;letter-spacing:2px;}
+.nav-links{display:flex;align-items:center;gap:4px;}
+.nav-links a{color:var(--muted);font-size:11px;padding:5px 8px;border-radius:6px;text-decoration:none;}
+.nav-links a:hover{color:var(--gold);}
+.nav-links a.active{color:var(--white)!important;font-weight:700;}
+.nav-test{color:var(--gold)!important;border:1px solid var(--gold);font-weight:700!important;padding:5px 10px!important;border-radius:6px;}
+
+/* 헤더 */
+.hero{padding:80px 20px 32px;max-width:720px;margin:0 auto;text-align:center;}
+.hero .label{color:var(--gold);font-size:10px;letter-spacing:4px;margin-bottom:8px;}
+.hero h1{font-size:20px;font-weight:900;margin-bottom:8px;}
+.hero p{color:var(--muted);font-size:13px;line-height:1.8;}
+
+/* 체질별 추천 */
+.type-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;max-width:720px;margin:0 auto 32px;padding:0 20px;}
+.type-box{border-radius:12px;padding:14px 10px;text-align:center;border:1px solid;}
+.type-box .em{font-size:22px;margin-bottom:5px;}
+.type-box .nm{font-size:12px;font-weight:900;margin-bottom:4px;}
+.type-box .dc{font-size:10px;line-height:1.5;opacity:0.65;}
+
+/* 섹션 */
+.section{max-width:720px;margin:0 auto;padding:32px 20px;}
+.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.15),transparent);max-width:720px;margin:0 auto;}
+.sec-header{display:flex;align-items:center;gap:8px;margin-bottom:20px;}
+.sec-icon{font-size:20px;}
+.sec-title{font-size:16px;font-weight:900;color:var(--white);}
+.sec-desc{color:var(--muted);font-size:11px;margin-left:auto;}
+
+/* 제품 그리드 */
+.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.product-card{background:rgba(13,27,62,0.5);border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);transition:all 0.2s;}
+.product-card:hover{border-color:rgba(201,168,76,0.2);transform:translateY(-2px);}
+
+/* 사진 공간 */
+.product-img{width:100%;aspect-ratio:1;background:rgba(255,255,255,0.04);display:flex;flex-direction:column;align-items:center;justify-content:center;border-bottom:1px solid rgba(255,255,255,0.05);position:relative;overflow:hidden;}
+.product-img img{width:100%;height:100%;object-fit:cover;}
+.product-img .placeholder{color:rgba(255,255,255,0.1);font-size:32px;margin-bottom:6px;}
+.product-img .placeholder-text{color:rgba(255,255,255,0.15);font-size:10px;}
+
+/* 제품 정보 */
+.product-info{padding:12px;}
+.product-name{color:var(--white);font-size:13px;font-weight:700;margin-bottom:3px;line-height:1.4;}
+.product-desc{color:var(--muted);font-size:11px;line-height:1.5;margin-bottom:10px;}
+.product-links{display:flex;gap:5px;flex-wrap:wrap;}
+.link-btn{padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;transition:all 0.2s;}
+.link-coupang{background:rgba(229,48,42,0.12);border:1px solid rgba(229,48,42,0.25);color:#ff7070;}
+.link-naver{background:rgba(3,199,90,0.1);border:1px solid rgba(3,199,90,0.2);color:#4fcfa0;}
+.link-olive{background:rgba(165,0,52,0.1);border:1px solid rgba(165,0,52,0.2);color:#f76f8e;}
+
+/* 빠른 이동 */
+.quick-nav{display:flex;gap:6px;flex-wrap:wrap;max-width:720px;margin:0 auto;padding:0 20px 24px;}
+.quick-btn{padding:6px 12px;border-radius:16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:var(--muted);font-size:11px;text-decoration:none;transition:all 0.2s;}
+.quick-btn:hover{color:var(--gold);border-color:rgba(201,168,76,0.3);}
+
+footer{border-top:1px solid rgba(201,168,76,0.1);padding:24px 20px;text-align:center;}
+footer .fb{color:var(--gold);font-size:11px;font-weight:700;letter-spacing:3px;margin-bottom:3px;}
+footer .fi{color:var(--muted);font-size:10px;}
+
+@media(max-width:480px){
+  .nav-links{display:flex;flex-wrap:nowrap;gap:2px;}
+  .product-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/landing.html" class="logo">
+      <img src="/logo.png" alt="PHYSICAL333"/>
+      <div class="logo-text">
+        <div class="b1">PHYSICAL333</div>
+        <div class="b2">ELITE SPORTS LAB</div>
+      </div>
+    </a>
+        <div class="nav-links">
+      <a href="/landing.html" >ABOUT</a>
+      <a href="/worry.html" >LAB</a>
+      <a href="/shop.html" class="active">SHOP</a>
+      <a href="/app?start=test" class="nav-test">TEST</a>
+    </div>
+  </div>
+</nav>
+
+<!-- 헤더 -->
+<div class="hero">
+  <div class="label">SHOPPING</div>
+  <h1>🛒 체질별 맞춤 제품 추천</h1>
+  <p>333TEST 결과를 알면 더 정확하게<br/>몰라도 체형별로 바로 찾아볼 수 있어요</p>
+</div>
+
+<!-- 체질별 추천 -->
+<div class="type-row">
+  <div class="type-box" style="background:rgba(79,207,160,0.07);border-color:rgba(79,207,160,0.2);">
+    <div class="em">🏃</div>
+    <div class="nm" style="color:#4fcfa0;">소비형</div>
+    <div class="dc" style="color:#4fcfa0;">소화효소·아연으로 흡수 공장 먼저, 키성장·단백질로 체격 올리기</div>
+  </div>
+  <div class="type-box" style="background:rgba(201,168,76,0.07);border-color:rgba(201,168,76,0.2);">
+    <div class="em">💪</div>
+    <div class="nm" style="color:var(--gold2);">균형형</div>
+    <div class="dc" style="color:var(--gold2);">종합비타민·오메가3·칼슘으로 지금 이 좋은 상태 그대로 유지</div>
+  </div>
+  <div class="type-box" style="background:rgba(247,111,142,0.07);border-color:rgba(247,111,142,0.2);">
+    <div class="em">🏋️</div>
+    <div class="nm" style="color:#f76f8e;">저장형</div>
+    <div class="dc" style="color:#f76f8e;">식이섬유·마그네슘으로 대사 올리고, 유산소 운동으로 체지방 관리</div>
+  </div>
+</div>
+
+<!-- 빠른 이동 -->
+<div class="quick-nav">
+  <a href="#키성장" class="quick-btn">📦 키성장</a>
+  <a href="#종합비타민" class="quick-btn">💊 종합비타민</a>
+  <a href="#유산균" class="quick-btn">🦠 유산균</a>
+  <a href="#칼슘마그네슘" class="quick-btn">🦴 칼슘·마그네슘</a>
+  <a href="#비타민D" class="quick-btn">☀️ 비타민D</a>
+  <a href="#오메가3" class="quick-btn">🐟 오메가3</a>
+  <a href="#소화효소" class="quick-btn">⚡ 소화효소</a>
+  <a href="#식이섬유" class="quick-btn">🌾 식이섬유</a>
+  <a href="#단백질" class="quick-btn">💪 단백질·벌크업</a>
+  <a href="#홈트" class="quick-btn">🏋️ 홈트기구</a>
+</div>
+
+<div class="divider"></div>
+
+<!-- 키성장 -->
+<div class="section" id="키성장">
+  <div class="sec-header">
+    <div class="sec-icon">📦</div>
+    <div class="sec-title">키성장</div>
+    <div class="sec-desc">소비형 필수</div>
+  </div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">📦</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">키즈텐 HT042 키성장 영양제</div>
+        <div class="product-desc">식약처 인증 원료 · 아연·비타민D 함유</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">📦</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">아이누리 성장원 키플러스</div>
+        <div class="product-desc">HT042 기능성 원료 · 2개월분</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 종합비타민 -->
+<div class="section" id="종합비타민">
+  <div class="sec-header">
+    <div class="sec-icon">💊</div>
+    <div class="sec-title">종합비타민</div>
+    <div class="sec-desc">균형형 필수</div>
+  </div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">💊</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">센트룸 어린이 종합비타민</div>
+        <div class="product-desc">어린이 맞춤 영양 밸런스</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">💊</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">아이배냇 어린이 멀티비타민</div>
+        <div class="product-desc">13가지 비타민·미네랄 함유</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-olive">올리브영 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 유산균 -->
+<div class="section" id="유산균">
+  <div class="sec-header">
+    <div class="sec-icon">🦠</div>
+    <div class="sec-title">유산균</div>
+    <div class="sec-desc">전 체질 공통</div>
+  </div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">🦠</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">종근당건강 락토핏 생유산균 골드</div>
+        <div class="product-desc">200억 CFU · 장 흡수력 개선</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">🦠</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">일동제약 지큐랩 우리아이 유산균</div>
+        <div class="product-desc">어린이 전용 · 면역 강화</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-olive">올리브영 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 칼슘·마그네슘 -->
+<div class="section" id="칼슘마그네슘">
+  <div class="sec-header">
+    <div class="sec-icon">🦴</div>
+    <div class="sec-title">칼슘·마그네슘</div>
+    <div class="sec-desc">뼈 성장·수면</div>
+  </div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">🦴</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">칼마디 어린이 칼슘마그네슘 아연 비타민D</div>
+        <div class="product-desc">4가지 영양소 한번에 · 츄어블</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">🦴</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">나우푸드 마그네슘 글리시네이트</div>
+        <div class="product-desc">흡수율 높은 킬레이트 마그네슘</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 비타민D -->
+<div class="section" id="비타민D">
+  <div class="sec-header">
+    <div class="sec-icon">☀️</div>
+    <div class="sec-title">비타민D</div>
+    <div class="sec-desc">면역·뼈 성장</div>
+  </div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">☀️</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">솔가 비타민D3 1000IU</div>
+        <div class="product-desc">흡수율 높은 D3 형태 · 소프트젤</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">☀️</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">나우푸드 비타민D3 2000IU</div>
+        <div class="product-desc">경제적인 대용량 · 면역 강화</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 오메가3 -->
+<div class="section" id="오메가3">
+  <div class="sec-header">
+    <div class="sec-icon">🐟</div>
+    <div class="sec-title">오메가3</div>
+    <div class="sec-desc">두뇌·집중력</div>
+  </div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">🐟</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">노르딕 내추럴스 칠드런스 DHA</div>
+        <div class="product-desc">어린이 전용 DHA · 딸기맛</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">🐟</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">닥터스베스트 오메가3</div>
+        <div class="product-desc">EPA+DHA 고함량 · 가성비</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 소화효소 -->
+<div class="section" id="소화효소">
+  <div class="sec-header">
+    <div class="sec-icon">⚡</div>
+    <div class="sec-title">소화효소</div>
+    <div class="sec-desc">소비형 1순위</div>
+  </div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">⚡</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">나우푸드 슈퍼 엔자임</div>
+        <div class="product-desc">소화 효소 복합 · 흡수력 향상</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">⚡</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">가든오브라이프 로우 엔자임</div>
+        <div class="product-desc">천연 원료 소화효소 · 식사 직전</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 식이섬유 -->
+<div class="section" id="식이섬유">
+  <div class="sec-header">
+    <div class="sec-icon">🌾</div>
+    <div class="sec-title">식이섬유</div>
+    <div class="sec-desc">저장형 1순위</div>
+  </div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">🌾</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">종근당건강 락토핏 다이어트 식이섬유</div>
+        <div class="product-desc">포만감·혈당 조절 · 장 건강</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">🌾</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">일동제약 지큐랩 프리바이오틱스</div>
+        <div class="product-desc">식이섬유+유산균 동시에</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 단백질·벌크업 -->
+<div class="section" id="단백질">
+  <div class="sec-header">
+    <div class="sec-icon">💪</div>
+    <div class="sec-title">단백질·벌크업</div>
+    <div class="sec-desc">소비형 체격 증진</div>
+  </div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">💪</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">옵티멈 뉴트리션 골드 스탠다드 웨이</div>
+        <div class="product-desc">단백질 24g · 근육 합성 최강</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">💪</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">스머커스 내추럴 피넛버터</div>
+        <div class="product-desc">무가당 · 고칼로리 밀도 증량 필수템</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 홈트 기구 -->
+<div class="section" id="홈트">
+  <div class="sec-header">
+    <div class="sec-icon">🏋️</div>
+    <div class="sec-title">홈트 운동기구</div>
+    <div class="sec-desc">체질별 운동 필수</div>
+  </div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">🏋️</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">도어형 철봉 풀업바</div>
+        <div class="product-desc">설치 간편 · 턱걸이·코어 운동</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">🏋️</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">탱그램 스마트 줄넘기</div>
+        <div class="product-desc">횟수 자동측정 · 유산소 최강</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">🏋️</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">저항밴드 5단계 세트</div>
+        <div class="product-desc">근력 운동 · 단계별 강도 조절</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img"><div class="placeholder">🏋️</div><div class="placeholder-text">사진 준비중</div></div>
+      <div class="product-info">
+        <div class="product-name">폼롤러</div>
+        <div class="product-desc">근육 회복·스트레칭 필수템</div>
+        <div class="product-links">
+          <a href="#" class="link-btn link-coupang">쿠팡 →</a>
+          <a href="#" class="link-btn link-naver">네이버 →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="fb">PHYSICAL333 · PHYSICAL333</div>
+  <div class="fi">ELITE SPORTS LAB · www.physical333.com</div>
+</footer>
+
+
+<script>
+// 관리자 등록 제품 로드
+window.addEventListener('load', function(){
+  const products = JSON.parse(localStorage.getItem('p333_products') || '[]');
+  if(!products.length) return;
+  
+  // 카테고리별 분류
+  const cats = {};
+  products.forEach(p=>{
+    if(!cats[p.cat]) cats[p.cat] = [];
+    cats[p.cat].push(p);
+  });
+
+  // 각 섹션에 추가
+  const catMap = {
+    '키성장':'#키성장','종합비타민':'#종합비타민','유산균':'#유산균',
+    '칼슘마그네슘':'#칼슘마그네슘','비타민D':'#비타민D','오메가3':'#오메가3',
+    '소화효소':'#소화효소','식이섬유':'#식이섬유','단백질':'#단백질','홈트':'#홈트'
+  };
+
+  Object.entries(cats).forEach(([cat, items])=>{
+    const anchor = catMap[cat];
+    if(!anchor) return;
+    const section = document.querySelector(anchor+' .product-grid');
+    if(!section) return;
+    items.forEach(p=>{
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <div class="product-img"><div class="placeholder">🛍️</div></div>
+        <div class="product-info">
+          <div class="product-name">${p.name}</div>
+          ${p.desc?`<div class="product-desc">${p.desc}</div>`:''}
+          <div class="product-links">
+            ${p.coupang?`<a href="${p.coupang}" target="_blank" class="link-btn link-coupang">쿠팡 →</a>`:''}
+            ${p.naver?`<a href="${p.naver}" target="_blank" class="link-btn link-naver">네이버 →</a>`:''}
+            ${p.olive?`<a href="${p.olive}" target="_blank" class="link-btn link-olive">올리브영 →</a>`:''}
+          </div>
+        </div>`;
+      section.appendChild(card);
+    });
+  });
+});
+</script>
+</body>
+</html>
