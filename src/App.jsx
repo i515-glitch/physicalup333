@@ -338,25 +338,25 @@ export default function App() {
     try{
       if(window.Kakao&&window.Kakao.isInitialized()){
         // 링크도 클립보드에 복사해두기
-        try{ await navigator.clipboard.writeText("https://pu333.kr"); }catch(e){}
+        try{ await navigator.clipboard.writeText("https://www.333test.com"); }catch(e){}
         window.Kakao.Share.sendDefault({
           objectType:"feed",
           content:{
             title:`${ment.emoji} ${result.code} ${mi.emoji}${result.main} · ${ment.nick} | 피지컬업 333TEST`,
             description:`"${shortWit}" 💡${shortTip}`,
-            imageUrl:"https://pu333.kr/og.png",
+            imageUrl:"https://www.333test.com/og.png",
             imageWidth:1200,
             imageHeight:630,
             link:{
-              mobileWebUrl:"https://pu333.kr",
-              webUrl:"https://pu333.kr"
+              mobileWebUrl:"https://www.333test.com",
+              webUrl:"https://www.333test.com"
             }
           },
           buttons:[{
             title:"우리 아이 체질 코드 찾기 →",
             link:{
-              mobileWebUrl:"https://pu333.kr",
-              webUrl:"https://pu333.kr"
+              mobileWebUrl:"https://www.333test.com",
+              webUrl:"https://www.333test.com"
             }
           }],
           installTalk:true,
@@ -374,7 +374,7 @@ export default function App() {
     // 폴백: 텍스트 복사
     const ageInfo=birth.length===6?calcAgeFromShort(birth):null;
     const growthTxt=(ageInfo&&heightVal&&weightVal)?`\n키 ${heightVal}cm · 몸무게 ${weightVal}kg · ${ageInfo.display}`:"";
-    const txt=`피지컬업 333TEST\n\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\n"${shortWit}"\n💡${shortTip}${growthTxt}\n\nwww.pu333.kr`;
+    const txt=`피지컬업 333TEST\n\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\n"${shortWit}"\n💡${shortTip}${growthTxt}\n\nwww.333test.com`;
     try{ await navigator.clipboard.writeText(txt); }
     catch(e){
       const el=document.createElement("textarea");
@@ -523,7 +523,7 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
   </div>
   <div class="footer-row">
     <div class="footer-date">${date}</div>
-    <div class="footer-url">pu333.kr</div>
+    <div class="footer-url">www.333test.com</div>
   </div>
 </div>
 
@@ -590,7 +590,7 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
 <div class="bottom-card">
   <div>
     <div style="color:rgba(201,168,76,0.6);font-size:10px;margin-bottom:2px;">검사일 ${date} · 발급처 피지컬업 PHYSICAL UP</div>
-    <div style="color:#c9a84c;font-size:12px;font-weight:700;letter-spacing:1px;">pu333.kr</div>
+    <div style="color:#c9a84c;font-size:12px;font-weight:700;letter-spacing:1px;">www.333test.com</div>
     <div class="hashtag">#피지컬333테스트 #피지컬업 #체질코드</div>
   </div>
   <div class="stamp">
@@ -603,7 +603,7 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
 <script>
 function shareKakao(){
-  const txt="피지컬업 333TEST\\n\\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\\n\\"${ment.wit.slice(0,16)}${ment.wit.length>16?'..':''}\\"\\n💡${ment.tip.slice(0,16)}${ment.tip.length>16?'..':''}\\n\\nwww.pu333.kr";
+  const txt="피지컬업 333TEST\\n\\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\\n\\"${ment.wit.slice(0,16)}${ment.wit.length>16?'..':''}\\"\\n💡${ment.tip.slice(0,16)}${ment.tip.length>16?'..':''}\\n\\nwww.333test.com";
   if(navigator.clipboard){
     navigator.clipboard.writeText(txt).then(()=>{
       document.getElementById('kakao-msg').style.display='block';
@@ -712,7 +712,7 @@ function saveHtml(){
             </div>
             <div style={{display:"flex",justifyContent:"space-between"}}>
               <span style={{color:"rgba(201,168,76,0.4)",fontSize:10}}>{date}</span>
-              <span style={{color:GOLD,fontSize:11,fontWeight:700}}>pu333.kr</span>
+              <span style={{color:GOLD,fontSize:11,fontWeight:700}}>www.333test.com</span>
             </div>
           </div>
 
@@ -733,7 +733,7 @@ function saveHtml(){
                 canvas.toBlob(async(blob)=>{
                   const file=new File([blob],'피지컬333결과.png',{type:'image/png'});
                   if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-                    await navigator.share({files:[file],text:'www.pu333.kr'});
+                    await navigator.share({files:[file],text:'www.333test.com'});
                   } else {
                     const url=URL.createObjectURL(blob);
                     const a=document.createElement('a');
@@ -745,7 +745,7 @@ function saveHtml(){
               }catch(e){
                 const shortWit=ment.wit.length>16?ment.wit.slice(0,16)+'..':ment.wit;
                 const shortTip=ment.tip.length>16?ment.tip.slice(0,16)+'..':ment.tip;
-                const txt=`피지컬업 333TEST\n\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\n"${shortWit}"\n💡${shortTip}\n\nwww.pu333.kr`;
+                const txt=`피지컬업 333TEST\n\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\n"${shortWit}"\n💡${shortTip}\n\nwww.333test.com`;
                 try{await navigator.clipboard.writeText(txt);}catch(e2){
                   const el=document.createElement('textarea');el.value=txt;
                   document.body.appendChild(el);el.select();
@@ -838,7 +838,7 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
     </div>
     <div class="footer-row">
       <span class="date">${date}</span>
-      <span class="site">pu333.kr</span>
+      <span class="site">www.333test.com</span>
     </div>
   </div>
 
@@ -859,8 +859,8 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
   <div class="caution">⚠️ ${mi.caution}</div>
 
   <div style="margin-top:16px;text-align:center;">
-    <a href="https://pu333.kr" style="display:inline-block;padding:14px 32px;border-radius:12px;background:linear-gradient(135deg,#c9a84c,#e8c76a);color:#0d1b3e;font-size:14px;font-weight:900;text-decoration:none;font-family:'Noto Sans KR',sans-serif;">⚾ 우리 아이도 체질 코드 찾기 →</a>
-    <p style="margin-top:8px;color:#3a5070;font-size:11px;font-family:'Noto Sans KR',sans-serif;">pu333.kr · 무료 · 약 5분</p>
+    <a href="https://www.333test.com" style="display:inline-block;padding:14px 32px;border-radius:12px;background:linear-gradient(135deg,#c9a84c,#e8c76a);color:#0d1b3e;font-size:14px;font-weight:900;text-decoration:none;font-family:'Noto Sans KR',sans-serif;">⚾ 우리 아이도 체질 코드 찾기 →</a>
+    <p style="margin-top:8px;color:#3a5070;font-size:11px;font-family:'Noto Sans KR',sans-serif;">www.333test.com · 무료 · 약 5분</p>
   </div>
 </div>
 </body></html>`;
@@ -1075,7 +1075,7 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
       {/* 푸터 */}
       <div style={{borderTop:"1px solid rgba(201,168,76,0.1)",padding:"20px",textAlign:"center"}}>
         <div style={{color:GOLD,fontSize:11,fontWeight:700,letterSpacing:2,marginBottom:4}}>PHYSICAL UP · 피지컬업</div>
-        <div style={{color:MUTED,fontSize:10}}>YOUTH SPORTS CLUB · pu333.kr</div>
+        <div style={{color:MUTED,fontSize:10}}>YOUTH SPORTS CLUB · www.333test.com</div>
       </div>
     </div>
   );
