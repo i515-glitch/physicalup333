@@ -1,20 +1,12 @@
 {
   "rewrites": [
-    {
-      "source": "/app",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/app/(.*)",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/",
-      "destination": "/landing.html"
-    },
-    {
-      "source": "/((?!index.html|assets|logo.png|og.png|landing.html|shop.html|youtube.html|worry.html).*)",
-      "destination": "/index.html"
-    }
+    { "source": "/app", "destination": "/index.html" },
+    { "source": "/app/(.*)", "destination": "/index.html" },
+    { "source": "/", "destination": "/landing.html" },
+    { "source": "/landing.html", "destination": "/landing.html" },
+    { "source": "/shop.html", "destination": "/shop.html" },
+    { "source": "/worry.html", "destination": "/worry.html" },
+    { "source": "/youtube.html", "destination": "/youtube.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
