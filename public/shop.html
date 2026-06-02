@@ -526,24 +526,59 @@ footer .fi{color:var(--muted);font-size:10px;}
 
 
 <script>
-// Google Sheets 제품 로드
-const SHEET_URL = "https://docs.google.com/spreadsheets/d/1OMyEfRy0pbpqHf33iZTYQc07xknM5gcZ6s7J_mAf9wg/gviz/tq?tqx=out:json&sheet=products";
+// Google Sheets CSV 제품 로드
+const SHEET_ID = "1OMyEfRy0pbpqHf33iZTYQc07xknM5gcZ6s7J_mAf9wg";
+const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=products`;
 
 window.addEventListener('load', async function(){
   try{
     const res = await fetch(SHEET_URL);
     const text = await res.text();
-    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/)[1]);
-    const rows = json.table.rows;
-    const cols = json.table.cols.map(c=>c.label);
-    
-    const products = rows.map(r=>{
+    const rows = text.trim().split('\n').map(r=>r.split(',').map(c=>c.replace(/^"|"$/g,'').trim()));
+    const headers = rows[0];
+    const products = rows.slice(1).map(r=>{
       const obj={};
-      cols.forEach((c,i)=>obj[c]=r.c[i]?r.c[i].v||'':'');
+      headers.forEach((h,i)=>obj[h]=r[i]||'');
       return obj;
     }).filter(p=>p.name);
-    
+
     if(!products.length) return;
+
+    products.forEach(p=>{
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(s=>{
+        const title = s.querySelector('.sec-title');
+        if(!title) return;
+        const catMatch = {
+          '키성장':'키성장','종합비타민':'종합비타민','유산균':'유산균',
+          '칼슘마그네슘':'칼슘','비타민D':'비타민D','오메가3':'오메가3',
+          '소화효소':'소화효소','식이섬유':'식이섬유','단백질':'단백질','홈트':'홈트'
+        };
+        if(title.textContent.includes(catMatch[p.cat])){
+          const grid = s.querySelector('.product-grid');
+          if(!grid) return;
+          const card = document.createElement('div');
+          card.className = 'product-card';
+          card.innerHTML = `
+            <div class="product-img"><div class="placeholder">🛍️</div><div class="placeholder-text">등록 제품</div></div>
+            <div class="product-info">
+              <div class="product-name">${p.name}</div>
+              ${p.desc?`<div class="product-desc">${p.desc}</div>`:''}
+              <div class="product-links">
+                ${p.coupang?`<a href="${p.coupang}" target="_blank" class="link-btn link-coupang">쿠팡 →</a>`:''}
+                ${p.naver?`<a href="${p.naver}" target="_blank" class="link-btn link-naver">네이버 →</a>`:''}
+                ${p.olive?`<a href="${p.olive}" target="_blank" class="link-btn link-olive">올리브영 →</a>`:''}
+              </div>
+            </div>`;
+          grid.appendChild(card);
+        }
+      });
+    });
+  }catch(e){
+    console.log('시트 로드 오류:', e);
+  }
+});
+</script>
   
   products.forEach(p=>{
     // 카테고리별 섹션 찾기
