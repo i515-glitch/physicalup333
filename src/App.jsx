@@ -337,6 +337,8 @@ export default function App() {
     // 카카오 SDK 방식 시도
     try{
       if(window.Kakao&&window.Kakao.isInitialized()){
+        // 링크도 클립보드에 복사해두기
+        try{ await navigator.clipboard.writeText("https://pu333.kr"); }catch(e){}
         window.Kakao.Share.sendDefault({
           objectType:"feed",
           content:{
@@ -358,6 +360,8 @@ export default function App() {
             }
           }]
         });
+        setCopied(true);
+        setTimeout(()=>setCopied(false),4000);
         return;
       }
     }catch(e){
@@ -675,12 +679,12 @@ function saveHtml(){
                 <div style={{color:GOLD,fontSize:10,letterSpacing:4,fontWeight:700}}>PHYSICAL UP</div>
                 <div style={{fontSize:18,fontWeight:900,color:GOLD2,letterSpacing:2}}>333TEST</div>
               </div>
-              <img src="/logo.png" alt="PHYSICAL UP" style={{width:40,height:40,objectFit:"contain",borderRadius:"50%",border:"1px solid rgba(201,168,76,0.3)"}}/>
+              <img src="/logo.png" alt="PHYSICAL UP" style={{width:52,height:52,objectFit:"contain"}}/>
             </div>
             <div style={{height:1,background:"linear-gradient(90deg,transparent,#c9a84c,transparent)",marginBottom:14}}/>
             <div style={{textAlign:"center",marginBottom:14}}>
               <div style={{display:"inline-block",padding:"8px 24px",borderRadius:24,background:"rgba(201,168,76,0.1)",border:"1.5px solid rgba(201,168,76,0.5)",marginBottom:10,textDecoration:"none"}}>
-                <span style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:30,fontWeight:900,letterSpacing:8,textDecoration:"none",display:"block"}}>{result.code}</span>
+                <span style={{color:"#e8c76a",fontSize:30,fontWeight:900,letterSpacing:8,display:"block"}}>{result.code}</span>
               </div>
               <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8,marginBottom:6}}>
                 <span style={{fontSize:16}}>{mi.emoji}</span>
@@ -747,7 +751,7 @@ function saveHtml(){
                 alert('✅ 복사됐어요!\n카톡 채팅창에 붙여넣기 하세요!');
               }
             }} style={{padding:"14px 8px",borderRadius:12,background:"#FEE500",color:"#000",fontSize:13,fontWeight:800,border:"none",cursor:"pointer",lineHeight:1.5}}>
-              💬 카톡 공유<br/><span style={{fontSize:10,opacity:0.7}}>결과 이미지 공유</span>
+              {copied?"✅ 전송! 링크도 복사됨":"💬 카톡 공유"}<br/><span style={{fontSize:10,opacity:0.7}}>{copied?"채팅창에 링크 붙여넣기 가능":"이미지 전송 + 링크 클립보드"}</span>
             </button>
             <button onClick={()=>{
               const bar2=n=>"●".repeat(n)+"○".repeat(3-n);
@@ -1344,7 +1348,7 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
             </div>
             {/* 코드 배지 - 투명 + 골드 테두리 */}
             <div style={{display:"inline-block",padding:"10px 32px",borderRadius:24,marginBottom:16,background:"rgba(201,168,76,0.08)",border:"1.5px solid rgba(201,168,76,0.5)",boxShadow:"0 4px 20px rgba(201,168,76,0.15)",textDecoration:"none"}}>
-              <span style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:32,fontWeight:900,letterSpacing:8,textDecoration:"none",display:"block"}}>{result.code}</span>
+              <span style={{color:"#e8c76a",fontSize:32,fontWeight:900,letterSpacing:8,display:"block"}}>{result.code}</span>
             </div>
             {/* 이모지+4글자 + 대분류 나란히 */}
             <div style={{marginBottom:10}}>
