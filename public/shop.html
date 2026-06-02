@@ -526,10 +526,24 @@ footer .fi{color:var(--muted);font-size:10px;}
 
 
 <script>
-// 관리자 등록 제품 로드
-window.addEventListener('load', function(){
-  const products = JSON.parse(localStorage.getItem('p333_products') || '[]');
-  if(!products.length) return;
+// Google Sheets 제품 로드
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/1OMyEfRy0pbpqHf33iZTYQc07xknM5gcZ6s7J_mAf9wg/gviz/tq?tqx=out:json&sheet=products";
+
+window.addEventListener('load', async function(){
+  try{
+    const res = await fetch(SHEET_URL);
+    const text = await res.text();
+    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);/)[1]);
+    const rows = json.table.rows;
+    const cols = json.table.cols.map(c=>c.label);
+    
+    const products = rows.map(r=>{
+      const obj={};
+      cols.forEach((c,i)=>obj[c]=r.c[i]?r.c[i].v||'':'');
+      return obj;
+    }).filter(p=>p.name);
+    
+    if(!products.length) return;
   
   products.forEach(p=>{
     // 카테고리별 섹션 찾기
