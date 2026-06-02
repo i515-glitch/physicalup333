@@ -338,25 +338,25 @@ export default function App() {
     try{
       if(window.Kakao&&window.Kakao.isInitialized()){
         // 링크도 클립보드에 복사해두기
-        try{ await navigator.clipboard.writeText("https://www.333test.com"); }catch(e){}
+        try{ await navigator.clipboard.writeText("https://www.physical333.com"); }catch(e){}
         window.Kakao.Share.sendDefault({
           objectType:"feed",
           content:{
-            title:`${ment.emoji} ${result.code} ${mi.emoji}${result.main} · ${ment.nick} | 피지컬업 333TEST`,
+            title:`${ment.emoji} ${result.code} ${mi.emoji}${result.main} · ${ment.nick} | PHYSICAL333 333TEST`,
             description:`"${shortWit}" 💡${shortTip}`,
-            imageUrl:"https://pu333.kr/og.png",
+            imageUrl:"https://www.physical333.com/og.png",
             imageWidth:1200,
             imageHeight:630,
             link:{
-              mobileWebUrl:"https://www.333test.com",
-              webUrl:"https://www.333test.com"
+              mobileWebUrl:"https://www.physical333.com",
+              webUrl:"https://www.physical333.com"
             }
           },
           buttons:[{
             title:"우리 아이 체질 코드 찾기 →",
             link:{
-              mobileWebUrl:"https://www.333test.com",
-              webUrl:"https://www.333test.com"
+              mobileWebUrl:"https://www.physical333.com",
+              webUrl:"https://www.physical333.com"
             }
           }],
           installTalk:true,
@@ -374,7 +374,7 @@ export default function App() {
     // 폴백: 텍스트 복사
     const ageInfo=birth.length===6?calcAgeFromShort(birth):null;
     const growthTxt=(ageInfo&&heightVal&&weightVal)?`\n키 ${heightVal}cm · 몸무게 ${weightVal}kg · ${ageInfo.display}`:"";
-    const txt=`피지컬업 333TEST\n\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\n"${shortWit}"\n💡${shortTip}${growthTxt}\n\nwww.333test.com`;
+    const txt=`PHYSICAL333 333TEST\n\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\n"${shortWit}"\n💡${shortTip}${growthTxt}\n\nwww.physical333.com`;
     try{ await navigator.clipboard.writeText(txt); }
     catch(e){
       const el=document.createElement("textarea");
@@ -485,9 +485,9 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
 <div class="header-card">
   <div class="brand-row">
     <div>
-      <div class="brand">PHYSICAL UP</div>
+      <div class="brand">PHYSICAL333</div>
       <div class="test-name">333TEST</div>
-      <div style="color:rgba(201,168,76,0.4);font-size:8px;letter-spacing:2px;">YOUTH SPORTS CLUB</div>
+      <div style="color:rgba(201,168,76,0.4);font-size:8px;letter-spacing:2px;">ELITE SPORTS LAB</div>
     </div>
     <div class="seal">⚾</div>
   </div>
@@ -523,7 +523,7 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
   </div>
   <div class="footer-row">
     <div class="footer-date">${date}</div>
-    <div class="footer-url">www.333test.com</div>
+    <div class="footer-url">www.physical333.com</div>
   </div>
 </div>
 
@@ -589,9 +589,9 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
 <!-- 하단 -->
 <div class="bottom-card">
   <div>
-    <div style="color:rgba(201,168,76,0.6);font-size:10px;margin-bottom:2px;">검사일 ${date} · 발급처 피지컬업 PHYSICAL UP</div>
-    <div style="color:#c9a84c;font-size:12px;font-weight:700;letter-spacing:1px;">www.333test.com</div>
-    <div class="hashtag">#피지컬333테스트 #피지컬업 #체질코드</div>
+    <div style="color:rgba(201,168,76,0.6);font-size:10px;margin-bottom:2px;">검사일 ${date} · 발급처 PHYSICAL333 PHYSICAL333</div>
+    <div style="color:#c9a84c;font-size:12px;font-weight:700;letter-spacing:1px;">www.physical333.com</div>
+    <div class="hashtag">#피지컬333테스트 #PHYSICAL333 #체질코드</div>
   </div>
   <div class="stamp">
     <div>PHYSICAL</div><div class="mid">UP</div><div>OFFICIAL</div>
@@ -603,7 +603,7 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
 <script>
 function shareKakao(){
-  const txt="피지컬업 333TEST\\n\\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\\n\\"${ment.wit.slice(0,16)}${ment.wit.length>16?'..':''}\\"\\n💡${ment.tip.slice(0,16)}${ment.tip.length>16?'..':''}\\n\\nwww.333test.com";
+  const txt="PHYSICAL333 333TEST\\n\\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\\n\\"${ment.wit.slice(0,16)}${ment.wit.length>16?'..':''}\\"\\n💡${ment.tip.slice(0,16)}${ment.tip.length>16?'..':''}\\n\\nwww.physical333.com";
   if(navigator.clipboard){
     navigator.clipboard.writeText(txt).then(()=>{
       document.getElementById('kakao-msg').style.display='block';
@@ -645,10 +645,10 @@ function saveHtml(){
     <nav style={{position:"sticky",top:0,zIndex:100,background:"rgba(6,10,20,0.96)",backdropFilter:"blur(12px)",borderBottom:"1px solid rgba(201,168,76,0.12)",padding:"0 20px"}}>
       <div style={{maxWidth:800,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",height:56}}>
         <a href="/landing.html" style={{display:"flex",alignItems:"center",gap:8,textDecoration:"none"}}>
-          <img src="/logo.png" alt="PHYSICAL UP" style={{width:32,height:32,objectFit:"contain",borderRadius:"50%"}}/>
+          <img src="/logo.png" alt="PHYSICAL333" style={{width:32,height:32,objectFit:"contain",borderRadius:"50%"}}/>
           <div>
-            <div style={{color:GOLD,fontSize:12,fontWeight:900,letterSpacing:2,lineHeight:1}}>PHYSICAL UP</div>
-            <div style={{color:MUTED,fontSize:9,letterSpacing:1}}>YOUTH SPORTS CLUB</div>
+            <div style={{color:GOLD,fontSize:12,fontWeight:900,letterSpacing:2,lineHeight:1}}>PHYSICAL333</div>
+            <div style={{color:MUTED,fontSize:9,letterSpacing:1}}>ELITE SPORTS LAB</div>
           </div>
         </a>
         <div style={{display:"flex",alignItems:"center",gap:4}}>
@@ -679,10 +679,10 @@ function saveHtml(){
             <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:"linear-gradient(90deg,#c9a84c,#e8c76a,#c9a84c)"}}/>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
               <div>
-                <div style={{color:GOLD,fontSize:10,letterSpacing:4,fontWeight:700}}>PHYSICAL UP</div>
+                <div style={{color:GOLD,fontSize:10,letterSpacing:4,fontWeight:700}}>PHYSICAL333</div>
                 <div style={{fontSize:18,fontWeight:900,color:GOLD2,letterSpacing:2}}>333TEST</div>
               </div>
-              <img src="/logo.png" alt="PHYSICAL UP" style={{width:52,height:52,objectFit:"contain"}}/>
+              <img src="/logo.png" alt="PHYSICAL333" style={{width:52,height:52,objectFit:"contain"}}/>
             </div>
             <div style={{height:1,background:"linear-gradient(90deg,transparent,#c9a84c,transparent)",marginBottom:14}}/>
             <div style={{textAlign:"center",marginBottom:14}}>
@@ -712,7 +712,7 @@ function saveHtml(){
             </div>
             <div style={{display:"flex",justifyContent:"space-between"}}>
               <span style={{color:"rgba(201,168,76,0.4)",fontSize:10}}>{date}</span>
-              <span style={{color:GOLD,fontSize:11,fontWeight:700}}>www.333test.com</span>
+              <span style={{color:GOLD,fontSize:11,fontWeight:700}}>www.physical333.com</span>
             </div>
           </div>
 
@@ -733,7 +733,7 @@ function saveHtml(){
                 canvas.toBlob(async(blob)=>{
                   const file=new File([blob],'피지컬333결과.png',{type:'image/png'});
                   if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-                    await navigator.share({files:[file],text:'www.333test.com'});
+                    await navigator.share({files:[file],text:'www.physical333.com'});
                   } else {
                     const url=URL.createObjectURL(blob);
                     const a=document.createElement('a');
@@ -745,7 +745,7 @@ function saveHtml(){
               }catch(e){
                 const shortWit=ment.wit.length>16?ment.wit.slice(0,16)+'..':ment.wit;
                 const shortTip=ment.tip.length>16?ment.tip.slice(0,16)+'..':ment.tip;
-                const txt=`피지컬업 333TEST\n\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\n"${shortWit}"\n💡${shortTip}\n\nwww.333test.com`;
+                const txt=`PHYSICAL333 333TEST\n\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\n"${shortWit}"\n💡${shortTip}\n\nwww.physical333.com`;
                 try{await navigator.clipboard.writeText(txt);}catch(e2){
                   const el=document.createElement('textarea');el.value=txt;
                   document.body.appendChild(el);el.select();
@@ -805,7 +805,7 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
 <body>
 <div class="card">
   <div class="header">
-    <div class="brand">PHYSICAL UP</div>
+    <div class="brand">PHYSICAL333</div>
     <div class="brand2">333TEST</div>
     <div style="text-align:center;margin-bottom:12px;">
       <div class="code-badge"><span class="code">${result.code}</span></div>
@@ -838,7 +838,7 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
     </div>
     <div class="footer-row">
       <span class="date">${date}</span>
-      <span class="site">www.333test.com</span>
+      <span class="site">www.physical333.com</span>
     </div>
   </div>
 
@@ -859,8 +859,8 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
   <div class="caution">⚠️ ${mi.caution}</div>
 
   <div style="margin-top:16px;text-align:center;">
-    <a href="https://www.333test.com" style="display:inline-block;padding:14px 32px;border-radius:12px;background:linear-gradient(135deg,#c9a84c,#e8c76a);color:#0d1b3e;font-size:14px;font-weight:900;text-decoration:none;font-family:'Noto Sans KR',sans-serif;">⚾ 우리 아이도 체질 코드 찾기 →</a>
-    <p style="margin-top:8px;color:#3a5070;font-size:11px;font-family:'Noto Sans KR',sans-serif;">www.333test.com · 무료 · 약 5분</p>
+    <a href="https://www.physical333.com" style="display:inline-block;padding:14px 32px;border-radius:12px;background:linear-gradient(135deg,#c9a84c,#e8c76a);color:#0d1b3e;font-size:14px;font-weight:900;text-decoration:none;font-family:'Noto Sans KR',sans-serif;">⚾ 우리 아이도 체질 코드 찾기 →</a>
+    <p style="margin-top:8px;color:#3a5070;font-size:11px;font-family:'Noto Sans KR',sans-serif;">www.physical333.com · 무료 · 약 5분</p>
   </div>
 </div>
 </body></html>`;
@@ -923,10 +923,10 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
       <nav style={{position:"sticky",top:0,zIndex:100,background:"rgba(6,10,20,0.95)",backdropFilter:"blur(10px)",borderBottom:"1px solid rgba(201,168,76,0.15)",padding:"0 20px"}}>
         <div style={{maxWidth:800,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",height:56}}>
           <a href="/landing.html" style={{display:"flex",alignItems:"center",gap:8,textDecoration:"none"}}>
-            <img src="/logo.png" alt="PHYSICAL UP" style={{width:32,height:32,objectFit:"contain",borderRadius:"50%"}}/>
+            <img src="/logo.png" alt="PHYSICAL333" style={{width:32,height:32,objectFit:"contain",borderRadius:"50%"}}/>
             <div>
-              <div style={{color:GOLD,fontSize:12,fontWeight:900,letterSpacing:2,lineHeight:1}}>PHYSICAL UP</div>
-              <div style={{color:MUTED,fontSize:9,letterSpacing:1}}>YOUTH SPORTS CLUB</div>
+              <div style={{color:GOLD,fontSize:12,fontWeight:900,letterSpacing:2,lineHeight:1}}>PHYSICAL333</div>
+              <div style={{color:MUTED,fontSize:9,letterSpacing:1}}>ELITE SPORTS LAB</div>
             </div>
           </a>
           <div style={{display:"flex",alignItems:"center",gap:4}}>
@@ -942,7 +942,7 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
       <div style={{textAlign:"center",padding:"60px 24px 50px",background:"linear-gradient(180deg,rgba(201,168,76,0.05) 0%,transparent 100%)"}}>
         <div style={{marginBottom:20}}>
           <div style={{display:"inline-block",padding:"10px 52px",borderRadius:24,background:"rgba(201,168,76,0.08)",border:"1.5px solid rgba(201,168,76,0.5)",marginBottom:16}}>
-            <div style={{color:GOLD,fontSize:12,fontWeight:700,letterSpacing:4,marginBottom:2}}>PHYSICAL UP</div>
+            <div style={{color:GOLD,fontSize:12,fontWeight:700,letterSpacing:4,marginBottom:2}}>PHYSICAL333</div>
             <div style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:34,fontWeight:900,letterSpacing:4}}>333TEST</div>
           </div>
         </div>
@@ -991,7 +991,7 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
         <div style={{background:"rgba(13,27,62,0.6)",borderRadius:20,padding:"28px 24px",border:"1px solid rgba(201,168,76,0.2)",position:"relative",overflow:"hidden"}}>
           <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:"linear-gradient(90deg,#c9a84c,#e8c76a,#c9a84c)"}}/>
           <div style={{color:GOLD,fontSize:10,letterSpacing:4,marginBottom:8}}>ABOUT US</div>
-          <div style={{color:WHITE,fontSize:18,fontWeight:800,marginBottom:16,lineHeight:1.5}}>피지컬업<br/><span style={{color:GOLD2}}>Physical-Up</span></div>
+          <div style={{color:WHITE,fontSize:18,fontWeight:800,marginBottom:16,lineHeight:1.5}}>PHYSICAL333<br/><span style={{color:GOLD2}}>Physical-Up</span></div>
           <p style={{color:MUTED,fontSize:13,lineHeight:1.9,marginBottom:16}}>
             무작정 많이 먹이는 일방적인 방식이 아닌,<br/>
             <span style={{color:GOLD2,fontWeight:700}}>생체 데이터 분석</span>을 통해 영양을 온전히<br/>
@@ -1022,7 +1022,7 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
       <div style={{padding:"40px 20px",maxWidth:480,margin:"0 auto"}}>
         <div style={{textAlign:"center",marginBottom:24}}>
           <div style={{color:GOLD,fontSize:11,letterSpacing:3,marginBottom:6}}>YOUTUBE CONTENT</div>
-          <div style={{color:WHITE,fontSize:18,fontWeight:800,marginBottom:8}}>📺 피지컬업 20강 커리큘럼</div>
+          <div style={{color:WHITE,fontSize:18,fontWeight:800,marginBottom:8}}>📺 PHYSICAL333 20강 커리큘럼</div>
           <div style={{color:MUTED,fontSize:13}}>유소년 선수 증량의 모든 것</div>
         </div>
         {[
@@ -1074,8 +1074,8 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
 
       {/* 푸터 */}
       <div style={{borderTop:"1px solid rgba(201,168,76,0.1)",padding:"20px",textAlign:"center"}}>
-        <div style={{color:GOLD,fontSize:11,fontWeight:700,letterSpacing:2,marginBottom:4}}>PHYSICAL UP · 피지컬업</div>
-        <div style={{color:MUTED,fontSize:10}}>YOUTH SPORTS CLUB · www.333test.com</div>
+        <div style={{color:GOLD,fontSize:11,fontWeight:700,letterSpacing:2,marginBottom:4}}>PHYSICAL333 · PHYSICAL333</div>
+        <div style={{color:MUTED,fontSize:10}}>ELITE SPORTS LAB · www.physical333.com</div>
       </div>
     </div>
   );
@@ -1086,7 +1086,7 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
       <div style={{maxWidth:400,width:"100%",textAlign:"center"}}>
         <div style={{marginBottom:20,textAlign:"center"}}>
           <div style={{display:"inline-block",padding:"10px 52px",borderRadius:24,background:"rgba(201,168,76,0.08)",border:"1.5px solid rgba(201,168,76,0.5)",boxShadow:"0 4px 24px rgba(201,168,76,0.15)"}}>
-            <div style={{color:GOLD,fontSize:13,fontWeight:700,letterSpacing:4,marginBottom:2}}>PHYSICAL UP</div>
+            <div style={{color:GOLD,fontSize:13,fontWeight:700,letterSpacing:4,marginBottom:2}}>PHYSICAL333</div>
             <div style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:36,fontWeight:900,letterSpacing:4}}>333TEST</div>
           </div>
         </div>
@@ -1324,7 +1324,7 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
 
           {/* 브랜드 */}
           <div style={{textAlign:"center",marginBottom:14}}>
-            <div style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a,#c9a84c)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:13,fontWeight:900,letterSpacing:3}}>PHYSICAL UP · 피지컬업</div>
+            <div style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a,#c9a84c)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:13,fontWeight:900,letterSpacing:3}}>PHYSICAL333 · PHYSICAL333</div>
           </div>
 
           {/* 인사말 */}
@@ -1743,7 +1743,7 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
 
           {/* 헤더 */}
           <div style={{textAlign:"center",marginBottom:16}}>
-            <div style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a,#c9a84c)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:13,fontWeight:900,letterSpacing:3,marginBottom:8}}>PHYSICAL UP · 피지컬업</div>
+            <div style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a,#c9a84c)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:13,fontWeight:900,letterSpacing:3,marginBottom:8}}>PHYSICAL333 · PHYSICAL333</div>
             <div style={{color:WHITE,fontSize:18,fontWeight:800,marginBottom:4}}>🛒 내 체질 맞춤 제품</div>
             <div style={{display:"inline-flex",alignItems:"center",gap:8,padding:"6px 16px",borderRadius:20,background:`${current.color}18`,border:`1px solid ${current.color}40`}}>
               <span style={{color:current.color,fontSize:13,fontWeight:700}}>{mi.emoji} {result.main}</span>
