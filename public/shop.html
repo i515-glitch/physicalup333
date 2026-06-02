@@ -531,41 +531,41 @@ window.addEventListener('load', function(){
   const products = JSON.parse(localStorage.getItem('p333_products') || '[]');
   if(!products.length) return;
   
-  // 카테고리별 분류
-  const cats = {};
   products.forEach(p=>{
-    if(!cats[p.cat]) cats[p.cat] = [];
-    cats[p.cat].push(p);
-  });
-
-  // 각 섹션에 추가
-  const catMap = {
-    '키성장':'#키성장','종합비타민':'#종합비타민','유산균':'#유산균',
-    '칼슘마그네슘':'#칼슘마그네슘','비타민D':'#비타민D','오메가3':'#오메가3',
-    '소화효소':'#소화효소','식이섬유':'#식이섬유','단백질':'#단백질','홈트':'#홈트'
-  };
-
-  Object.entries(cats).forEach(([cat, items])=>{
-    const anchor = catMap[cat];
-    if(!anchor) return;
-    const section = document.querySelector(anchor+' .product-grid');
-    if(!section) return;
-    items.forEach(p=>{
-      const card = document.createElement('div');
-      card.className = 'product-card';
-      card.innerHTML = `
-        <div class="product-img"><div class="placeholder">🛍️</div></div>
-        <div class="product-info">
-          <div class="product-name">${p.name}</div>
-          ${p.desc?`<div class="product-desc">${p.desc}</div>`:''}
-          <div class="product-links">
-            ${p.coupang?`<a href="${p.coupang}" target="_blank" class="link-btn link-coupang">쿠팡 →</a>`:''}
-            ${p.naver?`<a href="${p.naver}" target="_blank" class="link-btn link-naver">네이버 →</a>`:''}
-            ${p.olive?`<a href="${p.olive}" target="_blank" class="link-btn link-olive">올리브영 →</a>`:''}
-          </div>
-        </div>`;
-      section.appendChild(card);
+    // 카테고리별 섹션 찾기
+    const sections = document.querySelectorAll('.section');
+    let targetSection = null;
+    sections.forEach(s=>{
+      const title = s.querySelector('.sec-title');
+      if(!title) return;
+      const catMatch = {
+        '키성장':'키성장','종합비타민':'종합비타민','유산균':'유산균',
+        '칼슘마그네슘':'칼슘','비타민D':'비타민D','오메가3':'오메가3',
+        '소화효소':'소화효소','식이섬유':'식이섬유','단백질':'단백질','홈트':'홈트'
+      };
+      if(title.textContent.includes(catMatch[p.cat])){
+        targetSection = s;
+      }
     });
+    
+    if(!targetSection) return;
+    let grid = targetSection.querySelector('.product-grid');
+    if(!grid) return;
+    
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.innerHTML = `
+      <div class="product-img"><div class="placeholder">🛍️</div><div class="placeholder-text">등록 제품</div></div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        ${p.desc?`<div class="product-desc">${p.desc}</div>`:''}
+        <div class="product-links">
+          ${p.coupang?`<a href="${p.coupang}" target="_blank" class="link-btn link-coupang">쿠팡 →</a>`:''}
+          ${p.naver?`<a href="${p.naver}" target="_blank" class="link-btn link-naver">네이버 →</a>`:''}
+          ${p.olive?`<a href="${p.olive}" target="_blank" class="link-btn link-olive">올리브영 →</a>`:''}
+        </div>
+      </div>`;
+    grid.appendChild(card);
   });
 });
 </script>
