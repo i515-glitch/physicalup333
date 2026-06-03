@@ -385,7 +385,6 @@ async function callAI(pAns,kAns,res,setAiAdvice,setLoading) {
     setLoading(false);
   }, 500);
 }
-}
 
 // ─── 메인 컴포넌트 ────────────────────────────────────────────────────────────
 export default function App() {
