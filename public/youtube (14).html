@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>유튜브 20강 · PHYSICAL333</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--navy:#060a14;--gold:#c9a84c;--gold2:#e8c76a;--white:#f0f4ff;--muted:#4a6080;}
+html{scroll-behavior:smooth;}
+body{background:#060e10;font-family:'Noto Sans KR',sans-serif;color:var(--white);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.12);}
+.nav-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 20px;}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.logo img{width:32px;height:32px;object-fit:contain;}
+.logo-text .b1{color:var(--gold);font-size:12px;font-weight:900;letter-spacing:3px;line-height:1;}
+.logo-text .b2{color:var(--muted);font-size:8px;letter-spacing:2px;}
+.nav-links{display:flex;align-items:center;gap:2px;}
+.nav-links a{color:var(--muted);font-size:9px;padding:4px 5px;border-radius:6px;text-decoration:none;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);}
+.nav-links a.active{color:var(--white);font-weight:700;}
+.nav-test{color:var(--gold)!important;border:1px solid var(--gold);font-weight:700!important;border-radius:6px;}
+
+.hero{padding:80px 20px 24px;max-width:720px;margin:0 auto;text-align:center;}
+.hero .label{color:var(--gold);font-size:10px;letter-spacing:4px;margin-bottom:8px;}
+.hero h1{font-size:20px;font-weight:900;margin-bottom:6px;}
+.hero p{color:var(--muted);font-size:13px;line-height:1.8;}
+
+#loading{text-align:center;padding:60px 20px;color:var(--muted);font-size:13px;}
+#empty{display:none;text-align:center;padding:60px 20px;color:var(--muted);}
+
+.content{max-width:720px;margin:0 auto;padding:0 20px 60px;}
+.theme{background:rgba(13,27,62,0.5);border-radius:12px;border:1px solid rgba(201,168,76,0.1);overflow:hidden;margin-bottom:10px;transition:all 0.2s;}
+.theme:hover{border-color:rgba(201,168,76,0.25);}
+.theme-header{padding:14px 18px;background:rgba(201,168,76,0.05);border-bottom:1px solid rgba(201,168,76,0.08);display:flex;align-items:center;gap:10px;}
+.theme-label{color:var(--gold);font-size:11px;font-weight:700;letter-spacing:1px;}
+.theme-body{padding:10px 18px;}
+.lecture{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.lecture:last-child{border-bottom:none;}
+.lecture .num{color:var(--gold);font-size:10px;font-weight:700;min-width:22px;margin-top:2px;flex-shrink:0;}
+.lecture a{color:var(--muted);font-size:12px;line-height:1.6;text-decoration:none;transition:color 0.2s;}
+.lecture a:hover{color:var(--gold2);}
+.lecture .no-link{color:var(--muted);font-size:12px;line-height:1.6;}
+
+.yt-btn{display:inline-flex;align-items:center;gap:6px;margin:20px 0;padding:10px 20px;border-radius:8px;background:rgba(255,0,0,0.1);border:1px solid rgba(255,80,80,0.2);color:#ff7070;font-size:12px;font-weight:700;text-decoration:none;}
+
+footer{border-top:1px solid rgba(201,168,76,0.1);padding:24px 20px;text-align:center;}
+footer .fb{color:var(--gold);font-size:11px;font-weight:700;letter-spacing:3px;margin-bottom:3px;}
+footer .fi{color:var(--muted);font-size:10px;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/landing.html" class="logo">
+      <img src="/logo.png" alt="PHYSICAL333"/>
+      <div class="logo-text">
+        <div class="b1">PHYSICAL333</div>
+        <div class="b2">ELITE SPORTS LAB</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="/landing.html">ABOUT</a>
+      <a href="/worry.html">LAB</a>
+      <a href="/shop.html">SHOP</a>
+      <a href="/app?start=test" class="nav-test">TEST</a>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="label">YOUTUBE</div>
+  <h1>📺 피지컬333 유튜브</h1>
+  <p>감독님도 몰랐던 피지컬 과학 무료 공개</p>
+</div>
+
+<div id="loading">강의 목록 불러오는 중...</div>
+<div id="empty">등록된 강의가 없어요</div>
+<div class="content" id="content"></div>
+
+<footer>
+  <div class="fb">PHYSICAL333 · ELITE SPORTS LAB</div>
+  <div class="fi">www.physical333.com</div>
+</footer>
+
+<script>
+const SHEET_ID = "1OMyEfRy0pbpqHf33iZTYQc07xknM5gcZ6s7J_mAf9wg";
+const YT_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=youtube`;
+
+function parseGviz(text){
+  const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/);
+  if(!match) return [];
+  const data = JSON.parse(match[1]);
+  const cols = data.table.cols.map(c=>c.label);
+  return (data.table.rows||[]).map(r=>{
+    const obj={};
+    cols.forEach((c,i)=>obj[c]=(r.c[i]&&r.c[i].v!=null)?String(r.c[i].v):'');
+    return obj;
+  }).filter(r=>r.title);
+}
+
+window.addEventListener('load', async function(){
+  try{
+    const res = await fetch(YT_URL);
+    const text = await res.text();
+    const lectures = parseGviz(text);
+
+    document.getElementById('loading').style.display = 'none';
+
+    if(!lectures.length){
+      document.getElementById('empty').style.display = 'block';
+      return;
+    }
+
+    const container = document.getElementById('content');
+
+    // 테마별 분류
+    const themes = {};
+    lectures.forEach(l=>{
+      const t = l.theme || '기타';
+      if(!themes[t]) themes[t] = [];
+      themes[t].push(l);
+    });
+
+    // 유튜브 채널 링크 (url이 있는 첫번째 항목)
+    const channelUrl = lectures.find(l=>l.url)?.url;
+    if(channelUrl){
+      const btn = document.createElement('a');
+      btn.href = channelUrl;
+      btn.target = '_blank';
+      btn.className = 'yt-btn';
+      btn.innerHTML = '📺 유튜브 채널 바로가기 →';
+      container.appendChild(btn);
+    }
+
+    let num = 1;
+    Object.entries(themes).forEach(([theme, items])=>{
+      const div = document.createElement('div');
+      div.className = 'theme';
+      div.innerHTML = `
+        <div class="theme-header">
+          <span class="theme-label">${theme}</span>
+        </div>
+        <div class="theme-body">
+          ${items.map(l=>`
+            <div class="lecture">
+              <span class="num">${num++}강</span>
+              ${l.url
+                ? `<a href="${l.url}" target="_blank">${l.title}</a>`
+                : `<span class="no-link">${l.title}</span>`
+              }
+            </div>`).join('')}
+        </div>`;
+      container.appendChild(div);
+    });
+
+  }catch(e){
+    document.getElementById('loading').textContent = '강의 목록을 불러오지 못했어요';
+    console.log('오류:', e);
+  }
+});
+</script>
+</body>
+</html>
