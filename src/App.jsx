@@ -776,8 +776,8 @@ function saveHtml(){
     const blob=new Blob([html],{type:"text/html;charset=utf-8"});
     const url=URL.createObjectURL(blob);
     setDownloading(false);
-    window.open(url,'_blank');
-    setTimeout(()=>URL.revokeObjectURL(url),60000);
+    setStep("report");
+    window.scrollTo(0,0);
   }
 
 
@@ -1727,7 +1727,7 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
               {!downloading&&<div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${GOLD},${GOLD2},${GOLD})`}}/>}
               {downloading?"✅ 열리는 중!":"🏆 결과지 보기"}<br/>
               <span style={{fontSize:10,fontWeight:600,opacity:0.7}}>
-                {downloading?"새 창에서 확인하세요":"결과지 저장·카톡공유 가능"}
+                {downloading?"뒤로가기로 돌아오세요":"카톡공유·저장은 결과지에서"}
               </span>
             </button>
 
