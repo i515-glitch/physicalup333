@@ -3,231 +3,197 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Physical UP 333 · Physical UP 333 · 유소년 선수 체질 영양 전문</title>
-<meta name="description" content="살만 찌면 바로 주전인데요. 유소년 엘리트 선수 체질별 맞춤 영양 솔루션."/>
-<meta property="og:image" content="https://pu333.kr/og.png"/>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Noto+Serif+KR:wght@700;900&display=swap" rel="stylesheet"/>
+<title>피지컬업333 · Physical UP 333</title>
+<meta name="description" content="유소년 엘리트 선수 체질 코드 분석. 333TEST로 우리 아이 맞춤 피지컬 솔루션을 찾아보세요."/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --navy:#060a14;--navy2:#0d1b3e;--navy3:#1a2d5a;
-  --gold:#c9a84c;--gold2:#e8c76a;
-  --white:#f0f4ff;--muted:#4a6080;
-  --green:#4fcfa0;--pink:#f76f8e;
-}
+:root{--navy:#060a14;--gold:#c9a84c;--gold2:#e8c76a;--white:#f0f4ff;--muted:#4a6080;--line:rgba(255,255,255,0.07);}
 html{scroll-behavior:smooth;}
-body{background:var(--navy);font-family:'Noto Sans KR',sans-serif;color:var(--white);overflow-x:hidden;}
+body{background:var(--navy);font-family:'Noto Sans KR',sans-serif;color:var(--white);}
 
 /* 네비 */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.12);}
-.nav-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 20px;}
-.logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
-.logo img{width:32px;height:32px;object-fit:contain;}
-.logo-text .b1{color:var(--gold);font-size:12px;font-weight:900;letter-spacing:3px;line-height:1;}
-.logo-text .b2{color:var(--muted);font-size:8px;letter-spacing:2px;}
-.nav-links{display:flex;gap:2px;}
-.nav-links a{color:var(--muted);font-size:11px;padding:5px 8px;border-radius:6px;text-decoration:none;transition:color 0.2s;white-space:nowrap;}
-.nav-links a:hover{color:var(--gold);}
-.nav-links a.active{color:var(--white)!important;font-weight:700;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.1);}
+.nav-inner{max-width:760px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:52px;padding:0 20px;}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;}
+.logo img{width:28px;height:28px;object-fit:contain;}
+.logo-text .b1{color:var(--gold);font-size:11px;font-weight:900;letter-spacing:2px;line-height:1.2;white-space:nowrap;}
+.logo-text .b2{color:var(--muted);font-size:8px;letter-spacing:1px;white-space:nowrap;}
+.nav-links{display:flex;align-items:center;gap:2px;flex-shrink:0;}
+.nav-links a{color:var(--muted);font-size:9px;padding:4px 6px;border-radius:4px;text-decoration:none;white-space:nowrap;}
+.nav-links a.active{color:var(--white);font-weight:700;}
+.nav-test{color:var(--gold)!important;border:1px solid var(--gold);border-radius:4px;font-weight:700!important;}
 
-/* 섹션 공통 */
-.section{max-width:720px;margin:0 auto;padding:80px 20px;}
-.section:first-of-type{padding-top:100px;}
-.label{color:var(--gold);font-size:10px;letter-spacing:4px;margin-bottom:10px;}
-.title{font-size:22px;font-weight:900;line-height:1.5;margin-bottom:10px;}
-.desc{color:var(--muted);font-size:13px;line-height:1.9;}
-.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,0.15),transparent);}
-.card{background:rgba(13,27,62,0.5);border-radius:14px;padding:20px;border:1px solid rgba(201,168,76,0.1);transition:all 0.2s;}
-.card:hover{border-color:rgba(201,168,76,0.25);transform:translateY(-2px);}
+/* 레이아웃 */
+.wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+.sec{padding:72px 0;border-bottom:1px solid var(--line);}
+.sec:last-child{border-bottom:none;}
+.tag{color:var(--gold);font-size:9px;letter-spacing:4px;font-weight:700;margin-bottom:10px;}
+.title{font-size:22px;font-weight:900;line-height:1.5;margin-bottom:8px;}
+.sub{color:var(--muted);font-size:13px;line-height:1.9;margin-bottom:28px;}
 
-/* ── 1. 도움드리는일 ── */
-#about .about-intro{background:rgba(13,27,62,0.6);border-radius:16px;padding:24px;border:1px solid rgba(201,168,76,0.15);margin-top:20px;position:relative;overflow:hidden;}
-#about .about-intro::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
-#about .about-intro blockquote{color:var(--white);font-family:'Noto Serif KR',serif;font-size:15px;line-height:1.8;border-left:3px solid var(--gold);padding-left:14px;margin-bottom:16px;}
-#about .about-intro blockquote em{color:var(--gold2);font-style:normal;font-weight:700;}
-#about .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;}
-#about .item .icon{font-size:20px;margin-bottom:6px;}
-#about .item .t{color:var(--gold2);font-size:12px;font-weight:700;margin-bottom:3px;}
-#about .item .d{color:var(--muted);font-size:11px;line-height:1.6;}
+/* 히어로 */
+.hero{padding:100px 20px 72px;max-width:760px;margin:0 auto;border-bottom:1px solid var(--line);}
+.hero-tag{color:var(--gold);font-size:9px;letter-spacing:5px;font-weight:700;margin-bottom:20px;}
+.hero-title{font-size:30px;font-weight:900;line-height:1.5;margin-bottom:12px;}
+.hero-title em{color:var(--gold2);font-style:normal;}
+.hero-desc{color:var(--muted);font-size:14px;line-height:2;max-width:480px;margin-bottom:32px;}
+.hero-cta{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#060a14;font-size:14px;font-weight:900;text-decoration:none;letter-spacing:1px;}
+.hero-slogan{margin-top:28px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:11px;letter-spacing:3px;}
 
-/* ── 2. 아이체격고민 ── */
-#worry{background:rgba(13,27,62,0.15);}
-#worry .worry-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px;}
-#worry .wcard .q{font-size:18px;margin-bottom:6px;}
-#worry .wcard .t{color:var(--white);font-size:13px;font-weight:700;margin-bottom:4px;line-height:1.4;}
-#worry .wcard .d{color:var(--muted);font-size:11px;line-height:1.6;}
-#worry .axis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:20px;}
-#worry .ax{border-radius:12px;padding:16px 10px;text-align:center;border:1px solid;}
-#worry .ax .em{font-size:22px;margin-bottom:6px;}
-#worry .ax .nm{font-size:12px;font-weight:900;margin-bottom:4px;}
-#worry .ax .dc{font-size:10px;line-height:1.5;opacity:0.6;}
-#worry .yt-list{margin-top:20px;display:flex;flex-direction:column;gap:8px;}
-#worry .yt-item{background:rgba(13,27,62,0.4);border-radius:10px;border:1px solid rgba(255,255,255,0.05);overflow:hidden;}
-#worry .yt-header{padding:12px 16px;display:flex;gap:8px;align-items:center;}
-#worry .yt-label{color:var(--gold);font-size:10px;font-weight:700;}
-#worry .yt-title{color:var(--white);font-size:12px;font-weight:700;}
-#worry .yt-body{padding:8px 16px 12px;}
-#worry .yt-lecture{display:flex;gap:8px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.03);}
-#worry .yt-lecture:last-child{border-bottom:none;}
-#worry .yt-num{color:var(--gold);font-size:10px;font-weight:700;min-width:20px;margin-top:1px;flex-shrink:0;}
-#worry .yt-text{color:var(--muted);font-size:11px;line-height:1.6;}
-#worry .yt-btn{display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:10px 20px;border-radius:8px;background:rgba(255,0,0,0.1);border:1px solid rgba(255,80,80,0.2);color:#ff7070;font-size:12px;font-weight:700;text-decoration:none;}
+/* 문제 섹션 */
+.problem-list{display:flex;flex-direction:column;gap:0;}
+.problem-item{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--line);}
+.problem-item:last-child{border-bottom:none;}
+.problem-num{color:var(--gold);font-size:10px;font-weight:700;min-width:22px;padding-top:2px;}
+.problem-q{color:var(--white);font-size:13px;font-weight:700;margin-bottom:3px;}
+.problem-a{color:var(--muted);font-size:12px;line-height:1.7;}
 
-/* ── 3. 무료체질TEST ── */
-#test{background:radial-gradient(ellipse at 50% 50%,rgba(201,168,76,0.05),transparent 70%);}
-#test .test-box{background:linear-gradient(135deg,rgba(201,168,76,0.07),rgba(13,27,62,0.7));border-radius:16px;padding:28px 20px;border:1px solid rgba(201,168,76,0.2);margin-top:20px;text-align:center;position:relative;overflow:hidden;}
-#test .test-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--gold2),transparent);}
-#test .type-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:20px 0;}
-#test .type{border-radius:12px;padding:16px 8px;text-align:center;border:1px solid;}
-#test .type .em{font-size:24px;margin-bottom:6px;}
-#test .type .nm{font-size:13px;font-weight:900;margin-bottom:3px;}
-#test .type .tg{font-size:9px;font-weight:700;letter-spacing:1px;opacity:0.65;}
-#test .nums{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0;}
-#test .num .n{font-size:22px;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-#test .num .l{color:var(--muted);font-size:10px;margin-top:2px;}
-#test .start-btn{display:inline-block;padding:14px 40px;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy2);font-size:15px;font-weight:900;text-decoration:none;box-shadow:0 8px 24px rgba(201,168,76,0.3);}
+/* 333 소개 */
+.three-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border-radius:10px;overflow:hidden;margin-bottom:20px;}
+.three-cell{background:rgba(13,27,62,0.5);padding:20px 16px;text-align:center;}
+.three-num{font-size:36px;font-weight:900;color:var(--gold);line-height:1;margin-bottom:6px;}
+.three-label{font-size:11px;font-weight:700;color:var(--white);margin-bottom:6px;}
+.three-desc{font-size:11px;color:var(--muted);line-height:1.6;}
 
-/* ── 4. 맞춤제품추천 ── */
-#shop .shop-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:20px;}
-#shop .scard{border-radius:12px;padding:18px 10px;text-align:center;border:1px solid;text-decoration:none;display:block;transition:all 0.2s;}
-#shop .scard:hover{transform:translateY(-3px);}
-#shop .scard .em{font-size:26px;margin-bottom:6px;}
-#shop .scard .nm{font-size:13px;font-weight:900;margin-bottom:3px;}
-#shop .scard .tg{font-size:9px;font-weight:700;letter-spacing:1px;opacity:0.65;margin-bottom:6px;}
-#shop .scard .items{font-size:10px;line-height:1.8;opacity:0.55;}
-#shop .shop-more{display:inline-block;margin-top:16px;color:var(--gold);font-size:12px;font-weight:700;text-decoration:none;border-bottom:1px solid rgba(201,168,76,0.3);padding-bottom:2px;}
+/* 체질 카드 */
+.type-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;}
+.type-card{background:rgba(13,27,62,0.5);border-radius:10px;padding:16px;border:1px solid var(--line);}
+.type-card-name{font-size:13px;font-weight:700;margin-bottom:6px;}
+.type-card-desc{font-size:11px;color:var(--muted);line-height:1.6;}
 
-/* 푸터 */
-footer{border-top:1px solid rgba(201,168,76,0.1);padding:24px 20px;text-align:center;}
-footer .fb{color:var(--gold);font-size:11px;font-weight:700;letter-spacing:3px;margin-bottom:3px;}
+/* TEST CTA */
+.cta-box{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:28px 24px;text-align:center;position:relative;overflow:hidden;}
+.cta-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.cta-title{font-size:18px;font-weight:900;margin-bottom:6px;}
+.cta-desc{color:var(--muted);font-size:13px;line-height:1.8;margin-bottom:20px;}
+.cta-btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#060a14;font-size:14px;font-weight:900;text-decoration:none;}
+.cta-free{display:block;color:var(--muted);font-size:11px;margin-top:10px;}
+
+footer{padding:24px 20px;text-align:center;border-top:1px solid var(--line);}
+footer .fb{color:var(--gold);font-size:10px;font-weight:700;letter-spacing:3px;margin-bottom:3px;}
 footer .fi{color:var(--muted);font-size:10px;}
-footer .fl{margin-top:10px;display:flex;justify-content:center;gap:14px;}
-footer .fl a{color:var(--muted);font-size:10px;text-decoration:none;}
 
 @media(max-width:480px){
-  .nav-links a{font-size:10px;padding:4px 6px;}
-  .title{font-size:20px;}
+  .three-grid{grid-template-columns:1fr;}
+  .type-cards{grid-template-columns:1fr;}
+  .hero-title{font-size:22px;}
 }
 </style>
 </head>
 <body>
 
-<!-- 네비 -->
 <nav>
   <div class="nav-inner">
-    <a href="#about" class="logo">
-      <img src="/logo.png" alt="Physical UP 333"/>
+    <a href="/landing.html" class="logo">
+      <img src="/logo.png" alt="피지컬업333"/>
       <div class="logo-text">
         <div class="b1">Physical UP 333</div>
         <div class="b2">ELITE SPORTS LAB</div>
       </div>
     </a>
-    <div style="display:flex;align-items:center;gap:4px;">
-      <a href="#about" style="color:var(--white);font-size:11px;padding:5px 8px;border-radius:6px;text-decoration:none;font-weight:700;">ABOUT</a>
-      <a href="/worry.html" style="color:var(--muted);font-size:11px;padding:5px 8px;border-radius:6px;text-decoration:none;">LAB</a>
-      <a href="/shop.html" style="color:var(--muted);font-size:11px;padding:5px 8px;border-radius:6px;text-decoration:none;">SHOP</a>
-      <a href="/app?start=test" style="color:var(--gold);font-size:11px;padding:5px 10px;border-radius:6px;text-decoration:none;border:1px solid var(--gold);font-weight:700;">333TEST</a>
+    <div class="nav-links">
+      <a href="/landing.html" class="active">ABOUT</a>
+      <a href="/worry.html">LAB</a>
+      <a href="/shop.html">SHOP</a>
+      <a href="/app?start=test" class="nav-test">333TEST</a>
     </div>
   </div>
 </nav>
 
-<!-- 1. 도움드리는일 -->
-<div id="about" class="section">
-  <div class="label">Physical UP 333 · Physical UP 333</div>
-  <div class="title">체격은 유전이 아니라<br/><span style="color:var(--gold2);">철저하게 계산된 데이터 과학</span>입니다</div>
-  <p class="desc">유소년 엘리트 선수 전문 증량 테크 플랫폼</p>
-  <div class="about-intro">
-    <blockquote>"살만 찌면 바로 주전인데요"<br/><em>그 말이 얼마나 잔인한지 압니다.</em></blockquote>
-    <p style="color:var(--muted);font-size:13px;line-height:1.9;">무작정 많이 먹이는 방식이 아닌, 생체 데이터 분석으로 우리 아이만의 체질 코드를 찾아 <strong style="color:var(--white);">진짜 살찌는 몸</strong>의 로드맵을 설계합니다.</p>
-    <div class="grid">
-      <div class="card item"><div class="icon">🧬</div><div class="t">체질 분석</div><div class="d">흡수·연소·축적 3축으로 27가지 체질 코드 산출</div></div>
-      <div class="card item"><div class="icon">🥗</div><div class="t">맞춤 영양</div><div class="d">체질별 식단·영양제·운동 비율 설계</div></div>
-      <div class="card item"><div class="icon">📊</div><div class="t">성장 추적</div><div class="d">키·몸무게 또래 평균 비교 및 목표 로드맵</div></div>
-      <div class="card item"><div class="icon">🏆</div><div class="t">선수 특화</div><div class="d">유소년 스포츠 선수 전문 증량 프로그램</div></div>
+<!-- 히어로 -->
+<div class="hero">
+  <div class="hero-tag">PHYSICAL UP 333 · ELITE SPORTS LAB</div>
+  <div class="hero-title">우리 아이가<br/>경기에서 밀리는 이유,<br/><em>체질에 있습니다.</em></div>
+  <div class="hero-desc">잘 먹여도 살이 안 찌고, 영양제를 먹여도 체력이 그대로라면 — 체질을 모르고 접근하기 때문입니다. 333TEST로 우리 아이만의 체질 코드를 찾아드립니다.</div>
+  <a href="/app?start=test" class="hero-cta">무료 체질 검사 시작하기 →</a>
+  <div class="hero-slogan">피지컬은 데이터다 · Physical is Data</div>
+</div>
+
+<div class="wrap">
+
+<!-- 공감 섹션 -->
+<div class="sec">
+  <div class="tag">COMMON CONCERNS</div>
+  <div class="title">이런 고민, 있으신가요?</div>
+  <div class="problem-list">
+    <div class="problem-item">
+      <div class="problem-num">01</div>
+      <div><div class="problem-q">잘 먹이는데 살이 안 찌고 힘이 안 붙어요</div><div class="problem-a">흡수력이 낮은 체질은 아무리 먹어도 영양이 근육으로 가지 않습니다.</div></div>
+    </div>
+    <div class="problem-item">
+      <div class="problem-num">02</div>
+      <div><div class="problem-q">감독님이 체중 못 늘리면 주전 못 준다고 해요</div><div class="problem-a">체급은 경기력과 직결됩니다. 체격에서 밀리면 경기 자체가 성립되지 않습니다.</div></div>
+    </div>
+    <div class="problem-item">
+      <div class="problem-num">03</div>
+      <div><div class="problem-q">비싼 영양제 먹여도 달라지는 게 없어요</div><div class="problem-a">체질에 맞지 않는 영양제는 효과가 없습니다. 흡수 환경이 먼저입니다.</div></div>
+    </div>
+    <div class="problem-item">
+      <div class="problem-num">04</div>
+      <div><div class="problem-q">살이 쪄서 오히려 몸이 둔해졌어요</div><div class="problem-a">지방형 체중 증가는 스피드와 순발력을 떨어뜨립니다. 근육형 증량이 답입니다.</div></div>
+    </div>
+    <div class="problem-item">
+      <div class="problem-num">05</div>
+      <div><div class="problem-q">또래보다 체격이 작아 경기에서 밀려요</div><div class="problem-a">체격 차이는 경기 전 이미 승부가 납니다. 체질 기반 성장 전략이 필요합니다.</div></div>
     </div>
   </div>
 </div>
 
-<div class="divider"></div>
-
-<!-- 2. 아이체격고민 -->
-<div id="worry" class="section" style="background:#080f28;">
-  <div class="label">CONCERNS</div>
-  <div class="title">혹시 이런 고민 있으신가요?</div>
-  <p class="desc">원인을 알면 해답이 보입니다</p>
-  <div class="worry-grid">
-    <div class="card wcard"><div class="q">😮</div><div class="t">살이 안 쪄서 힘이 안 붙어요</div><div class="d">흡수력이 낮으면 아무리 먹어도 영양이 몸에 남지 않습니다.</div></div>
-    <div class="card wcard"><div class="q">😔</div><div class="t">감독님이 체중 못 늘리면 주전 못 준다고 해요</div><div class="d">체급이 경기력과 직결됩니다. 체격에서 밀리면 경기 자체가 안 됩니다.</div></div>
-    <div class="card wcard"><div class="q">💸</div><div class="t">영양제 먹여도 체력이 그대로예요</div><div class="d">체질에 맞지 않으면 영양제가 퍼포먼스에 전혀 기여하지 못합니다.</div></div>
-    <div class="card wcard"><div class="q">😤</div><div class="t">먹으면 살이 너무 쉽게 쪄요</div><div class="d">저장형 체질은 대사를 높이는 방법이 따로 있습니다.</div></div>
-    <div class="card wcard"><div class="q">🤢</div><div class="t">경기 당일 긴장하면 아무것도 못 먹어요</div><div class="d">경기 당일 위장이 닫히면 에너지 없이 뛰어야 합니다. 소화 기능이 경기력입니다.</div></div>
-    <div class="card wcard"><div class="q">📉</div><div class="t">체격이 작아서 경기에서 밀려요</div><div class="d">체격 차이는 경기 전 이미 승부가 납니다. 성장 에너지 확보가 최우선입니다.</div></div>
+<!-- 333TEST 소개 -->
+<div class="sec">
+  <div class="tag">ABOUT 333TEST</div>
+  <div class="title">피지컬업333이 하는 일</div>
+  <div class="sub">흡수력·연소력·축적력 3축을 분석해 27가지 체질 코드를 산출합니다. 우리 아이에게 딱 맞는 영양·운동·식단 전략을 데이터로 제시합니다.</div>
+  <div class="three-grid">
+    <div class="three-cell">
+      <div class="three-num">3</div>
+      <div class="three-label">축 분석</div>
+      <div class="three-desc">흡수력<br/>연소력<br/>축적력</div>
+    </div>
+    <div class="three-cell">
+      <div class="three-num">27</div>
+      <div class="three-label">체질 코드</div>
+      <div class="three-desc">각 축 1·2·3점<br/>3×3×3 = 27가지<br/>맞춤 체질 분류</div>
+    </div>
+    <div class="three-cell">
+      <div class="three-num">5분</div>
+      <div class="three-label">무료 검사</div>
+      <div class="three-desc">간단한 설문<br/>즉시 결과<br/>완전 무료</div>
+    </div>
   </div>
-
-  <!-- 3축 -->
-  <div style="margin-top:32px;">
-    <p style="color:var(--white);font-size:14px;font-weight:700;margin-bottom:4px;">왜 아이마다 결과가 다를까요?</p>
-    <p class="desc" style="margin-bottom:0;">흡수·연소·축적, 이 3가지 체질 축이 모두 다르기 때문입니다.</p>
-    <div class="axis">
-      <div class="ax" style="background:rgba(79,207,160,0.07);border-color:rgba(79,207,160,0.2);"><div class="em">🫙</div><div class="nm" style="color:#4fcfa0;">흡수력</div><div class="dc">먹은 영양이 몸에 얼마나 흡수되는가</div></div>
-      <div class="ax" style="background:rgba(247,149,79,0.07);border-color:rgba(247,149,79,0.2);"><div class="em">🔥</div><div class="nm" style="color:#f7954f;">연소력</div><div class="dc">흡수된 영양을 얼마나 빠르게 태우는가</div></div>
-      <div class="ax" style="background:rgba(247,111,142,0.07);border-color:rgba(247,111,142,0.2);"><div class="em">🏦</div><div class="nm" style="color:#f76f8e;">축적력</div><div class="dc">에너지를 얼마나 잘 저장하는가</div></div>
+  <div class="type-cards">
+    <div class="type-card">
+      <div class="type-card-name" style="color:#4fcfa0;">소비형 · BURNER</div>
+      <div class="type-card-desc">살이 안 찌는 체질. 흡수력 강화와 근력 운동이 핵심입니다.</div>
+    </div>
+    <div class="type-card">
+      <div class="type-card-name" style="color:var(--gold2);">균형형 · BALANCED</div>
+      <div class="type-card-desc">이상적 균형 체질. 잔근육 밀도를 높이는 훈련이 필요합니다.</div>
+    </div>
+    <div class="type-card">
+      <div class="type-card-name" style="color:#f76f8e;">저장형 · STORER</div>
+      <div class="type-card-desc">지방 축적이 쉬운 체질. 대사 활성화와 유산소 운동이 중요합니다.</div>
     </div>
   </div>
 </div>
 
-<div class="divider"></div>
-
-<!-- 3. 무료체질TEST -->
-<div id="test" class="section" style="background:#100c04;">
-  <div class="label">FREE TEST</div>
-  <div class="title">⚾ 무료 체질 TEST</div>
-  <p class="desc">5분이면 우리 아이 체질 코드를 알 수 있어요</p>
-  <div class="test-box">
-    <div class="type-row">
-      <div class="type" style="background:rgba(79,207,160,0.07);border-color:rgba(79,207,160,0.2);"><div class="em">🏃</div><div class="nm" style="color:#4fcfa0;">소비형</div><div class="tg" style="color:#4fcfa0;">찌우기 필요</div></div>
-      <div class="type" style="background:rgba(201,168,76,0.07);border-color:rgba(201,168,76,0.2);"><div class="em">💪</div><div class="nm" style="color:var(--gold2);">균형형</div><div class="tg" style="color:var(--gold2);">현상태 관리</div></div>
-      <div class="type" style="background:rgba(247,111,142,0.07);border-color:rgba(247,111,142,0.2);"><div class="em">🏋️</div><div class="nm" style="color:#f76f8e;">저장형</div><div class="tg" style="color:#f76f8e;">살빼기 필요</div></div>
-    </div>
-    <div class="nums">
-      <div class="num"><div class="n">27</div><div class="l">가지 체질 코드</div></div>
-      <div class="num"><div class="n">24</div><div class="l">개 설문 문항</div></div>
-      <div class="num"><div class="n">5분</div><div class="l">소요 · 무료</div></div>
-    </div>
-    <a href="/app?start=test" class="start-btn">⚾ 체질 코드 찾기</a>
-    <p style="color:var(--muted);font-size:11px;margin-top:8px;">카톡 공유 · AI 맞춤 상담 · 성장 지표 분석</p>
+<!-- CTA -->
+<div class="sec" style="border-bottom:none;">
+  <div class="cta-box">
+    <div class="tag" style="text-align:center;margin-bottom:12px;">FREE · 무료</div>
+    <div class="cta-title">우리 아이 체질 코드, 지금 바로 찾아보세요</div>
+    <div class="cta-desc">5분이면 충분합니다. 27가지 체질 코드 중 우리 아이의 코드를 찾고<br/>맞춤 영양·운동·식단 방향을 지금 바로 확인하세요.</div>
+    <a href="/app?start=test" class="cta-btn">333TEST 무료 시작 →</a>
+    <span class="cta-free">완전 무료 · 5분 소요 · 카톡 공유 가능</span>
   </div>
 </div>
 
-<div class="divider"></div>
-
-<!-- 4. 맞춤제품추천 -->
-<div id="shop" class="section" style="background:#050e18;">
-  <div class="label">SHOPPING</div>
-  <div class="title">🛒 맞춤 제품 추천</div>
-  <p class="desc">체질별 추천 영양제 · 클릭하면 바로 구매 가능해요</p>
-  <div class="shop-row">
-    <a href="/shop.html#소비형" class="scard" style="background:rgba(79,207,160,0.07);border-color:rgba(79,207,160,0.2);"><div class="em">🏃</div><div class="nm" style="color:#4fcfa0;">소비형</div><div class="tg" style="color:#4fcfa0;">찌우기</div><div class="items" style="color:#4fcfa0;">소화효소·아연<br/>유산균·비타민B</div></a>
-    <a href="/shop.html#균형형" class="scard" style="background:rgba(201,168,76,0.07);border-color:rgba(201,168,76,0.2);"><div class="em">💪</div><div class="nm" style="color:var(--gold2);">균형형</div><div class="tg" style="color:var(--gold2);">유지</div><div class="items" style="color:var(--gold2);">종합비타민<br/>오메가3·비타민D</div></a>
-    <a href="/shop.html#저장형" class="scard" style="background:rgba(247,111,142,0.07);border-color:rgba(247,111,142,0.2);"><div class="em">🏋️</div><div class="nm" style="color:#f76f8e;">저장형</div><div class="tg" style="color:#f76f8e;">빼기</div><div class="items" style="color:#f76f8e;">식이섬유·마그네슘<br/>유산균·오메가3</div></a>
-  </div>
-  <div style="text-align:center;">
-    <a href="/shop.html" class="shop-more">전체 제품 보기 →</a>
-  </div>
 </div>
 
-<div class="divider"></div>
-
-<!-- 푸터 -->
 <footer>
-  <div class="fb">Physical UP 333 · Physical UP 333</div>
-  <div class="fi">ELITE SPORTS LAB · www.physicalup333.com</div>
-  <div class="fl">
-    <a href="#about">ABOUT</a>
-    <a href="/worry.html">LAB</a>
-    <a href="#test">333TEST</a>
-    <a href="#shop">SHOP</a>
-  </div>
+  <div class="fb">PHYSICAL UP 333 · ELITE SPORTS LAB</div>
+  <div class="fi">피지컬은 데이터다 · Physical is Data · www.physicalup333.com</div>
 </footer>
 
 </body>
