@@ -1,13 +1,36 @@
+
 {
   "rewrites": [
-    { "source": "/app", "destination": "/index.html" },
-    { "source": "/app/(.*)", "destination": "/index.html" },
-    { "source": "/", "destination": "/landing.html" },
-    { "source": "/landing.html", "destination": "/landing.html" },
-    { "source": "/shop.html", "destination": "/shop.html" },
-    { "source": "/worry.html", "destination": "/worry.html" },
-    { "source": "/youtube.html", "destination": "/youtube.html" },
-    { "source": "/admin.html", "destination": "/admin.html" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/app",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/app/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/",
+      "destination": "/landing.html"
+    },
+    {
+      "source": "/(.*)\\.html",
+      "destination": "/$1.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)\\.html",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/html; charset=utf-8"
+        }
+      ]
+    }
   ]
 }
