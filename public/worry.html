@@ -3,156 +3,148 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>LAB · PHYSICAL333 ELITE SPORTS LAB</title>
+<title>LAB · Physical UP 333 ELITE SPORTS LAB</title>
+<meta name="description" content="피지컬은 데이터다. 유소년 선수 체격·퍼포먼스 과학 분석. Physical UP 333 ELITE SPORTS LAB."/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{--navy:#060a14;--gold:#c9a84c;--gold2:#e8c76a;--white:#f0f4ff;--muted:#4a6080;--line:rgba(255,255,255,0.07);}
+:root{--navy:#060a14;--navy2:#0d1b3e;--gold:#c9a84c;--gold2:#e8c76a;--white:#f0f4ff;--muted:#4a6080;--line:rgba(255,255,255,0.07);}
 html{scroll-behavior:smooth;}
 body{background:var(--navy);font-family:'Noto Sans KR',sans-serif;color:var(--white);}
 
 nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.1);}
-.nav-inner{max-width:760px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 24px;}
-.logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
-.logo img{width:30px;height:30px;object-fit:contain;}
-.logo-text .b1{color:var(--gold);font-size:11px;font-weight:900;letter-spacing:3px;}
-.logo-text .b2{color:var(--muted);font-size:8px;letter-spacing:2px;}
-.nav-links{display:flex;gap:2px;}
+.nav-inner{max-width:760px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:52px;padding:0 20px;}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;}
+.logo img{width:28px;height:28px;object-fit:contain;}
+.logo-text .b1{color:var(--gold);font-size:11px;font-weight:900;letter-spacing:2px;line-height:1.2;white-space:nowrap;}
+.logo-text .b2{color:var(--muted);font-size:8px;letter-spacing:1px;white-space:nowrap;}
+.nav-links{display:flex;align-items:center;gap:2px;flex-shrink:0;}
 .nav-links a{color:var(--muted);font-size:9px;padding:4px 6px;border-radius:4px;text-decoration:none;white-space:nowrap;}
 .nav-links a.active{color:var(--white);font-weight:700;}
-.nav-test{color:var(--gold)!important;border:1px solid var(--gold);border-radius:4px;}
+.nav-test{color:var(--gold)!important;border:1px solid var(--gold);border-radius:4px;font-weight:700!important;}
 
-.wrap{max-width:760px;margin:0 auto;padding:0 24px;}
-.sec{padding:64px 0;border-bottom:1px solid var(--line);}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+.sec{padding:60px 0;border-bottom:1px solid var(--line);}
 .sec:last-child{border-bottom:none;}
-.sec-tag{color:var(--gold);font-size:9px;letter-spacing:5px;font-weight:700;margin-bottom:10px;}
-.sec-title{font-size:20px;font-weight:900;margin-bottom:6px;line-height:1.4;}
-.sec-sub{color:var(--muted);font-size:12px;line-height:1.8;margin-bottom:28px;max-width:520px;}
+.tag{color:var(--gold);font-size:9px;letter-spacing:4px;font-weight:700;margin-bottom:8px;}
+.title{font-size:20px;font-weight:900;margin-bottom:6px;line-height:1.4;}
+.sub{color:var(--muted);font-size:12px;line-height:1.8;margin-bottom:24px;max-width:520px;}
 
 /* 커버 */
-.cover{padding:96px 24px 64px;max-width:760px;margin:0 auto;border-bottom:1px solid var(--line);}
-.cover-tag{color:var(--gold);font-size:9px;letter-spacing:5px;font-weight:700;margin-bottom:16px;}
-.cover-title{font-size:26px;font-weight:900;line-height:1.5;margin-bottom:12px;}
-.cover-desc{color:var(--muted);font-size:13px;line-height:2;max-width:500px;margin-bottom:28px;}
-.cover-meta{display:flex;gap:32px;padding-top:20px;border-top:1px solid var(--line);flex-wrap:wrap;}
-.meta-item .label{color:var(--muted);font-size:9px;letter-spacing:2px;margin-bottom:4px;}
-.meta-item .val{color:var(--white);font-size:12px;font-weight:700;}
+.cover{padding:88px 20px 60px;max-width:760px;margin:0 auto;border-bottom:1px solid var(--line);}
+.cover-eyebrow{color:var(--gold);font-size:9px;letter-spacing:5px;font-weight:700;margin-bottom:14px;}
+.cover-title{font-size:24px;font-weight:900;line-height:1.5;margin-bottom:10px;}
+.cover-desc{color:var(--muted);font-size:13px;line-height:2;max-width:480px;margin-bottom:24px;}
+.cover-meta{display:flex;gap:24px;flex-wrap:wrap;padding-top:18px;border-top:1px solid var(--line);}
+.meta .l{color:var(--muted);font-size:9px;letter-spacing:2px;margin-bottom:3px;}
+.meta .v{color:var(--white);font-size:11px;font-weight:700;}
 
 /* 목차 */
-.toc{background:rgba(255,255,255,0.02);border:1px solid var(--line);border-radius:8px;padding:20px 24px;margin-top:28px;}
-.toc-title{color:var(--muted);font-size:9px;letter-spacing:3px;margin-bottom:14px;}
-.toc-list{display:flex;flex-direction:column;gap:8px;}
-.toc-item{display:flex;gap:16px;align-items:baseline;text-decoration:none;}
-.toc-num{color:var(--gold);font-size:10px;font-weight:700;min-width:22px;}
-.toc-text{color:var(--muted);font-size:12px;}
-.toc-item:hover .toc-text{color:var(--white);}
+.toc{background:rgba(255,255,255,0.02);border:1px solid var(--line);border-radius:8px;padding:18px 20px;margin-top:24px;}
+.toc-hd{color:var(--muted);font-size:9px;letter-spacing:3px;margin-bottom:12px;}
+.toc-list{display:flex;flex-direction:column;gap:7px;}
+.toc-a{display:flex;gap:14px;text-decoration:none;}
+.toc-n{color:var(--gold);font-size:10px;font-weight:700;min-width:20px;}
+.toc-t{color:var(--muted);font-size:12px;}
+.toc-a:hover .toc-t{color:var(--white);}
 
-/* 고민 리스트 */
-.q-list{display:flex;flex-direction:column;}
-.q-item{display:flex;gap:20px;padding:16px 0;border-bottom:1px solid var(--line);}
-.q-item:last-child{border-bottom:none;}
-.q-num{color:var(--gold);font-size:10px;font-weight:700;min-width:24px;padding-top:2px;}
-.q-title{color:var(--white);font-size:13px;font-weight:700;margin-bottom:4px;}
-.q-desc{color:var(--muted);font-size:12px;line-height:1.8;}
-
-/* 메커니즘 */
-.mech{display:flex;flex-direction:column;gap:0;}
-.mech-item{display:flex;gap:20px;padding:16px 0;}
-.mech-num{width:28px;height:28px;border-radius:50%;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:10px;font-weight:700;flex-shrink:0;}
-.mech-title{color:var(--white);font-size:13px;font-weight:700;margin-bottom:5px;}
-.mech-desc{color:var(--muted);font-size:12px;line-height:1.8;}
-.mech-arrow{color:var(--muted);font-size:10px;padding:0 0 0 48px;}
-.insight{border-left:2px solid var(--gold);padding:12px 16px;margin-top:8px;}
-.insight p{color:var(--white);font-size:12px;font-weight:500;line-height:1.9;}
-
-/* 체질 분포 */
-.type-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border-radius:8px;overflow:hidden;margin-bottom:20px;}
-.type-cell{background:rgba(13,27,62,0.4);padding:20px 16px;}
-.type-pct{font-size:32px;font-weight:900;color:var(--white);margin-bottom:4px;}
-.type-name{font-size:11px;font-weight:700;color:var(--gold);margin-bottom:10px;letter-spacing:1px;}
-.type-desc{color:var(--muted);font-size:11px;line-height:1.7;}
-
-/* 바 차트 */
-.bar-row{margin-bottom:12px;}
-.bar-label-row{display:flex;justify-content:space-between;margin-bottom:4px;}
-.bar-label{color:var(--muted);font-size:11px;}
-.bar-val{color:var(--white);font-size:11px;font-weight:700;}
-.bar-track{height:5px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden;}
-.bar-fill{height:100%;border-radius:2px;background:var(--gold);}
+/* 테이블 공통 */
+.tbl{width:100%;border-collapse:collapse;font-size:12px;}
+.tbl th{padding:9px 8px;background:rgba(255,255,255,0.02);color:var(--muted);font-size:10px;letter-spacing:1px;border-bottom:1px solid var(--line);text-align:center;}
+.tbl th:first-child{text-align:left;}
+.tbl td{padding:9px 8px;border-bottom:1px solid var(--line);color:var(--muted);text-align:center;}
+.tbl td:first-child{color:var(--white);text-align:left;}
+.tbl td.w{color:var(--white);font-weight:700;}
+.tbl td.g{color:var(--gold);font-weight:700;}
+.tbl td.g2{color:var(--gold2);font-weight:700;}
+.tbl td.pos{color:#4fcfa0;}
+.tbl td.neg{color:#f76f8e;}
+.tbl tr:hover{background:rgba(255,255,255,0.01);}
 
 /* 탭 */
-.tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:20px;}
-.tab{padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;font-family:'Noto Sans KR',sans-serif;}
+.tabs{display:flex;border-bottom:1px solid var(--line);margin-bottom:18px;}
+.tab{padding:8px 14px;font-size:11px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;font-family:'Noto Sans KR',sans-serif;}
 .tab.on{color:var(--gold);border-bottom-color:var(--gold);}
 
-/* 테이블 */
-.tbl{width:100%;border-collapse:collapse;font-size:12px;}
-.tbl th{padding:10px 8px;background:rgba(255,255,255,0.02);color:var(--muted);font-size:10px;letter-spacing:1px;border-bottom:1px solid var(--line);text-align:center;}
-.tbl th:first-child{text-align:left;}
-.tbl td{padding:10px 8px;border-bottom:1px solid var(--line);color:var(--muted);text-align:center;}
-.tbl td:first-child{color:var(--white);text-align:left;}
-.tbl td.hi{color:var(--white);font-weight:700;}
-.tbl td.gold{color:var(--gold);font-weight:700;}
-.tbl td.gold2{color:var(--gold2);font-weight:700;}
-.tbl tr:hover{background:rgba(255,255,255,0.01);}
+/* 메커니즘 */
+.mech-item{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);}
+.mech-item:last-child{border-bottom:none;}
+.mech-n{width:26px;height:26px;border-radius:50%;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;}
+.mech-title{color:var(--white);font-size:13px;font-weight:700;margin-bottom:3px;}
+.mech-desc{color:var(--muted);font-size:12px;line-height:1.8;}
+
+/* 인사이트 박스 */
+.insight{border-left:2px solid var(--gold);padding:10px 14px;margin-top:10px;}
+.insight p{color:var(--white);font-size:12px;font-weight:500;line-height:1.9;}
 
 /* 비교 */
 .cmp{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-radius:8px;overflow:hidden;}
-.cmp-cell{background:rgba(13,27,62,0.4);padding:16px;}
-.cmp-title{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:12px;letter-spacing:1px;}
-.cmp-row{font-size:12px;color:var(--muted);padding:5px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;}
+.cmp-cell{background:rgba(13,27,62,0.4);padding:14px 16px;}
+.cmp-hd{font-size:10px;font-weight:700;color:var(--muted);margin-bottom:10px;letter-spacing:1px;}
+.cmp-row{font-size:12px;color:var(--muted);padding:5px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;}
 .cmp-row:last-child{border-bottom:none;}
-.neg{color:#f76f8e;}
-.pos{color:#4fcfa0;}
-
-/* 솔루션 로드맵 */
-.road{display:flex;flex-direction:column;}
-.road-item{display:flex;gap:20px;padding:20px 0;position:relative;}
-.road-item::after{content:'';position:absolute;left:11px;top:44px;bottom:-20px;width:1px;background:var(--line);}
-.road-item:last-child::after{display:none;}
-.road-dot{width:24px;height:24px;border-radius:50%;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
-.road-dot.on{background:var(--gold);}
-.road-dot span{font-size:8px;font-weight:700;color:var(--gold);}
-.road-dot.on span{color:var(--navy);}
-.road-phase{color:var(--muted);font-size:9px;letter-spacing:2px;margin-bottom:4px;}
-.road-title{color:var(--white);font-size:13px;font-weight:700;margin-bottom:6px;}
-.road-list{display:flex;flex-direction:column;gap:3px;}
-.road-list li{color:var(--muted);font-size:12px;line-height:1.8;list-style:none;padding-left:12px;position:relative;}
-.road-list li::before{content:'—';position:absolute;left:0;color:var(--gold);font-size:10px;}
-.cta{display:inline-block;margin-top:12px;padding:9px 22px;border-radius:6px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);color:var(--gold);font-size:12px;font-weight:700;text-decoration:none;letter-spacing:1px;}
 
 /* 인바디 */
+.inbody-wrap{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;}
+.inbody-svg{flex-shrink:0;}
+.inbody-data{flex:1;min-width:200px;}
 .inbody-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-radius:8px;overflow:hidden;}
-.inbody-cell{background:rgba(13,27,62,0.4);padding:14px 16px;}
-.inbody-label{color:var(--muted);font-size:10px;letter-spacing:1px;margin-bottom:4px;}
+.inbody-cell{background:rgba(13,27,62,0.4);padding:12px 14px;}
+.inbody-label{color:var(--muted);font-size:10px;letter-spacing:1px;margin-bottom:3px;}
 .inbody-val{color:var(--white);font-size:18px;font-weight:900;}
-.inbody-unit{color:var(--muted);font-size:11px;margin-left:3px;}
-.inbody-bar{height:3px;background:rgba(255,255,255,0.05);border-radius:2px;margin-top:8px;overflow:hidden;}
+.inbody-unit{color:var(--muted);font-size:10px;margin-left:2px;}
+.inbody-bar{height:3px;background:rgba(255,255,255,0.05);border-radius:2px;margin-top:6px;overflow:hidden;}
 .inbody-fill{height:100%;border-radius:2px;}
-.lock{opacity:0.35;position:relative;}
-.lock-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--gold);font-size:10px;font-weight:700;letter-spacing:2px;white-space:nowrap;}
+.lock-cell{background:rgba(13,27,62,0.6);position:relative;display:flex;flex-direction:column;justify-content:center;}
+.lock-cell .inbody-val{color:var(--muted);}
+.lock-tag{font-size:9px;color:var(--gold);font-weight:700;letter-spacing:2px;margin-top:4px;}
+
+/* 큐브 */
+.cube-wrap{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;}
+.cube-input-row{display:flex;gap:8px;align-items:center;margin-bottom:14px;}
+.cube-input-row input{width:90px;font-size:20px;font-weight:700;text-align:center;letter-spacing:6px;padding:7px 10px;border-radius:6px;border:1px solid rgba(201,168,76,0.3);background:rgba(13,27,62,0.6);color:var(--white);font-family:'Noto Sans KR',sans-serif;}
+.cube-input-row button{padding:7px 14px;font-size:11px;font-weight:700;border-radius:6px;border:1px solid var(--line);background:rgba(255,255,255,0.03);color:var(--muted);cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
+.cube-info{flex:1;min-width:180px;background:rgba(13,27,62,0.4);border-radius:8px;padding:16px;border:1px solid var(--line);}
+.cube-empty{color:var(--muted);font-size:12px;line-height:1.8;}
+
+/* 로드맵 */
+.road{display:flex;flex-direction:column;}
+.road-item{display:flex;gap:18px;padding:18px 0;position:relative;}
+.road-item::after{content:'';position:absolute;left:10px;top:42px;bottom:-18px;width:1px;background:var(--line);}
+.road-item:last-child::after{display:none;}
+.road-dot{width:22px;height:22px;border-radius:50%;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;background:var(--navy);}
+.road-dot.on{background:var(--gold);}
+.road-dot span{font-size:7px;font-weight:700;color:var(--gold);}
+.road-dot.on span{color:var(--navy);}
+.road-phase{color:var(--muted);font-size:9px;letter-spacing:2px;margin-bottom:3px;}
+.road-title{color:var(--white);font-size:13px;font-weight:700;margin-bottom:6px;}
+.road-list{display:flex;flex-direction:column;gap:3px;}
+.road-list li{color:var(--muted);font-size:11px;line-height:1.8;list-style:none;padding-left:12px;position:relative;}
+.road-list li::before{content:'—';position:absolute;left:0;color:var(--gold);font-size:9px;}
+.road-cta{display:inline-block;margin-top:10px;padding:8px 20px;border-radius:6px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);color:var(--gold);font-size:11px;font-weight:700;text-decoration:none;letter-spacing:1px;}
 
 /* 유튜브 */
 .theme{border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-bottom:8px;}
-.theme-hd{padding:10px 16px;background:rgba(255,255,255,0.02);border-bottom:1px solid var(--line);}
+.theme-hd{padding:9px 14px;background:rgba(255,255,255,0.02);border-bottom:1px solid var(--line);}
 .theme-hd-label{color:var(--gold);font-size:10px;font-weight:700;letter-spacing:1px;}
-.theme-body{padding:8px 16px;}
+.theme-body{padding:6px 14px;}
 .lec{display:flex;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.03);}
 .lec:last-child{border-bottom:none;}
-.lec-num{color:var(--gold);font-size:10px;font-weight:700;min-width:22px;padding-top:2px;flex-shrink:0;}
+.lec-num{color:var(--gold);font-size:10px;font-weight:700;min-width:20px;padding-top:2px;flex-shrink:0;}
 .lec a{color:var(--muted);font-size:12px;line-height:1.6;text-decoration:none;}
 .lec a:hover{color:var(--white);}
 .lec .no-link{color:var(--muted);font-size:12px;}
 
-footer{padding:24px;text-align:center;border-top:1px solid var(--line);}
+footer{padding:24px 20px;text-align:center;border-top:1px solid var(--line);}
 footer .fb{color:var(--gold);font-size:10px;font-weight:700;letter-spacing:3px;margin-bottom:3px;}
 footer .fi{color:var(--muted);font-size:10px;}
 
 @media(max-width:480px){
-  .type-grid{grid-template-columns:1fr;}
   .cmp{grid-template-columns:1fr;}
-  .inbody-grid{grid-template-columns:1fr;}
-  .cover-meta{gap:20px;}
+  .inbody-wrap{flex-direction:column;}
+  .cube-wrap{flex-direction:column;}
+  .cover-meta{gap:16px;}
+  .inbody-svg{width:100%;}
 }
 </style>
 </head>
@@ -161,9 +153,9 @@ footer .fi{color:var(--muted);font-size:10px;}
 <nav>
   <div class="nav-inner">
     <a href="/landing.html" class="logo">
-      <img src="/logo.png" alt="피지컬업333"/>
+      <img src="/logo.png" alt="Physical UP 333"/>
       <div class="logo-text">
-        <div class="b1">PHYSICAL UP 333</div>
+        <div class="b1">Physical UP 333</div>
         <div class="b2">ELITE SPORTS LAB</div>
       </div>
     </a>
@@ -178,98 +170,81 @@ footer .fi{color:var(--muted);font-size:10px;}
 
 <!-- 커버 -->
 <div class="cover">
-  <div class="cover-tag">PHYSICAL UP 333 · ELITE SPORTS LAB · RESEARCH REPORT</div>
-  <div class="cover-title">유소년 엘리트 선수의<br/>체격과 퍼포먼스 과학</div>
-  <div class="cover-desc">체격 차이는 경기력 차이입니다. 체질 기반 데이터 과학으로 우리 아이의 퍼포먼스 한계를 돌파합니다.</div>
+  <div class="cover-eyebrow">PHYSICAL UP 333 · ELITE SPORTS LAB · RESEARCH REPORT</div>
+  <div class="cover-title">피지컬은 데이터다<br/><span style="color:var(--gold);font-size:16px;letter-spacing:2px;">Physical is Data</span></div>
+  <div class="cover-desc">체격 차이는 경기력 차이입니다. 흡수·연소·축적 3축 데이터로 우리 아이의 퍼포먼스 한계를 돌파합니다.</div>
   <div class="cover-meta">
-    <div class="meta-item"><div class="label">SUBJECT</div><div class="val">유소년 스포츠 선수 (10–16세)</div></div>
-    <div class="meta-item"><div class="label">SCOPE</div><div class="val">체격·영양·체력·퍼포먼스</div></div>
-    <div class="meta-item"><div class="label">ISSUED BY</div><div class="val">PHYSICAL UP 333 ELITE SPORTS LAB</div></div>
+    <div class="meta"><div class="l">SUBJECT</div><div class="v">유소년 스포츠 선수 10–16세</div></div>
+    <div class="meta"><div class="l">SCOPE</div><div class="v">체격·영양·체력·퍼포먼스</div></div>
+    <div class="meta"><div class="l">ISSUED BY</div><div class="v">PHYSICAL UP 333 ELITE SPORTS LAB</div></div>
   </div>
   <div class="toc">
-    <div class="toc-title">CONTENTS</div>
+    <div class="toc-hd">CONTENTS</div>
     <div class="toc-list">
-      <a href="#s01" class="toc-item"><span class="toc-num">01</span><span class="toc-text">현장 고민 — 선수 부모가 가장 많이 묻는 질문</span></a>
-      <a href="#s02" class="toc-item"><span class="toc-num">02</span><span class="toc-text">영양 흡수 메커니즘 — 왜 먹어도 퍼포먼스가 안 나오는가</span></a>
-      <a href="#s03" class="toc-item"><span class="toc-num">03</span><span class="toc-text">체질 분포 — 소비형·균형형·저장형 대응전략</span></a>
-      <a href="#s04" class="toc-item"><span class="toc-num">04</span><span class="toc-text">성장 지표 — 또래 평균 vs 선수 목표치</span></a>
-      <a href="#s05" class="toc-item"><span class="toc-num">05</span><span class="toc-text">기초체력 기준표 — 학생·선수·프로·메이저</span></a>
-      <a href="#s06" class="toc-item"><span class="toc-num">06</span><span class="toc-text">근육형 vs 지방형 — 체중 증가와 퍼포먼스</span></a>
-      <a href="#s07" class="toc-item"><span class="toc-num">07</span><span class="toc-text">인바디 분석 — 유료 서비스 미리보기</span></a>
-      <a href="#s08" class="toc-item"><span class="toc-num">08</span><span class="toc-text">PHYSICAL UP 333 솔루션 로드맵</span></a>
-      <a href="#s09" class="toc-item"><span class="toc-num">09</span><span class="toc-text">무료 강의 — 유튜브 커리큘럼</span></a>
+      <a href="#s01" class="toc-a"><span class="toc-n">01</span><span class="toc-t">영양 흡수 메커니즘 — 흡수·연소·축적 3단계</span></a>
+      <a href="#s02" class="toc-a"><span class="toc-n">02</span><span class="toc-t">체질 분포 — 소비형·균형형·저장형</span></a>
+      <a href="#s03" class="toc-a"><span class="toc-n">03</span><span class="toc-t">성장 지표 — 또래 평균 vs 선수 목표치</span></a>
+      <a href="#s04" class="toc-a"><span class="toc-n">04</span><span class="toc-t">기초체력 기준표 — 학생·선수·프로·메이저</span></a>
+      <a href="#s05" class="toc-a"><span class="toc-n">05</span><span class="toc-t">근육형 vs 지방형 — 퍼포먼스 비교</span></a>
+      <a href="#s06" class="toc-a"><span class="toc-n">06</span><span class="toc-t">333 체질 큐브 — 27가지 코드 분포</span></a>
+      <a href="#s07" class="toc-a"><span class="toc-n">07</span><span class="toc-t">인바디 분석 — 유료 서비스 미리보기</span></a>
+      <a href="#s08" class="toc-a"><span class="toc-n">08</span><span class="toc-t">솔루션 로드맵 — 무료 · 유료 · 센터</span></a>
+      <a href="#s09" class="toc-a"><span class="toc-n">09</span><span class="toc-t">무료 강의 — 유튜브 커리큘럼</span></a>
     </div>
   </div>
 </div>
 
 <div class="wrap">
 
-<!-- 01 -->
+<!-- 01 메커니즘 -->
 <div class="sec" id="s01">
-  <div class="sec-tag">01 · FIELD CONCERNS</div>
-  <div class="sec-title">선수 부모가 가장 많이 묻는 질문</div>
-  <div class="q-list">
-    <div class="q-item"><div class="q-num">Q1</div><div><div class="q-title">살이 안 쪄서 힘이 안 붙어요</div><div class="q-desc">흡수력이 낮은 체질은 아무리 먹어도 영양이 근육으로 전환되지 않습니다. 근육량 부족은 순발력·파워 저하로 직결됩니다.</div></div></div>
-    <div class="q-item"><div class="q-num">Q2</div><div><div class="q-title">감독님이 체중 못 늘리면 주전 못 준다고 해요</div><div class="q-desc">체급은 경기력과 직결됩니다. 체격에서 밀리면 같은 기술력으로도 경기 자체가 성립되지 않습니다.</div></div></div>
-    <div class="q-item"><div class="q-num">Q3</div><div><div class="q-title">영양제 먹여도 체력이 그대로예요</div><div class="q-desc">체질에 맞지 않으면 영양제가 퍼포먼스에 전혀 기여하지 못합니다. 흡수 환경 없이는 어떤 영양제도 효과가 없습니다.</div></div></div>
-    <div class="q-item"><div class="q-num">Q4</div><div><div class="q-title">살이 쪄서 몸이 둔해져요</div><div class="q-desc">지방으로 체중이 늘면 근력 대비 체중이 증가해 스피드와 순발력이 저하됩니다. 근육형 증량 전략이 필요합니다.</div></div></div>
-    <div class="q-item"><div class="q-num">Q5</div><div><div class="q-title">경기 당일 긴장하면 아무것도 못 먹어요</div><div class="q-desc">평소 소화 기능 관리가 곧 경기력입니다. 위장이 닫히면 에너지 없이 뛰어야 합니다.</div></div></div>
-    <div class="q-item"><div class="q-num">Q6</div><div><div class="q-title">체격이 작아서 경기에서 밀려요</div><div class="q-desc">체격 차이는 경기 시작 전 이미 승부가 납니다. 성장 에너지 확보와 체중 고지 선점이 최우선입니다.</div></div></div>
+  <div class="tag">01 · MECHANISM</div>
+  <div class="title">영양 흡수 메커니즘</div>
+  <div class="sub">같은 음식을 먹어도 결과가 다른 이유 — 3단계 중 어디가 막혔는지가 체질 코드를 결정합니다.</div>
+  <div class="mech-item">
+    <div class="mech-n">1</div>
+    <div><div class="mech-title">흡수력 — 소화 및 장 환경</div><div class="mech-desc">장 점막 손상·소화효소 부족 시 흡수율 20~30% 저하. 고단백 식이를 해도 근육 합성에 쓰이는 영양소는 절반 이하가 됩니다.</div></div>
   </div>
+  <div style="color:var(--muted);font-size:11px;padding:4px 0 4px 42px;">↓</div>
+  <div class="mech-item">
+    <div class="mech-n">2</div>
+    <div><div class="mech-title">연소력 — 기초대사 및 ATP 전환</div><div class="mech-desc">비타민 B군 부족 시 미토콘드리아 ATP 전환 효율 저하. 연소력 과잉 = 소비형 (살 안 찜), 연소력 부족 = 저장형 (지방 축적).</div></div>
+  </div>
+  <div style="color:var(--muted);font-size:11px;padding:4px 0 4px 42px;">↓</div>
+  <div class="mech-item">
+    <div class="mech-n">3</div>
+    <div><div class="mech-title">축적력 — 근육·골격 합성</div><div class="mech-desc">성장호르몬은 깊은 수면 중 분비. 마그네슘·아연·비타민D 부족 시 수면 질 저하 → 성장호르몬 억제 → 근육 합성 차단.</div></div>
+  </div>
+  <div class="insight"><p>흡수 환경 구축 → 연소 속도 조절 → 근육 축적 경로 확보. 이 3단계가 체질에 따라 맞춤 설계되어야 퍼포먼스가 향상됩니다.</p></div>
 </div>
 
-<!-- 02 -->
+<!-- 02 체질 분포 -->
 <div class="sec" id="s02">
-  <div class="sec-tag">02 · NUTRITIONAL MECHANISM</div>
-  <div class="sec-title">왜 먹어도 퍼포먼스가 안 나오는가</div>
-  <div class="mech">
-    <div class="mech-item">
-      <div class="mech-num">1</div>
-      <div><div class="mech-title">흡수력 — 소화 및 장 환경</div><div class="mech-desc">장 점막 손상·소화효소 부족 시 흡수율 20~30%로 저하. 고단백 식이를 해도 근육 합성에 쓰이는 영양소는 절반 이하.</div></div>
-    </div>
-    <div class="mech-arrow">↓</div>
-    <div class="mech-item">
-      <div class="mech-num">2</div>
-      <div><div class="mech-title">연소력 — 기초대사 및 ATP 전환</div><div class="mech-desc">비타민 B군 부족 시 미토콘드리아 ATP 전환 효율 저하. 연소력 과잉 = 소비형(살 안 찜), 연소력 부족 = 저장형(지방 축적).</div></div>
-    </div>
-    <div class="mech-arrow">↓</div>
-    <div class="mech-item">
-      <div class="mech-num">3</div>
-      <div><div class="mech-title">축적력 — 근육·골격 합성</div><div class="mech-desc">성장호르몬은 깊은 수면 중 분비. 마그네슘·아연·비타민D 부족 시 수면 질 저하 → 성장호르몬 억제 → 근육 합성 차단.</div></div>
-    </div>
-  </div>
-  <div class="insight">
-    <p>흡수 환경 구축 → 연소 속도 조절 → 근육 축적 경로 확보. 이 3단계가 체질에 따라 맞춤 설계되어야 퍼포먼스가 향상됩니다.</p>
-  </div>
-</div>
-
-<!-- 03 -->
-<div class="sec" id="s03">
-  <div class="sec-tag">03 · BODY TYPE DISTRIBUTION</div>
-  <div class="sec-title">유소년 선수 체질 분포</div>
-  <div class="sec-sub">333TEST 누적 데이터 기반 · 야구·축구·농구 유소년 엘리트 선수 대상</div>
+  <div class="tag">02 · BODY TYPE</div>
+  <div class="title">유소년 선수 체질 분포</div>
+  <div class="sub">333TEST 누적 데이터 기반 · 야구·축구·농구 유소년 엘리트 선수 대상</div>
   <table class="tbl" style="margin-bottom:10px;">
     <thead><tr>
-      <th>체질</th><th>분포</th><th>특성</th><th>핵심 전략</th><th>추천 영양</th>
+      <th>체질</th><th>분포</th><th>주요 특성</th><th>핵심 전략</th><th>추천 영양소</th>
     </tr></thead>
     <tbody>
       <tr>
-        <td class="hi">소비형<br/><span style="color:var(--muted);font-size:10px;">BURNER</span></td>
-        <td class="gold" style="font-size:18px;font-weight:900;">47%</td>
+        <td class="w">소비형<br/><span style="color:var(--muted);font-size:10px;">BURNER</span></td>
+        <td class="g" style="font-size:20px;font-weight:900;">47%</td>
         <td>에너지 연소율 과잉<br/>체중 증가 어려움</td>
         <td>유산소 최소화<br/>근력 운동 집중</td>
         <td>소화효소·유산균·아연</td>
       </tr>
       <tr>
-        <td class="hi">균형형<br/><span style="color:var(--muted);font-size:10px;">BALANCED</span></td>
-        <td class="gold" style="font-size:18px;font-weight:900;">31%</td>
+        <td class="w">균형형<br/><span style="color:var(--muted);font-size:10px;">BALANCED</span></td>
+        <td class="g" style="font-size:20px;font-weight:900;">31%</td>
         <td>3축 균형<br/>이상적 체질</td>
         <td>잔근육 밀도 강화<br/>중강도 저항 운동</td>
         <td>종합비타민·오메가3·칼슘</td>
       </tr>
       <tr>
-        <td class="hi">저장형<br/><span style="color:var(--muted);font-size:10px;">STORER</span></td>
-        <td class="gold" style="font-size:18px;font-weight:900;">22%</td>
+        <td class="w">저장형<br/><span style="color:var(--muted);font-size:10px;">STORER</span></td>
+        <td class="g" style="font-size:20px;font-weight:900;">22%</td>
         <td>에너지 축적 과잉<br/>체지방 관리 필요</td>
         <td>유산소 주 5회 이상<br/>탄수화물 타이밍 관리</td>
         <td>식이섬유·마그네슘·오메가3</td>
@@ -279,10 +254,10 @@ footer .fi{color:var(--muted);font-size:10px;}
   <p style="color:var(--muted);font-size:10px;">※ 333TEST 누적 검사 데이터 기반</p>
 </div>
 
-<!-- 04 -->
-<div class="sec" id="s04">
-  <div class="sec-tag">04 · GROWTH INDEX</div>
-  <div class="sec-title">성장 지표 — 또래 평균 vs 선수 목표치</div>
+<!-- 03 성장 지표 -->
+<div class="sec" id="s03">
+  <div class="tag">03 · GROWTH INDEX</div>
+  <div class="title">성장 지표 — 또래 평균 vs 선수 목표치</div>
   <div class="tabs">
     <button class="tab on" onclick="showAge(11,this)">초5</button>
     <button class="tab" onclick="showAge(12,this)">초6</button>
@@ -291,30 +266,30 @@ footer .fi{color:var(--muted);font-size:10px;}
     <button class="tab" onclick="showAge(15,this)">중3</button>
   </div>
   <div id="g-chart"></div>
-  <p style="color:var(--muted);font-size:10px;margin-top:12px;">※ 교육부 학생건강체력평가(PAPS) · 대한성장의학회 성장곡선 · 대한체육회 엘리트선수 체격 기준</p>
+  <p style="color:var(--muted);font-size:10px;margin-top:10px;">※ 교육부 PAPS · 대한성장의학회 성장곡선 · 대한체육회 엘리트선수 체격 기준</p>
 </div>
 
-<!-- 05 -->
-<div class="sec" id="s05">
-  <div class="sec-tag">05 · FITNESS STANDARDS</div>
-  <div class="sec-title">기초체력 기준표 (남자)</div>
+<!-- 04 기초체력 -->
+<div class="sec" id="s04">
+  <div class="tag">04 · FITNESS STANDARDS</div>
+  <div class="title">기초체력 기준표 (남자)</div>
   <div class="tabs">
     <button class="tab on" onclick="showFit(13,this)">중1 · 13세</button>
     <button class="tab" onclick="showFit(14,this)">중2 · 14세</button>
     <button class="tab" onclick="showFit(15,this)">중3 · 15세</button>
   </div>
   <div id="f-table"></div>
-  <p style="color:var(--muted);font-size:10px;margin-top:12px;">※ 교육부 PAPS · 대한체육회 엘리트선수 체력검사 · KBO·K리그 신인 체력 기준</p>
+  <p style="color:var(--muted);font-size:10px;margin-top:10px;">※ 교육부 PAPS · 대한체육회 엘리트선수 체력검사 · KBO·K리그 신인 체력 기준</p>
 </div>
 
-<!-- 06 -->
-<div class="sec" id="s06">
-  <div class="sec-tag">06 · LEAN MASS VS FAT MASS</div>
-  <div class="sec-title">체중 증가와 퍼포먼스의 관계</div>
-  <div class="sec-sub">살만 찌우면 오히려 경기력이 떨어집니다. 골격근 중심의 증량이 퍼포먼스를 만듭니다.</div>
+<!-- 05 근육형 vs 지방형 -->
+<div class="sec" id="s05">
+  <div class="tag">05 · LEAN vs FAT</div>
+  <div class="title">체중 증가와 퍼포먼스</div>
+  <div class="sub">살만 찌우면 오히려 경기력이 떨어집니다. 골격근 중심의 증량이 퍼포먼스를 만듭니다.</div>
   <div class="cmp">
     <div class="cmp-cell">
-      <div class="cmp-title">지방형 체중 증가</div>
+      <div class="cmp-hd">지방형 체중 증가</div>
       <div class="cmp-row"><span>50m 달리기</span><span class="neg">느려짐</span></div>
       <div class="cmp-row"><span>순발력</span><span class="neg">저하</span></div>
       <div class="cmp-row"><span>지구력</span><span class="neg">저하</span></div>
@@ -323,7 +298,7 @@ footer .fi{color:var(--muted);font-size:10px;}
       <div class="cmp-row"><span>체력 회복</span><span class="neg">느려짐</span></div>
     </div>
     <div class="cmp-cell">
-      <div class="cmp-title">근육형 체중 증가</div>
+      <div class="cmp-hd">근육형 체중 증가</div>
       <div class="cmp-row"><span>50m 달리기</span><span class="pos">빨라짐</span></div>
       <div class="cmp-row"><span>순발력</span><span class="pos">향상</span></div>
       <div class="cmp-row"><span>지구력</span><span class="pos">향상</span></div>
@@ -332,65 +307,144 @@ footer .fi{color:var(--muted);font-size:10px;}
       <div class="cmp-row"><span>체력 회복</span><span class="pos">빨라짐</span></div>
     </div>
   </div>
-  <div class="insight" style="margin-top:16px;">
-    <p>단백질 합성 → 수면 중 성장호르몬 → 저항성 운동. 이 3박자가 체질에 따라 맞춤 설계되어야 합니다.</p>
+  <div class="insight" style="margin-top:14px;"><p>단백질 합성 → 수면 중 성장호르몬 → 저항성 운동. 이 3박자가 체질에 따라 맞춤 설계되어야 합니다.</p></div>
+</div>
+
+<!-- 06 큐브 -->
+<div class="sec" id="s06">
+  <div class="tag">06 · 333 CUBE</div>
+  <div class="title">333 체질 큐브</div>
+  <div class="sub">흡수·연소·축적 3축 × 각 1~3점 = 27가지 체질 코드. 코드를 입력하면 큐브에서 위치를 확인할 수 있습니다.</div>
+  <div class="cube-wrap">
+    <div>
+      <div class="cube-input-row">
+        <input id="cubeInput" type="text" maxlength="3" placeholder="222" oninput="onCubeInput(this.value)"/>
+        <button onclick="resetCube()">초기화</button>
+      </div>
+      <canvas id="cubeCanvas" width="260" height="260" style="border-radius:8px;border:1px solid var(--line);display:block;"></canvas>
+      <div style="display:flex;gap:10px;margin-top:8px;font-size:10px;color:var(--muted);">
+        <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:2px;background:rgba(79,207,160,0.6);display:inline-block;"></span>소비형</span>
+        <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:2px;background:rgba(201,168,76,0.6);display:inline-block;"></span>균형형</span>
+        <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:2px;background:rgba(247,111,142,0.6);display:inline-block;"></span>저장형</span>
+        <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:2px;background:rgba(120,160,255,0.8);display:inline-block;"></span>선택</span>
+      </div>
+    </div>
+    <div class="cube-info" id="cubeInfo">
+      <div class="cube-empty">코드 3자리를 입력하면<br/>체질 위치와 특성이 표시됩니다.<br/><br/>예: 111 · 222 · 333</div>
+    </div>
   </div>
 </div>
 
-<!-- 07 -->
+<!-- 07 인바디 -->
 <div class="sec" id="s07">
-  <div class="sec-tag">07 · INBODY ANALYSIS PREVIEW</div>
-  <div class="sec-title">인바디 분석 — 유료 서비스 미리보기</div>
-  <div class="sec-sub">오프라인 센터 방문 후 인바디 측정 시 아래 항목을 분석·처방해드립니다.</div>
-  <div class="inbody-grid">
-    <div class="inbody-cell">
-      <div class="inbody-label">골격근량</div>
-      <div><span class="inbody-val">28.6</span><span class="inbody-unit">kg</span></div>
-      <div class="inbody-bar"><div class="inbody-fill" style="width:72%;background:#4fcfa0;"></div></div>
+  <div class="tag">07 · INBODY PREVIEW</div>
+  <div class="title">인바디 분석 — 유료 서비스 미리보기</div>
+  <div class="sub">오프라인 센터 방문 후 인바디 측정 시 아래 항목을 분석·처방해드립니다.</div>
+  <div class="inbody-wrap">
+    <!-- 인체 SVG -->
+    <div class="inbody-svg">
+      <svg viewBox="0 0 220 460" width="180" style="display:block;">
+        <defs>
+          <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <!-- 머리 -->
+        <ellipse cx="110" cy="38" rx="22" ry="26" fill="none" stroke="#c9a84c" stroke-width="1"/>
+        <!-- 목 -->
+        <rect x="102" y="62" width="16" height="12" rx="3" fill="none" stroke="#c9a84c" stroke-width="1"/>
+        <!-- 몸통 -->
+        <path d="M72 74 Q68 100 66 128 Q64 155 68 175 Q78 186 110 188 Q142 186 152 175 Q156 155 154 128 Q152 100 148 74 Q130 68 110 68 Q90 68 72 74Z" fill="rgba(201,168,76,0.06)" stroke="#c9a84c" stroke-width="1"/>
+        <!-- 왼팔 -->
+        <path d="M72 80 Q56 100 50 128 Q46 150 48 168 Q54 174 60 168 Q64 150 68 126 Q72 102 76 86Z" fill="rgba(201,168,76,0.04)" stroke="#4a6080" stroke-width="0.8"/>
+        <path d="M48 168 Q44 188 46 205 Q50 212 56 210 Q60 208 60 200 Q60 184 60 168Z" fill="none" stroke="#4a6080" stroke-width="0.8"/>
+        <!-- 오른팔 -->
+        <path d="M148 80 Q164 100 170 128 Q174 150 172 168 Q166 174 160 168 Q156 150 152 126 Q148 102 144 86Z" fill="rgba(201,168,76,0.04)" stroke="#4a6080" stroke-width="0.8"/>
+        <path d="M172 168 Q176 188 174 205 Q170 212 164 210 Q160 208 160 200 Q160 184 160 168Z" fill="none" stroke="#4a6080" stroke-width="0.8"/>
+        <!-- 왼다리 -->
+        <path d="M82 188 Q76 218 74 246 Q72 270 74 292 Q78 300 86 298 Q94 300 96 292 Q98 270 98 246 Q100 218 102 188Z" fill="rgba(201,168,76,0.04)" stroke="#4a6080" stroke-width="0.8"/>
+        <path d="M74 292 Q72 316 74 336 Q76 344 84 344 Q90 342 92 334 Q94 316 96 292Z" fill="none" stroke="#4a6080" stroke-width="0.8"/>
+        <!-- 오른다리 -->
+        <path d="M138 188 Q144 218 146 246 Q148 270 146 292 Q142 300 134 298 Q126 300 124 292 Q122 270 122 246 Q120 218 118 188Z" fill="rgba(201,168,76,0.04)" stroke="#4a6080" stroke-width="0.8"/>
+        <path d="M146 292 Q148 316 146 336 Q144 344 136 344 Q130 342 128 334 Q126 316 124 292Z" fill="none" stroke="#4a6080" stroke-width="0.8"/>
+        <!-- 측정 포인트 -->
+        <circle cx="100" cy="110" r="3" fill="#4fcfa0"/>
+        <line x1="100" y1="110" x2="20" y2="95" stroke="#4fcfa0" stroke-width="0.6" stroke-dasharray="3,2" marker-end="url(#arr2)"/>
+        <text x="16" y="88" font-size="8" fill="#4fcfa0" font-family="sans-serif" text-anchor="end">골격근량</text>
+        <text x="16" y="98" font-size="7" fill="#4a6080" font-family="sans-serif" text-anchor="end">28.6 kg</text>
+        <circle cx="110" cy="148" r="3" fill="#f76f8e"/>
+        <line x1="110" y1="148" x2="20" y2="148" stroke="#f76f8e" stroke-width="0.6" stroke-dasharray="3,2" marker-end="url(#arr2)"/>
+        <text x="16" y="142" font-size="8" fill="#f76f8e" font-family="sans-serif" text-anchor="end">복부지방률</text>
+        <text x="16" y="152" font-size="7" fill="#4a6080" font-family="sans-serif" text-anchor="end">8.2 %</text>
+        <circle cx="120" cy="110" r="3" fill="#c9a84c"/>
+        <line x1="120" y1="110" x2="200" y2="95" stroke="#c9a84c" stroke-width="0.6" stroke-dasharray="3,2" marker-end="url(#arr2)"/>
+        <text x="204" y="88" font-size="8" fill="#c9a84c" font-family="sans-serif">체수분</text>
+        <text x="204" y="98" font-size="7" fill="#4a6080" font-family="sans-serif">32.4 L</text>
+        <circle cx="88" cy="245" r="3" fill="#78a0ff"/>
+        <line x1="88" y1="245" x2="20" y2="235" stroke="#78a0ff" stroke-width="0.6" stroke-dasharray="3,2" marker-end="url(#arr2)"/>
+        <text x="16" y="228" font-size="8" fill="#78a0ff" font-family="sans-serif" text-anchor="end">하체 근육량</text>
+        <text x="16" y="238" font-size="7" fill="#4a6080" font-family="sans-serif" text-anchor="end">18.2 kg</text>
+        <!-- 잠금 하단 -->
+        <rect x="40" y="360" width="140" height="50" rx="6" fill="rgba(6,10,20,0.8)" stroke="rgba(201,168,76,0.2)" stroke-width="0.5"/>
+        <text x="110" y="381" font-size="8" fill="#c9a84c" font-family="sans-serif" text-anchor="middle" font-weight="700">PREMIUM</text>
+        <text x="110" y="395" font-size="7" fill="#4a6080" font-family="sans-serif" text-anchor="middle">부위별 상세 분석</text>
+        <text x="110" y="407" font-size="7" fill="#4a6080" font-family="sans-serif" text-anchor="middle">유료 서비스 제공</text>
+      </svg>
     </div>
-    <div class="inbody-cell">
-      <div class="inbody-label">체지방량</div>
-      <div><span class="inbody-val">8.4</span><span class="inbody-unit">kg</span></div>
-      <div class="inbody-bar"><div class="inbody-fill" style="width:35%;background:var(--gold);"></div></div>
-    </div>
-    <div class="inbody-cell">
-      <div class="inbody-label">기초대사량</div>
-      <div><span class="inbody-val">1,420</span><span class="inbody-unit">kcal</span></div>
-      <div class="inbody-bar"><div class="inbody-fill" style="width:58%;background:var(--gold);"></div></div>
-    </div>
-    <div class="inbody-cell">
-      <div class="inbody-label">체수분</div>
-      <div><span class="inbody-val">32.4</span><span class="inbody-unit">L</span></div>
-      <div class="inbody-bar"><div class="inbody-fill" style="width:65%;background:var(--gold);"></div></div>
-    </div>
-    <div class="inbody-cell lock" style="background:rgba(13,27,62,0.6);">
-      <div class="inbody-label">부위별 근육량</div>
-      <div><span class="inbody-val" style="color:var(--muted);">——</span></div>
-      <div class="lock-label">PREMIUM</div>
-    </div>
-    <div class="inbody-cell lock" style="background:rgba(13,27,62,0.6);">
-      <div class="inbody-label">체질별 목표치</div>
-      <div><span class="inbody-val" style="color:var(--muted);">——</span></div>
-      <div class="lock-label">PREMIUM</div>
-    </div>
-    <div class="inbody-cell lock" style="background:rgba(13,27,62,0.6);">
-      <div class="inbody-label">맞춤 운동 처방</div>
-      <div><span class="inbody-val" style="color:var(--muted);">——</span></div>
-      <div class="lock-label">PREMIUM</div>
-    </div>
-    <div class="inbody-cell lock" style="background:rgba(13,27,62,0.6);">
-      <div class="inbody-label">성장 로드맵</div>
-      <div><span class="inbody-val" style="color:var(--muted);">——</span></div>
-      <div class="lock-label">PREMIUM</div>
+    <!-- 데이터 -->
+    <div class="inbody-data">
+      <div style="color:var(--muted);font-size:9px;letter-spacing:2px;margin-bottom:10px;">기본 측정값 (예시)</div>
+      <div class="inbody-grid">
+        <div class="inbody-cell">
+          <div class="inbody-label">골격근량</div>
+          <div><span class="inbody-val">28.6</span><span class="inbody-unit">kg</span></div>
+          <div class="inbody-bar"><div class="inbody-fill" style="width:72%;background:#4fcfa0;"></div></div>
+        </div>
+        <div class="inbody-cell">
+          <div class="inbody-label">체지방량</div>
+          <div><span class="inbody-val">8.4</span><span class="inbody-unit">kg</span></div>
+          <div class="inbody-bar"><div class="inbody-fill" style="width:35%;background:var(--gold);"></div></div>
+        </div>
+        <div class="inbody-cell">
+          <div class="inbody-label">기초대사량</div>
+          <div><span class="inbody-val">1,420</span><span class="inbody-unit">kcal</span></div>
+          <div class="inbody-bar"><div class="inbody-fill" style="width:58%;background:var(--gold);"></div></div>
+        </div>
+        <div class="inbody-cell">
+          <div class="inbody-label">체수분</div>
+          <div><span class="inbody-val">32.4</span><span class="inbody-unit">L</span></div>
+          <div class="inbody-bar"><div class="inbody-fill" style="width:65%;background:var(--gold);"></div></div>
+        </div>
+        <div class="inbody-cell lock-cell">
+          <div class="inbody-label">부위별 근육량</div>
+          <div><span class="inbody-val">——</span></div>
+          <div class="lock-tag">PREMIUM</div>
+        </div>
+        <div class="inbody-cell lock-cell">
+          <div class="inbody-label">맞춤 운동 처방</div>
+          <div><span class="inbody-val">——</span></div>
+          <div class="lock-tag">PREMIUM</div>
+        </div>
+        <div class="inbody-cell lock-cell">
+          <div class="inbody-label">체질별 목표치</div>
+          <div><span class="inbody-val">——</span></div>
+          <div class="lock-tag">PREMIUM</div>
+        </div>
+        <div class="inbody-cell lock-cell">
+          <div class="inbody-label">성장 로드맵</div>
+          <div><span class="inbody-val">——</span></div>
+          <div class="lock-tag">PREMIUM</div>
+        </div>
+      </div>
+      <p style="color:var(--muted);font-size:10px;margin-top:8px;">예시 데이터 · 실제 분석은 센터 방문 후 제공</p>
     </div>
   </div>
-  <p style="color:var(--muted);font-size:11px;margin-top:12px;">예시 데이터 · 실제 분석은 센터 방문 후 제공됩니다</p>
 </div>
 
-<!-- 08 -->
+<!-- 08 로드맵 -->
 <div class="sec" id="s08">
-  <div class="sec-tag">08 · SOLUTION ROADMAP</div>
-  <div class="sec-title">PHYSICAL UP 333 솔루션</div>
+  <div class="tag">08 · ROADMAP</div>
+  <div class="title">Physical UP 333 솔루션</div>
   <div class="road">
     <div class="road-item">
       <div class="road-dot on"><span>NOW</span></div>
@@ -401,8 +455,9 @@ footer .fi{color:var(--muted);font-size:10px;}
           <li>흡수·연소·축적 3축 기반 27가지 체질 코드 분석</li>
           <li>체질별 영양·운동 방향 처방</li>
           <li>성장 지표 비교 · 또래 분포 확인</li>
+          <li>AI 맞춤 상담</li>
         </ul>
-        <a href="/app?start=test" class="cta">무료 체질 검사 시작하기</a>
+        <a href="/app?start=test" class="road-cta">333TEST 무료 시작하기</a>
       </div>
     </div>
     <div class="road-item">
@@ -413,9 +468,9 @@ footer .fi{color:var(--muted);font-size:10px;}
         <ul class="road-list">
           <li>인바디 + 기초체력 정밀 측정 분석</li>
           <li>체질 코드 기반 맞춤 식단·영양제·트레이닝 설계</li>
-          <li>스마트 체중계 연동 — 아침·저녁 데이터 자동 저장</li>
+          <li>스마트 체중계 연동 — 아침·저녁 자동 데이터 저장</li>
           <li>월별·연별 성장 그래프 · 목표치 대비 진행률 추적</li>
-          <li>수년간 데이터 누적으로 최적 퍼포먼스 관리</li>
+          <li>수년간 데이터 누적 → 최적 퍼포먼스 관리</li>
         </ul>
       </div>
     </div>
@@ -435,11 +490,11 @@ footer .fi{color:var(--muted);font-size:10px;}
   </div>
 </div>
 
-<!-- 09 -->
+<!-- 09 유튜브 -->
 <div class="sec" id="s09">
-  <div class="sec-tag">09 · FREE LECTURE</div>
-  <div class="sec-title">무료 강의 커리큘럼</div>
-  <div class="sec-sub">감독님도 몰랐던 피지컬 과학 — 유소년 선수 증량의 모든 것</div>
+  <div class="tag">09 · FREE LECTURE</div>
+  <div class="title">무료 강의 커리큘럼</div>
+  <div class="sub">감독님도 몰랐던 피지컬 과학 — 유소년 선수 증량의 모든 것</div>
   <div id="yt-loading" style="color:var(--muted);font-size:12px;text-align:center;padding:20px;">강의 목록 불러오는 중...</div>
   <div id="yt-content"></div>
 </div>
@@ -448,10 +503,11 @@ footer .fi{color:var(--muted);font-size:10px;}
 
 <footer>
   <div class="fb">PHYSICAL UP 333 · ELITE SPORTS LAB</div>
-  <div class="fi">www.physicalup333.com</div>
+  <div class="fi">피지컬은 데이터다 · Physical is Data · www.physicalup333.com</div>
 </footer>
 
 <script>
+// 성장 지표
 const gData={
   11:{h:{avg:146,ath:150,tgt:155},w:{avg:38,ath:42,tgt:48}},
   12:{h:{avg:153,ath:158,tgt:163},w:{avg:44,ath:49,tgt:55}},
@@ -459,48 +515,23 @@ const gData={
   14:{h:{avg:167,ath:170,tgt:174},w:{avg:57,ath:63,tgt:69}},
   15:{h:{avg:170,ath:173,tgt:177},w:{avg:61,ath:67,tgt:73}},
 };
-
 function showAge(age,btn){
-  document.querySelectorAll('#s04 .tab').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('#s03 .tab').forEach(b=>b.classList.remove('on'));
   if(btn)btn.classList.add('on');
   const d=gData[age];
   document.getElementById('g-chart').innerHTML=`
     <table class="tbl">
-      <thead><tr>
-        <th>구분</th>
-        <th>학교 평균</th>
-        <th>학교 선수</th>
-        <th>선수 목표치</th>
-      </tr></thead>
+      <thead><tr><th>구분</th><th>학교 평균</th><th>학교 선수</th><th>선수 목표치</th><th>목표 차이</th></tr></thead>
       <tbody>
-        <tr>
-          <td>키 (cm)</td>
-          <td>${d.h.avg}</td>
-          <td class="hi">${d.h.ath}</td>
-          <td class="gold">${d.h.tgt}</td>
-        </tr>
-        <tr>
-          <td>몸무게 (kg)</td>
-          <td>${d.w.avg}</td>
-          <td class="hi">${d.w.ath}</td>
-          <td class="gold">${d.w.tgt}</td>
-        </tr>
-        <tr>
-          <td>차이 · 키 (cm)</td>
-          <td>—</td>
-          <td class="hi">+${d.h.ath-d.h.avg}</td>
-          <td class="gold">+${d.h.tgt-d.h.avg}</td>
-        </tr>
-        <tr>
-          <td>차이 · 몸무게 (kg)</td>
-          <td>—</td>
-          <td class="hi">+${d.w.ath-d.w.avg}</td>
-          <td class="gold">+${d.w.tgt-d.w.avg}</td>
-        </tr>
+        <tr><td>키 (cm)</td><td>${d.h.avg}</td><td class="w">${d.h.ath}</td><td class="g">${d.h.tgt}</td><td class="g">+${d.h.tgt-d.h.avg}</td></tr>
+        <tr><td>몸무게 (kg)</td><td>${d.w.avg}</td><td class="w">${d.w.ath}</td><td class="g">${d.w.tgt}</td><td class="g">+${d.w.tgt-d.w.avg}</td></tr>
+        <tr><td>선수·학생 차이 · 키</td><td>—</td><td class="w">+${d.h.ath-d.h.avg}</td><td class="g">+${d.h.tgt-d.h.avg}</td><td style="color:var(--muted);">—</td></tr>
+        <tr><td>선수·학생 차이 · 몸무게</td><td>—</td><td class="w">+${d.w.ath-d.w.avg}</td><td class="g">+${d.w.tgt-d.w.avg}</td><td style="color:var(--muted);">—</td></tr>
       </tbody>
     </table>`;
 }
 
+// 기초체력
 const fData={
   13:[
     {e:'50m 달리기',u:'초',avg:'8.5',ath:'7.8',pro:'6.8',maj:'6.2'},
@@ -524,72 +555,142 @@ const fData={
     {e:'왕복달리기',u:'회',avg:'54',ath:'74',pro:'96',maj:'114'},
   ],
 };
-
 function showFit(age,btn){
-  document.querySelectorAll('#s05 .tab').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('#s04 .tab').forEach(b=>b.classList.remove('on'));
   if(btn)btn.classList.add('on');
   const rows=fData[age];
   document.getElementById('f-table').innerHTML=`
     <table class="tbl">
-      <thead><tr>
-        <th>종목</th><th>학생 평균</th><th>학교 선수</th><th>프로 기대치</th><th>메이저</th>
-      </tr></thead>
+      <thead><tr><th>종목</th><th>학생 평균</th><th>학교 선수</th><th>프로 기대치</th><th>메이저</th></tr></thead>
       <tbody>${rows.map(r=>`
         <tr>
           <td>${r.e} <span style="color:var(--muted);font-size:10px;">(${r.u})</span></td>
-          <td>${r.avg}</td>
-          <td class="hi">${r.ath}</td>
-          <td class="gold">${r.pro}</td>
-          <td class="gold2">${r.maj}</td>
+          <td>${r.avg}</td><td class="w">${r.ath}</td>
+          <td class="g">${r.pro}</td><td class="g2">${r.maj}</td>
         </tr>`).join('')}
       </tbody>
     </table>`;
 }
 
+// 큐브
+const cubeInfo={
+  '111':{nick:'텅빈창고',pct:12,type:'burner',tip:'소화효소+유산균으로 흡수 공장 가동. 유산소 금지, 근력 집중.'},
+  '112':{nick:'빠른연료통',pct:9,type:'burner',tip:'에너지 보충 주기를 짧게. 고단백 간식 필수.'},
+  '113':{nick:'역설체형',pct:6,type:'burner',tip:'장 환경 개선 시 빠른 체중 증가 가능.'},
+  '121':{nick:'마른엔진',pct:8,type:'burner',tip:'체중 증가에 시간이 걸립니다. 꾸준한 접근 필요.'},
+  '122':{nick:'날렵한선수',pct:7,type:'burner',tip:'스피드는 좋으나 근육량 부족. 단백질 타이밍 관리.'},
+  '123':{nick:'숨은가능성',pct:5,type:'balanced',tip:'영양 환경 개선 시 폭발적 성장 가능.'},
+  '131':{nick:'에너지과부하',pct:4,type:'burner',tip:'연소력 과잉. 수면과 회복에 집중.'},
+  '132':{nick:'잠재형선수',pct:5,type:'balanced',tip:'영양 관리로 균형 체형으로 빠른 전환 가능.'},
+  '133':{nick:'변환형',pct:4,type:'balanced',tip:'흡수만 개선되면 근육 전환 준비 완료.'},
+  '211':{nick:'영양소실',pct:7,type:'burner',tip:'흡수는 보통이나 연소·축적 낮아 에너지 낭비.'},
+  '212':{nick:'안정형',pct:6,type:'balanced',tip:'3축 고르게 낮아 성장 속도 느림. 전반적 영양 강화.'},
+  '213':{nick:'선수형기반',pct:5,type:'balanced',tip:'영양 집중 시 빠른 체중 증가 가능.'},
+  '221':{nick:'기초탄탄',pct:6,type:'balanced',tip:'꾸준한 근력 운동으로 근육량 증가.'},
+  '222':{nick:'완벽균형',pct:8,type:'balanced',tip:'이상적 체질. 잔근육 밀도를 높이는 훈련에 집중.'},
+  '223':{nick:'축적우세',pct:6,type:'balanced',tip:'탄수화물 타이밍 관리 필요.'},
+  '231':{nick:'연소강화',pct:5,type:'balanced',tip:'에너지 보충 주기를 짧게 유지.'},
+  '232':{nick:'선수기준',pct:6,type:'balanced',tip:'훈련 강도를 높일수록 퍼포먼스 비례 향상.'},
+  '233':{nick:'전환주의',pct:5,type:'storer',tip:'운동 없이 고칼로리 시 지방 축적 위험.'},
+  '311':{nick:'흡수과잉',pct:4,type:'burner',tip:'흡수력 강점. 비타민B로 에너지 전환 효율 향상.'},
+  '312':{nick:'흡수형선수',pct:5,type:'balanced',tip:'영양 공급만 잘 되면 안정적 성장.'},
+  '313':{nick:'성장준비',pct:4,type:'balanced',tip:'성장판 열려 있는 시기에 집중적 영양 관리.'},
+  '321':{nick:'근육잠재',pct:5,type:'balanced',tip:'운동 자극에 반응 빠름. 근력 훈련 집중.'},
+  '322':{nick:'엘리트형',pct:6,type:'balanced',tip:'훈련 효율이 가장 좋은 체질.'},
+  '323':{nick:'체중관리필요',pct:4,type:'storer',tip:'칼로리 관리와 유산소 소홀히 하면 안 됨.'},
+  '331':{nick:'대사활성화',pct:4,type:'storer',tip:'운동 없이는 지방 축적 가능.'},
+  '332':{nick:'저장우세',pct:5,type:'storer',tip:'유산소를 주 5회 이상 실시.'},
+  '333':{nick:'완전저장',pct:6,type:'storer',tip:'식이 관리+유산소가 퍼포먼스의 핵심.'},
+};
+const tc={burner:{f:'rgba(79,207,160,0.15)',s:'rgba(79,207,160,0.5)',t:'#4fcfa0'},balanced:{f:'rgba(201,168,76,0.15)',s:'rgba(201,168,76,0.5)',t:'#c9a84c'},storer:{f:'rgba(247,111,142,0.15)',s:'rgba(247,111,142,0.5)',t:'#f76f8e'}};
+const sc={f:'rgba(120,160,255,0.4)',s:'#78a0ff'};
+let selCode=null;
+
+function drawCube(){
+  const canvas=document.getElementById('cubeCanvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const W=260,H=260;
+  const cs=48;
+  ctx.clearRect(0,0,W,H);
+  function proj(ix,iy,iz){
+    const x=(ix-iz)*(cs+5)*Math.cos(Math.PI/6)*0.7;
+    const y=-(iy)*(cs+5)*0.7+(ix+iz)*(cs+5)*Math.sin(Math.PI/6)*0.7;
+    return{x:W/2+x*0.9,y:H/2+y*0.85+18};
+  }
+  function cell(ix,iy,iz,fill,stroke){
+    const c2=cs*0.6;const p=proj(ix,iy,iz);
+    const cx=p.x,cy=p.y;
+    const hw=c2*Math.cos(Math.PI/6)*0.85,hh=c2*Math.sin(Math.PI/6)*0.85,vc=c2*0.75;
+    ctx.beginPath();ctx.moveTo(cx,cy-vc);ctx.lineTo(cx+hw,cy-vc+hh);ctx.lineTo(cx,cy-vc+hh*2);ctx.lineTo(cx-hw,cy-vc+hh);ctx.closePath();
+    ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=0.7;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx-hw,cy-vc+hh);ctx.lineTo(cx,cy-vc+hh*2);ctx.lineTo(cx,cy+vc);ctx.lineTo(cx-hw,cy+vc-hh);ctx.closePath();
+    ctx.fillStyle=fill.replace(/[\d.]+\)$/,'0.07)');ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=0.7;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx+hw,cy-vc+hh);ctx.lineTo(cx,cy-vc+hh*2);ctx.lineTo(cx,cy+vc);ctx.lineTo(cx+hw,cy+vc-hh);ctx.closePath();
+    ctx.fillStyle=fill.replace(/[\d.]+\)$/,'0.12)');ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=0.7;ctx.stroke();
+  }
+  for(let iz=0;iz<3;iz++)for(let ix=0;ix<3;ix++)for(let iy=2;iy>=0;iy--){
+    const code=`${ix+1}${iy+1}${iz+1}`;
+    const d=cubeInfo[code];if(!d)continue;
+    const c=tc[d.type];const isMe=code===selCode;
+    cell(ix,iy,iz,isMe?sc.f:c.f,isMe?sc.s:c.s);
+  }
+  ctx.font='9px sans-serif';ctx.fillStyle='rgba(200,200,200,0.3)';
+  const p0=proj(-0.3,1,1.5);ctx.fillText('흡수',p0.x-12,p0.y+3);
+  const p1=proj(1,2.6,1);ctx.fillText('연소',p1.x-10,p1.y-3);
+  const p2=proj(1,1,3.2);ctx.fillText('축적',p2.x-4,p2.y+3);
+}
+
+function onCubeInput(val){
+  val=val.replace(/[^123]/g,'');
+  document.getElementById('cubeInput').value=val;
+  if(val.length===3){selCode=val;drawCube();showCubeInfo(val);}
+  else{selCode=null;drawCube();if(!val)resetCubeInfo();}
+}
+function resetCube(){selCode=null;document.getElementById('cubeInput').value='';drawCube();resetCubeInfo();}
+function resetCubeInfo(){document.getElementById('cubeInfo').innerHTML='<div class="cube-empty">코드 3자리를 입력하면<br/>체질 위치와 특성이 표시됩니다.<br/><br/>예: 111 · 222 · 333</div>';}
+function showCubeInfo(code){
+  const d=cubeInfo[code];
+  if(!d){document.getElementById('cubeInfo').innerHTML='<div class="cube-empty" style="color:var(--muted)">유효하지 않은 코드입니다.<br/>각 자리는 1·2·3만 입력 가능합니다.</div>';return;}
+  const c=tc[d.type];
+  document.getElementById('cubeInfo').innerHTML=`
+    <div style="font-size:28px;font-weight:900;letter-spacing:5px;color:${c.t};margin-bottom:4px;">${code}</div>
+    <div style="font-size:13px;font-weight:700;color:var(--white);margin-bottom:2px;">${d.type==='burner'?'소비형':d.type==='balanced'?'균형형':'저장형'} · ${d.nick}</div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:12px;">${d.type==='burner'?'BURNER':d.type==='balanced'?'BALANCED':'STORER'}</div>
+    <div style="display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap;">
+      ${['흡수력','연소력','축적력'].map((n,i)=>`<span style="padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700;background:${c.f};color:${c.t};border:0.5px solid ${c.s};">${n} ${code[i]}</span>`).join('')}
+    </div>
+    <div style="padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid var(--line);">
+      <div style="color:var(--muted);font-size:10px;margin-bottom:3px;">또래 분포</div>
+      <div style="font-size:20px;font-weight:900;color:var(--white);">${d.pct}%<span style="font-size:11px;color:var(--muted);margin-left:4px;font-weight:400;">이 코드</span></div>
+    </div>
+    <div style="color:var(--muted);font-size:11px;line-height:1.8;">${d.tip}</div>`;
+}
+
+// 유튜브
 const SHEET_ID="1OMyEfRy0pbpqHf33iZTYQc07xknM5gcZ6s7J_mAf9wg";
 const YT_URL="https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?tqx=out:json&headers=1&sheet=youtube";
 const CHANNEL="야구아들 살찌우기 !!";
-
-function parseGviz(t){
-  const m=t.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/);
-  if(!m)return[];
-  const d=JSON.parse(m[1]);
-  const cols=d.table.cols.map(c=>c.label);
-  return(d.table.rows||[]).map(r=>{
-    const o={};cols.forEach((c,i)=>o[c]=(r.c[i]&&r.c[i].v!=null)?String(r.c[i].v).trim():'');return o;
-  }).filter(r=>r.title);
-}
-
-function getYtId(url){
-  if(!url)return null;
-  const m=url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
-  return m?m[1]:null;
-}
+function parseGviz(t){const m=t.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/);if(!m)return[];const d=JSON.parse(m[1]);const cols=d.table.cols.map(c=>c.label);return(d.table.rows||[]).map(r=>{const o={};cols.forEach((c,i)=>o[c]=(r.c[i]&&r.c[i].v!=null)?String(r.c[i].v).trim():'');return o;}).filter(r=>r.title);}
+function getYtId(url){if(!url)return null;const m=url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);return m?m[1]:null;}
 
 window.addEventListener('load',async function(){
-  showAge(11);showFit(13);
+  showAge(11);showFit(13);drawCube();
   try{
-    const res=await fetch(YT_URL);
-    const text=await res.text();
+    const res=await fetch(YT_URL);const text=await res.text();
     const lecs=parseGviz(text).filter(l=>l.channel===CHANNEL);
     document.getElementById('yt-loading').style.display='none';
     if(!lecs.length){document.getElementById('yt-loading').textContent='등록된 강의가 없어요';document.getElementById('yt-loading').style.display='block';return;}
     const cont=document.getElementById('yt-content');
-    const themes={};
-    lecs.forEach(l=>{const t=l.theme||'기타';if(!themes[t])themes[t]=[];themes[t].push(l);});
+    const themes={};lecs.forEach(l=>{const t=l.theme||'기타';if(!themes[t])themes[t]=[];themes[t].push(l);});
     let num=1;
     Object.entries(themes).forEach(([theme,items])=>{
-      const div=document.createElement('div');
-      div.className='theme';
+      const div=document.createElement('div');div.className='theme';
       div.innerHTML='<div class="theme-hd"><span class="theme-hd-label">'+theme+'</span></div><div class="theme-body">'+
-        items.map(l=>{
-          const id=getYtId(l.url);
-          const thumb=id?"https://img.youtube.com/vi/"+id+"/mqdefault.jpg":null;
-          const n=num++;
-          return'<div class="lec">'+(l.url?
-            '<a href="'+l.url+'" target="_blank" style="display:flex;gap:10px;align-items:center;text-decoration:none;">'+(thumb?'<img src="'+thumb+'" style="width:80px;height:50px;object-fit:cover;border-radius:4px;flex-shrink:0;" onerror="this.style.display=\'none\'">':'')+
-            '<span><span style="color:var(--gold);font-size:10px;font-weight:700;display:block;">'+n+'강</span><span style="color:var(--muted);font-size:12px;">'+l.title+'</span></span></a>':
-            '<span style="color:var(--gold);font-size:10px;font-weight:700;min-width:22px;">'+n+'강</span><span class="no-link">'+l.title+'</span>')+'</div>';
+        items.map(l=>{const id=getYtId(l.url);const thumb=id?"https://img.youtube.com/vi/"+id+"/mqdefault.jpg":null;const n=num++;
+          return'<div class="lec">'+(l.url?'<a href="'+l.url+'" target="_blank" style="display:flex;gap:10px;align-items:center;text-decoration:none;">'+(thumb?'<img src="'+thumb+'" style="width:76px;height:48px;object-fit:cover;border-radius:4px;flex-shrink:0;" onerror="this.style.display=\'none\'">':'')+
+          '<span><span style="color:var(--gold);font-size:10px;font-weight:700;display:block;">'+n+'강</span><span style="color:var(--muted);font-size:12px;">'+l.title+'</span></span></a>':
+          '<span class="lec-num">'+n+'강</span><span class="no-link">'+l.title+'</span>')+'</div>';
         }).join('')+'</div>';
       cont.appendChild(div);
     });
