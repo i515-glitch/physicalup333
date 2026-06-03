@@ -375,14 +375,16 @@ const distGrid=[["111","112","113","121","122","123","131","132","133"],["211","
 // ─── AI 호출 ─────────────────────────────────────────────────────────────────
 async function callAI(pAns,kAns,res,setAiAdvice,setLoading) {
   setLoading(true);
-  const pS=parentQuestions.map(q=>`${q.text}: ${pAns[q.id]!==undefined?q.options[pAns[q.id]]?.text:"미응답"}`).join("\n");
-  const kS=kidQuestions.map(q=>`${q.text}: ${kAns[q.id]!==undefined?q.options[kAns[q.id]]?.text:"미응답"}`).join("\n");
-  try {
-    const r=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:`당신은 아동 영양 체질 전문 상담사입니다.\n\n[부모 관찰]\n${pS}\n\n[아이 자가 응답]\n${kS}\n\n[결과] 코드:${res.code} 대분류:${res.main} 세분류:${res.sub}\n흡수:${res.scores.absorb}/3 연소:${res.scores.burn}/3 축적:${res.scores.store}/3\n\n이 아이에게 맞는 실용적인 상담을 해주세요.\n- 200자 내외 한국어\n- 대분류(${res.main}) 방향에 맞는 구체적 조언 2~3가지\n- 따뜻하고 공감적인 톤`}]})});
-    const d=await r.json();
-    setAiAdvice(d.content?.map(i=>i.text||"").join("")||"");
-  } catch { setAiAdvice("AI 상담 연결에 실패했습니다. 위 결과를 참고해 주세요."); }
-  setLoading(false);
+  const advice = {
+    "소비형": "흡수력이 낮은 소비형 체질입니다. 유산균·소화효소로 장 환경을 먼저 복구하고, 고칼로리 밀도 식품(견과류·아보카도·땅콩버터)을 추가하세요. 유산소 운동은 최소화하고 근력 운동 비율을 높여야 근육량이 늘어납니다.",
+    "균형형": "3축이 균형 잡힌 이상적인 체질입니다. 지금의 균형을 유지하며 잔근육 밀도를 높이는 중강도 저항 운동을 꾸준히 하세요. 종합비타민·오메가3·칼슘으로 기반을 탄탄히 다지면 선수 체형으로 발전합니다.",
+    "저장형": "에너지 축적이 빠른 저장형 체질입니다. 식이섬유·마그네슘으로 인슐린 감수성을 높이고, 달리기·줄넘기 유산소 운동을 주 5회 이상 실시하세요. 탄수화물 섭취 타이밍을 운동 후로 집중하면 체지방 관리에 효과적입니다.",
+  };
+  setTimeout(()=>{
+    setAiAdvice(advice[res.main] || advice["균형형"]);
+    setLoading(false);
+  }, 500);
+}
 }
 
 // ─── 메인 컴포넌트 ────────────────────────────────────────────────────────────
@@ -865,45 +867,34 @@ function saveHtml(){
             </div>
           </div>
 
-          {/* 카톡공유 + 저장 버튼 */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
+          {/* 카톡공유 버튼 */}
+          <div style={{marginBottom:16}}>
             <button onClick={async()=>{
+              const shortWit=ment.wit.length>20?ment.wit.slice(0,20)+'..':ment.wit;
+              const shortTip=ment.tip.length>20?ment.tip.slice(0,20)+'..':ment.tip;
+              const txt=`🧬 Physical UP 333 · 333TEST 결과\n\n체질코드: ${result.code} ${ment.emoji} ${ment.nick}\n유형: ${result.main}\n\n"${shortWit}"\n💡${shortTip}\n\n▶ 무료 체질검사\nwww.physicalup333.com`;
               try{
-                if(!window.html2canvas){
-                  await new Promise((res,rej)=>{
-                    const s=document.createElement('script');
-                    s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-                    s.onload=res;s.onerror=rej;
-                    document.head.appendChild(s);
-                  });
-                }
-                const card=document.getElementById('result-card');
-                const canvas=await window.html2canvas(card,{backgroundColor:'#0d1b3e',scale:2,useCORS:true,logging:false});
-                canvas.toBlob(async(blob)=>{
-                  const file=new File([blob],'피지컬업333결과.png',{type:'image/png'});
-                  if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
-                    await navigator.share({files:[file],text:'www.physicalup333.com'});
-                  } else {
-                    const url=URL.createObjectURL(blob);
-                    const a=document.createElement('a');
-                    a.href=url;a.download='피지컬업333결과.png';
-                    a.click();URL.revokeObjectURL(url);
-                    alert('이미지 저장됐어요!\n카톡에서 이미지로 공유해주세요 😊');
+                if(navigator.share){
+                  await navigator.share({title:'333TEST 체질 코드 결과',text:txt,url:'https://www.physicalup333.com'});
+                } else {
+                  try{await navigator.clipboard.writeText(txt);}catch(e){
+                    const el=document.createElement('textarea');el.value=txt;
+                    document.body.appendChild(el);el.select();
+                    document.execCommand('copy');document.body.removeChild(el);
                   }
-                },'image/png');
-              }catch(e){
-                const shortWit=ment.wit.length>16?ment.wit.slice(0,16)+'..':ment.wit;
-                const shortTip=ment.tip.length>16?ment.tip.slice(0,16)+'..':ment.tip;
-                const txt=`Physical UP 333 333TEST\n\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\n"${shortWit}"\n💡${shortTip}\n\nwww.physicalup333.com`;
-                try{await navigator.clipboard.writeText(txt);}catch(e2){
-                  const el=document.createElement('textarea');el.value=txt;
-                  document.body.appendChild(el);el.select();
-                  document.execCommand('copy');document.body.removeChild(el);
+                  alert('✅ 복사됐어요!\n카톡 채팅창에 붙여넣기 하세요!');
                 }
+              }catch(e){
+                try{await navigator.clipboard.writeText(txt);}catch(e2){}
                 alert('✅ 복사됐어요!\n카톡 채팅창에 붙여넣기 하세요!');
               }
-            }} style={{padding:"14px 8px",borderRadius:12,background:"#FEE500",color:"#000",fontSize:13,fontWeight:800,border:"none",cursor:"pointer",lineHeight:1.5}}>
-              {copied?"✅ 전송! 링크도 복사됨":"💬 카톡 공유"}<br/><span style={{fontSize:10,opacity:0.7}}>{copied?"채팅창에 링크 붙여넣기 가능":"이미지 전송 + 링크 클립보드"}</span>
+            }} style={{
+              width:"100%",padding:"16px",borderRadius:12,marginBottom:10,
+              background:"#FEE500",color:"#000",
+              fontSize:14,fontWeight:800,border:"none",cursor:"pointer",lineHeight:1.5
+            }}>
+              💬 카톡 공유하기<br/>
+              <span style={{fontSize:10,opacity:0.7}}>결과 텍스트 공유 · 링크 포함</span>
             </button>
             <button onClick={()=>{
               const bar2=n=>"●".repeat(n)+"○".repeat(3-n);
