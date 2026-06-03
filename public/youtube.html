@@ -3,51 +3,49 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>유소년 선수 증량 20강 · PHYSICAL333</title>
-<meta name="description" content="감독님도 몰랐던 우리 아이 피지컬의 과학 · 유소년 선수 증량 20강 마스터 커리큘럼"/>
+<title>유튜브 20강 · PHYSICAL333</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{
-  --navy:#060e10;--navy2:#0d1b3e;
-  --gold:#c9a84c;--gold2:#e8c76a;
-  --white:#f0f4ff;--muted:#3a5070;
-}
-body{background:var(--navy);font-family:'Noto Sans KR',sans-serif;color:var(--white);}
-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(201,168,76,0.12);}
-.nav-inner{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 20px;}
+:root{--navy:#060a14;--gold:#c9a84c;--gold2:#e8c76a;--white:#f0f4ff;--muted:#4a6080;}
+html{scroll-behavior:smooth;}
+body{background:#060e10;font-family:'Noto Sans KR',sans-serif;color:var(--white);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.12);}
+.nav-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 20px;}
 .logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
 .logo img{width:32px;height:32px;object-fit:contain;}
 .logo-text .b1{color:var(--gold);font-size:12px;font-weight:900;letter-spacing:3px;line-height:1;}
 .logo-text .b2{color:var(--muted);font-size:8px;letter-spacing:2px;}
-.nav-btn{padding:7px 16px;border-radius:16px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy2);font-size:12px;font-weight:900;text-decoration:none;}
+.nav-links{display:flex;align-items:center;gap:2px;}
+.nav-links a{color:var(--muted);font-size:9px;padding:4px 5px;border-radius:6px;text-decoration:none;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);}
+.nav-links a.active{color:var(--white);font-weight:700;}
+.nav-test{color:var(--gold)!important;border:1px solid var(--gold);font-weight:700!important;border-radius:6px;}
 
-.hero{padding:90px 20px 40px;max-width:640px;margin:0 auto;text-align:center;}
-.sec-label{color:var(--gold);font-size:10px;letter-spacing:4px;margin-bottom:8px;}
-.hero h1{font-size:22px;font-weight:900;margin-bottom:8px;line-height:1.5;}
-.hero h1 em{color:var(--gold2);font-style:normal;}
-.hero p{color:var(--muted);font-size:13px;line-height:1.8;margin-bottom:24px;}
-.yt-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:10px;background:rgba(255,0,0,0.12);border:1px solid rgba(255,80,80,0.25);color:#ff7070;font-size:13px;font-weight:700;text-decoration:none;transition:all 0.2s;}
-.yt-btn:hover{background:rgba(255,0,0,0.2);}
+.hero{padding:80px 20px 24px;max-width:720px;margin:0 auto;text-align:center;}
+.hero .label{color:var(--gold);font-size:10px;letter-spacing:4px;margin-bottom:8px;}
+.hero h1{font-size:20px;font-weight:900;margin-bottom:6px;}
+.hero p{color:var(--muted);font-size:13px;line-height:1.8;}
 
-.content{max-width:640px;margin:0 auto;padding:0 20px 60px;}
+#loading{text-align:center;padding:60px 20px;color:var(--muted);font-size:13px;}
+#empty{display:none;text-align:center;padding:60px 20px;color:var(--muted);}
+
+.content{max-width:720px;margin:0 auto;padding:0 20px 60px;}
 .theme{background:rgba(13,27,62,0.5);border-radius:12px;border:1px solid rgba(201,168,76,0.1);overflow:hidden;margin-bottom:10px;transition:all 0.2s;}
 .theme:hover{border-color:rgba(201,168,76,0.25);}
 .theme-header{padding:14px 18px;background:rgba(201,168,76,0.05);border-bottom:1px solid rgba(201,168,76,0.08);display:flex;align-items:center;gap:10px;}
-.theme-label{color:var(--gold);font-size:10px;font-weight:700;letter-spacing:1px;}
-.theme-title{color:var(--white);font-size:13px;font-weight:700;}
+.theme-label{color:var(--gold);font-size:11px;font-weight:700;letter-spacing:1px;}
 .theme-body{padding:10px 18px;}
-.lecture{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.lecture{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
 .lecture:last-child{border-bottom:none;}
 .lecture .num{color:var(--gold);font-size:10px;font-weight:700;min-width:22px;margin-top:2px;flex-shrink:0;}
-.lecture .text{color:var(--muted);font-size:12px;line-height:1.6;}
+.lecture a{color:var(--muted);font-size:12px;line-height:1.6;text-decoration:none;transition:color 0.2s;}
+.lecture a:hover{color:var(--gold2);}
+.lecture .no-link{color:var(--muted);font-size:12px;line-height:1.6;}
 
-.cta{max-width:640px;margin:0 auto;padding:0 20px 60px;text-align:center;}
-.cta-box{background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(13,27,62,0.7));border-radius:16px;padding:28px;border:1px solid rgba(201,168,76,0.2);position:relative;overflow:hidden;}
-.cta-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
-.start-btn{display:inline-block;padding:14px 36px;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy2);font-size:14px;font-weight:900;text-decoration:none;margin-top:16px;}
+.yt-btn{display:inline-flex;align-items:center;gap:6px;margin:20px 0;padding:10px 20px;border-radius:8px;background:rgba(255,0,0,0.1);border:1px solid rgba(255,80,80,0.2);color:#ff7070;font-size:12px;font-weight:700;text-decoration:none;}
 
-footer{border-top:1px solid rgba(201,168,76,0.1);padding:20px;text-align:center;}
+footer{border-top:1px solid rgba(201,168,76,0.1);padding:24px 20px;text-align:center;}
 footer .fb{color:var(--gold);font-size:11px;font-weight:700;letter-spacing:3px;margin-bottom:3px;}
 footer .fi{color:var(--muted);font-size:10px;}
 </style>
@@ -63,142 +61,105 @@ footer .fi{color:var(--muted);font-size:10px;}
         <div class="b2">ELITE SPORTS LAB</div>
       </div>
     </a>
-    <div style="display:flex;align-items:center;gap:4px;">
-      <a href="/landing.html#about" style="color:var(--muted);font-size:11px;padding:5px 8px;border-radius:6px;text-decoration:none;">도움드리는일</a>
-      <a href="/worry.html" style="color:var(--muted);font-size:11px;padding:5px 8px;border-radius:6px;text-decoration:none;">아이체격고민</a>
-      <a href="/app?start=test" style="color:var(--gold);font-size:11px;padding:5px 10px;border-radius:6px;text-decoration:none;border:1px solid var(--gold);font-weight:700;">⚾ 무료체질TEST</a>
-      <a href="/shop.html" style="color:var(--muted);font-size:11px;padding:5px 8px;border-radius:6px;text-decoration:none;">맞춤제품추천</a>
+    <div class="nav-links">
+      <a href="/landing.html">ABOUT</a>
+      <a href="/worry.html">LAB</a>
+      <a href="/shop.html">SHOP</a>
+      <a href="/app?start=test" class="nav-test">TEST</a>
     </div>
   </div>
 </nav>
 
 <div class="hero">
-  <div class="sec-label">YOUTUBE CONTENT</div>
-  <h1>유소년 선수 증량 <em>20강</em></h1>
-  <p>감독님도 몰랐던 우리 아이 피지컬의 과학<br/>먹이는 법부터 데이터 관리까지 완전 정복</p>
-  <a href="https://youtube.com" target="_blank" class="yt-btn">📺 유튜브 채널 바로가기 →</a>
+  <div class="label">YOUTUBE</div>
+  <h1>📺 피지컬333 유튜브</h1>
+  <p>감독님도 몰랐던 피지컬 과학 무료 공개</p>
 </div>
 
-<div class="content">
-
-  <div class="theme">
-    <div class="theme-header">
-      <span class="theme-label">🛑 테마1</span>
-      <span class="theme-title">현타 — 현실 고발과 공감</span>
-    </div>
-    <div class="theme-body">
-      <div class="lecture"><span class="num">1강</span><span class="text">"살만 찌면 바로 주전인데요" 감독님의 그 한마디에 숨겨진 잔인한 진실</span></div>
-    </div>
-  </div>
-
-  <div class="theme">
-    <div class="theme-header">
-      <span class="theme-label">🧪 테마2</span>
-      <span class="theme-title">체질변화 — 영양 흡수기 리셋</span>
-    </div>
-    <div class="theme-body">
-      <div class="lecture"><span class="num">2강</span><span class="text">우리 아이는 왜 살이 안 찌는 체질일까? (마른 선수 3대 체질 분석)</span></div>
-      <div class="lecture"><span class="num">3강</span><span class="text">비싼 고기 다 설사로 버리시나요? 김치와 유산균으로 '영양 흡수 공장'부터 세우세요</span></div>
-    </div>
-  </div>
-
-  <div class="theme">
-    <div class="theme-header">
-      <span class="theme-label">⏰ 테마3</span>
-      <span class="theme-title">성장을 위한 식사 시간 관리</span>
-    </div>
-    <div class="theme-body">
-      <div class="lecture"><span class="num">4강</span><span class="text">기상 직후 10분 — 위장 보일러를 켜야 점심 급식이 살로 갑니다</span></div>
-      <div class="lecture"><span class="num">5강</span><span class="text">취침 2시간 전 마감 — 훈련 끝나고 차 안이 오늘 하루 마지막 식사입니다</span></div>
-    </div>
-  </div>
-
-  <div class="theme">
-    <div class="theme-header">
-      <span class="theme-label">🚀 테마4</span>
-      <span class="theme-title">식습관 개조 — 밥상머리 전쟁 끝</span>
-    </div>
-    <div class="theme-body">
-      <div class="lecture"><span class="num">6강</span><span class="text">한 입 물고 세월아 네월아… 오래 씹는 버릇의 느린 식사 함정</span></div>
-      <div class="lecture"><span class="num">7강</span><span class="text">눈으로 먹지 말고 그릇을 비워라! 밥상 위 절대 원칙</span></div>
-      <div class="lecture"><span class="num">8강</span><span class="text">뱃구레를 키우는 항아리 법칙 — 거짓배부름에 속지 마라</span></div>
-      <div class="lecture"><span class="num">9강</span><span class="text">"엄마, 냉장고 꽉 채워주세요!" 살찌는 아이들의 비밀</span></div>
-    </div>
-  </div>
-
-  <div class="theme">
-    <div class="theme-header">
-      <span class="theme-label">🥩 테마5</span>
-      <span class="theme-title">필드 영양학 — 극한의 훈련 서바이벌</span>
-    </div>
-    <div class="theme-body">
-      <div class="lecture"><span class="num">10강</span><span class="text">냉장고 속 얼음물이 아이의 피지컬 성장을 가로막고 있었습니다</span></div>
-      <div class="lecture"><span class="num">11강</span><span class="text">시합 날 밥 굶는 아이들을 위한 차 안의 '비밀 파우치' TOP4</span></div>
-      <div class="lecture"><span class="num">12강</span><span class="text">삼겹살 회식의 배신 — 잘못된 고기 조리법의 역습</span></div>
-      <div class="lecture"><span class="num">13강</span><span class="text">홍삼과 녹용을 먹였더니 아이 체중이 더 빠진 기가 막힌 이유</span></div>
-    </div>
-  </div>
-
-  <div class="theme">
-    <div class="theme-header">
-      <span class="theme-label">📈 테마6</span>
-      <span class="theme-title">성장 가속 및 데이터 관리</span>
-    </div>
-    <div class="theme-body">
-      <div class="lecture"><span class="num">14강</span><span class="text">땅콩버터 한 스푼이 바꾸는 유소년 선수의 체급과 타구 비거리</span></div>
-      <div class="lecture"><span class="num">15강</span><span class="text">살이 쪄야 키가 큽니다 — 마른 선수들의 성장 호르몬을 깨우는 영양 공식</span></div>
-      <div class="lecture"><span class="num">16강</span><span class="text">마라탕과 액상과당에 중독된 아이들의 가짜 입맛 치료법</span></div>
-      <div class="lecture"><span class="num">17강</span><span class="text">감독님도 놀란 피지컬 기록지 — 감이 아닌 숫자로 찌우는 법</span></div>
-      <div class="lecture"><span class="num">18강</span><span class="text">정체기 돌파의 과학 — 한 달째 제자리걸음인 아이를 위한 7일 시크릿</span></div>
-      <div class="lecture"><span class="num">19강</span><span class="text">인바디의 과학 — 단순한 살이 아니라 골격근량으로 체급 올리는 법</span></div>
-      <div class="lecture"><span class="num">20강</span><span class="text">최종 고지 달성, 그 이후의 홈케어 독학 로드맵</span></div>
-    </div>
-  </div>
-
-</div>
-
+<div id="loading">강의 목록 불러오는 중...</div>
+<div id="empty">등록된 강의가 없어요</div>
+<div class="content" id="content"></div>
 
 <footer>
-  <div class="fb">PHYSICAL333 · PHYSICAL333</div>
-  <div class="fi">ELITE SPORTS LAB · www.physical333.com</div>
+  <div class="fb">PHYSICAL333 · ELITE SPORTS LAB</div>
+  <div class="fi">www.physical333.com</div>
 </footer>
 
-
 <script>
-// 관리자 등록 유튜브 링크 로드
-window.addEventListener('load', function(){
-  const youtubes = JSON.parse(localStorage.getItem('p333_youtubes') || '[]');
-  if(!youtubes.length) return;
+const SHEET_ID = "1OMyEfRy0pbpqHf33iZTYQc07xknM5gcZ6s7J_mAf9wg";
+const YT_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=youtube`;
 
-  const themes = {};
-  youtubes.forEach(y=>{
-    if(!themes[y.theme]) themes[y.theme] = [];
-    themes[y.theme].push(y);
-  });
+function parseGviz(text){
+  const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/);
+  if(!match) return [];
+  const data = JSON.parse(match[1]);
+  const cols = data.table.cols.map(c=>c.label);
+  return (data.table.rows||[]).map(r=>{
+    const obj={};
+    cols.forEach((c,i)=>obj[c]=(r.c[i]&&r.c[i].v!=null)?String(r.c[i].v):'');
+    return obj;
+  }).filter(r=>r.title);
+}
 
-  const container = document.querySelector('.content');
-  if(!container) return;
+window.addEventListener('load', async function(){
+  try{
+    const res = await fetch(YT_URL);
+    const text = await res.text();
+    const lectures = parseGviz(text);
 
-  const div = document.createElement('div');
-  div.innerHTML = '<div style="color:var(--gold);font-size:10px;letter-spacing:4px;margin:24px 0 12px;">📺 추가 강의</div>';
-  
-  Object.entries(themes).forEach(([theme, items])=>{
-    const block = document.createElement('div');
-    block.className = 'theme';
-    block.innerHTML = `
-      <div class="theme-header">
-        <span class="theme-label">${theme}</span>
-      </div>
-      <div class="theme-body">
-        ${items.map(y=>`
-          <div class="lecture">
-            <span class="num">▸</span>
-            <a href="${y.url}" target="_blank" class="text" style="color:var(--muted);text-decoration:none;">${y.title}</a>
-          </div>`).join('')}
-      </div>`;
-    div.appendChild(block);
-  });
-  container.appendChild(div);
+    document.getElementById('loading').style.display = 'none';
+
+    if(!lectures.length){
+      document.getElementById('empty').style.display = 'block';
+      return;
+    }
+
+    const container = document.getElementById('content');
+
+    // 테마별 분류
+    const themes = {};
+    lectures.forEach(l=>{
+      const t = l.theme || '기타';
+      if(!themes[t]) themes[t] = [];
+      themes[t].push(l);
+    });
+
+    // 유튜브 채널 링크 (url이 있는 첫번째 항목)
+    const channelUrl = lectures.find(l=>l.url)?.url;
+    if(channelUrl){
+      const btn = document.createElement('a');
+      btn.href = channelUrl;
+      btn.target = '_blank';
+      btn.className = 'yt-btn';
+      btn.innerHTML = '📺 유튜브 채널 바로가기 →';
+      container.appendChild(btn);
+    }
+
+    let num = 1;
+    Object.entries(themes).forEach(([theme, items])=>{
+      const div = document.createElement('div');
+      div.className = 'theme';
+      div.innerHTML = `
+        <div class="theme-header">
+          <span class="theme-label">${theme}</span>
+        </div>
+        <div class="theme-body">
+          ${items.map(l=>`
+            <div class="lecture">
+              <span class="num">${num++}강</span>
+              ${l.url
+                ? `<a href="${l.url}" target="_blank">${l.title}</a>`
+                : `<span class="no-link">${l.title}</span>`
+              }
+            </div>`).join('')}
+        </div>`;
+      container.appendChild(div);
+    });
+
+  }catch(e){
+    document.getElementById('loading').textContent = '강의 목록을 불러오지 못했어요';
+    console.log('오류:', e);
+  }
 });
 </script>
 </body>
