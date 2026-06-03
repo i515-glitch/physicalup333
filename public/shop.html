@@ -116,6 +116,11 @@ footer .fi{color:var(--muted);font-size:10px;}
 const SHEET_ID = "1OMyEfRy0pbpqHf33iZTYQc07xknM5gcZ6s7J_mAf9wg";
 const PRODUCTS_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=shop`;
 const CATS_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=shop_categories`;
+const CHANNEL = "야구아들 살찌우기 !!";
+
+let allProductsData = [];
+let catOrderData = [];
+let catIconsData = {};
 
 function parseGviz(text){
   const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/);
@@ -132,12 +137,76 @@ function parseGviz(text){
 function typeBadges(types){
   if(!types) return '';
   return types.split(',').map(t=>{
-    t = t.trim();
-    if(t==='소비형') return `<span class="badge badge-burner">🏃 소비형</span>`;
-    if(t==='균형형') return `<span class="badge badge-balanced">💪 균형형</span>`;
-    if(t==='저장형') return `<span class="badge badge-storer">🏋️ 저장형</span>`;
+    t=t.trim();
+    if(t==='소비형') return `<span class="badge badge-burner">소비형</span>`;
+    if(t==='균형형') return `<span class="badge badge-balanced">균형형</span>`;
+    if(t==='저장형') return `<span class="badge badge-storer">저장형</span>`;
     return '';
   }).join('');
+}
+
+function renderProducts(products){
+  const container = document.getElementById('products-container');
+  container.innerHTML = '';
+  if(!products.length){
+    document.getElementById('empty').style.display = 'block';
+    return;
+  }
+  document.getElementById('empty').style.display = 'none';
+
+  const usedCats = [...new Set(products.map(p=>p.cat))];
+  const orderedCats = [
+    ...catOrderData.filter(c=>usedCats.includes(c)),
+    ...usedCats.filter(c=>!catOrderData.includes(c))
+  ];
+
+  orderedCats.forEach(cat=>{
+    const items = products.filter(p=>p.cat===cat);
+    if(!items.length) return;
+    const icon = catIconsData[cat] || '🛍️';
+    const section = document.createElement('div');
+    section.className = 'cat-section';
+    section.innerHTML = `
+      <div class="cat-title">
+        <span class="icon">${icon}</span>
+        <span class="name">${cat}</span>
+        <span class="count">${items.length}개</span>
+      </div>
+      <div class="product-grid">
+        ${items.map(p=>`
+          <div class="product-card">
+            <div class="product-img">
+              ${p.image?`<img src="${p.image}" alt="${p.name}" onerror="this.parentElement.innerHTML='<div class=no-img>🛍️</div>'">`:'<div class="no-img">🛍️</div>'}
+            </div>
+            <div class="product-info">
+              <div class="product-name">${p.name}</div>
+              ${p.desc?`<div class="product-desc">${p.desc}</div>`:''}
+              ${p.types?`<div class="type-badges">${typeBadges(p.types)}</div>`:''}
+              <div class="product-links">
+                ${p.coupang?`<a href="${p.coupang}" target="_blank" class="link-btn link-coupang">쿠팡 →</a>`:''}
+                ${p.naver?`<a href="${p.naver}" target="_blank" class="link-btn link-naver">네이버 →</a>`:''}
+                ${p.olive?`<a href="${p.olive}" target="_blank" class="link-btn link-olive">올리브영 →</a>`:''}
+              </div>
+            </div>
+          </div>`).join('')}
+      </div>`;
+    container.appendChild(section);
+  });
+}
+
+function filterType(type){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  if(type==='all') document.querySelector('.filter-all').classList.add('active');
+  else if(type==='소비형') document.querySelector('.filter-burner').classList.add('active');
+  else if(type==='균형형') document.querySelector('.filter-balanced').classList.add('active');
+  else if(type==='저장형') document.querySelector('.filter-storer').classList.add('active');
+
+  if(type==='all'){
+    renderProducts(allProductsData);
+  } else {
+    const filtered = allProductsData.filter(p=>p.types&&p.types.includes(type));
+    renderProducts(filtered);
+  }
 }
 
 window.addEventListener('load', async function(){
@@ -145,64 +214,18 @@ window.addEventListener('load', async function(){
     const [pRes, cRes] = await Promise.all([fetch(PRODUCTS_URL), fetch(CATS_URL)]);
     const [pText, cText] = await Promise.all([pRes.text(), cRes.text()]);
     
-    const CHANNEL = "야구아들 살찌우기 !!";
-    const products = parseGviz(pText).filter(p=>p.name && p.channel===CHANNEL);
+    allProductsData = parseGviz(pText).filter(p=>p.name && p.channel===CHANNEL);
     const categories = parseGviz(cText).filter(c=>c.cat);
+    catOrderData = categories.map(c=>c.cat);
+    categories.forEach(c=>catIconsData[c.cat]=c.icon||'🛍️');
     
     document.getElementById('loading').style.display = 'none';
     
-    if(!products.length){
+    if(!allProductsData.length){
       document.getElementById('empty').style.display = 'block';
       return;
     }
-
-    const container = document.getElementById('products-container');
-    
-    // 카테고리 순서대로 표시
-    const catOrder = categories.map(c=>c.cat);
-    const catIcons = {};
-    categories.forEach(c=>catIcons[c.cat]=c.icon||'🛍️');
-    
-    // 등록된 제품의 카테고리만
-    const usedCats = [...new Set(products.map(p=>p.cat))];
-    const orderedCats = [
-      ...catOrder.filter(c=>usedCats.includes(c)),
-      ...usedCats.filter(c=>!catOrder.includes(c))
-    ];
-
-    orderedCats.forEach(cat=>{
-      const items = products.filter(p=>p.cat===cat);
-      if(!items.length) return;
-      
-      const icon = catIcons[cat] || '🛍️';
-      const section = document.createElement('div');
-      section.className = 'cat-section';
-      section.innerHTML = `
-        <div class="cat-title">
-          <span class="icon">${icon}</span>
-          <span class="name">${cat}</span>
-          <span class="count">${items.length}개</span>
-        </div>
-        <div class="product-grid">
-          ${items.map(p=>`
-            <div class="product-card">
-              <div class="product-img">
-                ${p.image?`<img src="${p.image}" alt="${p.name}" onerror="this.parentElement.innerHTML='<div class=no-img>🛍️</div>'">`:'<div class="no-img">🛍️</div>'}
-              </div>
-              <div class="product-info">
-                <div class="product-name">${p.name}</div>
-                ${p.desc?`<div class="product-desc">${p.desc}</div>`:''}
-                ${p.types?`<div class="type-badges">${typeBadges(p.types)}</div>`:''}
-                <div class="product-links">
-                  ${p.coupang?`<a href="${p.coupang}" target="_blank" class="link-btn link-coupang">쿠팡 →</a>`:''}
-                  ${p.naver?`<a href="${p.naver}" target="_blank" class="link-btn link-naver">네이버 →</a>`:''}
-                  ${p.olive?`<a href="${p.olive}" target="_blank" class="link-btn link-olive">올리브영 →</a>`:''}
-                </div>
-              </div>
-            </div>`).join('')}
-        </div>`;
-      container.appendChild(section);
-    });
+    renderProducts(allProductsData);
   }catch(e){
     document.getElementById('loading').textContent = '제품을 불러오지 못했어요';
     console.log('오류:', e);
