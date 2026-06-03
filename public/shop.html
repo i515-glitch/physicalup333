@@ -94,8 +94,8 @@ footer .fi{color:var(--muted);font-size:10px;}
 
 <script>
 const SHEET_ID = "1OMyEfRy0pbpqHf33iZTYQc07xknM5gcZ6s7J_mAf9wg";
-const PRODUCTS_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=shop`;
-const CATS_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=shop_categories`;
+const PRODUCTS_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=shop`;
+const CATS_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=shop_categories`;
 
 function parseGviz(text){
   const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/);
@@ -104,7 +104,7 @@ function parseGviz(text){
   const cols = data.table.cols.map(c=>c.label);
   return (data.table.rows||[]).map(r=>{
     const obj={};
-    cols.forEach((c,i)=>obj[c]=(r.c[i]&&r.c[i].v!=null)?String(r.c[i].v):'');
+    cols.forEach((c,i)=>obj[c]=(r.c[i]&&r.c[i].v!=null)?String(r.c[i].v).trim():'');
     return obj;
   }).filter(r=>Object.values(r).some(v=>v));
 }
