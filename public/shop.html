@@ -94,7 +94,7 @@ footer .fi{color:var(--muted);font-size:10px;}
 
 <script>
 const SHEET_ID = "1OMyEfRy0pbpqHf33iZTYQc07xknM5gcZ6s7J_mAf9wg";
-const PRODUCTS_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=shop_product`;
+const PRODUCTS_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=shop`;
 const CATS_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=shop_categories`;
 
 function parseGviz(text){
@@ -125,7 +125,8 @@ window.addEventListener('load', async function(){
     const [pRes, cRes] = await Promise.all([fetch(PRODUCTS_URL), fetch(CATS_URL)]);
     const [pText, cText] = await Promise.all([pRes.text(), cRes.text()]);
     
-    const products = parseGviz(pText).filter(p=>p.name);
+    const CHANNEL = "야구아들 살찌우기 !!";
+    const products = parseGviz(pText).filter(p=>p.name && p.channel===CHANNEL);
     const categories = parseGviz(cText).filter(c=>c.cat);
     
     document.getElementById('loading').style.display = 'none';
