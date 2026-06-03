@@ -776,8 +776,13 @@ function saveHtml(){
     const blob=new Blob([html],{type:"text/html;charset=utf-8"});
     const url=URL.createObjectURL(blob);
     setDownloading(false);
-    window.open(url,'_blank');
-    setTimeout(()=>URL.revokeObjectURL(url),60000);
+    const a=document.createElement('a');
+    a.href=url;
+    a.download=`피지컬업333_${result.code}_${ment.nick}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url),10000);
   }
 
 
@@ -815,7 +820,7 @@ function saveHtml(){
     const ageInfo=birth.length===6?calcAgeFromShort(birth):null;
 
     return (
-      <div style={{minHeight:"100vh",background:"#f5f3ef",fontFamily:font,padding:"20px 16px 60px"}}>
+      <div style={{minHeight:"100vh",background:"#060a14",fontFamily:font,padding:"20px 16px 60px"}}>
         <div style={{maxWidth:480,margin:"0 auto"}}>
 
           {/* 헤더 카드 */}
@@ -1715,21 +1720,6 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
 
           {/* 버튼 */}
           <div style={{marginBottom:16}}>
-            <button onClick={handleDownload} style={{
-              width:"100%",padding:"16px",borderRadius:12,marginBottom:10,
-              background:downloading?"rgba(79,207,160,0.15)":"linear-gradient(145deg,#0d1b3e,#1a2d5a)",
-              color:downloading?"#4fcfa0":GOLD2,
-              fontSize:14,fontWeight:800,
-              border:downloading?"1.5px solid #4fcfa0":`1.5px solid ${GOLD}`,
-              cursor:"pointer",lineHeight:1.5,
-              position:"relative",overflow:"hidden",transition:"all 0.3s"
-            }}>
-              {!downloading&&<div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${GOLD},${GOLD2},${GOLD})`}}/>}
-              {downloading?"✅ 열리는 중!":"🏆 결과지 보기"}<br/>
-              <span style={{fontSize:10,fontWeight:600,opacity:0.7}}>
-                {downloading?"새 창에서 확인하세요":"결과지 저장·카톡공유 가능"}
-              </span>
-            </button>
 
             {/* 유료회원 전환 배너 */}
             <div style={{
