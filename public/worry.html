@@ -606,7 +606,8 @@ const tc={burner:{f:'rgba(79,207,160,0.15)',s:'rgba(79,207,160,0.5)',t:'#4fcfa0'
 const sc={f:'rgba(120,160,255,0.4)',s:'#78a0ff'};
 let selCode=null;
 
-function drawCube(){
+let glowAnim=null;
+function drawCube(glow){
   const canvas=document.getElementById('cubeCanvas');
   if(!canvas)return;
   const ctx=canvas.getContext('2d');
@@ -618,36 +619,71 @@ function drawCube(){
     const y=-(iy)*(cs+5)*0.7+(ix+iz)*(cs+5)*Math.sin(Math.PI/6)*0.7;
     return{x:W/2+x*0.9,y:H/2+y*0.85+18};
   }
-  function cell(ix,iy,iz,fill,stroke){
+  function cell(ix,iy,iz,fill,stroke,glow2){
     const c2=cs*0.6;const p=proj(ix,iy,iz);
     const cx=p.x,cy=p.y;
     const hw=c2*Math.cos(Math.PI/6)*0.85,hh=c2*Math.sin(Math.PI/6)*0.85,vc=c2*0.75;
+    if(glow2){ctx.save();ctx.shadowColor=stroke;ctx.shadowBlur=18;}
     ctx.beginPath();ctx.moveTo(cx,cy-vc);ctx.lineTo(cx+hw,cy-vc+hh);ctx.lineTo(cx,cy-vc+hh*2);ctx.lineTo(cx-hw,cy-vc+hh);ctx.closePath();
-    ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=0.7;ctx.stroke();
+    ctx.fillStyle=fill;ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=glow2?1.2:0.7;ctx.stroke();
     ctx.beginPath();ctx.moveTo(cx-hw,cy-vc+hh);ctx.lineTo(cx,cy-vc+hh*2);ctx.lineTo(cx,cy+vc);ctx.lineTo(cx-hw,cy+vc-hh);ctx.closePath();
-    ctx.fillStyle=fill.replace(/[\d.]+\)$/,'0.07)');ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=0.7;ctx.stroke();
+    ctx.fillStyle=fill.replace(/[\d.]+\)$/,glow2?'0.18)':'0.05)');ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=glow2?1.2:0.7;ctx.stroke();
     ctx.beginPath();ctx.moveTo(cx+hw,cy-vc+hh);ctx.lineTo(cx,cy-vc+hh*2);ctx.lineTo(cx,cy+vc);ctx.lineTo(cx+hw,cy+vc-hh);ctx.closePath();
-    ctx.fillStyle=fill.replace(/[\d.]+\)$/,'0.12)');ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=0.7;ctx.stroke();
+    ctx.fillStyle=fill.replace(/[\d.]+\)$/,glow2?'0.25)':'0.08)');ctx.fill();ctx.strokeStyle=stroke;ctx.lineWidth=glow2?1.2:0.7;ctx.stroke();
+    if(glow2)ctx.restore();
   }
   for(let iz=0;iz<3;iz++)for(let ix=0;ix<3;ix++)for(let iy=2;iy>=0;iy--){
     const code=`${ix+1}${iy+1}${iz+1}`;
     const d=cubeInfo[code];if(!d)continue;
-    const c=tc[d.type];const isMe=code===selCode;
-    cell(ix,iy,iz,isMe?sc.f:c.f,isMe?sc.s:c.s);
+    const isMe=code===selCode;
+    if(isMe){
+      const g=glow||0;
+      const alpha=(0.3+0.5*Math.sin(g)).toFixed(2);
+      const gAlpha=(0.6+0.4*Math.sin(g)).toFixed(2);
+      cell(ix,iy,iz,`rgba(120,160,255,${alpha})`,`rgba(140,180,255,${gAlpha})`,true);
+    } else {
+      // 기본: 옅은 회색 반투명
+      cell(ix,iy,iz,'rgba(255,255,255,0.04)','rgba(255,255,255,0.12)',false);
+    }
   }
-  ctx.font='9px sans-serif';ctx.fillStyle='rgba(200,200,200,0.3)';
-  const p0=proj(-0.3,1,1.5);ctx.fillText('흡수',p0.x-12,p0.y+3);
-  const p1=proj(1,2.6,1);ctx.fillText('연소',p1.x-10,p1.y-3);
-  const p2=proj(1,1,3.2);ctx.fillText('축적',p2.x-4,p2.y+3);
+  // 축 레이블
+  ctx.font='bold 10px sans-serif';
+  // X축 - 흡수력
+  const px=proj(-0.5,1,1);
+  ctx.fillStyle='rgba(79,207,160,0.7)';
+  ctx.fillText('← 흡수력',px.x-40,px.y+4);
+  // Y축 - 연소력
+  const py=proj(1,3.1,1);
+  ctx.fillStyle='rgba(247,149,79,0.7)';
+  ctx.fillText('연소력 ↑',py.x-16,py.y-4);
+  // Z축 - 축적력
+  const pz=proj(1,1,3.3);
+  ctx.fillStyle='rgba(247,111,142,0.7)';
+  ctx.fillText('축적력 →',pz.x-4,pz.y+4);
+}
+
+function animGlow(){
+  if(glowAnim)cancelAnimationFrame(glowAnim);
+  let t=0;
+  function loop(){
+    t+=0.08;
+    drawCube(t);
+    glowAnim=requestAnimationFrame(loop);
+  }
+  loop();
+}
+function stopGlow(){
+  if(glowAnim){cancelAnimationFrame(glowAnim);glowAnim=null;}
+  drawCube(0);
 }
 
 function onCubeInput(val){
   val=val.replace(/[^123]/g,'');
   document.getElementById('cubeInput').value=val;
-  if(val.length===3){selCode=val;drawCube();showCubeInfo(val);}
-  else{selCode=null;drawCube();if(!val)resetCubeInfo();}
+  if(val.length===3){selCode=val;animGlow();showCubeInfo(val);}
+  else{selCode=null;stopGlow();if(!val)resetCubeInfo();}
 }
-function resetCube(){selCode=null;document.getElementById('cubeInput').value='';drawCube();resetCubeInfo();}
+function resetCube(){selCode=null;document.getElementById('cubeInput').value='';stopGlow();resetCubeInfo();}
 function resetCubeInfo(){document.getElementById('cubeInfo').innerHTML='<div class="cube-empty">코드 3자리를 입력하면<br/>체질 위치와 특성이 표시됩니다.<br/><br/>예: 111 · 222 · 333</div>';}
 function showCubeInfo(code){
   const d=cubeInfo[code];
@@ -675,7 +711,7 @@ function parseGviz(t){const m=t.match(/google\.visualization\.Query\.setResponse
 function getYtId(url){if(!url)return null;const m=url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);return m?m[1]:null;}
 
 window.addEventListener('load',async function(){
-  showAge(11);showFit(13);drawCube();
+  showAge(11);showFit(13);drawCube(0);
   try{
     const res=await fetch(YT_URL);const text=await res.text();
     const lecs=parseGviz(text).filter(l=>l.channel===CHANNEL);
