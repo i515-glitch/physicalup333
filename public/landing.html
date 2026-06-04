@@ -5,7 +5,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>피지컬업333 · Physical UP 333</title>
-<meta name="description" content="유소년 엘리트 선수 체질 코드 분석. 333TEST로 우리 아이 맞춤 피지컬 솔루션을 찾아보세요."/>
+<meta name="description" content="유소년 엘리트 선수 BIO CODE 분석. 333TEST로 우리 아이 맞춤 피지컬 솔루션을 찾아보세요."/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -141,7 +141,7 @@ footer .fi{color:var(--muted);font-size:10px;}
     <div class="cause-desc">잘 먹이고, 운동도 시키고, 영양제도 먹이는데 왜 효과가 없을까요? 체질마다 흡수하는 방식, 에너지를 태우는 속도, 살이 붙는 경로가 전혀 다르기 때문입니다. 체질을 모르면 아무리 좋은 방법도 역효과가 납니다.</div>
   </div>
   <div class="insight">
-    <p>흡수력·연소력·축적력 — 이 3축의 조합이 우리 아이만의 체질 코드입니다. 코드를 알면 해답이 보입니다.</p>
+    <p>흡수력·연소력·축적력 — 이 3축의 조합이 우리 아이만의 BIO CODE입니다. 코드를 알면 해답이 보입니다.</p>
   </div>
 </div>
 
@@ -149,7 +149,7 @@ footer .fi{color:var(--muted);font-size:10px;}
 <div class="sec">
   <div class="tag">03 · SOLUTION</div>
   <div class="title">피지컬업333이 하는 일</div>
-  <div class="sub">흡수·연소·축적 3축을 분석해 27가지 체질 코드를 산출합니다. 우리 아이에게 딱 맞는 영양·운동·식단 전략을 데이터로 제시합니다.</div>
+  <div class="sub">흡수·연소·축적 3축을 분석해 27가지 BIO CODE를 산출합니다. 우리 아이에게 딱 맞는 영양·운동·식단 전략을 데이터로 제시합니다.</div>
   <div class="three-grid">
     <div class="three-cell">
       <div class="three-num">3</div>
@@ -158,7 +158,7 @@ footer .fi{color:var(--muted);font-size:10px;}
     </div>
     <div class="three-cell">
       <div class="three-num">27</div>
-      <div class="three-label">체질 코드</div>
+      <div class="three-label">BIO CODE</div>
       <div class="three-desc">3×3×3<br/>27가지 분류<br/>맞춤 솔루션</div>
     </div>
     <div class="three-cell">
@@ -184,14 +184,24 @@ footer .fi{color:var(--muted);font-size:10px;}
 </div>
 
 <!-- 4. CTA -->
-<div class="sec" style="border-bottom:none;">
+<div class="sec">
   <div class="cta-box">
     <div class="tag" style="text-align:center;margin-bottom:12px;">FREE · 무료 · 5분</div>
-    <div class="cta-title">우리 아이 체질 코드, 지금 바로 찾아보세요</div>
-    <div class="cta-desc">27가지 체질 코드 중 우리 아이의 코드를 찾고 맞춤 영양·운동·식단 방향을 지금 바로 확인하세요.</div>
+    <div class="cta-title">우리 아이 BIO CODE, 지금 바로 찾아보세요</div>
+    <div class="cta-desc">27가지 BIO CODE 중 우리 아이의 코드를 찾고 맞춤 영양·운동·식단 방향을 지금 바로 확인하세요.</div>
     <a href="/app?start=test" class="cta-btn">333TEST 무료 시작 →</a>
     <span class="cta-note">완전 무료 · 5분 소요 · 카톡 공유 가능</span>
   </div>
+</div>
+
+<!-- 5. 유튜브 -->
+<div class="sec" style="border-bottom:none;">
+  <div class="tag">YOUTUBE</div>
+  <div class="title">영상으로 더 알아보기</div>
+  <div class="sub">유소년 선수 부모님이 꼭 알아야 할 피지컬 이야기, 영상으로 만나보세요.</div>
+  <div id="yt-content"></div>
+  <div id="yt-loading" style="color:var(--muted);font-size:12px;text-align:center;padding:16px;">영상 불러오는 중...</div>
+  <a href="https://www.youtube.com" target="_blank" style="display:block;margin-top:14px;padding:13px;border-radius:10px;background:rgba(255,0,0,0.08);border:1px solid rgba(255,0,0,0.25);color:#ff6b6b;font-size:13px;font-weight:700;text-decoration:none;text-align:center;">📺 유튜브 채널 바로가기 →</a>
 </div>
 
 </div>
@@ -200,6 +210,32 @@ footer .fi{color:var(--muted);font-size:10px;}
   <div class="fb">PHYSICAL UP 333 · ELITE SPORTS LAB</div>
   <div class="fi">피지컬은 데이터다 · Physical is Data · www.physicalup333.com</div>
 </footer>
+
+<script>
+const SHEET_ID="1OMyEfRy0pbpqHf33iZTYQc07xknM5gcZ6s7J_mAf9wg";
+const YT_URL="https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?tqx=out:json&headers=1&sheet=youtube";
+const CHANNEL="야구아들 살찌우기 !!";
+function parseGviz(t){const m=t.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/);if(!m)return[];const d=JSON.parse(m[1]);const cols=d.table.cols.map(c=>c.label);return(d.table.rows||[]).map(r=>{const o={};cols.forEach((c,i)=>o[c]=(r.c[i]&&r.c[i].v!=null)?String(r.c[i].v).trim():'');return o;}).filter(r=>r.title);}
+function getYtId(url){if(!url)return null;const m=url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);return m?m[1]:null;}
+window.addEventListener('load',async function(){
+  try{
+    const res=await fetch(YT_URL);const text=await res.text();
+    const lecs=parseGviz(text).filter(l=>l.channel===CHANNEL).slice(0,4);
+    document.getElementById('yt-loading').style.display='none';
+    if(!lecs.length){return;}
+    const cont=document.getElementById('yt-content');
+    cont.style.display='grid';cont.style.gridTemplateColumns='1fr 1fr';cont.style.gap='10px';
+    lecs.forEach(l=>{
+      const id=getYtId(l.url);const thumb=id?"https://img.youtube.com/vi/"+id+"/mqdefault.jpg":null;
+      const a=document.createElement('a');a.href=l.url||'#';a.target='_blank';
+      a.style.cssText='text-decoration:none;background:rgba(13,27,62,0.4);border-radius:8px;overflow:hidden;border:1px solid var(--line);';
+      a.innerHTML=(thumb?'<img src="'+thumb+'" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block;">':'')+'<div style="padding:8px;color:var(--muted);font-size:11px;line-height:1.4;">'+l.title+'</div>';
+      cont.appendChild(a);
+    });
+  }catch(e){document.getElementById('yt-loading').style.display='none';}
+});
+</script>
+
 
 </body>
 </html>
