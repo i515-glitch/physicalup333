@@ -56,7 +56,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.97
 .tbl td.neg{color:#f76f8e;}
 
 /* 차트 박스 */
-.chart-box{background:linear-gradient(180deg,rgba(13,27,62,0.4),rgba(13,27,62,0.15));border:1px solid var(--line);border-radius:10px;padding:18px 16px;}
+.chart-box{background:linear-gradient(180deg,rgba(13,27,62,0.4),rgba(13,27,62,0.15));border:1px solid var(--line);border-radius:10px;padding:16px 12px;}
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:480px){.chart-row{grid-template-columns:1fr;}}
 
 /* 입력 패널 */
 .input-panel{background:rgba(13,27,62,0.35);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:18px 16px;margin-bottom:18px;}
@@ -66,7 +68,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.97
 .ip-field label{font-size:10px;color:var(--muted);}
 .ip-field input{background:rgba(6,10,20,0.5);border:1px solid var(--line);border-radius:6px;padding:9px 10px;color:var(--white);font-size:14px;font-family:'Noto Sans KR',sans-serif;outline:none;width:100%;box-sizing:border-box;}
 .ip-field input:focus{border-color:rgba(201,168,76,0.5);}
-.ip-result{margin-top:14px;font-size:12px;color:var(--gold2);line-height:1.7;display:none;}
+.ip-result{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--gold2);line-height:1.7;display:none;}
 .ip-result.show{display:block;}
 @media(min-width:520px){.ip-grid{grid-template-columns:1fr 1fr 1fr 1fr;}}
 .chart-label{font-family:var(--mono);color:var(--gold);font-size:10px;font-weight:700;letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
@@ -227,18 +229,20 @@ footer .fi{font-family:var(--mono);color:var(--muted2);font-size:9px;letter-spac
     <div id="ip-result" class="ip-result"></div>
   </div>
 
-  <div class="chart-box" style="margin-bottom:16px;">
-    <div class="chart-label">▎신장 STATURE (cm)</div>
-    <div class="legend">
-      <span><span class="ln" style="background:rgba(255,255,255,0.35);"></span>또래 평균 P50</span>
-      <span style="color:var(--gold);"><span class="ln" style="background:var(--gold);"></span>우수 선수 P90</span>
-      <span style="color:#78a0ff;"><span class="dt" style="background:#78a0ff;"></span>분석 대상</span>
-    </div>
-    <div id="height-chart"></div>
+  <div class="legend" style="margin-bottom:12px;">
+    <span><span class="ln" style="background:rgba(255,255,255,0.35);"></span>또래 평균 P50</span>
+    <span style="color:var(--gold);"><span class="ln" style="background:var(--gold);"></span>우수 선수 P90</span>
+    <span style="color:#78a0ff;"><span class="dt" style="background:#78a0ff;"></span>분석 대상</span>
   </div>
-  <div class="chart-box">
-    <div class="chart-label">▎체중 BODY WEIGHT (kg)</div>
-    <div id="weight-chart"></div>
+  <div class="chart-row">
+    <div class="chart-box">
+      <div class="chart-label">▎신장 STATURE (cm)</div>
+      <div id="height-chart"></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-label">▎체중 WEIGHT (kg)</div>
+      <div id="weight-chart"></div>
+    </div>
   </div>
   <div class="footnote">
     <p>[1] 교육부 학생건강체력평가 PAPS 2023</p>
@@ -463,8 +467,15 @@ const gData={
   17:{h:{avg:173,tgt:182},w:{avg:66,tgt:79}},
   18:{h:{avg:174,tgt:184},w:{avg:68,tgt:82}},
 };
+// 정규분포 누적분포함수 (백분위 추정용)
+function normCDF(z){
+  const t=1/(1+0.2316419*Math.abs(z));
+  const d=0.3989423*Math.exp(-z*z/2);
+  let p=d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274))));
+  return z>0?1-p:p;
+}
 function calcAge(birth){
-  // YYMMDD → 만 나이
+  // YYMMDD → {age:만나이정수, exact:개월반영소수나이}
   if(!birth||birth.length!==6)return null;
   const yy=parseInt(birth.slice(0,2)),mm=parseInt(birth.slice(2,4)),dd=parseInt(birth.slice(4,6));
   if(mm<1||mm>12||dd<1||dd>31)return null;
@@ -472,9 +483,12 @@ function calcAge(birth){
   const year=yy<=(now.getFullYear()%100)?2000+yy:1900+yy;
   const b=new Date(year,mm-1,dd);
   if(isNaN(b.getTime()))return null;
-  let age=now.getFullYear()-year;
-  if(now.getMonth()<mm-1||(now.getMonth()===mm-1&&now.getDate()<dd))age--;
-  return age>=0&&age<=25?age:null;
+  // 정확한 일수 기반 소수 나이
+  const diffMs=now-b;
+  const exact=diffMs/(365.25*24*3600*1000);
+  const age=Math.floor(exact);
+  if(age<0||age>25)return null;
+  return {age:age,exact:parseFloat(exact.toFixed(2))};
 }
 function getMyData(){
   // 입력칸 우선, 없으면 localStorage(333TEST와 공유), 그 다음 URL
@@ -483,12 +497,13 @@ function getMyData(){
     const birth=document.getElementById('in-birth').value;
     const h=document.getElementById('in-height').value;
     const w=document.getElementById('in-weight').value;
-    const age=calcAge(birth);
-    return {name:nameEl.value,age:age,h:h?parseFloat(h):null,w:w?parseFloat(w):null};
+    const a=calcAge(birth);
+    return {name:nameEl.value,age:a?a.age:null,exact:a?a.exact:null,h:h?parseFloat(h):null,w:w?parseFloat(w):null};
   }
   const p=new URLSearchParams(location.search);
   const age=p.get('age'),h=p.get('h'),w=p.get('w');
-  return {age:age?parseInt(age):null,h:h?parseFloat(h):null,w:w?parseFloat(w):null};
+  const ageNum=age?parseInt(age):null;
+  return {age:ageNum,exact:ageNum,h:h?parseFloat(h):null,w:w?parseFloat(w):null};
 }
 function updateChart(){
   // 입력값을 localStorage에 저장 (333TEST와 공유)
@@ -506,15 +521,39 @@ function updateChart(){
   const my=getMyData();
   const res=document.getElementById('ip-result');
   if(!res)return;
-  if(my.age&&(my.h||my.w)){
-    const ageLabel=my.age>=11&&my.age<=18?`만 ${my.age}세`:`만 ${my.age}세 (그래프 범위 밖)`;
-    let msg=`${my.name?my.name+' · ':''}${ageLabel}`;
-    if(my.age>=11&&my.age<=18){
-      const d=gData[my.age];
-      if(my.h){const diff=(d.tgt-my.h).toFixed(0);msg+=` · 키 ${my.h}cm (우수선수 목표 ${d.tgt}cm${diff>0?', '+diff+'cm 더':''})`;}
-      if(my.w){msg+=` · 몸무게 ${my.w}kg`;}
+  if(my.exact&&(my.h||my.w)){
+    const e=my.exact;
+    // 개월수 보간으로 정확한 기준값 계산
+    function interp(key,sub){
+      if(e<11)return gData[11][key][sub];
+      if(e>=18)return gData[18][key][sub];
+      const lo=Math.floor(e),hi=lo+1,f=e-lo;
+      return gData[lo][key][sub]+(gData[hi][key][sub]-gData[lo][key][sub])*f;
     }
-    res.textContent=msg;
+    const ageLabel=e>=11&&e<=18?`만 ${e.toFixed(1)}세`:`만 ${my.age}세 (그래프 범위 밖)`;
+    let html=`<div style="font-weight:700;color:var(--white);margin-bottom:8px;">${my.name?my.name+' · ':''}${ageLabel}</div>`;
+    if(e>=11&&e<=18){
+      if(my.h){
+        const avg=interp('h','avg'),tgt=interp('h','tgt');
+        // 표준편차 약 6cm 가정 → 백분위 추정
+        const z=(my.h-avg)/6;
+        const pct=Math.round(normCDF(z)*100);
+        const tgtRatio=Math.round((my.h/tgt)*100);
+        const diff=(tgt-my.h).toFixed(1);
+        html+=`<div style="margin-bottom:6px;"><span style="color:var(--white);">키 ${my.h}cm</span> · 또래 평균 ${avg.toFixed(1)}cm · 우수선수 ${tgt.toFixed(1)}cm</div>`;
+        html+=`<div style="font-family:var(--mono);font-size:11px;color:var(--muted);">└ 또래 중 상위 ${100-pct}% · 우수선수 기준 ${tgtRatio}% · 목표까지 ${diff>0?diff+'cm':'달성'}</div>`;
+      }
+      if(my.w){
+        const avg=interp('w','avg'),tgt=interp('w','tgt');
+        const z=(my.w-avg)/7;
+        const pct=Math.round(normCDF(z)*100);
+        const tgtRatio=Math.round((my.w/tgt)*100);
+        const diff=(tgt-my.w).toFixed(1);
+        html+=`<div style="margin-top:8px;margin-bottom:6px;"><span style="color:var(--white);">몸무게 ${my.w}kg</span> · 또래 평균 ${avg.toFixed(1)}kg · 우수선수 ${tgt.toFixed(1)}kg</div>`;
+        html+=`<div style="font-family:var(--mono);font-size:11px;color:var(--muted);">└ 또래 중 상위 ${100-pct}% · 우수선수 기준 ${tgtRatio}% · 목표까지 ${diff>0?diff+'kg':'달성'}</div>`;
+      }
+    }
+    res.innerHTML=html;
     res.classList.add('show');
   }else{
     res.classList.remove('show');
@@ -527,21 +566,34 @@ function drawGrowthChart(containerId,key,unit){
   const tgtVals=ages.map(a=>gData[a][key].tgt);
   const allVals=[...avgVals,...tgtVals];
   const minV=Math.min(...allVals),maxV=Math.max(...allVals);
-  const pad=(maxV-minV)*0.15,lo=minV-pad,hi=maxV+pad;
-  const W=680,H=240,mL=40,mR=16,mT=16,mB=32,pw=W-mL-mR,ph=H-mT-mB;
+  const pad=(maxV-minV)*0.18,lo=minV-pad,hi=maxV+pad;
+  // 좁은 박스용 비율 (세로로 길게)
+  const W=340,H=300,mL=34,mR=14,mT=18,mB=30,pw=W-mL-mR,ph=H-mT-mB;
   const x=i=>mL+(i/(ages.length-1))*pw;
   const y=v=>mT+ph-((v-lo)/(hi-lo))*ph;
-  const my=getMyData(),myVal=key==='h'?my.h:my.w,myAge=my.age;
+  const my=getMyData(),myVal=key==='h'?my.h:my.w,myExact=my.exact;
+  function interpV(arr,e){if(e<=11)return arr[0];if(e>=18)return arr[7];const l=Math.floor(e)-11,f=e-Math.floor(e);return arr[l]+(arr[l+1]-arr[l])*f;}
   const pathOf=vals=>vals.map((v,i)=>`${i===0?'M':'L'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
   let yTicks='';
   for(let t=0;t<=4;t++){const v=lo+(hi-lo)*(t/4),yy=y(v);
     yTicks+=`<line x1="${mL}" y1="${yy}" x2="${W-mR}" y2="${yy}" stroke="rgba(255,255,255,0.04)"/>`;
-    yTicks+=`<text x="${mL-5}" y="${yy+3}" font-size="8" font-family="monospace" fill="#3a4d6a" text-anchor="end">${Math.round(v)}</text>`;}
-  let xLabels='';labels.forEach((l,i)=>{xLabels+=`<text x="${x(i)}" y="${H-mB+16}" font-size="8" font-family="monospace" fill="#3a4d6a" text-anchor="middle">${l}</text>`;});
+    yTicks+=`<text x="${mL-4}" y="${yy+3}" font-size="8" font-family="monospace" fill="#3a4d6a" text-anchor="end">${Math.round(v)}</text>`;}
+  let xLabels='';labels.forEach((l,i)=>{xLabels+=`<text x="${x(i)}" y="${H-mB+15}" font-size="7.5" font-family="monospace" fill="#3a4d6a" text-anchor="middle">${l}</text>`;});
   let myDot='';
-  if(myVal&&myAge&&myAge>=11&&myAge<=18){const mi=myAge-11,mx=x(mi),myy=y(myVal);
-    myDot=`<circle cx="${mx}" cy="${myy}" r="7" fill="rgba(120,160,255,0.25)"/><circle cx="${mx}" cy="${myy}" r="4" fill="#78a0ff" stroke="#fff" stroke-width="1"/><text x="${mx}" y="${myy-11}" font-size="9" font-family="monospace" fill="#78a0ff" text-anchor="middle" font-weight="700">${myVal}${unit}</text>`;}
-  document.getElementById(containerId).innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;">${yTicks}${xLabels}<path d="${pathOf(avgVals)}" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.8"/><path d="${pathOf(tgtVals)}" fill="none" stroke="#c9a84c" stroke-width="2.2"/>${avgVals.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="2.2" fill="rgba(255,255,255,0.4)"/>`).join('')}${tgtVals.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="2.2" fill="#c9a84c"/>`).join('')}${myDot}</svg>`;
+  if(myVal&&myExact&&myExact>=11&&myExact<=18){
+    const mi=myExact-11, mx=x(mi), myy=y(myVal);
+    // 내 나이 지점의 비교군 값 (보간)
+    const avgAtMe=interpV(avgVals,myExact), tgtAtMe=interpV(tgtVals,myExact);
+    const ax=mx, ay=y(avgAtMe), ty=mx, ty2=y(tgtAtMe);
+    myDot=`
+      <line x1="${mx}" y1="${mT}" x2="${mx}" y2="${mT+ph}" stroke="rgba(120,160,255,0.3)" stroke-width="1" stroke-dasharray="3,3"/>
+      <circle cx="${mx}" cy="${ay}" r="3" fill="rgba(255,255,255,0.5)"/>
+      <text x="${mx+6}" y="${ay-4}" font-size="8" font-family="monospace" fill="rgba(255,255,255,0.6)">${Math.round(avgAtMe)}</text>
+      <circle cx="${mx}" cy="${ty2}" r="3" fill="#c9a84c"/>
+      <text x="${mx+6}" y="${ty2-4}" font-size="8" font-family="monospace" fill="#c9a84c">${Math.round(tgtAtMe)}</text>
+      <circle cx="${mx}" cy="${myy}" r="7" fill="rgba(120,160,255,0.25)"/><circle cx="${mx}" cy="${myy}" r="4.5" fill="#78a0ff" stroke="#fff" stroke-width="1.2"/>
+      <text x="${mx}" y="${myy+(myy<ay?-12:18)}" font-size="10" font-family="monospace" fill="#78a0ff" text-anchor="middle" font-weight="700">${myVal}${unit}</text>`;}
+  document.getElementById(containerId).innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;">${yTicks}${xLabels}<path d="${pathOf(avgVals)}" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.8"/><path d="${pathOf(tgtVals)}" fill="none" stroke="#c9a84c" stroke-width="2.2"/>${avgVals.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="2" fill="rgba(255,255,255,0.4)"/>`).join('')}${tgtVals.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="2" fill="#c9a84c"/>`).join('')}${myDot}</svg>`;
 }
 function showAge(){drawGrowthChart('height-chart','h','cm');drawGrowthChart('weight-chart','w','kg');}
 
