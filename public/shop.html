@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -42,7 +43,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.96
 .product-img .no-img{color:rgba(255,255,255,0.1);font-size:28px;}
 .product-info{padding:12px;}
 .product-name{color:var(--white);font-size:13px;font-weight:700;margin-bottom:4px;line-height:1.4;}
-.product-desc{color:var(--muted);font-size:11px;line-height:1.5;margin-bottom:6px;}
+.product-desc{color:var(--muted);font-size:11px;line-height:1.5;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer;}
+.product-desc.expanded{-webkit-line-clamp:unset;}
+.product-desc.has-more::after{content:' ⋯더보기';color:var(--gold);font-size:10px;font-weight:700;}
+.product-desc.expanded.has-more::after{content:' 접기';}
 .type-badges{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;}
 .badge{padding:2px 7px;border-radius:10px;font-size:9px;font-weight:700;}
 .badge-burner{background:rgba(79,207,160,0.15);color:#4fcfa0;border:1px solid rgba(79,207,160,0.3);}
@@ -58,6 +62,20 @@ footer .fb{color:var(--gold);font-size:11px;font-weight:700;letter-spacing:3px;m
 footer .fi{color:var(--muted);font-size:10px;}
 
 .filter-row{display:flex;gap:8px;flex-wrap:wrap;max-width:720px;margin:0 auto 20px;padding:0 20px;justify-content:center;}
+
+.guide-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;max-width:720px;margin:0 auto 28px;padding:0 20px;}
+.guide-card{background:rgba(13,27,62,0.5);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.06);}
+.guide-burner{border-top:2px solid #4fcfa0;}
+.guide-balanced{border-top:2px solid var(--gold);}
+.guide-storer{border-top:2px solid #f76f8e;}
+.guide-hd{font-size:13px;font-weight:900;margin-bottom:4px;}
+.guide-hd span{font-size:8px;font-weight:700;opacity:0.5;letter-spacing:1px;margin-left:2px;}
+.guide-burner .guide-hd{color:#4fcfa0;}
+.guide-balanced .guide-hd{color:var(--gold2);}
+.guide-storer .guide-hd{color:#f76f8e;}
+.guide-desc{color:var(--muted);font-size:10px;line-height:1.5;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.05);}
+.guide-items{color:var(--white);font-size:11px;line-height:1.7;font-weight:500;}
+@media(max-width:560px){.guide-row{grid-template-columns:1fr;}}
 .filter-btn{padding:7px 16px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid;transition:all 0.2s;background:transparent;}
 .filter-btn:hover{opacity:0.8;}
 .filter-btn.active{opacity:1;}
@@ -93,8 +111,8 @@ footer .fi{color:var(--muted);font-size:10px;}
 
 <div class="hero">
   <div class="label">SHOPPING</div>
-  <h1>🛒 맞춤 제품 추천</h1>
-  <p>체질별 추천 제품을 확인하세요</p>
+  <h1>🛒 BIO CODE 맞춤 제품</h1>
+  <p>우리 아이 체질에 딱 맞는 제품을 추천해드립니다</p>
 </div>
 
 <div class="filter-row">
@@ -103,6 +121,25 @@ footer .fi{color:var(--muted);font-size:10px;}
   <button class="filter-btn filter-balanced" onclick="filterType('균형형')">💪 균형형</button>
   <button class="filter-btn filter-storer" onclick="filterType('저장형')">🏋️ 저장형</button>
 </div>
+
+<div class="guide-row">
+  <div class="guide-card guide-burner">
+    <div class="guide-hd">🏃 소비형 <span>BURNER</span></div>
+    <div class="guide-desc">잘 안 찌는 체질 · 흡수와 증량 집중</div>
+    <div class="guide-items">유산균 · 소화효소 · 아연 · 고칼로리 간식 · 단백질</div>
+  </div>
+  <div class="guide-card guide-balanced">
+    <div class="guide-hd">💪 균형형 <span>BALANCED</span></div>
+    <div class="guide-desc">이상적 균형 · 현 상태 유지 강화</div>
+    <div class="guide-items">종합비타민 · 오메가3 · 비타민D · 칼슘 · 마그네슘</div>
+  </div>
+  <div class="guide-card guide-storer">
+    <div class="guide-hd">🏋️ 저장형 <span>STORER</span></div>
+    <div class="guide-desc">잘 찌는 체질 · 대사 활성·체중 관리</div>
+    <div class="guide-items">식이섬유 · 마그네슘 · 오메가3 · 비타민D · 유산균</div>
+  </div>
+</div>
+
 <div id="loading">제품 불러오는 중...</div>
 <div id="empty">등록된 제품이 없어요</div>
 <div id="products-container"></div>
@@ -110,6 +147,10 @@ footer .fi{color:var(--muted);font-size:10px;}
 <footer>
   <div class="fb">Physical UP 333 · ELITE SPORTS LAB</div>
   <div class="fi">www.physicalup333.com</div>
+  <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.05);color:var(--muted);font-size:10px;line-height:1.7;max-width:480px;margin-left:auto;margin-right:auto;">
+    이 사이트는 쿠팡 파트너스 · 네이버 쇼핑 파트너스 활동의 일환으로,<br/>
+    이에 따른 일정액의 수수료를 제공받습니다.
+  </div>
 </footer>
 
 <script>
@@ -180,7 +221,7 @@ function renderProducts(products){
             </div>
             <div class="product-info">
               <div class="product-name">${p.name}</div>
-              ${p.desc?`<div class="product-desc">${p.desc}</div>`:''}
+              ${p.desc?`<div class="product-desc" onclick="if(this.classList.contains('has-more'))this.classList.toggle('expanded')">${p.desc}</div>`:''}
               ${p.types?`<div class="type-badges">${typeBadges(p.types)}</div>`:''}
               <div class="product-links">
                 ${p.coupang?`<a href="${p.coupang}" target="_blank" class="link-btn link-coupang">쿠팡 →</a>`:''}
@@ -192,6 +233,12 @@ function renderProducts(products){
       </div>`;
     container.appendChild(section);
   });
+  // 2줄 넘치는 설명에만 더보기 표시
+  setTimeout(()=>{
+    document.querySelectorAll('.product-desc').forEach(el=>{
+      if(el.scrollHeight>el.clientHeight+2){el.classList.add('has-more');}
+    });
+  },50);
 }
 
 function filterType(type){
@@ -200,6 +247,11 @@ function filterType(type){
   else if(type==='소비형') document.querySelector('.filter-burner').classList.add('active');
   else if(type==='균형형') document.querySelector('.filter-balanced').classList.add('active');
   else if(type==='저장형') document.querySelector('.filter-storer').classList.add('active');
+
+  // 안내 카드 강조
+  const cardMap={'소비형':'guide-burner','균형형':'guide-balanced','저장형':'guide-storer'};
+  document.querySelectorAll('.guide-card').forEach(c=>{c.style.opacity=type==='all'?'1':'0.35';});
+  if(type!=='all'){const el=document.querySelector('.'+cardMap[type]);if(el)el.style.opacity='1';}
 
   if(type==='all'){
     renderProducts(allProductsData);
