@@ -109,12 +109,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.97
 .cmp-row .v{font-family:var(--mono);font-weight:700;}
 
 /* 큐브 */
-.cube-wrap{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;}
-.cube-input-row{display:flex;gap:8px;align-items:center;margin-bottom:14px;}
-.cube-input-row input{width:96px;font-family:var(--mono);font-size:22px;font-weight:700;text-align:center;letter-spacing:6px;padding:8px 10px;border-radius:6px;border:1px solid rgba(201,168,76,0.3);background:rgba(13,27,62,0.6);color:var(--white);}
-.cube-input-row button{padding:8px 14px;font-size:11px;font-weight:700;border-radius:6px;border:1px solid var(--line);background:rgba(255,255,255,0.03);color:var(--muted);cursor:pointer;font-family:'Noto Sans KR',sans-serif;}
-.cube-info{flex:1;min-width:190px;background:rgba(13,27,62,0.4);border-radius:10px;padding:18px;border:1px solid var(--line);}
+.cube-layout{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;}
+.cube-left{display:flex;flex-direction:column;}
+.cube-right{display:flex;flex-direction:column;gap:10px;}
+.cube-input-box{background:rgba(13,27,62,0.4);border:1px solid var(--line);border-radius:8px;padding:14px;}
+.cube-input-row{display:flex;gap:8px;align-items:center;}
+.cube-input-row input{flex:1;font-family:var(--mono);font-size:20px;font-weight:700;text-align:center;letter-spacing:6px;padding:8px 10px;border-radius:6px;border:1px solid rgba(201,168,76,0.3);background:rgba(13,27,62,0.6);color:var(--white);}
+.cube-input-row button{padding:8px 12px;font-size:10px;font-weight:700;border-radius:6px;border:1px solid var(--line);background:rgba(255,255,255,0.03);color:var(--muted);cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;}
+.cube-info{background:rgba(13,27,62,0.4);border-radius:8px;padding:16px;border:1px solid var(--line);min-height:140px;}
 .cube-empty{color:var(--muted);font-size:12px;line-height:1.8;}
+@media(max-width:520px){.cube-layout{grid-template-columns:1fr;}}
 
 /* 프로세스 */
 .process{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;}
@@ -157,7 +161,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.97
 .pc-no{font-family:var(--mono);color:var(--gold);font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:10px;opacity:0.7;}
 .pc-title{color:var(--white);font-size:13px;font-weight:700;margin-bottom:8px;line-height:1.4;}
 .pc-desc{color:var(--muted);font-size:11px;line-height:1.7;}
-@media(max-width:520px){.premium-grid{grid-template-columns:1fr;}}
+.premium-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:28px;}
+.pcard{background:rgba(13,27,62,0.4);border:1px solid var(--line);border-radius:10px;padding:18px 14px;text-align:center;}
+.pcard-icon{font-size:32px;margin-bottom:8px;}
+.pcard-label{font-family:var(--mono);color:var(--gold);font-size:9px;font-weight:700;letter-spacing:2px;margin-bottom:6px;}
+.pcard-title{color:var(--white);font-size:12px;font-weight:700;line-height:1.5;margin-bottom:10px;}
+.pcard-desc{color:var(--muted);font-size:10px;line-height:1.7;text-align:left;}
+@media(max-width:520px){.premium-grid{grid-template-columns:1fr;}.premium-cards{grid-template-columns:1fr;}}
 
 /* 각주 */
 .footnote{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);}
@@ -272,22 +282,13 @@ footer .fi{font-family:var(--mono);color:var(--muted2);font-size:9px;letter-spac
   </div>
 
   <div style="margin-top:28px;margin-bottom:8px;font-family:var(--mono);color:var(--gold);font-size:10px;font-weight:700;letter-spacing:1px;">▎유소년 선수 BIO CODE 분포 (N=누적 표본)</div>
-  <div class="dist">
-    <div class="dist-row">
-      <div class="dist-label">소비형<span class="en">BURNER</span></div>
-      <div class="dist-bar"><div class="dist-fill" style="width:47%;background:linear-gradient(90deg,rgba(79,207,160,0.5),rgba(79,207,160,0.8));"></div></div>
-      <div class="dist-pct" style="color:#4fcfa0;">47%</div>
-    </div>
-    <div class="dist-row">
-      <div class="dist-label">균형형<span class="en">BALANCED</span></div>
-      <div class="dist-bar"><div class="dist-fill" style="width:31%;background:linear-gradient(90deg,rgba(201,168,76,0.5),rgba(201,168,76,0.8));"></div></div>
-      <div class="dist-pct" style="color:var(--gold2);">31%</div>
-    </div>
-    <div class="dist-row">
-      <div class="dist-label">저장형<span class="en">STORER</span></div>
-      <div class="dist-bar"><div class="dist-fill" style="width:22%;background:linear-gradient(90deg,rgba(247,111,142,0.5),rgba(247,111,142,0.8));"></div></div>
-      <div class="dist-pct" style="color:#f76f8e;">22%</div>
-    </div>
+  <div style="border-radius:8px;overflow:hidden;height:36px;display:flex;margin-bottom:10px;">
+    <div style="width:47%;background:linear-gradient(90deg,rgba(79,207,160,0.5),rgba(79,207,160,0.75));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#4fcfa0;gap:4px;">소비형 47%</div>
+    <div style="width:31%;background:linear-gradient(90deg,rgba(201,168,76,0.5),rgba(201,168,76,0.75));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gold2);gap:4px;">균형형 31%</div>
+    <div style="width:22%;background:linear-gradient(90deg,rgba(247,111,142,0.5),rgba(247,111,142,0.75));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#f76f8e;gap:4px;">저장형 22%</div>
+  </div>
+  <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:9px;color:var(--muted2);margin-bottom:18px;">
+    <span>BURNER</span><span>BALANCED</span><span>STORER</span>
   </div>
   <div class="insight">
     <div class="ip">BIO CODE를 진단하지 않은 영양 공급은 효율을 보장하지 못합니다.<span class="big">"밑 빠진 독에 물 붓기"</span></div>
@@ -297,8 +298,8 @@ footer .fi{font-family:var(--mono);color:var(--muted2);font-size:9px;letter-spac
 <!-- 03 분석 -->
 <div class="sec" id="s03">
   <div class="sec-head"><span class="sec-no">03</span><span class="sec-cat">Diagnosis · Free</span></div>
-  <div class="title">데이터로 <em>측정한다</em></div>
-  <div class="lead">표준화된 18문항 설문으로 흡수·연소·축적 3축 점수를 산출하고, 27가지 BIO CODE 중 대상의 코드를 결정합니다.</div>
+  <div class="title">333TEST란? <em>데이터로 측정한다</em></div>
+  <div class="lead">표준화된 18문항 설문으로 흡수·연소·저장 3축 점수를 산출하고, 27가지 BIO CODE 중 대상의 코드를 결정합니다.</div>
   <div class="process" style="margin-bottom:28px;">
     <div class="proc-item">
       <div class="proc-num">1</div>
@@ -313,23 +314,31 @@ footer .fi{font-family:var(--mono);color:var(--muted2);font-size:9px;letter-spac
       <div><div class="proc-title">BIO CODE 결정</div><div class="proc-desc">3×3×3 = 27개 코드 좌표 중 대상의 코드를 매핑합니다.</div></div>
     </div>
   </div>
-  <div style="font-family:var(--mono);color:var(--gold);font-size:10px;font-weight:700;letter-spacing:1px;margin-bottom:12px;">▎27-CODE 3D MATRIX — 코드를 입력해 좌표를 확인하세요</div>
-  <div class="cube-wrap">
-    <div>
-      <div class="cube-input-row">
-        <input id="cubeInput" type="text" maxlength="3" placeholder="222" oninput="onCubeInput(this.value)"/>
-        <button onclick="resetCube()">RESET</button>
-      </div>
-      <canvas id="cubeCanvas" width="260" height="260" style="border-radius:8px;border:1px solid var(--line);display:block;background:rgba(13,27,62,0.3);"></canvas>
-      <div style="display:flex;gap:10px;margin-top:8px;font-family:var(--mono);font-size:9px;color:var(--muted);flex-wrap:wrap;">
+  <div style="font-family:var(--mono);color:var(--gold);font-size:10px;font-weight:700;letter-spacing:1px;margin-bottom:12px;">▎27-CODE 3D MATRIX</div>
+  <div class="cube-layout">
+    <!-- 왼쪽: 큐브 -->
+    <div class="cube-left">
+      <canvas id="cubeCanvas" width="280" height="280" style="border-radius:8px;border:1px solid var(--line);display:block;background:rgba(13,27,62,0.3);width:100%;"></canvas>
+      <div style="display:flex;gap:8px;margin-top:8px;font-family:var(--mono);font-size:9px;color:var(--muted);flex-wrap:wrap;">
         <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:2px;background:rgba(79,207,160,0.6);display:inline-block;"></span>BURNER</span>
         <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:2px;background:rgba(201,168,76,0.6);display:inline-block;"></span>BALANCED</span>
         <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:2px;background:rgba(247,111,142,0.6);display:inline-block;"></span>STORER</span>
         <span style="display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:2px;background:rgba(120,160,255,0.8);display:inline-block;"></span>SELECTED</span>
       </div>
     </div>
-    <div class="cube-info" id="cubeInfo">
-      <div class="cube-empty">3자리 코드를 입력하면<br/>3D 좌표와 특성이 표기됩니다.<br/><br/>예: 111 · 222 · 333</div>
+    <!-- 오른쪽: 위=입력, 아래=설명 -->
+    <div class="cube-right">
+      <div class="cube-input-box">
+        <div style="font-family:var(--mono);color:var(--muted2);font-size:9px;letter-spacing:1px;margin-bottom:8px;">CODE INPUT</div>
+        <div class="cube-input-row">
+          <input id="cubeInput" type="text" maxlength="3" placeholder="222" oninput="onCubeInput(this.value)"/>
+          <button onclick="resetCube()">RESET</button>
+        </div>
+        <div style="font-family:var(--mono);color:var(--muted2);font-size:9px;margin-top:6px;">각 자리: 1(낮음) · 2(보통) · 3(높음)</div>
+      </div>
+      <div class="cube-info" id="cubeInfo">
+        <div class="cube-empty">코드 3자리 입력 시<br/>3D 좌표와 특성이<br/>표기됩니다.<br/><br/>예: 111 · 222 · 333</div>
+      </div>
     </div>
   </div>
 </div>
@@ -365,7 +374,7 @@ footer .fi{font-family:var(--mono);color:var(--muted2);font-size:9px;letter-spac
 <!-- 05 퍼포먼스 -->
 <div class="sec" id="s05">
   <div class="sec-head"><span class="sec-no">05</span><span class="sec-cat">Performance</span></div>
-  <div class="title">관리 결과는 <em>경기력으로</em></div>
+  <div class="title">관리 결과는 <em>경기력으로 + 나타납니다</em></div>
   <div class="lead">체중 증가의 방식이 경기력을 좌우합니다. 체지방 증가는 운동 능력을 저해하나, 골격근 증가는 전 지표를 향상시킵니다.</div>
   <div class="cmp" style="margin-bottom:28px;">
     <div class="cmp-cell">
@@ -396,32 +405,27 @@ footer .fi{font-family:var(--mono);color:var(--muted2);font-size:9px;letter-spac
 <!-- 06 프리미엄 -->
 <div class="sec" id="s06">
   <div class="sec-head"><span class="sec-no">06</span><span class="sec-cat">Premium · Coming Soon</span></div>
-  <div class="title">여기까지가 <em>무료입니다</em></div>
-  <div class="lead">단순 측정으로 끝나지 않습니다. 인바디·종목 특성·BIO CODE를 결합해 <span style="color:var(--gold2);">우리 아이 종목에 맞는 훈련·식단·영양 방향까지</span> 1:1로 설계하는 프리미엄이 곧 출시됩니다.</div>
+  <div class="title">프리미엄 서비스 <em>(출시 예정)</em></div>
+  <div class="lead">단순 측정으로 끝나지 않습니다. 인바디·종목 특성·BIO CODE를 결합해 <span style="color:var(--gold2);">우리 아이 종목에 맞는 훈련·식단·영양 방향까지</span> 1:1로 설계합니다.</div>
 
-  <div style="font-family:var(--mono);color:var(--muted2);font-size:9px;letter-spacing:2px;margin-bottom:10px;text-transform:uppercase;">Body Composition · 예시</div>
-  <div class="inbody-grid" style="margin-bottom:32px;">
-    <div class="inbody-cell"><div class="inbody-label">Skeletal Muscle</div><div><span class="inbody-val">28.6</span><span class="inbody-unit">kg</span></div><div class="inbody-bar"><div class="inbody-fill" style="width:72%;background:#4fcfa0;"></div></div></div>
-    <div class="inbody-cell"><div class="inbody-label">Body Fat Mass</div><div><span class="inbody-val">8.4</span><span class="inbody-unit">kg</span></div><div class="inbody-bar"><div class="inbody-fill" style="width:35%;background:var(--gold);"></div></div></div>
-    <div class="inbody-cell lock-cell"><div class="inbody-label">Segmental Lean</div><div><span class="inbody-val">———</span></div><div class="lock-tag">PREMIUM</div></div>
-    <div class="inbody-cell lock-cell"><div class="inbody-label">Target Plan</div><div><span class="inbody-val">———</span></div><div class="lock-tag">PREMIUM</div></div>
-  </div>
-
-  <div class="premium-grid">
-    <div class="premium-card">
-      <div class="pc-no">P1</div>
-      <div class="pc-title">인바디 + 종목 특성 →<br/>훈련 스케줄 수립</div>
-      <div class="pc-desc">부위별 체성분을 실측하고, 종목별 요구 능력(야구·축구·농구 등)을 반영해 맞춤 훈련 스케줄을 설계합니다.</div>
+  <div class="premium-cards">
+    <div class="pcard">
+      <div class="pcard-icon">🏋️</div>
+      <div class="pcard-label">P1</div>
+      <div class="pcard-title">인바디 + 종목 특성<br/>→ 훈련 스케줄</div>
+      <div class="pcard-desc">부위별 체성분을 실측하고, 종목별 요구 능력(야구·축구·농구 등)을 반영해 맞춤 훈련 스케줄을 설계합니다.</div>
     </div>
-    <div class="premium-card">
-      <div class="pc-no">P2</div>
-      <div class="pc-title">목표 설정 →<br/>식단 관리</div>
-      <div class="pc-desc">목표 체중·체성분을 정하고, 거기까지 도달하는 일일 식단을 설계·추적합니다.</div>
+    <div class="pcard">
+      <div class="pcard-icon">🥗</div>
+      <div class="pcard-label">P2</div>
+      <div class="pcard-title">목표 설정<br/>→ 식단 관리</div>
+      <div class="pcard-desc">목표 체중·체성분을 정하고, 거기까지 도달하는 일일 식단을 설계·추적합니다.</div>
     </div>
-    <div class="premium-card">
-      <div class="pc-no">P3</div>
-      <div class="pc-title">BIO CODE →<br/>영양 관리</div>
-      <div class="pc-desc">코드 특성에 맞춘 영양 보충 스케줄을 1:1로 설계하고 관리합니다.</div>
+    <div class="pcard">
+      <div class="pcard-icon">💊</div>
+      <div class="pcard-label">P3</div>
+      <div class="pcard-title">BIO CODE<br/>→ 영양 관리</div>
+      <div class="pcard-desc">코드 특성에 맞춘 영양 보충 스케줄을 1:1로 설계하고 관리합니다.</div>
     </div>
   </div>
 
@@ -442,8 +446,9 @@ footer .fi{font-family:var(--mono);color:var(--muted2);font-size:9px;letter-spac
   </div>
   <div class="footnote"><p>* BIO CODE + 인바디 + 종목 포지션을 종합하여 운동 능력 향상 스케줄을 설계합니다</p></div>
 
+  <div style="text-align:center;margin-top:28px;padding:24px;background:linear-gradient(180deg,rgba(201,168,76,0.06),transparent);border:1px solid rgba(201,168,76,0.15);border-radius:12px;">
     <div style="color:var(--white);font-size:14px;font-weight:700;margin-bottom:6px;">먼저, 무료로 우리 아이 BIO CODE부터 확인하세요</div>
-    <div style="color:var(--muted);font-size:12px;line-height:1.8;margin-bottom:16px;">측정 없이는 관리도 없습니다. 3분이면 충분합니다.</div>
+    <div style="color:var(--muted);font-size:12px;line-height:1.8;margin-bottom:16px;">측정 없이는 관리도 없습니다. 5분이면 충분합니다.</div>
     <a href="/app?start=test" class="road-cta">무료 BIO CODE 측정 →</a>
   </div>
 </div>
@@ -535,22 +540,15 @@ function updateChart(){
     if(e>=11&&e<=18){
       if(my.h){
         const avg=interp('h','avg'),tgt=interp('h','tgt');
-        // 표준편차 약 6cm 가정 → 백분위 추정
-        const z=(my.h-avg)/6;
-        const pct=Math.round(normCDF(z)*100);
-        const tgtRatio=Math.round((my.h/tgt)*100);
         const diff=(tgt-my.h).toFixed(1);
-        html+=`<div style="margin-bottom:6px;"><span style="color:var(--white);">키 ${my.h}cm</span> · 또래 평균 ${avg.toFixed(1)}cm · 우수선수 ${tgt.toFixed(1)}cm</div>`;
-        html+=`<div style="font-family:var(--mono);font-size:11px;color:var(--muted);">└ 또래 중 상위 ${100-pct}% · 우수선수 기준 ${tgtRatio}% · 목표까지 ${diff>0?diff+'cm':'달성'}</div>`;
+        html+=`<div style="margin-bottom:6px;"><span style="color:var(--white);font-size:13px;font-weight:700;">키 ${my.h}cm</span></div>`;
+        html+=`<div style="font-family:var(--mono);font-size:11px;color:var(--muted);">또래 평균 ${avg.toFixed(1)}cm · 우수선수 기준 ${tgt.toFixed(1)}cm · <span style="color:${diff>0?'#f76f8e':'#4fcfa0'}">${diff>0?diff+'cm 부족':'목표 달성!'}</span></div>`;
       }
       if(my.w){
         const avg=interp('w','avg'),tgt=interp('w','tgt');
-        const z=(my.w-avg)/7;
-        const pct=Math.round(normCDF(z)*100);
-        const tgtRatio=Math.round((my.w/tgt)*100);
         const diff=(tgt-my.w).toFixed(1);
-        html+=`<div style="margin-top:8px;margin-bottom:6px;"><span style="color:var(--white);">몸무게 ${my.w}kg</span> · 또래 평균 ${avg.toFixed(1)}kg · 우수선수 ${tgt.toFixed(1)}kg</div>`;
-        html+=`<div style="font-family:var(--mono);font-size:11px;color:var(--muted);">└ 또래 중 상위 ${100-pct}% · 우수선수 기준 ${tgtRatio}% · 목표까지 ${diff>0?diff+'kg':'달성'}</div>`;
+        html+=`<div style="margin-top:8px;margin-bottom:6px;"><span style="color:var(--white);font-size:13px;font-weight:700;">몸무게 ${my.w}kg</span></div>`;
+        html+=`<div style="font-family:var(--mono);font-size:11px;color:var(--muted);">또래 평균 ${avg.toFixed(1)}kg · 우수선수 기준 ${tgt.toFixed(1)}kg · <span style="color:${diff>0?'#f76f8e':'#4fcfa0'}">${diff>0?diff+'kg 부족':'목표 달성!'}</span></div>`;
       }
     }
     res.innerHTML=html;
@@ -566,34 +564,44 @@ function drawGrowthChart(containerId,key,unit){
   const tgtVals=ages.map(a=>gData[a][key].tgt);
   const allVals=[...avgVals,...tgtVals];
   const minV=Math.min(...allVals),maxV=Math.max(...allVals);
-  const pad=(maxV-minV)*0.18,lo=minV-pad,hi=maxV+pad;
-  // 좁은 박스용 비율 (세로로 길게)
-  const W=340,H=300,mL=34,mR=14,mT=18,mB=30,pw=W-mL-mR,ph=H-mT-mB;
-  const x=i=>mL+(i/(ages.length-1))*pw;
+  const pad=(maxV-minV)*0.25,lo=minV-pad,hi=maxV+pad;
+  const W=340,H=310,mL=36,mR=16,mT=20,mB=30,pw=W-mL-mR,ph=H-mT-mB;
+  // X: 인덱스(0~7) 기반, 소수 나이는 (age-11)로 변환
+  const x=i=>mL+(i/7)*pw;
   const y=v=>mT+ph-((v-lo)/(hi-lo))*ph;
   const my=getMyData(),myVal=key==='h'?my.h:my.w,myExact=my.exact;
-  function interpV(arr,e){if(e<=11)return arr[0];if(e>=18)return arr[7];const l=Math.floor(e)-11,f=e-Math.floor(e);return arr[l]+(arr[l+1]-arr[l])*f;}
+  function interpV(arr,e){
+    if(e<=11)return arr[0];if(e>=18)return arr[7];
+    const lo2=Math.floor(e)-11,f=e-Math.floor(e);
+    if(lo2+1>7)return arr[7];
+    return arr[lo2]+(arr[lo2+1]-arr[lo2])*f;
+  }
   const pathOf=vals=>vals.map((v,i)=>`${i===0?'M':'L'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
   let yTicks='';
   for(let t=0;t<=4;t++){const v=lo+(hi-lo)*(t/4),yy=y(v);
-    yTicks+=`<line x1="${mL}" y1="${yy}" x2="${W-mR}" y2="${yy}" stroke="rgba(255,255,255,0.04)"/>`;
-    yTicks+=`<text x="${mL-4}" y="${yy+3}" font-size="8" font-family="monospace" fill="#3a4d6a" text-anchor="end">${Math.round(v)}</text>`;}
-  let xLabels='';labels.forEach((l,i)=>{xLabels+=`<text x="${x(i)}" y="${H-mB+15}" font-size="7.5" font-family="monospace" fill="#3a4d6a" text-anchor="middle">${l}</text>`;});
+    yTicks+=`<line x1="${mL}" y1="${yy.toFixed(1)}" x2="${W-mR}" y2="${yy.toFixed(1)}" stroke="rgba(255,255,255,0.05)"/>`;
+    yTicks+=`<text x="${mL-5}" y="${(yy+3).toFixed(1)}" font-size="9" font-family="monospace" fill="#3a4d6a" text-anchor="end">${Math.round(v)}</text>`;}
+  let xLabels='';labels.forEach((l,i)=>{xLabels+=`<text x="${x(i).toFixed(1)}" y="${H-mB+15}" font-size="8" font-family="monospace" fill="#3a4d6a" text-anchor="middle">${l}</text>`;});
   let myDot='';
   if(myVal&&myExact&&myExact>=11&&myExact<=18){
-    const mi=myExact-11, mx=x(mi), myy=y(myVal);
-    // 내 나이 지점의 비교군 값 (보간)
+    const mi=myExact-11; // 0~7 사이 소수
+    const mx=x(mi), myy=y(myVal);
     const avgAtMe=interpV(avgVals,myExact), tgtAtMe=interpV(tgtVals,myExact);
-    const ax=mx, ay=y(avgAtMe), ty=mx, ty2=y(tgtAtMe);
+    const ay=y(avgAtMe), ty2=y(tgtAtMe);
+    // 숫자 위치: 그래프 선 왼쪽 (선 방향 반대편)에 크게 표시
+    const textX=mx>W/2?mx-10:mx+10;
+    const textAnchor=mx>W/2?'end':'start';
     myDot=`
-      <line x1="${mx}" y1="${mT}" x2="${mx}" y2="${mT+ph}" stroke="rgba(120,160,255,0.3)" stroke-width="1" stroke-dasharray="3,3"/>
-      <circle cx="${mx}" cy="${ay}" r="3" fill="rgba(255,255,255,0.5)"/>
-      <text x="${mx+6}" y="${ay-4}" font-size="8" font-family="monospace" fill="rgba(255,255,255,0.6)">${Math.round(avgAtMe)}</text>
-      <circle cx="${mx}" cy="${ty2}" r="3" fill="#c9a84c"/>
-      <text x="${mx+6}" y="${ty2-4}" font-size="8" font-family="monospace" fill="#c9a84c">${Math.round(tgtAtMe)}</text>
-      <circle cx="${mx}" cy="${myy}" r="7" fill="rgba(120,160,255,0.25)"/><circle cx="${mx}" cy="${myy}" r="4.5" fill="#78a0ff" stroke="#fff" stroke-width="1.2"/>
-      <text x="${mx}" y="${myy+(myy<ay?-12:18)}" font-size="10" font-family="monospace" fill="#78a0ff" text-anchor="middle" font-weight="700">${myVal}${unit}</text>`;}
-  document.getElementById(containerId).innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;">${yTicks}${xLabels}<path d="${pathOf(avgVals)}" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.8"/><path d="${pathOf(tgtVals)}" fill="none" stroke="#c9a84c" stroke-width="2.2"/>${avgVals.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="2" fill="rgba(255,255,255,0.4)"/>`).join('')}${tgtVals.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="2" fill="#c9a84c"/>`).join('')}${myDot}</svg>`;
+      <line x1="${mx.toFixed(1)}" y1="${mT}" x2="${mx.toFixed(1)}" y2="${mT+ph}" stroke="rgba(120,160,255,0.35)" stroke-width="1.2" stroke-dasharray="4,3"/>
+      <circle cx="${mx.toFixed(1)}" cy="${ay.toFixed(1)}" r="4" fill="rgba(255,255,255,0.6)"/>
+      <text x="${textX}" y="${(ay-8).toFixed(1)}" font-size="11" font-family="monospace" fill="rgba(255,255,255,0.9)" text-anchor="${textAnchor}" font-weight="700">${Math.round(avgAtMe)}</text>
+      <circle cx="${mx.toFixed(1)}" cy="${ty2.toFixed(1)}" r="4" fill="#c9a84c"/>
+      <text x="${textX}" y="${(ty2-8).toFixed(1)}" font-size="11" font-family="monospace" fill="#e8c76a" text-anchor="${textAnchor}" font-weight="700">${Math.round(tgtAtMe)}</text>
+      <circle cx="${mx.toFixed(1)}" cy="${myy.toFixed(1)}" r="8" fill="rgba(120,160,255,0.2)"/>
+      <circle cx="${mx.toFixed(1)}" cy="${myy.toFixed(1)}" r="5" fill="#78a0ff" stroke="#fff" stroke-width="1.5"/>
+      <text x="${textX}" y="${(myy-8).toFixed(1)}" font-size="13" font-family="monospace" fill="#78a0ff" text-anchor="${textAnchor}" font-weight="900">${myVal}${unit}</text>`;
+  }
+  document.getElementById(containerId).innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;">${yTicks}${xLabels}<path d="${pathOf(avgVals)}" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.8"/><path d="${pathOf(tgtVals)}" fill="none" stroke="#c9a84c" stroke-width="2.2"/>${avgVals.map((v,i)=>`<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="2.2" fill="rgba(255,255,255,0.4)"/>`).join('')}${tgtVals.map((v,i)=>`<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="2.2" fill="#c9a84c"/>`).join('')}${myDot}</svg>`;
 }
 function showAge(){drawGrowthChart('height-chart','h','cm');drawGrowthChart('weight-chart','w','kg');}
 
@@ -673,10 +681,24 @@ function drawCube(glow){
     if(isMe){const g=glow||0;const a=(0.3+0.5*Math.sin(g)).toFixed(2);const ga=(0.6+0.4*Math.sin(g)).toFixed(2);cell(ix,iy,iz,`rgba(120,160,255,${a})`,`rgba(140,180,255,${ga})`,true);}
     else cell(ix,iy,iz,'rgba(255,255,255,0.04)','rgba(255,255,255,0.12)',false);
   }
-  ctx.font='600 9px monospace';
-  const px=proj(-0.5,1,1);ctx.fillStyle='rgba(79,207,160,0.7)';ctx.fillText('ABSORB',px.x-38,px.y+4);
-  const py=proj(1,3.1,1);ctx.fillStyle='rgba(201,168,76,0.7)';ctx.fillText('METAB',py.x-16,py.y-4);
-  const pz=proj(1,1,3.3);ctx.fillStyle='rgba(247,111,142,0.7)';ctx.fillText('STORE',pz.x-4,pz.y+4);
+  // x,y,z 축 화살표
+  function drawArrow(from,to,color,label,labelOff){
+    ctx.beginPath();ctx.moveTo(from.x,from.y);ctx.lineTo(to.x,to.y);
+    ctx.strokeStyle=color;ctx.lineWidth=1.5;ctx.stroke();
+    // 화살촉
+    const angle=Math.atan2(to.y-from.y,to.x-from.x);
+    ctx.beginPath();
+    ctx.moveTo(to.x,to.y);
+    ctx.lineTo(to.x-8*Math.cos(angle-0.4),to.y-8*Math.sin(angle-0.4));
+    ctx.lineTo(to.x-8*Math.cos(angle+0.4),to.y-8*Math.sin(angle+0.4));
+    ctx.closePath();ctx.fillStyle=color;ctx.fill();
+    ctx.font='bold 9px monospace';ctx.fillStyle=color;
+    ctx.fillText(label,to.x+labelOff.x,to.y+labelOff.y);
+  }
+  const O=proj(0,0,0);
+  drawArrow({x:O.x,y:O.y},proj(3.5,0,0),'rgba(79,207,160,0.8)','ABSORB →',{x:2,y:4});
+  drawArrow({x:O.x,y:O.y},proj(0,3.5,0),'rgba(201,168,76,0.8)','METAB ↑',{x:-42,y:-4});
+  drawArrow({x:O.x,y:O.y},proj(0,0,3.5),'rgba(247,111,142,0.8)','STORE →',{x:2,y:4});
 }
 function animGlow(){if(glowAnim)cancelAnimationFrame(glowAnim);let t=0;function loop(){t+=0.08;drawCube(t);glowAnim=requestAnimationFrame(loop);}loop();}
 function stopGlow(){if(glowAnim){cancelAnimationFrame(glowAnim);glowAnim=null;}drawCube(0);}
