@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -558,7 +559,7 @@ function updateChart(){
 }
 function drawGrowthChart(containerId,key,unit){
   const ages=[11,12,13,14,15,16,17,18];
-  const labels=['초5','초6','중1','중2','중3','고1','고2','고3'];
+  const labels=['11세','12세','13세','14세','15세','16세','17세','18세'];
   const avgVals=ages.map(a=>gData[a][key].avg);
   const tgtVals=ages.map(a=>gData[a][key].tgt);
   const allVals=[...avgVals,...tgtVals];
