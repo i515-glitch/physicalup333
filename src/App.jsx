@@ -129,7 +129,7 @@ function CubeChart({code, ment}){
               <div style={{color:'#c9a84c',fontSize:11,fontWeight:700,marginBottom:6}}>🔒 프리미엄 분석</div>
               <div style={{color:'#4a6080',fontSize:11,lineHeight:1.8,marginBottom:8}}>
                 · 27칸 큐브 전체 상세 분석<br/>
-                · 인접 체질과 퍼포먼스 비교<br/>
+                · 인접 BIO CODE와 퍼포먼스 비교<br/>
                 · 맞춤 성장 로드맵 설계<br/>
                 · 밀착 데이터 관리
               </div>
@@ -318,54 +318,159 @@ function getPctLabel(pct) {
 }
 
 // ─── 설문 문항 ────────────────────────────────────────────────────────────────
-const parentQuestions = [
-  {id:"p1",section:"🍽️ 식탁 풍경",text:"\"밥 먹어!\" 불렀을 때 아이가 오는 방식은?",hint:"부르고 나서 밥상까지 오는 그 과정을 떠올려보세요",options:[{text:"\"응!\" 하고 바로 달려와서 숟가락 잡음 🏃",absorb:1,burn:0,store:0},{text:"\"어~ 알았어~\" 하고 5분 뒤에 슬쩍 옴 😐",absorb:0,burn:0,store:0},{text:"세 번은 불러야 겨우 옴. 표정도 별로 😑",absorb:-1,burn:0,store:-1},{text:"부르기도 전에 밥 냄새 맡고 먼저 와 있음 👃",absorb:1,burn:1,store:1}]},
-  {id:"p2",section:"🍽️ 식탁 풍경",text:"밥 먹는 도중 아이가 가장 자주 하는 행동은?",hint:"밥상 앞 아이의 단골 패턴, 딱 하나만 골라주세요",options:[{text:"\"잠깐만\" \"좀 이따가\" \"지금 배 안 고픈데\" 시전 후 결국 안 먹음 🙄",absorb:-1,burn:-1,store:-1},{text:"먹다가 갑자기 화장실. 이게 꽤 자주 있음 🚽",absorb:-1,burn:0,store:-1},{text:"다 먹고 나서도 냉장고 문을 습관적으로 열어 둘러봄 🧊",absorb:1,burn:1,store:1},{text:"반찬 보이면 일단 \"이거 누구 꺼야?\" 먼저 찜 👀",absorb:1,burn:0,store:1}]},
-  {id:"p3",section:"🍽️ 식탁 풍경",text:"밥상에 처음 보는 음식이 올라왔을 때 아이의 반응은?",hint:"낯선 음식 앞에서 튀어나오는 첫 반응을 보세요",options:[{text:"쳐다도 안 봄. \"이게 뭐야\" 한마디 하고 옆으로 밀어냄 🙅",absorb:-1,burn:0,store:-1},{text:"냄새부터 맡고... 한참 고민하다가 결국 손도 안 댐 👃",absorb:-1,burn:0,store:0},{text:"\"이거 뭐야?\" 묻고 나서 조심스럽게 한 입 시도 😬",absorb:0,burn:0,store:0},{text:"처음 보는 것도 일단 입에 넣고 봄. 맛이 궁금해서 😋",absorb:1,burn:1,store:1}]},
-  {id:"p4",section:"🔭 몸 상태 관찰",text:"아침에 깨웠을 때 아이의 첫 마디는?",hint:"오늘 아침, 혹은 평소 아침을 떠올려보세요",options:[{text:"\"5분만...\" — 이걸 최소 세 번은 반복함 🧟",absorb:-1,burn:-1,store:-1},{text:"눈 뜨자마자 \"배고파\" — 주방까지 직행 🏃",absorb:1,burn:1,store:0},{text:"말없이 천천히 일어나서 조용히 준비 시작 😌",absorb:0,burn:0,store:1},{text:"불 켜기도 전에 혼자 일어나 돌아다니고 있음 ⚡",absorb:1,burn:1,store:0}]},
-  {id:"p5",section:"🔭 몸 상태 관찰",text:"밥 먹고 나서 아이 배를 슬쩍 건드려보면?",hint:"식사 끝나고 20~30분 후, 살짝 눌러보거나 표정을 보세요",options:[{text:"북처럼 빵빵함. 본인도 \"배 빵빵해\" 하며 두드림 🥁",absorb:-1,burn:-1,store:1},{text:"가끔 \"배 아파\" 하면서 쪼그리고 앉음 😣",absorb:-1,burn:0,store:-1},{text:"언제 먹었냐는 듯 씩씩하게 놀러 나감 👍",absorb:1,burn:1,store:0},{text:"다 먹자마자 또 \"배고프다\" — 냉장고 앞으로 직행 🚶",absorb:1,burn:1,store:1}]},
-  {id:"p6",section:"🔭 몸 상태 관찰",text:"화장실 패턴이 어떤가요? (예민하지만 아주 중요해요!)",hint:"최근 한 달, 솔직하게 떠올려보세요",options:[{text:"하루에도 여러 번, 묽거나 설사 형태가 잦음 💨",absorb:-2,burn:0,store:-1},{text:"며칠에 한 번씩, 늘 힘들게 보고 나옴 😫",absorb:0,burn:-1,store:1},{text:"매일 비슷한 시간에 알아서 해결하고 나옴 ✅",absorb:1,burn:1,store:0},{text:"색깔이나 냄새가 유독 강하고 기름진 느낌 🟤",absorb:-1,burn:0,store:1}]},
-  {id:"p7",section:"⚡ 에너지 관찰",text:"학교 마치고 집에 돌아온 아이의 첫 행동은?",hint:"현관문 열고 들어오는 그 순간부터 관찰해보세요",options:[{text:"가방도 안 내려놓고 \"뭐 먹을 것 없어?\" 주방 직행 🎒",absorb:1,burn:1,store:1},{text:"손 씻고 간식 먹고 숙제하는 루틴이 있음 📚",absorb:1,burn:0,store:0},{text:"가방 던지고 바로 쓰러짐. 피곤해 죽겠다는 표정 😵",absorb:-1,burn:-1,store:-1},{text:"들어오자마자 어디 나가서 놀겠다고 다시 나감 🏃",absorb:1,burn:2,store:0}]},
-  {id:"p8",section:"⚡ 에너지 관찰",text:"같은 걸 뛰었는데 아이 땀 양은 또래와 비교하면?",hint:"체육 수업 후, 운동장 놀이 후 등 비슷한 활동 기준",options:[{text:"친구들보다 훨씬 많이 흘림. 머리까지 흠뻑 😅",absorb:0,burn:2,store:-1},{text:"다들 비슷한 것 같음. 딱 보통 👌",absorb:0,burn:0,store:0},{text:"친구들은 땀 범벅인데 우리 아이는 멀쩡 🧊",absorb:0,burn:-1,store:1},{text:"운동할 때보다 주로 잠잘 때 땀을 많이 흘림 🌙",absorb:-1,burn:0,store:-1}]},
-  {id:"p9",section:"😴 수면·회복 관찰",text:"불 끄고 나서 아이가 잠들기까지의 과정은?",hint:"어젯밤을 떠올려보세요",options:[{text:"눕자마자 10분 안에 조용해짐. 기절 수준 💤",absorb:1,burn:1,store:0},{text:"\"배고파\" \"물 줘\" \"화장실\" — 이유 대며 계속 나옴 🚽",absorb:1,burn:1,store:1},{text:"조용히 누워 있는데 한참 뒤에 잠듦. 생각이 많은 듯 🤔",absorb:-1,burn:-1,store:-1},{text:"더웠다 추웠다, 뒤척이다 땀 흘리며 자주 깸 😰",absorb:-1,burn:1,store:-1}]},
-  {id:"p10",section:"😴 수면·회복 관찰",text:"아이가 감기에 걸렸을 때, 어떻게 앓나요?",hint:"형제·자매 또는 같은 반 친구들과 비교해서",options:[{text:"잘 안 걸리고, 걸려도 3~4일이면 씩씩하게 나음 💪",absorb:1,burn:1,store:1},{text:"걸리면 일주일 정도, 딱 평범하게 앓고 나음 🙂",absorb:0,burn:0,store:0},{text:"한 번 걸리면 2주 이상. 중이염·폐렴으로 이어진 적도 있음 😷",absorb:-2,burn:-1,store:-1},{text:"잘 걸리진 않는데 한번 걸리면 유독 처져 있고 밥을 안 먹음 😩",absorb:-1,burn:-1,store:0}]},
-  {id:"p11",section:"📈 성장 패턴",text:"최근 6개월, 아이 체중이 어떻게 됐나요?",hint:"건강검진 수첩이나 성장 앱 기록을 떠올려보세요",options:[{text:"거의 그대로. 체중계가 고장난 줄 알았음 😅",absorb:-1,burn:1,store:-2},{text:"조금 늘긴 했는데 또래보다는 덜 늘었다는 느낌 📉",absorb:-1,burn:1,store:-1},{text:"꾸준히 잘 늘고 있음. 성장 곡선 따라가는 중 📊",absorb:1,burn:0,store:1},{text:"또래보다 확실히 빠르게, 많이 늘고 있음 📈",absorb:1,burn:-1,store:2}]},
-  {id:"p12",section:"📈 성장 패턴",text:"우리 아이 평소 모습과 제일 가까운 것은?",hint:"집에서, 학교에서 관찰되는 일상 속 성향",options:[{text:"낯선 것엔 일단 겁부터. 새 음식·새 장소·새 친구 다 적응 느림 🐌",absorb:-1,burn:-1,store:-1},{text:"가만히 있는 걸 못 함. 항상 뭔가 하고 있어야 직성이 풀림 🌪️",absorb:1,burn:2,store:-1},{text:"뭘 줘도 \"응\" 하고 받아들임. 불평이 별로 없음 🐻",absorb:1,burn:-1,store:1},{text:"조용하고 혼자 있는 걸 좋아함. 자기 세계가 있음 🌙",absorb:-1,burn:-1,store:0}]},
-];
+// ─── 90문항 풀 ────────────────────────────────────────────────────────────────
+const questionPool = {
+  absorb: [
+    {id:"a1",text:"식당에 가면 메뉴판을 꼼꼼히 본다",options:[{text:"항상 그래요",v:3},{text:"가끔요",v:2},{text:"별로요",v:1},{text:"그런 편 아니에요",v:0}],scores:[3,2,1,0]},
+    {id:"a2",text:"처음 보는 음식도 일단 먹어본다",options:[{text:"당연하죠!",v:3},{text:"한 입은 먹어봐요",v:2},{text:"좀 고민해요",v:1},{text:"안 먹어요",v:0}],scores:[3,2,1,0]},
+    {id:"a3",text:"밥 먹고 나서 배가 빵빵하게 부풀어 오른다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"거의 없어요",v:3}],scores:[0,1,2,3]},
+    {id:"a4",text:"화장실에 앉으면 30분이다",options:[{text:"맞아요 ㅋㅋ",v:0},{text:"좀 오래 있는 편",v:1},{text:"빨리 해결해요",v:2},{text:"매일 시원하게!",v:3}],scores:[0,1,2,3]},
+    {id:"a5",text:"밥 먹을 때 반찬은 많이 먹지 않는다",options:[{text:"반찬보다 밥만",v:0},{text:"조금만 먹어요",v:1},{text:"골고루 먹어요",v:2},{text:"반찬을 더 좋아해요",v:3}],scores:[0,1,2,3]},
+    {id:"a6",text:"밥 먹고 나서 배 아플 때가 종종 있다",options:[{text:"자주 그래요",v:0},{text:"가끔요",v:1},{text:"거의 없어요",v:2},{text:"전혀 없어요",v:3}],scores:[0,1,2,3]},
+    {id:"a7",text:"영양제 먹으면 오히려 속이 불편하다",options:[{text:"항상요",v:0},{text:"가끔요",v:1},{text:"별로 없어요",v:2},{text:"전혀요",v:3}],scores:[0,1,2,3]},
+    {id:"a8",text:"밥 먹는 속도가 친구들보다 느리다",options:[{text:"많이 느려요",v:0},{text:"조금 느려요",v:1},{text:"비슷해요",v:2},{text:"빠른 편이에요",v:3}],scores:[0,1,2,3]},
+    {id:"a9",text:"음식 냄새만 맡아도 배가 고파진다",options:[{text:"항상요!",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"a10",text:"급식 당번은 내가 먼저 손든다",options:[{text:"항상요!",v:3},{text:"가끔요",v:2},{text:"별로요",v:1},{text:"안 해요",v:0}],scores:[3,2,1,0]},
+    {id:"a11",text:"밥 먹고 나서 졸린 게 당연하다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"별로요",v:3}],scores:[0,1,2,3]},
+    {id:"a12",text:"배탈이 자주 난다",options:[{text:"자주요",v:0},{text:"가끔요",v:1},{text:"별로요",v:2},{text:"거의 없어요",v:3}],scores:[0,1,2,3]},
+    {id:"a13",text:"밥상 앞에 앉으면 일단 기분이 좋아진다",options:[{text:"항상요!",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"a14",text:"좋아하는 음식은 맨 마지막에 먹는다",options:[{text:"항상요",v:3},{text:"가끔요",v:2},{text:"별로요",v:1},{text:"먼저 먹어요",v:0}],scores:[3,2,1,0]},
+    {id:"a15",text:"음식을 천천히 꼭꼭 씹어먹는 편이다",options:[{text:"항상요",v:3},{text:"가끔요",v:2},{text:"별로요",v:1},{text:"빨리 먹어요",v:0}],scores:[3,2,1,0]},
+    {id:"a16",text:"먹는 게 한정적이고 편식이 심하다",options:[{text:"많이요",v:0},{text:"조금요",v:1},{text:"별로요",v:2},{text:"다 잘 먹어요",v:3}],scores:[0,1,2,3]},
+    {id:"a17",text:"밥 먹고 소파에 눕는 게 당연하다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"바로 움직여요",v:3}],scores:[0,1,2,3]},
+    {id:"a18",text:"새벽에 배고파서 깰 때가 있다",options:[{text:"자주요",v:3},{text:"가끔요",v:2},{text:"거의 없어요",v:1},{text:"전혀요",v:0}],scores:[3,2,1,0]},
+    {id:"a19",text:"밥은 먹고 싶은데 뭘 먹을지 모를 때가 많다",options:[{text:"항상요",v:1},{text:"가끔요",v:2},{text:"별로요",v:3},{text:"먹고 싶은 게 항상 있어요",v:3}],scores:[1,2,3,3]},
+    {id:"a20",text:"급식 메뉴 보고 실망한 적이 있다",options:[{text:"자주요",v:0},{text:"가끔요",v:1},{text:"별로요",v:2},{text:"다 맛있어요",v:3}],scores:[0,1,2,3]},
+    {id:"a21",text:"밥보다 간식이 더 좋다",options:[{text:"당연하죠",v:1},{text:"가끔요",v:2},{text:"밥이 더 좋아요",v:3},{text:"둘 다 좋아요",v:3}],scores:[1,2,3,3]},
+    {id:"a22",text:"먹다가 갑자기 배부르다고 멈출 때가 있다",options:[{text:"자주요",v:0},{text:"가끔요",v:1},{text:"별로요",v:2},{text:"다 먹어요",v:3}],scores:[0,1,2,3]},
+    {id:"a23",text:"음식 사진만 봐도 침이 고인다",options:[{text:"항상요!",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"a24",text:"아침밥은 잘 못 먹는다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"잘 먹어요",v:3}],scores:[0,1,2,3]},
+    {id:"a25",text:"밥 먹고 나서 단 게 생각난다",options:[{text:"항상요",v:1},{text:"자주요",v:2},{text:"가끔요",v:2},{text:"별로요",v:3}],scores:[1,2,2,3]},
+    {id:"a26",text:"밥 먹을 때 물을 자주 마신다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"별로요",v:3}],scores:[0,1,2,3]},
+    {id:"a27",text:"특정 음식 먹으면 꼭 배탈이 난다",options:[{text:"맞아요",v:0},{text:"가끔요",v:1},{text:"별로요",v:2},{text:"없어요",v:3}],scores:[0,1,2,3]},
+    {id:"a28",text:"배고프면 예민해진다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"a29",text:"밥 냄새 맡으면 저절로 주방으로 간다",options:[{text:"항상요!",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"a30",text:"음식을 남기는 게 아깝다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+  ],
+  burn: [
+    {id:"b1",text:"쉬는 시간이면 어느새 매점 앞에 와 있다",options:[{text:"맞아요 ㅋㅋ",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"b2",text:"조금만 뛰어도 땀이 엄청 난다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"b3",text:"밥 먹고 1시간도 안 됐는데 또 배고프다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"b4",text:"가만히 있질 못하고 항상 뭔가 하고 있다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"b5",text:"체육 시간이 제일 기다려진다",options:[{text:"당연하죠!",v:3},{text:"좋아해요",v:2},{text:"보통이에요",v:1},{text:"싫어해요",v:0}],scores:[3,2,1,0]},
+    {id:"b6",text:"아침에 일어나면 몸이 무겁고 기운이 없다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"별로요",v:3}],scores:[0,1,2,3]},
+    {id:"b7",text:"친구들보다 빨리 지치는 편이다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"비슷해요",v:2},{text:"오래 버텨요",v:3}],scores:[0,1,2,3]},
+    {id:"b8",text:"여름에 유독 더위를 많이 탄다",options:[{text:"많이요",v:3},{text:"조금요",v:2},{text:"보통이에요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"b9",text:"쉬는 시간에 가만히 앉아있질 못한다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"잘 앉아있어요",v:0}],scores:[3,2,1,0]},
+    {id:"b10",text:"운동하고 나면 꼭 뭔가 먹어야 된다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"b11",text:"점심시간 10분 전부터 설렌다",options:[{text:"항상요!",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"b12",text:"자고 일어나도 피곤하다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"개운해요",v:3}],scores:[0,1,2,3]},
+    {id:"b13",text:"친구들보다 땀을 많이 흘린다",options:[{text:"훨씬 많이요",v:3},{text:"조금 많아요",v:2},{text:"비슷해요",v:1},{text:"적게 흘려요",v:0}],scores:[3,2,1,0]},
+    {id:"b14",text:"집에 오면 바로 쓰러져 잔다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"별로요",v:3}],scores:[0,1,2,3]},
+    {id:"b15",text:"소풍 도시락은 오전에 다 먹어버린다",options:[{text:"항상요 ㅋㅋ",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"점심에 먹어요",v:0}],scores:[3,2,1,0]},
+    {id:"b16",text:"학교 마치고 오면 항상 배고프다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"b17",text:"겨울에도 더워서 얇게 입는다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"추위 타요",v:0}],scores:[3,2,1,0]},
+    {id:"b18",text:"한자리에 오래 앉아있기 힘들다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"잘 앉아있어요",v:0}],scores:[3,2,1,0]},
+    {id:"b19",text:"뭔가 먹으면 금방 힘이 난다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"b20",text:"운동회 날이 제일 신난다",options:[{text:"당연하죠!",v:3},{text:"좋아해요",v:2},{text:"보통이에요",v:1},{text:"싫어해요",v:0}],scores:[3,2,1,0]},
+    {id:"b21",text:"자기 전에 야식 생각이 난다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"b22",text:"걸을 때보다 뛸 때가 더 많다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"걷는 게 좋아요",v:0}],scores:[3,2,1,0]},
+    {id:"b23",text:"밥 먹자마자 또 뭔가 먹고 싶다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"b24",text:"잠을 자도 자도 피곤하다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"잘 자고 일어나요",v:3}],scores:[0,1,2,3]},
+    {id:"b25",text:"친구들이 지쳤을 때도 혼자 멀쩡하다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"나도 지쳐요",v:0}],scores:[3,2,1,0]},
+    {id:"b26",text:"추위를 잘 안 탄다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"추위 많이 타요",v:0}],scores:[3,2,1,0]},
+    {id:"b27",text:"먹는 양에 비해 살이 잘 안 찐다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"잘 찌는 편",v:0}],scores:[3,2,1,0]},
+    {id:"b28",text:"밥 먹고 바로 운동해도 괜찮다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"소화 먼저요",v:0}],scores:[3,2,1,0]},
+    {id:"b29",text:"활동량이 많은 날 오히려 컨디션이 좋다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"쉬는 게 좋아요",v:0}],scores:[3,2,1,0]},
+    {id:"b30",text:"쉬는 날보다 바쁜 날이 더 재밌다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"쉬는 게 좋아요",v:0}],scores:[3,2,1,0]},
+  ],
+  store: [
+    {id:"s1",text:"배부르면 기분이 좋아진다",options:[{text:"항상요!",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"s2",text:"조금만 먹어도 금방 살이 찐다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"s3",text:"자고 일어나면 얼굴이 잘 붓는다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"s4",text:"단 음식이나 밀가루 음식을 유독 좋아한다",options:[{text:"많이요!",v:3},{text:"좋아해요",v:2},{text:"보통이에요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"s5",text:"살은 찌는데 키는 잘 안 크는 것 같다",options:[{text:"맞아요",v:3},{text:"조금요",v:2},{text:"별로요",v:1},{text:"키도 잘 커요",v:0}],scores:[3,2,1,0]},
+    {id:"s6",text:"운동하면 빠지는데 안 하면 바로 찐다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"s7",text:"냉장고 문을 하루에 10번은 열어본다",options:[{text:"맞아요 ㅋㅋ",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"s8",text:"살은 있는데 근육이 없는 느낌이다",options:[{text:"맞아요",v:3},{text:"조금요",v:2},{text:"별로요",v:1},{text:"근육 있어요",v:0}],scores:[3,2,1,0]},
+    {id:"s9",text:"먹고 자면 살이 더 찐다는 걸 안다",options:[{text:"경험담이에요",v:3},{text:"조금요",v:2},{text:"별로요",v:1},{text:"안 그래요",v:0}],scores:[3,2,1,0]},
+    {id:"s10",text:"또래보다 체중이 많이 나가는 편이다",options:[{text:"많이요",v:3},{text:"조금요",v:2},{text:"비슷해요",v:1},{text:"오히려 적어요",v:0}],scores:[3,2,1,0]},
+    {id:"s11",text:"겨울에 유독 살이 찌는 것 같다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"s12",text:"스트레스받으면 더 먹고 싶다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"s13",text:"잘 먹이는 것 같은데 살이 안 찐다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"잘 쪄요",v:3}],scores:[0,1,2,3]},
+    {id:"s14",text:"먹는 양에 비해 살이 잘 찐다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"s15",text:"조금만 먹어도 포만감이 오래간다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"금방 배고파요",v:0}],scores:[3,2,1,0]},
+    {id:"s16",text:"야식 먹으면 다음날 바로 티가 난다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"s17",text:"체중이 늘 제자리다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"잘 변해요",v:3}],scores:[0,1,2,3]},
+    {id:"s18",text:"잘 때 땀을 많이 흘린다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"s19",text:"같은 걸 먹어도 나만 살이 찌는 것 같다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"s20",text:"물만 마셔도 살찐다는 말이 공감된다",options:[{text:"완전요!",v:3},{text:"조금요",v:2},{text:"별로요",v:1},{text:"공감 안 돼요",v:0}],scores:[3,2,1,0]},
+    {id:"s21",text:"먹으면 바로 어딘가 티가 난다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"s22",text:"체중이 잘 안 늘어서 고민이다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"잘 늘어요",v:3}],scores:[0,1,2,3]},
+    {id:"s23",text:"성장이 친구들보다 느린 것 같다",options:[{text:"많이요",v:0},{text:"조금요",v:1},{text:"비슷해요",v:2},{text:"빠른 편이에요",v:3}],scores:[0,1,2,3]},
+    {id:"s24",text:"근육이 잘 안 붙는 편이다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"잘 붙어요",v:3}],scores:[0,1,2,3]},
+    {id:"s25",text:"먹을수록 더 먹고 싶다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"s26",text:"배고픔을 잘 참는 편이다",options:[{text:"잘 참아요",v:0},{text:"조금 참아요",v:1},{text:"힘들어요",v:2},{text:"못 참아요",v:3}],scores:[0,1,2,3]},
+    {id:"s27",text:"손발이 자주 차갑다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"따뜻해요",v:3}],scores:[0,1,2,3]},
+    {id:"s28",text:"배부른 느낌을 잘 모르겠다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"잘 알아요",v:0}],scores:[3,2,1,0]},
+    {id:"s29",text:"밥 먹고 나서 바로 또 배고프다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"s30",text:"체중 변화가 거의 없다",options:[{text:"항상요",v:1},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"잘 변해요",v:3}],scores:[1,1,2,3]},
+  ]
+};
 
-const kidQuestions = [
-  {id:"k1",section:"🍚 밥이랑 나랑",text:"\"밥 먹어!\" 소리 들었을 때 내 속마음은?",hint:"진짜 솔직하게! 아무도 안 봐",options:[{text:"🎉 오예! 드디어! 달려가는 중",absorb:1,burn:1,store:0},{text:"😒 또...? 방금 먹은 것 같은데...",absorb:-1,burn:-1,store:-1},{text:"🤷 뭐 나왔는지 보고 결정",absorb:0,burn:0,store:0},{text:"😋 밥 차리는 냄새 맡고 벌써 침 고임",absorb:1,burn:1,store:1}]},
-  {id:"k2",section:"🍚 밥이랑 나랑",text:"급식에서 내가 젤 싫어하는 반찬이 나왔어. 나는?",hint:"학교 급식 또는 집 밥에서 실제로 해본 것!",options:[{text:"🙅 안 먹어. 진짜로. 굶어도 괜찮아.",absorb:-2,burn:0,store:-1},{text:"😤 선생님 몰래 냅킨에 싸서 버림 (실화)",absorb:-1,burn:0,store:-1},{text:"😬 코 막고 한 입. 후다닥 삼키고 물로 넘김",absorb:0,burn:0,store:0},{text:"😎 싫은 건 없는데? 다 먹을 수 있음",absorb:1,burn:1,store:1}]},
-  {id:"k3",section:"🍚 밥이랑 나랑",text:"점심 먹고 오후 수업 시간, 내 배 상태는?",hint:"오늘 오후를 떠올려봐. 아니면 어제",options:[{text:"🔔 벌써 배고파. 시계만 보고 있음 (간식 생각)",absorb:1,burn:2,store:0},{text:"😌 든든하고 괜찮음. 수업에 집중 가능",absorb:1,burn:0,store:1},{text:"🤢 뭔가 부글부글하거나 묵직하게 불편함",absorb:-2,burn:0,store:0},{text:"😶 배고픈지 배부른지 솔직히 잘 모르겠음",absorb:-1,burn:-1,store:-1}]},
-  {id:"k4",section:"🔥 내 몸의 온도",text:"체육 시간에 친구들이랑 같이 뛰고 나서, 나만의 특징은?",hint:"같은 걸 했는데 나만 다른 점이 있으면 골라봐",options:[{text:"💦 나만 땀이 폭포임. 머리카락까지 젖음",absorb:0,burn:2,store:-1},{text:"😅 다들 비슷하게 흘리는 것 같음. 나도 보통",absorb:0,burn:0,store:0},{text:"🧊 친구들은 땀 범벅인데 나는 별로 안 남",absorb:0,burn:-1,store:1},{text:"🥵 얼굴은 빨개지는데 땀은 별로 없고 속이 더움",absorb:-1,burn:1,store:0}]},
-  {id:"k5",section:"🔥 내 몸의 온도",text:"교실에서 에어컨 온도 전쟁이 나면, 나는 어느 팀?",hint:"진짜 솔직하게! 눈치 보지 말고",options:[{text:"🥵 덥다팀. 나만 더운 것 같음. 에어컨 더 틀어줘",absorb:0,burn:2,store:-1},{text:"🥶 춥다팀. 여름에도 긴팔 입고 싶음. 항상 추워",absorb:-1,burn:-1,store:0},{text:"😊 중간파. 어느 쪽이든 별로 신경 안 씀",absorb:0,burn:0,store:0},{text:"🤔 때에 따라 다름. 오늘은 덥고 내일은 추운 타입",absorb:0,burn:0,store:0}]},
-  {id:"k6",section:"💩 은밀한 화장실 이야기",text:"나의 화장실 루틴은? (아무도 모르는 나만의 비밀!)",hint:"진짜 솔직하게 — 여기서만 말해봐",options:[{text:"✅ 매일 같은 시간에 시원하게 해결. 기분 좋음",absorb:1,burn:1,store:0},{text:"😫 며칠에 한 번. 오래 앉아 있어야 하고 힘듦",absorb:0,burn:-1,store:1},{text:"🚨 갑자기 배가 아프다가 급하게 달려가는 스타일",absorb:-2,burn:0,store:-1},{text:"💭 딱히 패턴이 없음. 마려우면 가고 아니면 안 가고",absorb:0,burn:0,store:0}]},
-  {id:"k7",section:"😴 잠이랑 나랑",text:"불 끄고 누웠을 때, 잠들기까지 나는?",hint:"어젯밤 자기 직전을 떠올려봐",options:[{text:"💤 눕자마자 기억 없음. 눈 감으면 끝",absorb:1,burn:1,store:0},{text:"🍕 배가 고파서 뭔가 먹고 싶은데 참다가 잠듦",absorb:1,burn:2,store:0},{text:"🤔 오늘 있었던 일이 자꾸 생각나서 한참 뒤에 잠듦",absorb:-1,burn:-1,store:-1},{text:"🌡️ 덥거나 추워서 이불을 계속 조정하다 겨우 잠듦",absorb:-1,burn:1,store:-1}]},
-  {id:"k8",section:"😴 잠이랑 나랑",text:"학교 가는 날 아침, 일어났을 때 내 몸은?",hint:"오늘 아침 딱 그 느낌",options:[{text:"⚡ 멀쩡함. 일어나면 바로 움직일 수 있음",absorb:1,burn:1,store:0},{text:"🍳 배고파서 빨리 밥 먹고 싶음. 그게 제일 먼저",absorb:1,burn:2,store:0},{text:"🧟 몸이 무겁고 피곤함. 학교 가기 싫은 게 반, 피곤한 게 반",absorb:-1,burn:-1,store:-1},{text:"😐 그냥 보통. 졸리지도 않고 신나지도 않음",absorb:0,burn:0,store:0}]},
-  {id:"k9",section:"🧠 내 마음 속",text:"급식 줄 서면서 메뉴 보고 \"오늘 별로다\" 싶을 때, 진짜 이유는?",hint:"제일 자주 드는 그 생각으로 골라봐",options:[{text:"🤢 냄새나 식감이 너무 싫음. 그냥 보기만 해도 거부감",absorb:-2,burn:0,store:-1},{text:"😶 딱히 이유는 없는데 그냥 별로 안 고픔",absorb:-1,burn:-1,store:-1},{text:"😤 저번에 먹고 배 아팠던 기억이 있어서",absorb:-2,burn:0,store:0},{text:"😊 그런 생각 별로 안 함. 나오면 먹는 편",absorb:1,burn:0,store:1}]},
-  {id:"k10",section:"🧠 내 마음 속",text:"시험이나 발표 있는 날 아침, 밥 앞에서 나는?",hint:"긴장되는 날 아침 밥상 앞의 내 모습",options:[{text:"🤮 배가 아프거나 메스꺼워서 한 숟갈도 못 먹겠음",absorb:-2,burn:0,store:-1},{text:"😐 긴장해도 밥은 밥. 그냥 평소처럼 먹고 나감",absorb:0,burn:0,store:0},{text:"💪 긴장하면 오히려 배가 더 고픔. 든든하게 먹어야 함",absorb:1,burn:1,store:0},{text:"🍫 스트레스받으면 단 거나 과자가 더 당김",absorb:0,burn:0,store:2}]},
-  {id:"k11",section:"🏃 몸 쓰는 이야기",text:"체육 수업 끝나고 딱 그 순간, 내 몸이 제일 먼저 원하는 건?",hint:"수업 끝나는 종소리 들리는 그 순간",options:[{text:"💧 물! 물 마시고 싶음. 일단 수분 보충",absorb:0,burn:1,store:0},{text:"🍔 배고파 죽겠음. 다음 급식까지 못 기다리겠음",absorb:1,burn:2,store:0},{text:"🛋️ 앉고 싶음. 너무 힘들었음. 좀 쉬고 싶음",absorb:-1,burn:-1,store:0},{text:"🤢 배가 살살 아프거나 울렁거림. 이게 종종 있음",absorb:-2,burn:0,store:-1}]},
-  {id:"k12",section:"🏃 몸 쓰는 이야기",text:"마지막 질문! 지금 이 순간 솔직히, 내 배는?",hint:"설문 푸는 바로 지금 이 순간",options:[{text:"🔔 배고파. 이거 끝나면 뭔가 먹을 것 같음",absorb:1,burn:1,store:0},{text:"😌 적당히 든든함. 딱 좋음",absorb:1,burn:0,store:1},{text:"😶 잘 모르겠음. 배고픈 것 같기도 하고 아닌 것 같기도 함",absorb:-1,burn:-1,store:-1},{text:"🤢 좀 불편하거나 더부룩함. 뭔가 걸린 느낌",absorb:-1,burn:0,store:0}]},
-];
+// 랜덤 추출 함수 (각 테마에서 6개씩 = 18문항)
+function getRandomQuestions(){
+  function shuffle(arr){
+    const a=[...arr];
+    for(let i=a.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+  return [
+    ...shuffle(questionPool.absorb).slice(0,6),
+    ...shuffle(questionPool.burn).slice(0,6),
+    ...shuffle(questionPool.store).slice(0,6),
+  ];
+}
+
+const parentQuestions = getRandomQuestions();
+const kidQuestions = [];
 
 // ─── 분석 함수 ────────────────────────────────────────────────────────────────
 function analyze(pAns,kAns) {
-  let a=0,b=0,c=0,pCount=0,kCount=0;
+  let a=0,b=0,c=0;
   parentQuestions.forEach(q=>{
     const idx=pAns[q.id];
-    if(idx!==undefined){a+=q.options[idx].absorb;b+=q.options[idx].burn;c+=q.options[idx].store;pCount++;}
+    if(idx!==undefined){
+      const s=q.scores[idx]||0;
+      if(q.id.startsWith('a')) a+=s;
+      else if(q.id.startsWith('b')) b+=s;
+      else if(q.id.startsWith('s')) c+=s;
+    }
   });
-  kidQuestions.forEach(q=>{
-    const idx=kAns[q.id];
-    if(idx!==undefined){a+=q.options[idx].absorb;b+=q.options[idx].burn;c+=q.options[idx].store;kCount++;}
-  });
-  const thr=pCount>0&&kCount===0?2:3;
-  const norm=v=>v<=-thr?1:v>=thr?3:v<0?1:v===0?2:3;
-  const code=`${norm(a)}${norm(b)}${norm(c)}`;
-  const sub=codeMap[code]||"항온형";
-  const main=(subType[sub]&&subType[sub].main)||"균형형";
-  return {code,sub,main,scores:{absorb:norm(a),burn:norm(b),store:norm(c)}};
+  const toScore=v=>v>=12?3:v>=6?2:1;
+  const aScore=toScore(a);
+  const bScore=toScore(b);
+  const cScore=toScore(c);
+  const code=`${aScore}${bScore}${cScore}`;
+  const main=bScore===3&&cScore<=1?'소비형':bScore<=1&&cScore>=3?'저장형':'균형형';
+  const subMap={
+    '111':'완전소비형','112':'연소우세형','113':'소비역설형',
+    '121':'흡수부진형','122':'날렵형','123':'잠재균형형',
+    '131':'과연소형','132':'잠재형','133':'변환형',
+    '211':'에너지손실형','212':'안정형','213':'선수형기반',
+    '221':'기초탄탄형','222':'완벽균형형','223':'축적우세형',
+    '231':'연소강화형','232':'선수기준형','233':'전환주의형',
+    '311':'흡수과잉형','312':'흡수선수형','313':'성장준비형',
+    '321':'근육잠재형','322':'엘리트형','323':'체중관리형',
+    '331':'대사활성형','332':'저장우세형','333':'완전저장형',
+  };
+  const sub=subMap[code]||'균형형';
+  return {code,main,sub,scores:{absorb:aScore,burn:bScore,store:cScore}};
 }
+// ─── 분석 함수 ────────────────────────────────────────────────────────────────
 
 // ─── 분포 데이터 ──────────────────────────────────────────────────────────────
 const distData={"111":3,"112":2,"121":3,"211":2,"331":5,"231":4,"321":4,"131":3,"132":2,"133":2,"311":3,"312":2,"222":8,"221":5,"212":4,"122":4,"333":5,"323":4,"332":5,"322":4,"232":3,"113":3,"213":2,"313":2,"233":5,"223":4,"123":3};
@@ -422,21 +527,12 @@ export default function App() {
     setTimeout(()=>{
       const n={...pAns,[pQ.id]:i};
       setPAns(n);setSelP(null);
-      if(pIdx<parentQuestions.length-1) setPIdx(pIdx+1);
-      else setStep("bridge");
-    },250);
-  }
-
-  function handleKid(i){
-    setSelK(i);
-    setTimeout(()=>{
-      const n={...kAns,[kQ.id]:i};
-      setKAns(n);setSelK(null);
-      if(kIdx<kidQuestions.length-1) setKIdx(kIdx+1);
-      else {
-        const res=analyze(pAns,n);
+      if(pIdx<parentQuestions.length-1){
+        setPIdx(pIdx+1);
+      } else {
+        const res=analyze(n,{});
         setResult(res);setStep("result");
-        callAI(pAns,n,res,setAiAdvice,setLoading);
+        callAI(n,{},res,setAiAdvice,setLoading);
       }
     },250);
   }
@@ -450,7 +546,7 @@ export default function App() {
   function goResult(){
     const res=analyze({},{});
     setResult(res);setStep("result");
-    setAiAdvice("설문 응답이 없어 AI 상담을 제공하기 어렵습니다. 신체 정보 기반 성장 지표를 확인해보세요.");
+    setAiAdvice(res.main==='소비형'?'흡수력이 낮은 소비형 체질입니다. 유산균·소화효소로 장 환경을 먼저 복구하고 근력 운동 비율을 높이세요.':res.main==='저장형'?'에너지 축적이 빠른 저장형 체질입니다. 유산소 운동 주 5회 이상, 탄수화물 타이밍을 운동 후로 집중하세요.':'3축이 균형 잡힌 체질입니다. 중강도 저항 운동을 꾸준히 하며 잔근육 밀도를 높이세요.');
   }
 
   function reset(){
@@ -498,7 +594,7 @@ export default function App() {
             }
           },
           buttons:[{
-            title:"우리 아이 체질 코드 찾기 →",
+            title:"우리 아이 BIO CODE 찾기 →",
             link:{
               mobileWebUrl:"https://www.physicalup333.com",
               webUrl:"https://www.physicalup333.com"
@@ -689,7 +785,7 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
 </div>
 <div class="detail-card">
   <div class="detail-header">
-    <div class="detail-title">체질 상세 결과 확인서</div>
+    <div class="detail-title">BIO CODE 상세 결과 확인서</div>
     <div class="detail-badge">${result.code}</div>
   </div>
 
@@ -736,7 +832,7 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
   <div>
     <div style="color:rgba(201,168,76,0.6);font-size:10px;margin-bottom:2px;">검사일 ${date} · 발급처 Physical UP 333 Physical UP 333</div>
     <div style="color:#c9a84c;font-size:12px;font-weight:700;letter-spacing:1px;">www.physicalup333.com</div>
-    <div class="hashtag">#피지컬업333테스트 #Physical UP 333 #체질코드</div>
+    <div class="hashtag">#피지컬업333테스트 #Physical UP 333 #BIOCODE</div>
   </div>
   <div class="stamp">
     <div>PHYSICAL</div><div class="mid">UP</div><div>OFFICIAL</div>
@@ -811,60 +907,102 @@ function saveHtml(){
     </nav>
   );
 
-  // ── BRIDGE ─────────────────────────────────────────────────────────────────
-  if(step==="bridge") return (
+
+  // ── INTRO ──────────────────────────────────────────────────────────────────
+  if(step==="intro") return (
     <div style={{minHeight:"100vh",background:bg,fontFamily:font}}>
       <NavBar/>
-      <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"28px"}}>
+      <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"28px",paddingTop:40}}>
       <div style={{maxWidth:400,width:"100%",textAlign:"center"}}>
-        <div style={{width:70,height:70,borderRadius:"50%",margin:"0 auto 18px",background:"linear-gradient(135deg,#c9a84c,#e8c76a)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:32,boxShadow:"0 0 30px rgba(201,168,76,0.4)"}}>🎉</div>
-        <h2 style={{color:WHITE,fontSize:20,fontWeight:800,marginBottom:8}}>PART A 완료!</h2>
-        <p style={{color:MUTED,fontSize:14,lineHeight:1.9,marginBottom:24}}>부모님의 날카로운 관찰 완료 👀<br/>아이 설문을 추가하면 더 정확해져요.</p>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
-          <button onClick={()=>setStep("partB")} style={{padding:"16px 8px",borderRadius:12,background:"linear-gradient(135deg,#c9a84c,#e8c76a)",color:NAVY,fontSize:14,fontWeight:800,border:"none",cursor:"pointer",boxShadow:"0 4px 16px rgba(201,168,76,0.3)",lineHeight:1.6}}>
-            🙋 아이 설문<br/><span style={{fontSize:11,fontWeight:600,opacity:0.7}}>PART B · 12문항</span>
-          </button>
-          <button onClick={skipKid} style={{padding:"16px 8px",borderRadius:12,background:"rgba(201,168,76,0.08)",color:GOLD2,fontSize:14,fontWeight:800,border:`1.5px solid rgba(201,168,76,0.3)`,cursor:"pointer",lineHeight:1.6}}>
-            ⚡ 바로 결과<br/><span style={{fontSize:11,fontWeight:600,opacity:0.7}}>부모 응답만으로</span>
+        <div style={{marginBottom:20,textAlign:"center"}}>
+          <div style={{display:"inline-block",padding:"10px 52px",borderRadius:24,background:"rgba(201,168,76,0.08)",border:"1.5px solid rgba(201,168,76,0.5)",boxShadow:"0 4px 24px rgba(201,168,76,0.15)"}}>
+            <div style={{color:GOLD,fontSize:13,fontWeight:700,letterSpacing:4,marginBottom:2}}>Physical UP 333</div>
+            <div style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:36,fontWeight:900,letterSpacing:4}}>333TEST</div>
+          </div>
+        </div>
+        <h1 style={{color:WHITE,fontSize:21,fontWeight:800,lineHeight:1.5,marginBottom:8}}>우리 아이 BIO CODE 찾기</h1>
+        <p style={{color:MUTED,fontSize:13,lineHeight:2,marginBottom:20}}>흡수력 · 연소력 · 축적력<br/>3축 점수로 BIO CODE를 측정합니다</p>
+
+        {/* 신체 정보 입력 */}
+        <div style={{background:"rgba(201,168,76,0.05)",borderRadius:14,padding:"14px",marginBottom:16,border:"1px solid rgba(201,168,76,0.15)"}}>
+          <div style={{color:GOLD,fontSize:11,fontWeight:700,marginBottom:4,letterSpacing:1}}>📏 아이 정보 입력 (선택 · 자동저장)</div>
+          <div style={{color:MUTED,fontSize:10,marginBottom:12,opacity:0.8}}>※ 만 18세 이하 유소년 선수 대상 서비스입니다</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
+            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${childName?"rgba(201,168,76,0.6)":"rgba(201,168,76,0.3)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
+              <div style={{color:MUTED,fontSize:10,marginBottom:6}}>이름</div>
+              <input type="text" value={childName} onChange={e=>updateName(e.target.value)} placeholder="홍길동"
+                style={{width:"100%",background:"transparent",border:"none",color:childName?GOLD2:MUTED,fontSize:14,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
+            </div>
+            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${birth.length===6?"rgba(201,168,76,0.6)":"rgba(201,168,76,0.3)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
+              <div style={{color:MUTED,fontSize:10,marginBottom:6}}>생년월일 <span style={{fontSize:9}}>(YYMMDD)</span></div>
+              <input type="text" value={birth} onChange={e=>updateBirth(e.target.value.replace(/\D/g,"").slice(0,6))} placeholder="190523" maxLength={6}
+                style={{width:"100%",background:"transparent",border:"none",color:birth.length===6?GOLD2:MUTED,fontSize:14,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box",letterSpacing:2}}/>
+              {birth.length===6&&(()=>{
+                const age=calcAgeFromShort(birth);
+                return age?<div style={{color:GOLD,fontSize:9,marginTop:3}}>✓ {age.display}</div>:<div style={{color:"#f76f8e",fontSize:9,marginTop:3}}>날짜 확인</div>;
+              })()}
+            </div>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${heightVal?"rgba(201,168,76,0.6)":"rgba(201,168,76,0.3)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
+              <div style={{color:MUTED,fontSize:10,marginBottom:6}}>키 (cm)</div>
+              <input type="number" value={heightVal} onChange={e=>updateHeight(e.target.value)} placeholder="115"
+                style={{width:"100%",background:"transparent",border:"none",color:heightVal?GOLD2:MUTED,fontSize:16,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
+            </div>
+            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${weightVal?"rgba(201,168,76,0.6)":"rgba(201,168,76,0.3)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
+              <div style={{color:MUTED,fontSize:10,marginBottom:6}}>몸무게 (kg)</div>
+              <input type="number" value={weightVal} onChange={e=>updateWeight(e.target.value)} placeholder="20"
+                style={{width:"100%",background:"transparent",border:"none",color:weightVal?GOLD2:MUTED,fontSize:16,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
+            </div>
+          </div>
+        </div>
+
+        <div style={{marginBottom:10}}>
+          <button onClick={()=>setStep("partA")} style={{width:"100%",padding:"16px",borderRadius:12,background:"linear-gradient(135deg,#c9a84c,#e8c76a)",color:NAVY,fontSize:14,fontWeight:800,border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(201,168,76,0.3)",lineHeight:1.5}}>
+            333TEST 시작하기<br/><span style={{fontSize:11,fontWeight:600,opacity:0.7}}>18문항 · 약 3~5분 · 무료</span>
           </button>
         </div>
-        <p style={{color:MUTED,fontSize:11,opacity:0.5}}>아이 설문 건너뛰면 정확도가 낮아질 수 있어요</p>
+        <button onClick={goResult} style={{width:"100%",padding:"12px",borderRadius:12,background:"rgba(255,255,255,0.03)",color:MUTED,fontSize:13,border:"1px solid rgba(255,255,255,0.07)",cursor:"pointer",marginBottom:4}}>
+          ⚡ 신체 정보만으로 성장 지표 확인
+        </button>
+        <p style={{color:MUTED,fontSize:11,opacity:0.5}}>18문항 · 약 3~5분 소요</p>
       </div>
       </div>
     </div>
   );
 
-  // ── PART B ─────────────────────────────────────────────────────────────────
-  if(step==="partB"){
-    const prog=Math.round((Object.keys(kAns).length/kidQuestions.length)*100);
+  // ── PART A (18문항) ─────────────────────────────────────────────────────────
+  if(step==="partA"){
+    const prog=Math.round((Object.keys(pAns).length/parentQuestions.length)*100);
+    const themeLabel=pQ&&pQ.id.startsWith('a')?"🍽️ 먹고 소화하기":pQ&&pQ.id.startsWith('b')?"⚡ 에너지 쓰기":"💪 저장하고 성장하기";
     return (
       <div style={{minHeight:"100vh",background:bg,fontFamily:font}}>
         <NavBar/>
         <div style={{display:"flex",flexDirection:"column",alignItems:"center",padding:"24px"}}>
         <div style={{maxWidth:400,width:"100%"}}>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
-            <div style={{background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:20,padding:"4px 14px",color:GOLD,fontSize:11,fontWeight:700}}>🙋 PART B · 아이 자가체크</div>
-            <span style={{color:GOLD,fontSize:13,fontWeight:800,background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:20,padding:"3px 12px"}}>{kIdx+1} / 12</span>
+            <div style={{background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:20,padding:"4px 14px",color:GOLD,fontSize:11,fontWeight:700}}>{themeLabel}</div>
+            <span style={{color:GOLD,fontSize:13,fontWeight:800,background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.2)",borderRadius:20,padding:"3px 12px"}}>{pIdx+1} / {parentQuestions.length}</span>
           </div>
           <div style={{height:4,background:"rgba(255,255,255,0.06)",borderRadius:4,marginBottom:6}}>
-            <div style={{height:"100%",borderRadius:4,background:"linear-gradient(90deg,#e8c76a,#f5e0a0)",width:`${prog}%`,transition:"width 0.3s",boxShadow:"0 0 8px rgba(232,199,106,0.5)"}}/>
+            <div style={{height:"100%",borderRadius:4,background:"linear-gradient(90deg,#c9a84c,#e8c76a)",width:`${prog}%`,transition:"width 0.3s",boxShadow:"0 0 8px rgba(201,168,76,0.5)"}}/>
           </div>
-          <div style={{textAlign:"right",color:MUTED,fontSize:10,marginBottom:18}}>{prog}%</div>
-          <div style={{color:MUTED,fontSize:12,marginBottom:8}}>✏️ {kQ.hint}</div>
-          <h2 style={{color:WHITE,fontSize:18,fontWeight:700,lineHeight:1.6,marginBottom:20}}>{kQ.text}</h2>
+          <div style={{textAlign:"right",color:MUTED,fontSize:10,marginBottom:24}}>{prog}%</div>
+          <h2 style={{color:WHITE,fontSize:19,fontWeight:700,lineHeight:1.6,marginBottom:24,textAlign:"center",minHeight:60,display:"flex",alignItems:"center",justifyContent:"center"}}>{pQ&&pQ.text}</h2>
           <div style={{display:"flex",flexDirection:"column",gap:9}}>
-            {kQ.options.map((opt,i)=>(
-              <button key={i} onClick={()=>handleKid(i)} style={{padding:"14px 16px",borderRadius:12,textAlign:"left",background:selK===i?"rgba(201,168,76,0.18)":kAns[kQ.id]===i?"rgba(201,168,76,0.10)":"rgba(255,255,255,0.03)",border:selK===i?"1.5px solid rgba(201,168,76,0.8)":kAns[kQ.id]===i?"1.5px solid rgba(201,168,76,0.4)":"1.5px solid rgba(255,255,255,0.07)",color:kAns[kQ.id]===i?GOLD3:"#e8c8d4",fontSize:14,cursor:"pointer",transition:"all 0.2s",transform:selK===i?"scale(0.98)":"scale(1)"}}>
+            {pQ&&pQ.options.map((opt,i)=>(
+              <button key={i} onClick={()=>handleParent(i)} style={{padding:"15px 16px",borderRadius:12,textAlign:"center",background:selP===i?"rgba(201,168,76,0.18)":pAns[pQ.id]===i?"rgba(201,168,76,0.10)":"rgba(255,255,255,0.03)",border:selP===i?"1.5px solid rgba(201,168,76,0.8)":pAns[pQ.id]===i?"1.5px solid rgba(201,168,76,0.4)":"1.5px solid rgba(255,255,255,0.07)",color:pAns[pQ.id]===i?GOLD3:"#9ab8cc",fontSize:15,fontWeight:600,cursor:"pointer",transition:"all 0.2s",transform:selP===i?"scale(0.98)":"scale(1)"}}>
                 {opt.text}
               </button>
             ))}
           </div>
-          {kIdx>0&&<button onClick={()=>setKIdx(kIdx-1)} style={{marginTop:18,background:"none",border:"none",color:MUTED,fontSize:13,cursor:"pointer"}}>← 이전</button>}
+          {pIdx>0&&<button onClick={()=>setPIdx(pIdx-1)} style={{marginTop:18,background:"none",border:"none",color:MUTED,fontSize:13,cursor:"pointer"}}>← 이전</button>}
         </div>
         </div>
       </div>
     );
   }
+
 
   // ── RESULT ─────────────────────────────────────────────────────────────────
   if(step==="result"&&result){
@@ -911,7 +1049,7 @@ function saveHtml(){
               <span style={{color:GOLD2}}>{nameDisplay}</span>
               {ageInfo&&<span style={{color:MUTED,fontSize:13,fontWeight:600}}> ({ageInfo.display})</span>}
             </div>
-            <div style={{color:MUTED,fontSize:13,marginTop:4}}>의 체질 코드 분석 결과입니다 ⚾</div>
+            <div style={{color:MUTED,fontSize:13,marginTop:4}}>의 BIO CODE 분석 결과입니다 ⚾</div>
           </div>
 
           {/* 코드 메인 카드 */}
@@ -1008,7 +1146,7 @@ function saveHtml(){
 
           {/* 3축 게이지 */}
           <div style={cardStyle}>
-            <div style={{color:GOLD,fontSize:11,marginBottom:14,fontWeight:700,letterSpacing:1,borderBottom:"1px solid rgba(201,168,76,0.15)",paddingBottom:10}}>⚾ 3축 체질 코드 분석</div>
+            <div style={{color:GOLD,fontSize:11,marginBottom:14,fontWeight:700,letterSpacing:1,borderBottom:"1px solid rgba(201,168,76,0.15)",paddingBottom:10}}>⚾ 3축 BIO CODE 분석</div>
             {axes.map(ax=>(
               <div key={ax.label} style={{marginBottom:12}}>
                 <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
@@ -1024,7 +1162,7 @@ function saveHtml(){
 
           {/* 3D 큐브 분포도 */}
           <div style={cardStyle}>
-            <div style={{color:GOLD,fontSize:11,marginBottom:4,fontWeight:700,letterSpacing:1}}>📦 333 체질 코드 큐브</div>
+            <div style={{color:GOLD,fontSize:11,marginBottom:4,fontWeight:700,letterSpacing:1}}>📦 333 BIO CODE 큐브</div>
             <div style={{color:MUTED,fontSize:10,marginBottom:14}}>흡수력 · 연소력 · 축적력 3축의 27가지 코드 — 우리 아이 위치가 표시됩니다</div>
             <CubeChart code={result.code} ment={ment}/>
           </div>
@@ -1147,10 +1285,10 @@ function saveHtml(){
               <button onClick={async()=>{
                 const shortWit=ment.wit.length>20?ment.wit.slice(0,20)+'..':ment.wit;
                 const shortTip=ment.tip.length>20?ment.tip.slice(0,20)+'..':ment.tip;
-                const txt=`🧬 Physical UP 333 · 333TEST\n\n체질코드: ${result.code} ${ment.emoji} ${ment.nick}\n유형: ${result.main}\n\n"${shortWit}"\n💡${shortTip}\n\n▶ 무료 체질검사\npu333.kr`;
+                const txt=`🧬 Physical UP 333 · 333TEST\n\nBIO CODE: ${result.code} ${ment.emoji} ${ment.nick}\n유형: ${result.main}\n\n"${shortWit}"\n💡${shortTip}\n\n▶ 무료 BIO CODE 검사\npu333.kr`;
                 try{
                   if(navigator.share){
-                    await navigator.share({title:'333TEST 체질 코드 결과',text:txt,url:'https://pu333.kr'});
+                    await navigator.share({title:'333TEST BIO CODE 결과',text:txt,url:'https://pu333.kr'});
                   } else {
                     try{await navigator.clipboard.writeText(txt);}catch(e){
                       const el=document.createElement('textarea');el.value=txt;
@@ -1247,12 +1385,13 @@ function saveHtml(){
                     textDecoration:"none"
                   }}>전체 보기</a>
                 </div>
+                <div style={{color:MUTED,fontSize:9,marginTop:10,lineHeight:1.6,opacity:0.7}}>쿠팡 파트너스·네이버 쇼핑 파트너스 활동의 일환으로 일정액의 수수료를 제공받습니다.</div>
               </div>
             );
           })()}
 
           <button onClick={reset} style={{width:"100%",padding:"14px",borderRadius:12,background:"rgba(201,168,76,0.06)",color:MUTED,fontSize:14,border:"1px solid rgba(201,168,76,0.2)",cursor:"pointer",marginBottom:4}}>🔄 처음부터 다시하기</button>
-          <p style={{color:"#1a2a3a",fontSize:11,textAlign:"center",marginTop:14,lineHeight:1.7}}>본 결과는 참고용이며 의학적 진단을 대체하지 않습니다.<br/>성장곡선이 지속 하락 시 소아과 진료를 권장합니다.</p>
+          <p style={{color:"#1a2a3a",fontSize:11,textAlign:"center",marginTop:14,lineHeight:1.7}}>문항에 따라 결과는 다를 수 있으며 재미있는 참고용입니다.<br/>보다 완벽한 BIO CODE 결과는 유료 서비스로 제공해 드릴 예정입니다.</p>
         </div>
         </div>
       </div>
@@ -1310,7 +1449,7 @@ function saveHtml(){
           {/* 헤더 */}
           <div style={{textAlign:"center",marginBottom:16}}>
             <div style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a,#c9a84c)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:13,fontWeight:900,letterSpacing:3,marginBottom:8}}>Physical UP 333 · Physical UP 333</div>
-            <div style={{color:WHITE,fontSize:18,fontWeight:800,marginBottom:4}}>🛒 내 체질 맞춤 제품</div>
+            <div style={{color:WHITE,fontSize:18,fontWeight:800,marginBottom:4}}>🛒 내 BIO CODE 맞춤 제품</div>
             <div style={{display:"inline-flex",alignItems:"center",gap:8,padding:"6px 16px",borderRadius:20,background:`${current.color}18`,border:`1px solid ${current.color}40`}}>
               <span style={{color:current.color,fontSize:13,fontWeight:700}}>{mi.emoji} {result.main}</span>
               <span style={{color:"rgba(255,255,255,0.3)"}}>|</span>
@@ -1351,7 +1490,7 @@ function saveHtml(){
 
           {/* 다른 체질 보기 */}
           <div style={{...cardStyle}}>
-            <div style={{color:GOLD,fontSize:11,fontWeight:700,marginBottom:12,letterSpacing:1}}>다른 체질 제품도 보기</div>
+            <div style={{color:GOLD,fontSize:11,fontWeight:700,marginBottom:12,letterSpacing:1}}>다른 BIO CODE 제품도 보기</div>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
               {Object.entries(shopData).map(([name,data])=>(
                 <button key={name} onClick={()=>setShopTab(name)} style={{
