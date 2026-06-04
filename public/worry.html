@@ -57,6 +57,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.97
 
 /* 차트 박스 */
 .chart-box{background:linear-gradient(180deg,rgba(13,27,62,0.4),rgba(13,27,62,0.15));border:1px solid var(--line);border-radius:10px;padding:18px 16px;}
+
+/* 입력 패널 */
+.input-panel{background:rgba(13,27,62,0.35);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:18px 16px;margin-bottom:18px;}
+.ip-label{font-family:var(--mono);color:var(--gold);font-size:10px;font-weight:700;letter-spacing:1px;margin-bottom:14px;}
+.ip-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.ip-field{display:flex;flex-direction:column;gap:5px;}
+.ip-field label{font-size:10px;color:var(--muted);}
+.ip-field input{background:rgba(6,10,20,0.5);border:1px solid var(--line);border-radius:6px;padding:9px 10px;color:var(--white);font-size:14px;font-family:'Noto Sans KR',sans-serif;outline:none;width:100%;box-sizing:border-box;}
+.ip-field input:focus{border-color:rgba(201,168,76,0.5);}
+.ip-result{margin-top:14px;font-size:12px;color:var(--gold2);line-height:1.7;display:none;}
+.ip-result.show{display:block;}
+@media(min-width:520px){.ip-grid{grid-template-columns:1fr 1fr 1fr 1fr;}}
 .chart-label{font-family:var(--mono);color:var(--gold);font-size:10px;font-weight:700;letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
 .legend{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;font-size:11px;}
 .legend span{display:flex;align-items:center;gap:5px;color:var(--muted);}
@@ -191,6 +203,30 @@ footer .fi{font-family:var(--mono);color:var(--muted2);font-size:9px;letter-spac
   <div class="sec-head"><span class="sec-no">01</span><span class="sec-cat">Growth Index</span></div>
   <div class="title">우리 아이가 <em>얼마나 작은가</em></div>
   <div class="lead">연령에 따른 신장·체중 성장 곡선입니다. 또래 평균(50th percentile)과 우수 선수 목표치(90th percentile)를 기준으로 현재 위치를 진단합니다.</div>
+
+  <div class="input-panel">
+    <div class="ip-label">▎분석 대상 정보 입력 (그래프에 위치 표기)</div>
+    <div class="ip-grid">
+      <div class="ip-field">
+        <label>이름</label>
+        <input type="text" id="in-name" placeholder="홍길동" oninput="updateChart()"/>
+      </div>
+      <div class="ip-field">
+        <label>생년월일 (YYMMDD)</label>
+        <input type="text" id="in-birth" placeholder="100523" maxlength="6" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');updateChart()"/>
+      </div>
+      <div class="ip-field">
+        <label>키 (cm)</label>
+        <input type="number" id="in-height" placeholder="160" inputmode="decimal" oninput="updateChart()"/>
+      </div>
+      <div class="ip-field">
+        <label>몸무게 (kg)</label>
+        <input type="number" id="in-weight" placeholder="55" inputmode="decimal" oninput="updateChart()"/>
+      </div>
+    </div>
+    <div id="ip-result" class="ip-result"></div>
+  </div>
+
   <div class="chart-box" style="margin-bottom:16px;">
     <div class="chart-label">▎신장 STATURE (cm)</div>
     <div class="legend">
@@ -208,7 +244,6 @@ footer .fi{font-family:var(--mono);color:var(--muted2);font-size:9px;letter-spac
     <p>[1] 교육부 학생건강체력평가 PAPS 2023</p>
     <p>[2] 대한소아청소년과학회 2017 소아청소년 성장도표</p>
     <p>[3] 대한체육회 엘리트 유소년 선수 신체계측 기준</p>
-    <p>* 분석 대상 위치는 333TEST에서 신체 정보 입력 시 표기됩니다</p>
   </div>
 </div>
 
@@ -428,10 +463,62 @@ const gData={
   17:{h:{avg:173,tgt:182},w:{avg:66,tgt:79}},
   18:{h:{avg:174,tgt:184},w:{avg:68,tgt:82}},
 };
+function calcAge(birth){
+  // YYMMDD → 만 나이
+  if(!birth||birth.length!==6)return null;
+  const yy=parseInt(birth.slice(0,2)),mm=parseInt(birth.slice(2,4)),dd=parseInt(birth.slice(4,6));
+  if(mm<1||mm>12||dd<1||dd>31)return null;
+  const now=new Date();
+  const year=yy<=(now.getFullYear()%100)?2000+yy:1900+yy;
+  const b=new Date(year,mm-1,dd);
+  if(isNaN(b.getTime()))return null;
+  let age=now.getFullYear()-year;
+  if(now.getMonth()<mm-1||(now.getMonth()===mm-1&&now.getDate()<dd))age--;
+  return age>=0&&age<=25?age:null;
+}
 function getMyData(){
+  // 입력칸 우선, 없으면 localStorage(333TEST와 공유), 그 다음 URL
+  const nameEl=document.getElementById('in-name');
+  if(nameEl){
+    const birth=document.getElementById('in-birth').value;
+    const h=document.getElementById('in-height').value;
+    const w=document.getElementById('in-weight').value;
+    const age=calcAge(birth);
+    return {name:nameEl.value,age:age,h:h?parseFloat(h):null,w:w?parseFloat(w):null};
+  }
   const p=new URLSearchParams(location.search);
   const age=p.get('age'),h=p.get('h'),w=p.get('w');
   return {age:age?parseInt(age):null,h:h?parseFloat(h):null,w:w?parseFloat(w):null};
+}
+function updateChart(){
+  // 입력값을 localStorage에 저장 (333TEST와 공유)
+  try{
+    const n=document.getElementById('in-name').value;
+    const b=document.getElementById('in-birth').value;
+    const h=document.getElementById('in-height').value;
+    const w=document.getElementById('in-weight').value;
+    localStorage.setItem('pu333_name',n);
+    localStorage.setItem('pu333_birth',b);
+    localStorage.setItem('pu333_height',h);
+    localStorage.setItem('pu333_weight',w);
+  }catch(e){}
+  showAge();showFit();
+  const my=getMyData();
+  const res=document.getElementById('ip-result');
+  if(!res)return;
+  if(my.age&&(my.h||my.w)){
+    const ageLabel=my.age>=11&&my.age<=18?`만 ${my.age}세`:`만 ${my.age}세 (그래프 범위 밖)`;
+    let msg=`${my.name?my.name+' · ':''}${ageLabel}`;
+    if(my.age>=11&&my.age<=18){
+      const d=gData[my.age];
+      if(my.h){const diff=(d.tgt-my.h).toFixed(0);msg+=` · 키 ${my.h}cm (우수선수 목표 ${d.tgt}cm${diff>0?', '+diff+'cm 더':''})`;}
+      if(my.w){msg+=` · 몸무게 ${my.w}kg`;}
+    }
+    res.textContent=msg;
+    res.classList.add('show');
+  }else{
+    res.classList.remove('show');
+  }
 }
 function drawGrowthChart(containerId,key,unit){
   const ages=[11,12,13,14,15,16,17,18];
@@ -557,7 +644,21 @@ function showCubeInfo(code){
     </div>
     <div style="color:var(--muted);font-size:11px;line-height:1.8;border-top:1px solid var(--line);padding-top:10px;">${d.tip}</div>`;
 }
-window.addEventListener('load',function(){showAge();showFit();drawCube(0);});
+window.addEventListener('load',function(){
+  // 1순위 URL 파라미터, 2순위 localStorage(333TEST 공유)
+  const p=new URLSearchParams(location.search);
+  function fill(id,urlKey,lsKey){
+    const el=document.getElementById(id);if(!el)return;
+    let v=p.get(urlKey);
+    if(!v){try{v=localStorage.getItem(lsKey);}catch(e){}}
+    if(v)el.value=v;
+  }
+  fill('in-name','name','pu333_name');
+  fill('in-birth','birth','pu333_birth');
+  fill('in-height','h','pu333_height');
+  fill('in-weight','w','pu333_weight');
+  updateChart();drawCube(0);
+});
 </script>
 </body>
 </html>
