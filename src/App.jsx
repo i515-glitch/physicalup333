@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 // ─── 브랜드 컬러 ──────────────────────────────────────────────────────────────
 const GOLD="#c9a84c", GOLD2="#e8c76a", GOLD3="#f5e0a0";
@@ -320,102 +320,106 @@ function getPctLabel(pct) {
 // ─── 설문 문항 ────────────────────────────────────────────────────────────────
 // ─── 90문항 풀 ────────────────────────────────────────────────────────────────
 const questionPool = {
+  // 흡수력 — dir:1(항상=흡수좋음/정방향), dir:-1(역방향) · 역방향 9개(30%)
   absorb: [
-    {id:"a1",text:"식당에 가면 메뉴판을 꼼꼼히 본다",options:[{text:"항상 그래요",v:3},{text:"가끔요",v:2},{text:"별로요",v:1},{text:"그런 편 아니에요",v:0}],scores:[3,2,1,0]},
-    {id:"a2",text:"처음 보는 음식도 일단 먹어본다",options:[{text:"당연하죠!",v:3},{text:"한 입은 먹어봐요",v:2},{text:"좀 고민해요",v:1},{text:"안 먹어요",v:0}],scores:[3,2,1,0]},
-    {id:"a3",text:"밥 먹고 나서 배가 빵빵하게 부풀어 오른다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"거의 없어요",v:3}],scores:[0,1,2,3]},
-    {id:"a4",text:"화장실에 앉으면 30분이다",options:[{text:"맞아요 ㅋㅋ",v:0},{text:"좀 오래 있는 편",v:1},{text:"빨리 해결해요",v:2},{text:"매일 시원하게!",v:3}],scores:[0,1,2,3]},
-    {id:"a5",text:"밥 먹을 때 반찬은 많이 먹지 않는다",options:[{text:"반찬보다 밥만",v:0},{text:"조금만 먹어요",v:1},{text:"골고루 먹어요",v:2},{text:"반찬을 더 좋아해요",v:3}],scores:[0,1,2,3]},
-    {id:"a6",text:"밥 먹고 나서 배 아플 때가 종종 있다",options:[{text:"자주 그래요",v:0},{text:"가끔요",v:1},{text:"거의 없어요",v:2},{text:"전혀 없어요",v:3}],scores:[0,1,2,3]},
-    {id:"a7",text:"영양제 먹으면 오히려 속이 불편하다",options:[{text:"항상요",v:0},{text:"가끔요",v:1},{text:"별로 없어요",v:2},{text:"전혀요",v:3}],scores:[0,1,2,3]},
-    {id:"a8",text:"밥 먹는 속도가 친구들보다 느리다",options:[{text:"많이 느려요",v:0},{text:"조금 느려요",v:1},{text:"비슷해요",v:2},{text:"빠른 편이에요",v:3}],scores:[0,1,2,3]},
-    {id:"a9",text:"음식 냄새만 맡아도 배가 고파진다",options:[{text:"항상요!",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"a10",text:"급식 당번은 내가 먼저 손든다",options:[{text:"항상요!",v:3},{text:"가끔요",v:2},{text:"별로요",v:1},{text:"안 해요",v:0}],scores:[3,2,1,0]},
-    {id:"a11",text:"밥 먹고 나서 졸린 게 당연하다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"별로요",v:3}],scores:[0,1,2,3]},
-    {id:"a12",text:"배탈이 자주 난다",options:[{text:"자주요",v:0},{text:"가끔요",v:1},{text:"별로요",v:2},{text:"거의 없어요",v:3}],scores:[0,1,2,3]},
-    {id:"a13",text:"밥상 앞에 앉으면 일단 기분이 좋아진다",options:[{text:"항상요!",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"a14",text:"좋아하는 음식은 맨 마지막에 먹는다",options:[{text:"항상요",v:3},{text:"가끔요",v:2},{text:"별로요",v:1},{text:"먼저 먹어요",v:0}],scores:[3,2,1,0]},
-    {id:"a15",text:"음식을 천천히 꼭꼭 씹어먹는 편이다",options:[{text:"항상요",v:3},{text:"가끔요",v:2},{text:"별로요",v:1},{text:"빨리 먹어요",v:0}],scores:[3,2,1,0]},
-    {id:"a16",text:"먹는 게 한정적이고 편식이 심하다",options:[{text:"많이요",v:0},{text:"조금요",v:1},{text:"별로요",v:2},{text:"다 잘 먹어요",v:3}],scores:[0,1,2,3]},
-    {id:"a17",text:"밥 먹고 소파에 눕는 게 당연하다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"바로 움직여요",v:3}],scores:[0,1,2,3]},
-    {id:"a18",text:"새벽에 배고파서 깰 때가 있다",options:[{text:"자주요",v:3},{text:"가끔요",v:2},{text:"거의 없어요",v:1},{text:"전혀요",v:0}],scores:[3,2,1,0]},
-    {id:"a19",text:"밥은 먹고 싶은데 뭘 먹을지 모를 때가 많다",options:[{text:"항상요",v:1},{text:"가끔요",v:2},{text:"별로요",v:3},{text:"먹고 싶은 게 항상 있어요",v:3}],scores:[1,2,3,3]},
-    {id:"a20",text:"급식 메뉴 보고 실망한 적이 있다",options:[{text:"자주요",v:0},{text:"가끔요",v:1},{text:"별로요",v:2},{text:"다 맛있어요",v:3}],scores:[0,1,2,3]},
-    {id:"a21",text:"밥보다 간식이 더 좋다",options:[{text:"당연하죠",v:1},{text:"가끔요",v:2},{text:"밥이 더 좋아요",v:3},{text:"둘 다 좋아요",v:3}],scores:[1,2,3,3]},
-    {id:"a22",text:"먹다가 갑자기 배부르다고 멈출 때가 있다",options:[{text:"자주요",v:0},{text:"가끔요",v:1},{text:"별로요",v:2},{text:"다 먹어요",v:3}],scores:[0,1,2,3]},
-    {id:"a23",text:"음식 사진만 봐도 침이 고인다",options:[{text:"항상요!",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"a24",text:"아침밥은 잘 못 먹는다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"잘 먹어요",v:3}],scores:[0,1,2,3]},
-    {id:"a25",text:"밥 먹고 나서 단 게 생각난다",options:[{text:"항상요",v:1},{text:"자주요",v:2},{text:"가끔요",v:2},{text:"별로요",v:3}],scores:[1,2,2,3]},
-    {id:"a26",text:"밥 먹을 때 물을 자주 마신다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"별로요",v:3}],scores:[0,1,2,3]},
-    {id:"a27",text:"특정 음식 먹으면 꼭 배탈이 난다",options:[{text:"맞아요",v:0},{text:"가끔요",v:1},{text:"별로요",v:2},{text:"없어요",v:3}],scores:[0,1,2,3]},
-    {id:"a28",text:"배고프면 예민해진다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"a29",text:"밥 냄새 맡으면 저절로 주방으로 간다",options:[{text:"항상요!",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"a30",text:"음식을 남기는 게 아깝다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
+    {id:"a1",text:"식당에 가면 메뉴판을 꼼꼼히 본다",dir:1},
+    {id:"a2",text:"음식 냄새만 맡아도 배가 고파진다",dir:1},
+    {id:"a3",text:"밥상 앞에 앉으면 입맛이 없다",dir:-1},
+    {id:"a4",text:"반찬도 골고루 잘 먹는다",dir:1},
+    {id:"a5",text:"밥 냄새 맡으면 저절로 주방으로 간다",dir:1},
+    {id:"a6",text:"배탈이 자주 나는 편이다",dir:-1},
+    {id:"a7",text:"새로운 음식도 호기심 있게 먹어본다",dir:1},
+    {id:"a8",text:"한 번 먹을 때 양이 많은 편이다",dir:1},
+    {id:"a9",text:"편식이 심해서 먹는 게 한정적이다",dir:-1},
+    {id:"a10",text:"화장실을 매일 시원하게 다녀온다",dir:1},
+    {id:"a11",text:"급식 메뉴가 대체로 다 맛있다",dir:1},
+    {id:"a12",text:"먹어도 영양분이 흡수가 안 되는 느낌이다",dir:-1},
+    {id:"a13",text:"밥을 남기지 않고 다 먹는다",dir:1},
+    {id:"a14",text:"음식 사진만 봐도 침이 고인다",dir:1},
+    {id:"a15",text:"아침밥을 잘 못 먹는다",dir:-1},
+    {id:"a16",text:"식사 시간을 기다린다",dir:1},
+    {id:"a17",text:"외식하면 평소보다 더 잘 먹는다",dir:1},
+    {id:"a18",text:"영양제를 먹으면 속이 불편하다",dir:-1},
+    {id:"a19",text:"배고프다는 말을 자주 한다",dir:1},
+    {id:"a20",text:"맛집 가자고 먼저 조른다",dir:1},
+    {id:"a21",text:"입이 짧아서 조금만 먹어도 그만이다",dir:-1},
+    {id:"a22",text:"새 반찬이 나오면 먼저 맛본다",dir:1},
+    {id:"a23",text:"밥 먹는 속도가 또래보다 느리다",dir:-1},
+    {id:"a24",text:"먹는 걸 좋아한다고 자주 말한다",dir:1},
+    {id:"a25",text:"한 그릇 뚝딱 비우고 더 달라고 한다",dir:1},
+    {id:"a26",text:"먹는 것에 별로 관심이 없다",dir:-1},
+    {id:"a27",text:"맛있게 먹고 소화도 잘 시킨다",dir:1},
+    {id:"a28",text:"우유나 기름진 음식 먹으면 배가 아프다",dir:-1},
+    {id:"a29",text:"먹고 싶은 음식이 늘 분명하다",dir:1},
+    {id:"a30",text:"간식을 입에 달고 산다",dir:1},
   ],
+  // 연소력 — 역방향 9개(30%)
   burn: [
-    {id:"b1",text:"쉬는 시간이면 어느새 매점 앞에 와 있다",options:[{text:"맞아요 ㅋㅋ",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"b2",text:"조금만 뛰어도 땀이 엄청 난다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"b3",text:"밥 먹고 1시간도 안 됐는데 또 배고프다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"b4",text:"가만히 있질 못하고 항상 뭔가 하고 있다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"b5",text:"체육 시간이 제일 기다려진다",options:[{text:"당연하죠!",v:3},{text:"좋아해요",v:2},{text:"보통이에요",v:1},{text:"싫어해요",v:0}],scores:[3,2,1,0]},
-    {id:"b6",text:"아침에 일어나면 몸이 무겁고 기운이 없다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"별로요",v:3}],scores:[0,1,2,3]},
-    {id:"b7",text:"친구들보다 빨리 지치는 편이다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"비슷해요",v:2},{text:"오래 버텨요",v:3}],scores:[0,1,2,3]},
-    {id:"b8",text:"여름에 유독 더위를 많이 탄다",options:[{text:"많이요",v:3},{text:"조금요",v:2},{text:"보통이에요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"b9",text:"쉬는 시간에 가만히 앉아있질 못한다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"잘 앉아있어요",v:0}],scores:[3,2,1,0]},
-    {id:"b10",text:"운동하고 나면 꼭 뭔가 먹어야 된다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"b11",text:"점심시간 10분 전부터 설렌다",options:[{text:"항상요!",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"b12",text:"자고 일어나도 피곤하다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"개운해요",v:3}],scores:[0,1,2,3]},
-    {id:"b13",text:"친구들보다 땀을 많이 흘린다",options:[{text:"훨씬 많이요",v:3},{text:"조금 많아요",v:2},{text:"비슷해요",v:1},{text:"적게 흘려요",v:0}],scores:[3,2,1,0]},
-    {id:"b14",text:"집에 오면 바로 쓰러져 잔다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"별로요",v:3}],scores:[0,1,2,3]},
-    {id:"b15",text:"소풍 도시락은 오전에 다 먹어버린다",options:[{text:"항상요 ㅋㅋ",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"점심에 먹어요",v:0}],scores:[3,2,1,0]},
-    {id:"b16",text:"학교 마치고 오면 항상 배고프다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"b17",text:"겨울에도 더워서 얇게 입는다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"추위 타요",v:0}],scores:[3,2,1,0]},
-    {id:"b18",text:"한자리에 오래 앉아있기 힘들다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"잘 앉아있어요",v:0}],scores:[3,2,1,0]},
-    {id:"b19",text:"뭔가 먹으면 금방 힘이 난다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"b20",text:"운동회 날이 제일 신난다",options:[{text:"당연하죠!",v:3},{text:"좋아해요",v:2},{text:"보통이에요",v:1},{text:"싫어해요",v:0}],scores:[3,2,1,0]},
-    {id:"b21",text:"자기 전에 야식 생각이 난다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"b22",text:"걸을 때보다 뛸 때가 더 많다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"걷는 게 좋아요",v:0}],scores:[3,2,1,0]},
-    {id:"b23",text:"밥 먹자마자 또 뭔가 먹고 싶다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"b24",text:"잠을 자도 자도 피곤하다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"잘 자고 일어나요",v:3}],scores:[0,1,2,3]},
-    {id:"b25",text:"친구들이 지쳤을 때도 혼자 멀쩡하다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"나도 지쳐요",v:0}],scores:[3,2,1,0]},
-    {id:"b26",text:"추위를 잘 안 탄다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"추위 많이 타요",v:0}],scores:[3,2,1,0]},
-    {id:"b27",text:"먹는 양에 비해 살이 잘 안 찐다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"잘 찌는 편",v:0}],scores:[3,2,1,0]},
-    {id:"b28",text:"밥 먹고 바로 운동해도 괜찮다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"소화 먼저요",v:0}],scores:[3,2,1,0]},
-    {id:"b29",text:"활동량이 많은 날 오히려 컨디션이 좋다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"쉬는 게 좋아요",v:0}],scores:[3,2,1,0]},
-    {id:"b30",text:"쉬는 날보다 바쁜 날이 더 재밌다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"쉬는 게 좋아요",v:0}],scores:[3,2,1,0]},
+    {id:"b1",text:"쉬는 시간이면 어느새 매점 앞에 와 있다",dir:1},
+    {id:"b2",text:"밥 먹고 1시간도 안 돼서 또 배고프다",dir:1},
+    {id:"b3",text:"조금만 움직여도 쉽게 지친다",dir:-1},
+    {id:"b4",text:"가만히 있질 못하고 항상 움직인다",dir:1},
+    {id:"b5",text:"체육 시간을 제일 기다린다",dir:1},
+    {id:"b6",text:"추위를 많이 타고 손발이 차갑다",dir:-1},
+    {id:"b7",text:"운동하고 나면 꼭 뭔가 먹어야 한다",dir:1},
+    {id:"b8",text:"아침에 일어나면 몸이 무겁고 처진다",dir:-1},
+    {id:"b9",text:"조금만 뛰어도 땀이 엄청 난다",dir:1},
+    {id:"b10",text:"활동량이 적고 느긋한 편이다",dir:-1},
+    {id:"b11",text:"학교 마치고 오면 항상 배고프다",dir:1},
+    {id:"b12",text:"쉽게 피곤하다고 말한다",dir:-1},
+    {id:"b13",text:"걸을 때보다 뛸 때가 더 많다",dir:1},
+    {id:"b14",text:"몸 쓰는 활동을 귀찮아한다",dir:-1},
+    {id:"b15",text:"친구들이 지쳐도 혼자 멀쩡하다",dir:1},
+    {id:"b16",text:"운동회 날이 제일 신난다",dir:1},
+    {id:"b17",text:"숨이 차도 끝까지 뛰어다닌다",dir:1},
+    {id:"b18",text:"먹는 양에 비해 살이 잘 안 찐다",dir:1},
+    {id:"b19",text:"하루 대부분을 실내에서 보낸다",dir:-1},
+    {id:"b20",text:"활동량 많은 날 컨디션이 더 좋다",dir:1},
+    {id:"b21",text:"에너지가 넘친다는 말을 자주 듣는다",dir:1},
+    {id:"b22",text:"늘 나른하고 졸려 한다",dir:-1},
+    {id:"b23",text:"몸 쓰는 놀이를 좋아한다",dir:1},
+    {id:"b24",text:"아침부터 활발하게 움직인다",dir:1},
+    {id:"b25",text:"움직이기보다 쉬는 걸 더 좋아한다",dir:-1},
+    {id:"b26",text:"잠시도 쉬지 않고 뛰어다닌다",dir:1},
+    {id:"b27",text:"몸에서 열이 많은 편이다",dir:1},
+    {id:"b28",text:"운동 후 회복이 빠르다",dir:1},
+    {id:"b29",text:"동작이 빠르고 날쌔다",dir:1},
+    {id:"b30",text:"하루 종일 뛰어놀아도 안 지친다",dir:1},
   ],
+  // 축적력 — 역방향 9개(30%)
   store: [
-    {id:"s1",text:"배부르면 기분이 좋아진다",options:[{text:"항상요!",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"s2",text:"조금만 먹어도 금방 살이 찐다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"s3",text:"자고 일어나면 얼굴이 잘 붓는다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"s4",text:"단 음식이나 밀가루 음식을 유독 좋아한다",options:[{text:"많이요!",v:3},{text:"좋아해요",v:2},{text:"보통이에요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"s5",text:"살은 찌는데 키는 잘 안 크는 것 같다",options:[{text:"맞아요",v:3},{text:"조금요",v:2},{text:"별로요",v:1},{text:"키도 잘 커요",v:0}],scores:[3,2,1,0]},
-    {id:"s6",text:"운동하면 빠지는데 안 하면 바로 찐다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"s7",text:"냉장고 문을 하루에 10번은 열어본다",options:[{text:"맞아요 ㅋㅋ",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"s8",text:"살은 있는데 근육이 없는 느낌이다",options:[{text:"맞아요",v:3},{text:"조금요",v:2},{text:"별로요",v:1},{text:"근육 있어요",v:0}],scores:[3,2,1,0]},
-    {id:"s9",text:"먹고 자면 살이 더 찐다는 걸 안다",options:[{text:"경험담이에요",v:3},{text:"조금요",v:2},{text:"별로요",v:1},{text:"안 그래요",v:0}],scores:[3,2,1,0]},
-    {id:"s10",text:"또래보다 체중이 많이 나가는 편이다",options:[{text:"많이요",v:3},{text:"조금요",v:2},{text:"비슷해요",v:1},{text:"오히려 적어요",v:0}],scores:[3,2,1,0]},
-    {id:"s11",text:"겨울에 유독 살이 찌는 것 같다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"s12",text:"스트레스받으면 더 먹고 싶다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"s13",text:"잘 먹이는 것 같은데 살이 안 찐다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"잘 쪄요",v:3}],scores:[0,1,2,3]},
-    {id:"s14",text:"먹는 양에 비해 살이 잘 찐다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"s15",text:"조금만 먹어도 포만감이 오래간다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"금방 배고파요",v:0}],scores:[3,2,1,0]},
-    {id:"s16",text:"야식 먹으면 다음날 바로 티가 난다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"s17",text:"체중이 늘 제자리다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"잘 변해요",v:3}],scores:[0,1,2,3]},
-    {id:"s18",text:"잘 때 땀을 많이 흘린다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"s19",text:"같은 걸 먹어도 나만 살이 찌는 것 같다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"s20",text:"물만 마셔도 살찐다는 말이 공감된다",options:[{text:"완전요!",v:3},{text:"조금요",v:2},{text:"별로요",v:1},{text:"공감 안 돼요",v:0}],scores:[3,2,1,0]},
-    {id:"s21",text:"먹으면 바로 어딘가 티가 난다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"s22",text:"체중이 잘 안 늘어서 고민이다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"잘 늘어요",v:3}],scores:[0,1,2,3]},
-    {id:"s23",text:"성장이 친구들보다 느린 것 같다",options:[{text:"많이요",v:0},{text:"조금요",v:1},{text:"비슷해요",v:2},{text:"빠른 편이에요",v:3}],scores:[0,1,2,3]},
-    {id:"s24",text:"근육이 잘 안 붙는 편이다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"잘 붙어요",v:3}],scores:[0,1,2,3]},
-    {id:"s25",text:"먹을수록 더 먹고 싶다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"s26",text:"배고픔을 잘 참는 편이다",options:[{text:"잘 참아요",v:0},{text:"조금 참아요",v:1},{text:"힘들어요",v:2},{text:"못 참아요",v:3}],scores:[0,1,2,3]},
-    {id:"s27",text:"손발이 자주 차갑다",options:[{text:"항상요",v:0},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"따뜻해요",v:3}],scores:[0,1,2,3]},
-    {id:"s28",text:"배부른 느낌을 잘 모르겠다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"잘 알아요",v:0}],scores:[3,2,1,0]},
-    {id:"s29",text:"밥 먹고 나서 바로 또 배고프다",options:[{text:"항상요",v:3},{text:"자주요",v:2},{text:"가끔요",v:1},{text:"별로요",v:0}],scores:[3,2,1,0]},
-    {id:"s30",text:"체중 변화가 거의 없다",options:[{text:"항상요",v:1},{text:"자주요",v:1},{text:"가끔요",v:2},{text:"잘 변해요",v:3}],scores:[1,1,2,3]},
+    {id:"s1",text:"배부르면 기분이 좋아진다",dir:1},
+    {id:"s2",text:"조금만 먹어도 금방 살이 찐다",dir:1},
+    {id:"s3",text:"아무리 먹어도 살이 안 붙는다",dir:-1},
+    {id:"s4",text:"단 음식이나 밀가루 음식을 유독 좋아한다",dir:1},
+    {id:"s5",text:"체중이 늘 제자리고 잘 안 는다",dir:-1},
+    {id:"s6",text:"냉장고 문을 하루에 10번은 열어본다",dir:1},
+    {id:"s7",text:"마른 편이라 살 좀 쪘으면 좋겠다",dir:-1},
+    {id:"s8",text:"먹고 자면 살이 더 찐다",dir:1},
+    {id:"s9",text:"또래보다 마르고 가벼운 편이다",dir:-1},
+    {id:"s10",text:"또래보다 체중이 많이 나간다",dir:1},
+    {id:"s11",text:"야식 먹으면 다음날 바로 티가 난다",dir:1},
+    {id:"s12",text:"많이 먹어도 체중 변화가 거의 없다",dir:-1},
+    {id:"s13",text:"물만 마셔도 살찐다는 말이 공감된다",dir:1},
+    {id:"s14",text:"살이 잘 안 쪄서 고민이다",dir:-1},
+    {id:"s15",text:"군것질을 자주 한다",dir:1},
+    {id:"s16",text:"입맛이 없어 끼니를 거를 때가 많다",dir:-1},
+    {id:"s17",text:"한번 먹기 시작하면 멈추기 어렵다",dir:1},
+    {id:"s18",text:"먹어도 금방 다시 홀쭉해진다",dir:-1},
+    {id:"s19",text:"밤에 야식 생각이 자주 난다",dir:1},
+    {id:"s20",text:"체격이 또래보다 왜소하다",dir:-1},
+    {id:"s21",text:"먹는 걸로 스트레스를 푼다",dir:1},
+    {id:"s22",text:"한 끼 굶어도 끄떡없다",dir:1},
+    {id:"s23",text:"간식을 늘 가까이 둔다",dir:1},
+    {id:"s24",text:"체격이 또래보다 큰 편이다",dir:1},
+    {id:"s25",text:"먹을 것 앞에서 참기 힘들어 한다",dir:1},
+    {id:"s26",text:"통통하다는 말을 자주 듣는다",dir:1},
+    {id:"s27",text:"잘 먹어서 든든하다는 말을 듣는다",dir:1},
+    {id:"s28",text:"밥 먹고 나서 든든함이 오래간다",dir:1},
+    {id:"s29",text:"끼니 사이에도 간식을 챙겨 먹는다",dir:1},
+    {id:"s30",text:"먹는 양에 비해 살이 잘 찐다",dir:1},
   ]
+};
 };
 
 // 랜덤 추출 함수 (각 테마에서 6개씩 = 18문항)
@@ -444,30 +448,21 @@ function analyze(pAns,kAns) {
   parentQuestions.forEach(q=>{
     const idx=pAns[q.id];
     if(idx!==undefined){
-      const s=q.scores[idx]||0;
-      if(q.id.startsWith('a')) a+=s;
-      else if(q.id.startsWith('b')) b+=s;
-      else if(q.id.startsWith('s')) c+=s;
+      // 전혀(0)~항상(3) · dir:1 정방향, dir:-1 역방향(뒤집기)
+      const score=q.dir===-1?(3-idx):idx;
+      if(q.id.startsWith('a')) a+=score;
+      else if(q.id.startsWith('b')) b+=score;
+      else if(q.id.startsWith('s')) c+=score;
     }
   });
+  // 각 축 6문항 × 최대3점 = 0~18점 → 1~3점
   const toScore=v=>v>=12?3:v>=6?2:1;
   const aScore=toScore(a);
   const bScore=toScore(b);
   const cScore=toScore(c);
   const code=`${aScore}${bScore}${cScore}`;
-  const main=bScore===3&&cScore<=1?'소비형':bScore<=1&&cScore>=3?'저장형':'균형형';
-  const subMap={
-    '111':'완전소비형','112':'연소우세형','113':'소비역설형',
-    '121':'흡수부진형','122':'날렵형','123':'잠재균형형',
-    '131':'과연소형','132':'잠재형','133':'변환형',
-    '211':'에너지손실형','212':'안정형','213':'선수형기반',
-    '221':'기초탄탄형','222':'완벽균형형','223':'축적우세형',
-    '231':'연소강화형','232':'선수기준형','233':'전환주의형',
-    '311':'흡수과잉형','312':'흡수선수형','313':'성장준비형',
-    '321':'근육잠재형','322':'엘리트형','323':'체중관리형',
-    '331':'대사활성형','332':'저장우세형','333':'완전저장형',
-  };
-  const sub=subMap[code]||'균형형';
+  const sub=codeMap[code]||"항온형";
+  const main=(subType[sub]&&subType[sub].main)||"균형형";
   return {code,main,sub,scores:{absorb:aScore,burn:bScore,store:cScore}};
 }
 // ─── 분석 함수 ────────────────────────────────────────────────────────────────
@@ -988,11 +983,11 @@ function saveHtml(){
             <div style={{height:"100%",borderRadius:4,background:"linear-gradient(90deg,#c9a84c,#e8c76a)",width:`${prog}%`,transition:"width 0.3s",boxShadow:"0 0 8px rgba(201,168,76,0.5)"}}/>
           </div>
           <div style={{textAlign:"right",color:MUTED,fontSize:10,marginBottom:24}}>{prog}%</div>
-          <h2 style={{color:WHITE,fontSize:19,fontWeight:700,lineHeight:1.6,marginBottom:24,textAlign:"center",minHeight:60,display:"flex",alignItems:"center",justifyContent:"center"}}>{pQ&&pQ.text}</h2>
-          <div style={{display:"flex",flexDirection:"column",gap:9}}>
-            {pQ&&pQ.options.map((opt,i)=>(
-              <button key={i} onClick={()=>handleParent(i)} style={{padding:"15px 16px",borderRadius:12,textAlign:"center",background:selP===i?"rgba(201,168,76,0.18)":pAns[pQ.id]===i?"rgba(201,168,76,0.10)":"rgba(255,255,255,0.03)",border:selP===i?"1.5px solid rgba(201,168,76,0.8)":pAns[pQ.id]===i?"1.5px solid rgba(201,168,76,0.4)":"1.5px solid rgba(255,255,255,0.07)",color:pAns[pQ.id]===i?GOLD3:"#9ab8cc",fontSize:15,fontWeight:600,cursor:"pointer",transition:"all 0.2s",transform:selP===i?"scale(0.98)":"scale(1)"}}>
-                {opt.text}
+          <h2 style={{color:WHITE,fontSize:19,fontWeight:700,lineHeight:1.6,marginBottom:28,textAlign:"center",minHeight:60,display:"flex",alignItems:"center",justifyContent:"center"}}>{pQ&&pQ.text}</h2>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:6}}>
+            {["전혀","가끔","자주","항상"].map((label,i)=>(
+              <button key={i} onClick={()=>handleParent(i)} style={{padding:"18px 4px",borderRadius:10,textAlign:"center",background:selP===i?"rgba(201,168,76,0.25)":pAns[pQ.id]===i?"rgba(201,168,76,0.12)":"rgba(255,255,255,0.03)",border:selP===i?"1.5px solid rgba(201,168,76,0.9)":pAns[pQ.id]===i?"1.5px solid rgba(201,168,76,0.4)":"1.5px solid rgba(255,255,255,0.07)",color:pAns[pQ.id]===i?GOLD3:"#9ab8cc",fontSize:14,fontWeight:700,cursor:"pointer",transition:"all 0.2s",transform:selP===i?"scale(0.95)":"scale(1)"}}>
+                {label}
               </button>
             ))}
           </div>
