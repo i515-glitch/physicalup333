@@ -42,21 +42,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.96
 .product-img img{width:100%;height:100%;object-fit:cover;}
 .product-img .no-img{color:rgba(255,255,255,0.1);font-size:28px;}
 .product-info{padding:12px;}
-.product-name{color:var(--white);font-size:13px;font-weight:700;margin-bottom:4px;line-height:1.4;}
+.product-name{color:var(--white);font-size:13px;font-weight:700;margin-bottom:4px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .product-desc{color:var(--muted);font-size:11px;line-height:1.5;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer;}
 .product-desc.expanded{-webkit-line-clamp:unset;}
 .product-desc.has-more::after{content:' ⋯더보기';color:var(--gold);font-size:10px;font-weight:700;}
 .product-desc.expanded.has-more::after{content:' 접기';}
+a.card-link{text-decoration:none;display:block;cursor:pointer;}
+a.card-link:hover{border-color:rgba(201,168,76,0.35)!important;transform:translateY(-2px);}
 .type-badges{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;}
 .badge{padding:2px 7px;border-radius:10px;font-size:9px;font-weight:700;}
 .badge-burner{background:rgba(79,207,160,0.15);color:#4fcfa0;border:1px solid rgba(79,207,160,0.3);}
 .badge-balanced{background:rgba(201,168,76,0.15);color:var(--gold2);border:1px solid rgba(201,168,76,0.3);}
 .badge-storer{background:rgba(247,111,142,0.15);color:#f76f8e;border:1px solid rgba(247,111,142,0.3);}
 .product-links{display:flex;gap:5px;flex-wrap:wrap;}
-.link-btn{padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;}
-.link-coupang{background:rgba(229,48,42,0.12);border:1px solid rgba(229,48,42,0.25);color:#ff7070;}
-.link-naver{background:rgba(3,199,90,0.1);border:1px solid rgba(3,199,90,0.2);color:#4fcfa0;}
-.link-olive{background:rgba(165,0,52,0.1);border:1px solid rgba(165,0,52,0.2);color:#f76f8e;}
+
 footer{border-top:1px solid rgba(201,168,76,0.1);padding:24px 20px;text-align:center;}
 footer .fb{color:var(--gold);font-size:11px;font-weight:700;letter-spacing:3px;margin-bottom:3px;}
 footer .fi{color:var(--muted);font-size:10px;}
@@ -214,8 +213,12 @@ function renderProducts(products){
         <span class="count">${items.length}개</span>
       </div>
       <div class="product-grid">
-        ${items.map(p=>`
-          <div class="product-card">
+        ${items.map(p=>{
+          // 링크 우선순위: 쿠팡 > 네이버 > 올리브영
+          const link=p.coupang||p.naver||p.olive||'#';
+          const isLink=link!=='#';
+          return `
+          <${isLink?`a href="${link}" target="_blank" rel="noopener noreferrer"`:'div'} class="product-card${isLink?' card-link':''}">
             <div class="product-img">
               ${p.image?`<img src="${p.image}" alt="${p.name}" onerror="this.parentElement.innerHTML='<div class=no-img>🛍️</div>'">`:'<div class="no-img">🛍️</div>'}
             </div>
@@ -223,17 +226,14 @@ function renderProducts(products){
               <div class="product-name">${p.name}</div>
               ${p.desc?`<div class="product-desc" onclick="if(this.classList.contains('has-more'))this.classList.toggle('expanded')">${p.desc}</div>`:''}
               ${p.types?`<div class="type-badges">${typeBadges(p.types)}</div>`:''}
-              <div class="product-links">
-                ${p.coupang?`<a href="${p.coupang}" target="_blank" class="link-btn link-coupang">쿠팡 →</a>`:''}
-                ${p.naver?`<a href="${p.naver}" target="_blank" class="link-btn link-naver">네이버 →</a>`:''}
-                ${p.olive?`<a href="${p.olive}" target="_blank" class="link-btn link-olive">올리브영 →</a>`:''}
-              </div>
+              ${isLink?`<div style="font-size:10px;color:var(--muted);margin-top:6px;opacity:0.7;">${p.coupang?'쿠팡':p.naver?'네이버':'올리브영'} → 바로가기</div>`:''}
             </div>
-          </div>`).join('')}
+          </${isLink?'a':'div'}>`;
+        }).join('')}
       </div>`;
     container.appendChild(section);
   });
-  // 2줄 넘치는 설명에만 더보기 표시
+  // 3줄 넘치는 설명에만 더보기 표시
   setTimeout(()=>{
     document.querySelectorAll('.product-desc').forEach(el=>{
       if(el.scrollHeight>el.clientHeight+2){el.classList.add('has-more');}
