@@ -1154,13 +1154,6 @@ function saveHtml(){
             ))}
           </div>
 
-          {/* 3D 큐브 분포도 */}
-          <div style={cardStyle}>
-            <div style={{color:GOLD,fontSize:11,marginBottom:4,fontWeight:700,letterSpacing:1}}>📦 333 BIO CODE 큐브</div>
-            <div style={{color:MUTED,fontSize:10,marginBottom:14}}>흡수력 · 연소력 · 축적력 3축의 27가지 코드 — 우리 아이 위치가 표시됩니다</div>
-            <CubeChart code={result.code} ment={ment}/>
-          </div>
-
           {/* 솔루션 */}
           <div style={cardStyle}>
             <div style={{color:GOLD,fontSize:12,fontWeight:700,marginBottom:4,letterSpacing:1}}>{mi.goal}</div>
