@@ -1306,76 +1306,67 @@ function saveHtml(){
               </button>
             </div>
 
-            {/* 유료회원 전환 배너 */}
-            <div style={{
-              padding:"14px 16px",borderRadius:12,marginBottom:10,
-              background:"linear-gradient(135deg,rgba(201,168,76,0.08),rgba(13,27,62,0.6))",
-              border:"1px solid rgba(201,168,76,0.3)",
-              position:"relative",overflow:"hidden"
-            }}>
-              <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${GOLD},${GOLD2},${GOLD})`}}/>
-              <div style={{display:"flex",alignItems:"center",gap:10}}>
-                <div style={{fontSize:24,flexShrink:0}}>🏅</div>
-                <div>
-                  <div style={{color:GOLD2,fontSize:12,fontWeight:800,marginBottom:3}}>유료회원 전환 준비 중</div>
-                  <div style={{color:MUTED,fontSize:11,lineHeight:1.6}}>
-                    피지컬UP을 위한 <span style={{color:GOLD}}>철저한 식단 · 운동 · 체중관리</span> 기능이 곧 제공됩니다
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 맞춤 제품 추천 */}
+          {/* 맞춤 제품 추천 바로가기 */}
           {(()=>{
             const shopMap={
-              "111":["#소화효소","#유산균"],"112":["#단백질","#유산균"],
-              "121":["#소화효소","#종합비타민"],"211":["#유산균","#소화효소"],
-              "331":["#단백질","#칼슘마그네슘"],"231":["#단백질","#오메가3"],
-              "321":["#키성장","#칼슘마그네슘"],"131":["#유산균","#소화효소"],
-              "132":["#소화효소","#유산균"],"133":["#유산균","#비타민D"],
-              "311":["#단백질","#종합비타민"],"312":["#단백질","#칼슘마그네슘"],
-              "222":["#종합비타민","#오메가3"],"221":["#종합비타민","#오메가3"],
-              "212":["#단백질","#칼슘마그네슘"],"122":["#비타민D","#유산균"],
-              "333":["#종합비타민","#칼슘마그네슘"],"323":["#비타민D","#칼슘마그네슘"],
-              "332":["#오메가3","#종합비타민"],"322":["#칼슘마그네슘","#비타민D"],
-              "232":["#단백질","#종합비타민"],"113":["#식이섬유","#홈트"],
-              "213":["#식이섬유","#유산균"],"313":["#종합비타민","#홈트"],
-              "233":["#식이섬유","#홈트"],"223":["#식이섬유","#칼슘마그네슘"],
-              "123":["#홈트","#식이섬유"],
+              "111":["소화효소","유산균"],"112":["단백질","유산균"],
+              "121":["소화효소","종합비타민"],"211":["유산균","소화효소"],
+              "331":["단백질","칼슘·마그네슘"],"231":["단백질","오메가3"],
+              "321":["키성장","칼슘·마그네슘"],"131":["유산균","소화효소"],
+              "132":["소화효소","유산균"],"133":["유산균","비타민D"],
+              "311":["단백질","종합비타민"],"312":["단백질","칼슘·마그네슘"],
+              "222":["종합비타민","오메가3"],"221":["종합비타민","오메가3"],
+              "212":["단백질","칼슘·마그네슘"],"122":["비타민D","유산균"],
+              "333":["종합비타민","칼슘·마그네슘"],"323":["비타민D","칼슘·마그네슘"],
+              "332":["오메가3","종합비타민"],"322":["칼슘·마그네슘","비타민D"],
+              "232":["단백질","종합비타민"],"113":["식이섬유","유산균"],
+              "213":["식이섬유","유산균"],"313":["종합비타민","비타민D"],
+              "233":["식이섬유","오메가3"],"223":["식이섬유","칼슘·마그네슘"],
+              "123":["종합비타민","식이섬유"],
             };
-            const nameMap={
-              "#소화효소":"소화효소","#유산균":"유산균","#단백질":"단백질·벌크업",
-              "#종합비타민":"종합비타민","#오메가3":"오메가3","#비타민D":"비타민D",
-              "#칼슘마그네슘":"칼슘·마그네슘","#키성장":"키성장","#식이섬유":"식이섬유",
-              "#홈트":"홈트기구",
-            };
-            const links=shopMap[result.code]||["#종합비타민","#유산균"];
+            const items=shopMap[result.code]||["종합비타민","유산균"];
             return (
-              <div style={{...cardStyle,marginBottom:10}}>
-                <div style={{color:GOLD,fontSize:11,fontWeight:700,letterSpacing:1,marginBottom:10}}>🛒 {ment.nick} 맞춤 추천 제품</div>
-                <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-                  {links.map((l,i)=>(
-                    <a key={i} href={`/shop.html${l}`} target="_blank" rel="noopener noreferrer" style={{
-                      padding:"8px 16px",borderRadius:10,
-                      background:`linear-gradient(135deg,${GOLD}18,rgba(13,27,62,0.6))`,
-                      border:`1px solid ${GOLD}40`,
-                      color:GOLD2,fontSize:13,fontWeight:700,
-                      textDecoration:"none",display:"flex",alignItems:"center",gap:4
-                    }}>🛒 {nameMap[l]} →</a>
+              <div style={{marginBottom:10}}>
+                <div style={{color:GOLD,fontSize:11,fontWeight:700,letterSpacing:1,marginBottom:8}}>🛒 {ment.nick} 맞춤 제품 추천</div>
+                <div style={{display:"flex",gap:6,marginBottom:8,flexWrap:"wrap"}}>
+                  {items.map((name,i)=>(
+                    <span key={i} style={{
+                      padding:"6px 14px",borderRadius:20,
+                      background:`rgba(201,168,76,0.12)`,
+                      border:`1px solid rgba(201,168,76,0.35)`,
+                      color:GOLD2,fontSize:12,fontWeight:700,
+                    }}>💊 {name}</span>
                   ))}
-                  <a href="/shop.html" target="_blank" rel="noopener noreferrer" style={{
-                    padding:"8px 16px",borderRadius:10,
-                    background:"rgba(255,255,255,0.03)",
-                    border:"1px solid rgba(255,255,255,0.08)",
-                    color:MUTED,fontSize:12,fontWeight:500,
-                    textDecoration:"none"
-                  }}>전체 보기</a>
                 </div>
-                <div style={{color:MUTED,fontSize:9,marginTop:10,lineHeight:1.6,opacity:0.7}}>쿠팡 파트너스·네이버 쇼핑 파트너스 활동의 일환으로 일정액의 수수료를 제공받습니다.</div>
+                <a href="/shop.html" style={{
+                  display:"block",width:"100%",padding:"13px",
+                  borderRadius:12,textAlign:"center",
+                  background:"linear-gradient(135deg,#c9a84c,#e8c76a)",
+                  color:NAVY,fontSize:14,fontWeight:900,
+                  textDecoration:"none",boxSizing:"border-box",
+                  boxShadow:"0 4px 16px rgba(201,168,76,0.35)"
+                }}>
+                  🛍️ 맞춤 제품 추천 바로가기
+                </a>
+                <div style={{color:MUTED,fontSize:9,marginTop:8,lineHeight:1.6,opacity:0.7,textAlign:"center"}}>쿠팡 파트너스·네이버 쇼핑 파트너스 활동의 일환으로 일정액의 수수료를 제공받습니다.</div>
               </div>
             );
           })()}
+
+          {/* 유료 서비스 전환 준비 중 */}
+          <div style={{
+            padding:"16px",borderRadius:12,marginBottom:10,
+            background:"linear-gradient(135deg,rgba(201,168,76,0.06),rgba(13,27,62,0.5))",
+            border:"1px solid rgba(201,168,76,0.25)",
+            position:"relative",overflow:"hidden"
+          }}>
+            <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${GOLD},${GOLD2},${GOLD})`}}/>
+            <div style={{color:GOLD2,fontSize:13,fontWeight:800,marginBottom:6}}>🏅 프리미엄 서비스 출시 예정</div>
+            <div style={{color:MUTED,fontSize:11,lineHeight:1.8}}>
+              <span style={{color:GOLD}}>인바디 분석 + 종목별 훈련 스케줄 + BIO CODE 맞춤 식단·영양</span>까지<br/>
+              더 정밀하게 관리해 드리는 1:1 프리미엄이 곧 출시됩니다.
+            </div>
+          </div>
 
           <button onClick={reset} style={{width:"100%",padding:"14px",borderRadius:12,background:"rgba(201,168,76,0.06)",color:MUTED,fontSize:14,border:"1px solid rgba(201,168,76,0.2)",cursor:"pointer",marginBottom:4}}>🔄 처음부터 다시하기</button>
           <p style={{color:"#1a2a3a",fontSize:11,textAlign:"center",marginTop:14,lineHeight:1.7}}>문항에 따라 결과는 다를 수 있으며 재미있는 참고용입니다.<br/>보다 완벽한 BIO CODE 결과는 유료 서비스로 제공해 드릴 예정입니다.</p>
