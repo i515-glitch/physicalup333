@@ -420,7 +420,6 @@ const questionPool = {
     {id:"s30",text:"먹는 양에 비해 살이 잘 찐다",dir:1},
   ]
 };
-};
 
 // 랜덤 추출 함수 (각 테마에서 6개씩 = 18문항)
 function getRandomQuestions(){
