@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>관리자 · PHYSICAL333</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--navy:#060a14;--navy2:#0d1b3e;--gold:#c9a84c;--gold2:#e8c76a;--white:#f0f4ff;--muted:#4a6080;--green:#4fcfa0;--pink:#f76f8e;}
+body{background:var(--navy);font-family:'Noto Sans KR',sans-serif;color:var(--white);min-height:100vh;}
+
+/* 로그인 */
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;}
+.login-box{background:rgba(13,27,62,0.8);border-radius:16px;padding:40px;border:1px solid rgba(201,168,76,0.3);text-align:center;width:320px;position:relative;overflow:hidden;}
+.login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.login-logo{font-size:13px;font-weight:900;color:var(--gold);letter-spacing:3px;margin-bottom:4px;}
+.login-sub{font-size:11px;color:var(--muted);margin-bottom:24px;}
+.login-input{width:100%;padding:12px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.2);color:var(--white);font-size:14px;font-family:'Noto Sans KR',sans-serif;text-align:center;letter-spacing:4px;outline:none;margin-bottom:12px;}
+.login-input:focus{border-color:var(--gold);}
+.login-btn{width:100%;padding:12px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy2);font-size:14px;font-weight:900;border:none;cursor:pointer;}
+.login-err{color:var(--pink);font-size:12px;margin-top:8px;}
+
+/* 관리자 */
+#admin{display:none;padding:20px;max-width:720px;margin:0 auto;}
+.admin-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid rgba(201,168,76,0.2);}
+.admin-title{color:var(--gold);font-size:14px;font-weight:900;letter-spacing:2px;}
+.logout-btn{padding:6px 14px;border-radius:8px;background:rgba(247,111,142,0.1);border:1px solid rgba(247,111,142,0.3);color:var(--pink);font-size:12px;cursor:pointer;}
+
+/* 섹션 */
+.section{background:rgba(13,27,62,0.5);border-radius:14px;padding:20px;margin-bottom:16px;border:1px solid rgba(201,168,76,0.1);}
+.section-title{color:var(--gold);font-size:12px;font-weight:700;letter-spacing:2px;margin-bottom:16px;}
+
+/* 입력 폼 */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.form-input{padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--white);font-size:12px;font-family:'Noto Sans KR',sans-serif;outline:none;width:100%;}
+.form-input:focus{border-color:var(--gold);}
+.form-input.full{grid-column:1/-1;}
+.add-btn{padding:10px 20px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy2);font-size:12px;font-weight:900;border:none;cursor:pointer;white-space:nowrap;}
+
+/* 아이템 목록 */
+.item-list{margin-top:12px;display:flex;flex-direction:column;gap:8px;}
+.item{background:rgba(255,255,255,0.03);border-radius:8px;padding:12px;border:1px solid rgba(255,255,255,0.06);display:flex;align-items:flex-start;gap:10px;}
+.item-info{flex:1;}
+.item-name{color:var(--white);font-size:13px;font-weight:700;margin-bottom:3px;}
+.item-desc{color:var(--muted);font-size:11px;margin-bottom:4px;}
+.item-links{display:flex;gap:6px;flex-wrap:wrap;}
+.item-link{padding:3px 8px;border-radius:4px;font-size:10px;font-weight:700;text-decoration:none;}
+.item-link.c{background:rgba(229,48,42,0.15);color:#ff7070;border:1px solid rgba(229,48,42,0.3);}
+.item-link.n{background:rgba(3,199,90,0.1);color:#4fcfa0;border:1px solid rgba(3,199,90,0.2);}
+.item-link.o{background:rgba(165,0,52,0.1);color:#f76f8e;border:1px solid rgba(165,0,52,0.2);}
+.del-btn{padding:4px 10px;border-radius:6px;background:rgba(247,111,142,0.1);border:1px solid rgba(247,111,142,0.2);color:var(--pink);font-size:11px;cursor:pointer;flex-shrink:0;}
+
+/* 카테고리 선택 */
+.cat-select{padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:var(--white);font-size:12px;font-family:'Noto Sans KR',sans-serif;outline:none;width:100%;}
+
+/* 빈 상태 */
+.empty{color:var(--muted);font-size:12px;text-align:center;padding:20px;opacity:0.5;}
+
+/* 저장 버튼 */
+.save-btn{width:100%;padding:14px;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy2);font-size:14px;font-weight:900;border:none;cursor:pointer;margin-top:8px;}
+.save-msg{color:var(--green);font-size:12px;text-align:center;margin-top:8px;display:none;}
+</style>
+</head>
+<body>
+
+<!-- 로그인 -->
+
+
+<!-- 관리자 -->
+<div id="admin">
+  <div class="admin-header">
+    <div class="admin-title">PHYSICAL333 · ADMIN</div>
+    <button class="logout-btn" onclick="doLogout()">로그아웃</button>
+  </div>
+
+  <!-- 쇼핑 제품 관리 -->
+  <div class="section">
+    <div class="section-title">🛒 쇼핑 제품 관리</div>
+    <div class="form-row">
+      <input class="form-input" id="p-name" placeholder="제품명"/>
+      <input class="form-input" id="p-desc" placeholder="한 줄 설명"/>
+    </div>
+    <div class="form-row">
+      <select class="cat-select" id="p-cat">
+        <option value="키성장">📦 키성장</option>
+        <option value="종합비타민">💊 종합비타민</option>
+        <option value="유산균">🦠 유산균</option>
+        <option value="칼슘마그네슘">🦴 칼슘·마그네슘</option>
+        <option value="비타민D">☀️ 비타민D</option>
+        <option value="오메가3">🐟 오메가3</option>
+        <option value="소화효소">⚡ 소화효소</option>
+        <option value="식이섬유">🌾 식이섬유</option>
+        <option value="단백질">💪 단백질·벌크업</option>
+        <option value="홈트">🏋️ 홈트기구</option>
+      </select>
+      <button class="add-btn" onclick="addProduct()">+ 추가</button>
+    </div>
+    <div class="form-row">
+      <input class="form-input" id="p-coupang" placeholder="쿠팡 링크 (https://...)"/>
+      <input class="form-input" id="p-naver" placeholder="네이버 링크 (https://...)"/>
+    </div>
+    <input class="form-input full" id="p-olive" placeholder="올리브영 링크 (https://...) - 선택"/>
+    <div class="item-list" id="product-list"></div>
+  </div>
+
+  <!-- 유튜브 링크 관리 -->
+  <div class="section">
+    <div class="section-title">📺 유튜브 링크 관리</div>
+    <div class="form-row">
+      <input class="form-input" id="y-title" placeholder="강의 제목"/>
+      <input class="form-input" id="y-url" placeholder="유튜브 링크 (https://...)"/>
+    </div>
+    <div class="form-row">
+      <select class="cat-select" id="y-theme">
+        <option value="테마1">🛑 테마1 · 현타</option>
+        <option value="테마2">🧪 테마2 · 체질변화</option>
+        <option value="테마3">⏰ 테마3 · 식사시간</option>
+        <option value="테마4">🚀 테마4 · 식습관</option>
+        <option value="테마5">🥩 테마5 · 필드영양학</option>
+        <option value="테마6">📈 테마6 · 성장가속</option>
+      </select>
+      <button class="add-btn" onclick="addYoutube()">+ 추가</button>
+    </div>
+    <div class="item-list" id="youtube-list"></div>
+  </div>
+
+  <button class="save-btn" onclick="saveAll()">💾 저장 완료</button>
+  <div class="save-msg" id="save-msg">✅ 저장됐어요! 쇼핑/유튜브 페이지에 반영됩니다.</div>
+</div>
+
+<script>
+const PW = "i515**";
+
+// 데이터
+let products = JSON.parse(localStorage.getItem('p333_products') || '[]');
+let youtubes = JSON.parse(localStorage.getItem('p333_youtubes') || '[]');
+
+function doLogin(){
+  const pw = document.getElementById('pw').value;
+  if(pw === PW){
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('admin').style.display = 'block';
+    renderAll();
+  } else {
+    document.getElementById('err').textContent = '비밀번호가 틀렸어요';
+  }
+}
+
+function doLogout(){
+  document.getElementById('login').style.display = 'flex';
+  document.getElementById('admin').style.display = 'none';
+  document.getElementById('pw').value = '';
+}
+
+// 제품 추가
+function addProduct(){
+  const name = document.getElementById('p-name').value.trim();
+  const desc = document.getElementById('p-desc').value.trim();
+  const cat  = document.getElementById('p-cat').value;
+  const coupang = document.getElementById('p-coupang').value.trim();
+  const naver   = document.getElementById('p-naver').value.trim();
+  const olive   = document.getElementById('p-olive').value.trim();
+  if(!name) return alert('제품명을 입력하세요');
+  products.push({id:Date.now(), name, desc, cat, coupang, naver, olive});
+  ['p-name','p-desc','p-coupang','p-naver','p-olive'].forEach(id=>document.getElementById(id).value='');
+  renderProducts();
+}
+
+function delProduct(id){
+  products = products.filter(p=>p.id!==id);
+  renderProducts();
+}
+
+function renderProducts(){
+  const el = document.getElementById('product-list');
+  if(!products.length){ el.innerHTML='<div class="empty">등록된 제품이 없어요</div>'; return; }
+  el.innerHTML = products.map(p=>`
+    <div class="item">
+      <div class="item-info">
+        <div class="item-name">${p.name} <span style="color:var(--muted);font-size:10px;">[${p.cat}]</span></div>
+        ${p.desc?`<div class="item-desc">${p.desc}</div>`:''}
+        <div class="item-links">
+          ${p.coupang?`<a href="${p.coupang}" target="_blank" class="item-link c">쿠팡</a>`:''}
+          ${p.naver?`<a href="${p.naver}" target="_blank" class="item-link n">네이버</a>`:''}
+          ${p.olive?`<a href="${p.olive}" target="_blank" class="item-link o">올리브영</a>`:''}
+        </div>
+      </div>
+      <button class="del-btn" onclick="delProduct(${p.id})">삭제</button>
+    </div>
+  `).join('');
+}
+
+// 유튜브 추가
+function addYoutube(){
+  const title = document.getElementById('y-title').value.trim();
+  const url   = document.getElementById('y-url').value.trim();
+  const theme = document.getElementById('y-theme').value;
+  if(!title||!url) return alert('제목과 링크를 입력하세요');
+  youtubes.push({id:Date.now(), title, url, theme});
+  ['y-title','y-url'].forEach(id=>document.getElementById(id).value='');
+  renderYoutubes();
+}
+
+function delYoutube(id){
+  youtubes = youtubes.filter(y=>y.id!==id);
+  renderYoutubes();
+}
+
+function renderYoutubes(){
+  const el = document.getElementById('youtube-list');
+  if(!youtubes.length){ el.innerHTML='<div class="empty">등록된 유튜브 링크가 없어요</div>'; return; }
+  el.innerHTML = youtubes.map(y=>`
+    <div class="item">
+      <div class="item-info">
+        <div class="item-name">${y.title}</div>
+        <div class="item-desc">[${y.theme}] <a href="${y.url}" target="_blank" style="color:var(--gold);font-size:11px;">${y.url}</a></div>
+      </div>
+      <button class="del-btn" onclick="delYoutube(${y.id})">삭제</button>
+    </div>
+  `).join('');
+}
+
+function renderAll(){
+  renderProducts();
+  renderYoutubes();
+}
+
+function saveAll(){
+  localStorage.setItem('p333_products', JSON.stringify(products));
+  localStorage.setItem('p333_youtubes', JSON.stringify(youtubes));
+  const msg = document.getElementById('save-msg');
+  msg.style.display = 'block';
+  setTimeout(()=>msg.style.display='none', 3000);
+}
+</script>
+</body>
+</html>
