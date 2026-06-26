@@ -70,10 +70,10 @@
   .pf .conf{text-transform:uppercase;letter-spacing:1.5px;}
   .body{flex:1;padding-top:12mm;padding-bottom:6mm;}
 
-  /* ===== COVER PAGE (Navy Theme for White Logo) ===== */
+  /* ===== COVER PAGE (White Theme) ===== */
   .cover{
-    background:var(--navy);
-    color:#ffffff;
+    background:var(--page);
+    color:var(--navy);
     justify-content:flex-start;
     padding:24mm 13mm;
     width:160mm;
@@ -88,7 +88,7 @@
   .cover-mid{margin-top:14mm;margin-bottom:auto;}
   .cover .rule{width:60px;height:3px;background:var(--gold);margin:0 auto 22px;}
   .cover .kind{font-size:10pt;letter-spacing:7px;color:var(--gold);text-transform:uppercase;margin-bottom:16px;font-weight:600;}
-  .cover h1{font-family:'Pretendard',sans-serif;font-size:34pt;font-weight:900;line-height:1.3;letter-spacing:-1px;color:#ffffff;}
+  .cover h1{font-family:'Pretendard',sans-serif;font-size:34pt;font-weight:900;line-height:1.3;letter-spacing:-1px;color:var(--navy);}
   .cover .quote{margin:22px auto 0;text-align:center;}
   .cover .quote .slogan-img{width:68mm;height:auto;display:block;margin:0 auto;}
   .cover-info{
@@ -107,7 +107,7 @@
     text-align:center;
   }
   .cover-info div span{font-size:8pt;letter-spacing:2px;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:4px;font-weight:600;}
-  .cover-info div b{font-size:13pt;color:#ffffff;font-weight:700;}
+  .cover-info div b{font-size:13pt;color:var(--navy);font-weight:700;}
 
   /* ===== HEADINGS ===== */
   .chapter{display:flex;align-items:baseline;gap:12px;margin-bottom:3px;}
@@ -327,12 +327,12 @@
 
 <!-- ============ PAGE 1 : COVER ============ -->
 <div class="page cover">
-  <img class="logo-img" src="/static/logo.png">
+  <img class="logo-img" src="/static/logo.png?v=2">
   <div class="cover-mid">
     <div class="rule"></div>
     <div class="kind">Premium Analysis Report</div>
     <h1>성장잠재력<br>분석 보고서</h1>
-    <div class="quote"><img class="slogan-img" src="/static/slogan_logo.png" alt="Physical is Data."></div>
+    <div class="quote"><img class="slogan-img" src="/static/slogan_logo.png?v=2" alt="Physical is Data."></div>
   </div>
   <div class="cover-info">
     <div><span>분석 대상</span><b>신지오</b></div>
@@ -584,22 +584,6 @@
   <p class="src" style="margin-top: 30px;">근거: 질병관리청 소아청소년 표준 성장도표 / 자체 누적 신체 발달 데이터 추적.</p>
 </div>
 
-<!-- 3.5장 누적 성장 추이 신설 -->
-<div class="sheet" id="growth-history-section" style="display: none;">
-  <div class="ph"><span class="doc-id">DOC-333-0001</span><span class="logo">PHYSICAL UP 333</span></div>
-  <div class="chapter"><span class="cn">3.5</span><span class="ck">현재 몸 · 누적 성장 추이</span></div>
-  <h2 style="margin-top: 15px; font-size: 15pt; color: var(--navy); font-weight: 800;">우리아이 누적 성장 추이 곡선</h2>
-  <div class="box" style="text-align: center; padding: 25px; margin-top: 25px;">
-    <img id="growth-history-chart-img" src="" style="max-width: 90%; height: auto; border-radius: 6px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);" />
-    <p class="src" id="growth-history-notice" style="margin-top: 20px; font-size: 10pt; color: var(--gold); font-weight: 700; text-align: center;"></p>
-  </div>
-  <div class="note" style="margin-top: 20px; padding: 15px 20px;">
-    <b>성장 관리 가이드 — 꾸준함이 데이터를 만들고, 데이터가 성장을 증명합니다.</b>
-    <p style="margin: 5px 0 0; line-height: 1.6; font-size: 9.5pt; color: var(--ink2);">아이가 자람에 따라 키와 몸무게는 일정한 주기(월 1회 권장)로 체크하는 것이 가장 과학적입니다. 점들이 모여 선이 되고, 그 선이 아이가 가야 할 최적의 성장 경로를 명확하게 제시해 줍니다. 매달 꾸준한 측정으로 변화를 확인하세요.</p>
-  </div>
-  <p class="src" style="margin-top: 30px;">근거: 질병관리청 소아청소년 표준 성장도표 / 자체 누적 신체 발달 데이터 추적.</p>
-</div>
-
 <div class="sheet">
 <!-- ============ PAGE 6 : Ⅳ 비교군 ============ -->
 <div class="section">
@@ -681,94 +665,95 @@
     <div style="font-size:9pt;color:#44505f;margin:8px 0;">전체 아이들이 27유형에 어떻게 분포하는지, 그 안에서 신지오 학생의 위치를 표시했습니다. 가운데가 흔하고 양 끝이 드뭅니다.</div>
     <svg width="100%" height="210" viewBox="0 0 720 210" preserveAspectRatio="xMidYMid meet" style="margin:6px 0;">
   <path d="M 40 107 L 40 107 L 147 93 L 253 78 L 360 44 L 467 50 L 573 79 L 680 101 L 680 129 L 573 151 L 467 180 L 360 186 L 253 152 L 147 137 L 40 123 Z" fill="#eef1f6" stroke="#c0c8d4" stroke-width="1.2"/>
-  <line x1="40" y1="115" x2="680" y2="115" stroke="#c0c8d4" stroke-width="0.8" stroke-dasharray="3 3"/><line x1="40" y1="107" x2="40" y2="123" stroke="#9aa3b0" stroke-width="0.8"/><text x="40" y="138" font-size="9.5" fill="#44505f" text-anchor="middle" font-weight="700">1-1-1</text><text x="40" y="150" font-size="8" fill="#8a6b2c" text-anchor="middle">0.5% · 200명 중 1명</text><line x1="360" y1="44" x2="360" y2="186" stroke="#9aa3b0" stroke-width="0.8"/><text x="360" y="201" font-size="9.5" fill="#44505f" text-anchor="middle" font-weight="700">2-2-2</text><text x="360" y="36" font-size="8" fill="#8a6b2c" text-anchor="middle">30.5% · 가장 흔함</text><line x1="680" y1="101" x2="680" y2="129" stroke="#9aa3b0" stroke-width="0.8"/><text x="680" y="144" font-size="9.5" fill="#44505f" text-anchor="middle" font-weight="3-3-3">3-3-3</text><text x="680" y="156" font-size="8" fill="#8a6b2c" text-anchor="middle">0.5% · 200명 중 1명</text><circle class="bc-user-marker" cx="253" cy="115" r="8" fill="#15233b" stroke="#fff" stroke-width="2.5"/>
+  <line x1="40" y1="115" x2="680" y2="115" stroke="#c0c8d4" stroke-width="0.8" stroke-dasharray="3 3"/><line x1="40" y1="107" x2="40" y2="123" stroke="#9aa3b0" stroke-width="0.8"/><text x="40" y="138" font-size="9.5" fill="#44505f" text-anchor="middle" font-weight="700">1-1-1</text><text x="40" y="150" font-size="8" fill="#8a6b2c" text-anchor="middle">0.5% · 200명 중 1명</text><line x1="360" y1="44" x2="360" y2="186" stroke="#9aa3b0" stroke-width="0.8"/><text x="360" y="201" font-size="9.5" fill="#44505f" text-anchor="middle" font-weight="700">2-2-2</text><text x="360" y="36" font-size="8" fill="#8a6b2c" text-anchor="middle">30.5% · 가장 흔함</text><line x1="680" y1="101" x2="680" y2="129" stroke="#9aa3b0" stroke-width="0.8"/><text x="680" y="144" font-size="9.5" fill="#44505f" text-anchor="middle" font-weight="700">3-3-3</text><text x="680" y="156" font-size="8" fill="#8a6b2c" text-anchor="middle">0.5% · 200명 중 1명</text><circle class="bc-user-marker" cx="253" cy="115" r="8" fill="#15233b" stroke="#fff" stroke-width="2.5"/>
   <text class="bc-user-label" x="253" y="63" font-size="11" fill="#15233b" text-anchor="middle" font-weight="700">신지오 2·1·2</text>
   <line class="bc-user-line" x1="253" y1="71" x2="253" y2="105" stroke="#b08a3e" stroke-width="0.8" stroke-dasharray="2 2"/>
   <text x="40" y="112" font-size="8.5" fill="#9aa3b0">← 약함</text>
-  <text x="680" y="112" font-size="8.5" fill="#9aa3b0" text-ancho<div class="sheet">
-<!-- ============ PAGE 10 : Ⅷ 실행전략 ============ -->
-<div class="section cont">
-  <div class="body">
-    <div class="chapter"><span class="cn">8</span><span class="ck">실행 전략 · 5영역 처방</span></div>
-    <h2>무엇을, 어떻게 바꿀 것인가</h2>
-    <p class="lead" id="presc-lead-text">로드맵의 현재 시기 과제를 5개 영역의 구체적 실행안으로 제시합니다. 신체 대사형과 약점 요소를 고려한 최우선 과제를 식별하여 실행을 시작합니다.</p>
-    <table>
-      <thead><tr><th>영역</th><th>처방</th><th>우선순위</th></tr></thead>
-      <tbody id="presc-table-body">
-        <!-- 동적 렌더링 영역 -->
-      </tbody>
-    </table>
-
-    <h3>왜 이 처방인가 — 근거 한 줄씩 <span class="kr">Rationale</span></h3>
-    <div id="presc-rationale-area">
-      <!-- 동적 렌더링 영역 -->
-    </div>
-    <div class="engine"><b>분석엔진 — 처방 생성</b>입력: BioCode(흡수 약점) + 설문 원인 + 습관 진단 / 처리: 약한 축 우선 + 근거DB 매칭 / 출력: 우선순위가 매겨진 5영역 실행안.</div>
+  <text x="680" y="112" font-size="8.5" fill="#9aa3b0" text-anchor="end">강함 →</text>
+  <text class="bc-user-desc" x="360" y="205" font-size="9.5" fill="#8a6b2c" text-anchor="middle" font-weight="700">양 끝도 드물게 있습니다 — 신지오는 하위 12%, 대사를 채우면 가운데로 이동</text>
+</svg>
   </div>
 </div>
 </div>
 
-<div class="sheet" id="sheet-workout-inbody">
-<!-- ============ PAGE : 부위별 맞춤 운동 스케줄 ============ -->
-<div class="section cont">
-  <div class="body">
-    <div class="chapter"><span class="cn">8</span><span class="ck">실행 전략 · 부위별 맞춤 운동</span></div>
-    <h2>어디를, 어떻게 키울 것인가</h2>
-    <p class="lead" id="workout-lead-text">인바디의 부위별 근육 분석은 '몸 전체'가 아니라 '어느 부위'를 보강해야 하는지 알려줍니다. 부위별 발달을 읽고, 상체·하체·코어 맞춤 운동 스케줄을 제시합니다.</p>
-
-    <h3>부위별 근육 발달 <span class="kr">Segmental Lean Analysis</span></h3>
-    <p style="font-size:8.5pt;color:var(--ink3);margin:10px 0 16px;">가운데 세로선이 <b>또래 표준</b>입니다. 막대가 <span style="color:#b04e3a;font-weight:700;">왼쪽(빨강)</span>이면 표준 이하로 보강이 필요한 부위입니다.</p>
-    <div class="dbar">
-      <div class="dt"><span>오른팔</span><b style="color:#b04e3a;">표준 이하</b></div>
-      <div class="dtrack"><div class="dmid"></div><div class="dseg neg" style="width:30%;"><span>보강</span></div></div>
-    </div>
-    <div class="dbar">
-      <div class="dt"><span>왼팔</span><b style="color:#b04e3a;">표준 이하</b></div>
-      <div class="dtrack"><div class="dmid"></div><div class="dseg neg" style="width:30%;"><span>보강</span></div></div>
-    </div>
-    <div class="dbar">
-      <div class="dt"><span>몸통(코어)</span><b style="color:#235c4e;">표준</b></div>
-      <div class="dtrack"><div class="dmid"></div><div class="dseg pos" style="width:8%;"><span></span></div></div>
-    </div>
-    <div class="dbar">
-      <div class="dt"><span>오른다리</span><b style="color:#235c4e;">표준</b></div>
-      <div class="dtrack"><div class="dmid"></div><div class="dseg pos" style="width:8%;"><span></span></div></div>
-    </div>
-    <div class="dbar">
-      <div class="dt"><span>왼다리</span><b style="color:#235c4e;">표준</b></div>
-      <div class="dtrack"><div class="dmid"></div><div class="dseg pos" style="width:8%;"><span></span></div></div>
-    </div>
-    <div class="interp" id="workout-interpretation"><b>해석.</b> 다리(하체)와 몸통은 표준이지만 양팔(상체)이 표준 이하로, 상체 보강이 우선입니다. 성장기이므로 모든 근력 운동은 1RM(최대 무게) 측정 없이 맨몸·가벼운 무게 위주로 진행합니다.</div>
-
-    <h3>상·하체 운동 스케줄 <span class="kr">Training Schedule</span></h3>
-    <table>
-      <thead><tr><th>구분</th><th>현재</th><th>처방 (주 단위)</th><th>목표</th></tr></thead>
-      <tbody id="workout-schedule-body">
-        <!-- 동적 렌더링 영역 -->
-      </tbody>
-    </table>
-    <div class="engine"><b>분석엔진 — 부위별 운동 설계</b>입력: 인바디 부위별 근육(팔·다리·몸통) + 종목(야구·내야수) / 처리: 약한 부위 보강 + 종목 핵심 부위 강화 + 성장기 안전 규칙 / 출력: 상·하체 주간 스케줄.</div>
-    <div class="note" id="workout-safety-note"><b>안전 원칙.</b> 청소년 근력 운동은 성장판을 손상시키지 않습니다 — 오히려 올바른 자극은 뼈 성장을 촉진합니다(울프의 법칙). 다만 과도한 중량·잘못된 자세는 부상 위험이 있으므로, 1RM 측정 금지 및 맨몸/밴드 우선 원칙을 준수합니다.</div>
-    <p class="src">근거: AAP·NSCA 청소년 저항운동 지침 / 부위별 근육 분석은 InBody 추정치 / 운동 후 단백질 합성 골든타임.</p>
-  </div>
-</div>
-</div>
-
+<!-- ============ PAGE 8 : Ⅵ 목표 기준 ============ -->
 <div class="sheet">
-<!-- ============ PAGE 11 : Ⅸ 로드맵 + 평결 ============ -->
 <div class="section">
   <div class="body">
-    <div class="chapter"><span class="cn">9</span><span class="ck">실행 설계 · 실행 로드맵</span></div>
-    <h2>100일, 그리고 그 다음</h2>
-    <p class="lead">큰 변화는 작은 습관에서 시작됩니다. 먼저 100일 동안 토대를 만들고, 이후 매 학기 재측정으로 궤적을 관리합니다. 핵심은 체중계 숫자가 아니라 인바디 추세입니다.</p>
-    <table>
-      <thead><tr><th>구간</th><th>목표</th><th>핵심 행동</th><th>점검</th></tr></thead>
-      <tbody id="roadmap-table-body">
-        <!-- 동적 렌더링 영역 -->
-      </tbody>
-    </table>
+    <div class="chapter"><span class="cn">6</span><span class="ck">실행 설계 · 목표 기준</span></div>
+    <h2>도달해야 할 선수의 몸</h2>
+    <p class="lead">우리의 목표는 막연한 '키 크기'가 아니라 '운동을 잘하는 몸'입니다. 그 기준은 실제로 그 레벨에서 뛰는 선수들의 실측 데이터입니다. 신지오 학생의 현재 위치와 예상키를 이 사다리 위에 함께 올려놓았습니다.</p>
 
-    <div id="constitution-rules-container"></div>. 하나는 교육부 <b>PAPS(학생건강체력평가)</b>로, 5등급 체계와 셔틀런·악력·제자리멀리뛰기 항목을 제공하며 부모님이 NEIS에서 직접 결과를 확인하실 수 있습니다. 다른 하나는 세계 최고 수준인 <b>MLB 드래프트 컴바인</b>입니다 — 30야드 대시, 제자리멀리뛰기, 악력, 어깨 가동성(부상 위험)까지 측정하며, 이 값들은 20-80 스카우팅 스케일(50=평균, 70+=최상위)로 환산되는데 이것이 본 보고서 백분위 시스템의 원형입니다.</p>
+    <svg width="100%" viewBox="0 0 560 360" preserveAspectRatio="xMidYMid meet" style="margin:10px 0;font-family:Pretendard,sans-serif;">
+      <defs>
+        <linearGradient id="ladderGrad" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stop-color="#2c6356"/><stop offset="0.5" stop-color="#9a7836"/><stop offset="1" stop-color="#b08a3e"/>
+        </linearGradient>
+        <linearGradient id="zoneNow" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#15233b" stop-opacity="0.06"/><stop offset="1" stop-color="#15233b" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+
+      <!-- y축 키 눈금 -->
+      <g stroke="#e3e7ec" stroke-width="1">
+        <line x1="70" y1="330" x2="70" y2="22"/>
+      </g>
+      <g font-size="9" fill="#9aa3b0" text-anchor="end">
+        <text x="62" y="333">155</text>
+        <text x="62" y="258">165</text>
+        <text x="62" y="183">175</text>
+        <text x="62" y="108">185</text>
+        <text x="62" y="33">195</text>
+      </g>
+      <g stroke="#eef1f5" stroke-width="1" stroke-dasharray="2 3">
+        <line x1="70" y1="330" x2="530" y2="330"/>
+        <line x1="70" y1="255" x2="530" y2="255"/>
+        <line x1="70" y1="180" x2="530" y2="180"/>
+        <line x1="70" y1="105" x2="530" y2="105"/>
+        <line x1="70" y1="30" x2="530" y2="30"/>
+      </g>
+      <text x="20" y="180" font-size="9.5" fill="#7b8493" text-anchor="middle" transform="rotate(-90 20 180)" font-weight="600">신장 (cm)</text>
+
+      <!-- 선수 레벨 막대들 -->
+      <g>
+        <rect x="90" y="38" width="240" height="15" rx="7.5" fill="#b08a3e" opacity="0.88"/>
+        <text x="338" y="49" font-size="9.5" fill="#8a6b2c" font-weight="700">MLB · 193cm</text>
+      </g>
+      <g>
+        <rect x="90" y="105" width="240" height="15" rx="7.5" fill="#9a7836" opacity="0.85"/>
+        <text x="338" y="116" font-size="9.5" fill="#8a6b2c" font-weight="700">KBO 프로 · 184cm</text>
+      </g>
+      <g>
+        <rect x="90" y="143" width="240" height="13" rx="6.5" fill="#9a7836" opacity="0.6"/>
+        <text x="338" y="153" font-size="9.5" fill="#9a7836" font-weight="600">대학 선수 · 182cm</text>
+      </g>
+      <g>
+        <rect x="90" y="195" width="240" height="13" rx="6.5" fill="#2c6356" opacity="0.6"/>
+        <text x="338" y="205" font-size="9.5" fill="#2c6356" font-weight="600">또래 상위 10% · 176cm</text>
+      </g>
+
+      <!-- 신지오 예상키 -->
+      <line class="ladder-exp-line" x1="70" y1="161" x2="530" y2="161" stroke="#15233b" stroke-width="1.5" stroke-dasharray="5 3"/>
+      <circle class="ladder-exp-marker" cx="180" cy="161" r="7" fill="#15233b"/>
+      <text class="ladder-exp-label" x="180" y="151" font-size="10" fill="#15233b" text-anchor="middle" font-weight="800">예상키 177.5cm</text>
+
+      <!-- 신지오 현재 -->
+      <rect class="ladder-cur-zone" x="70" y="255" width="460" height="75" fill="url(#zoneNow)"/>
+      <circle class="ladder-cur-marker" cx="180" cy="255" r="8" fill="#b08a3e" stroke="#fff" stroke-width="2"/>
+      <text class="ladder-cur-label" x="180" y="277" font-size="10.5" fill="#8a6b2c" text-anchor="middle" font-weight="800">현재 165cm</text>
+
+      <!-- 성장 화살표 -->
+      <path class="ladder-gap-path" d="M180,247 L180,170" stroke="#b08a3e" stroke-width="2.5" stroke-dasharray="4 3" marker-end="url(#arrUp)"/>
+      <defs><marker id="arrUp" markerWidth="9" markerHeight="9" refX="4.5" refY="7" orient="auto"><path d="M1,7 L4.5,1 L8,7" fill="none" stroke="#b08a3e" stroke-width="1.8"/></marker></defs>
+      <text class="ladder-gap-label" x="200" y="212" font-size="8.5" fill="#8a6b2c" font-weight="600">성장 잠재력 +12.5cm</text>
+    </svg>
+    <p class="src">매핑: 키 155~195cm 기준. 현재 165cm는 최근 측정, 예상키 177.5cm는 중간부모키(MPH) 공식. 레벨 데이터: KBO·MLB 신체 프로필, 고교야구 표준치(2016).</p>
+
+    <div class="interp ladder-interp"><b>한눈에 보기.</b> 신지오 학생은 현재 165cm로, 유전 예상키는 177.5cm입니다. 이는 <b>'선수 또래 상위 10%(176cm)'를 넘어 '대학 선수(182cm)' 구간에 근접</b>하는 잠재력입니다. 키가 다는 아니지만, 출발 잠재력이 충분하다는 것은 분명한 강점입니다. 여기에 순발력 강점과 흡수력 보강이 더해지면 '운동 잘하는 몸'에 닿을 수 있습니다.</div>
+    <div class="engine"><b>분석엔진 — 목표 기준 DB</b>입력: 종목·포지션 + 예상키 / 출력: 레벨별 목표값과 현재 위치. 데이터: KBO·NPB·MLB 신체·구속, 고교 근력 표준치(2016). 검증된 공식 체계를 빌려 씁니다.</div>
+
+    <h3>검증된 측정 체계를 빌려 씁니다 <span class="kr">Proven Metrics</span></h3>
+    <p>신지오 학생의 측정에는 이미 공신력 있는 두 체계를 씁니다. 하나는 교육부 <b>PAPS(학생건강체력평가)</b>로, 5등급 체계와 셔틀런·악력·제자리멀리뛰기 항목을 제공하며 부모님이 NEIS에서 직접 결과를 확인하실 수 있습니다. 다른 하나는 세계 최고 수준인 <b>MLB 드래프트 컴바인</b>입니다 — 30야드 대시, 제자리멀리뛰기, 악력, 어깨 가동성(부상 위험)까지 측정하며, 이 값들은 20-80 스카우팅 스케일(50=평균, 70+=최상위)로 환산되는데 이것이 본 보고서 백분위 시스템의 원형입니다.</p>
 
     <div class="note"><b>관점 — 작아도 됩니다.</b> 지금 체격이 작아도 비관할 필요는 없습니다. 중학생 때 저평가됐다가 고등학교에서 급성장한 사례, 작은 체격으로 정상급에 오른 사례(알투베·김선빈 등)가 실재합니다. MLB 1라운드 지명자 분석에서도 고교 시절 체격이 미래 성적을 결정하지 않는다는 결과가 나왔습니다. 목표는 '키'가 아니라 '운동 잘하는 몸'이며, 신지오 학생은 순발력이라는 강점을 이미 쥐고 있습니다.</div>
     <p class="src">근거: 교육부 PAPS 5등급 / MLB 드래프트 컴바인·20-80 스케일 / MLB 1라운드 지명자 체격 분석 — Crotin 외(2022).</p>
@@ -1773,24 +1758,6 @@ document.addEventListener("DOMContentLoaded", () => {
             verdictVq.innerHTML = `현재 상태는 <em>${biocode.replaceAll("-", "·")} · ${persona}</em>입니다.<br>아동 고유의 생활 루틴 and 대사 작용을 교정하여 잠재력을 최대로 실현하도록 권장합니다.`;
         }
     }
-    // 누적 성장 추이 차트 바인딩
-    const growthHistorySection = document.getElementById("growth-history-section");
-    const growthHistoryChartImg = document.getElementById("growth-history-chart-img");
-    const growthHistoryNotice = document.getElementById("growth-history-notice");
-    if (growthHistoryChartImg && data.chart_growth_history) {
-        if (growthHistorySection) growthHistorySection.style.display = "block";
-        growthHistoryChartImg.src = data.chart_growth_history;
-        
-        const historyCount = data.history_count || 1;
-        if (growthHistoryNotice) {
-            if (historyCount <= 1) {
-                growthHistoryNotice.innerText = "💡 이번이 첫 번째 측정입니다. 다음 달에 다시 측정하시면 멋진 누적 성장 추이 곡선이 그려집니다!";
-            } else {
-                growthHistoryNotice.innerText = `💡 총 ${historyCount}회의 누적 데이터를 기반으로 분석된 성장 추이 곡선입니다.`;
-            }
-        }
-    }
-
     // 누적 성장 추이 차트 바인딩
     const growthHistorySection = document.getElementById("growth-history-section");
     const growthHistoryChartImg = document.getElementById("growth-history-chart-img");

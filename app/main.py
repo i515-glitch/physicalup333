@@ -360,101 +360,101 @@ def online_apply(request: AnalysisRequest):
             len(request.survey_responses) == 24):
             is_completed = True
             
-        if request.is_free:
-            reservation_date = request.reservation_date
+        # All requests are now treated as reservation requests
+        reservation_date = request.reservation_date
+        
+        # 예약 날짜가 입력되지 않은 경우 -> 자동으로 오늘부터 50명이 안 찬 가장 빠른 날짜를 예약일로 자동 배정
+        if not reservation_date:
+            from datetime import timedelta
+            search_date = datetime.now() # Start searching from today
+            found_date = None
             
-            # 예약 날짜가 입력되지 않은 경우 -> 자동으로 내일부터 50명이 안 찬 가장 빠른 날짜를 예약일로 자동 배정
-            if not reservation_date:
-                from datetime import timedelta
-                search_date = datetime.now() + timedelta(days=1)
-                found_date = None
+            # 예약 카운팅을 위한 사전 스캔
+            scheduled_counts = {}
+            if os.path.exists(REQUESTS_DIR):
+                for filename in os.listdir(REQUESTS_DIR):
+                    if filename.endswith(".json"):
+                        file_path = os.path.join(REQUESTS_DIR, filename)
+                        try:
+                            with open(file_path, "r", encoding="utf-8") as f:
+                                d = json.load(f)
+                            if d.get("status") == "Scheduled":
+                                sched_at = d.get("scheduled_at", 0)
+                                if sched_at > 0:
+                                    sched_dt = datetime.fromtimestamp(sched_at / 1000)
+                                    date_str = sched_dt.strftime("%Y-%m-%d")
+                                    scheduled_counts[date_str] = scheduled_counts.get(date_str, 0) + 1
+                        except:
+                            pass
+                            
+            for _ in range(60):  # 최대 60일 뒤까지 탐색
+                date_str = search_date.strftime("%Y-%m-%d")
+                if scheduled_counts.get(date_str, 0) < 50:
+                    found_date = date_str
+                    break
+                search_date += timedelta(days=1)
                 
-                # 예약 카운팅을 위한 사전 스캔
-                scheduled_counts = {}
-                if os.path.exists(REQUESTS_DIR):
-                    for filename in os.listdir(REQUESTS_DIR):
-                        if filename.endswith(".json"):
-                            file_path = os.path.join(REQUESTS_DIR, filename)
-                            try:
-                                with open(file_path, "r", encoding="utf-8") as f:
-                                    d = json.load(f)
-                                if d.get("status") == "Scheduled":
-                                    sched_at = d.get("scheduled_at", 0)
-                                    if sched_at > 0:
-                                        sched_dt = datetime.fromtimestamp(sched_at / 1000)
-                                        date_str = sched_dt.strftime("%Y-%m-%d")
-                                        scheduled_counts[date_str] = scheduled_counts.get(date_str, 0) + 1
-                            except:
-                                pass
-                                
-                for _ in range(60):  # 최대 60일 뒤까지 탐색
-                    date_str = search_date.strftime("%Y-%m-%d")
-                    if scheduled_counts.get(date_str, 0) < 50:
-                        found_date = date_str
-                        break
-                    search_date += timedelta(days=1)
-                    
-                if not found_date:
-                    raise HTTPException(status_code=400, detail="현재 예약이 밀려 있어 신청이 불가능합니다. 관리자에게 문의해 주세요.")
-                
-                reservation_date = found_date
-            else:
-                # 지정 예약일을 선택한 경우 -> config에 열린 날짜인지 검증
-                open_dates = []
-                if os.path.exists(CONFIG_FILE):
-                    with open(CONFIG_FILE, "r", encoding="utf-8") as f:
-                        config_data = json.load(f)
-                        open_dates = config_data.get("open_dates", [])
-                
-                if reservation_date not in open_dates:
-                    raise HTTPException(status_code=400, detail="지정된 예약 오픈 날짜가 아닙니다.")
-                    
-                today_str = datetime.now().strftime("%Y-%m-%d")
-                if reservation_date < today_str:
-                    raise HTTPException(status_code=400, detail="이미 지난 날짜로는 예약 신청이 불가합니다.")
-                    
-                # 50명 정원 체크
-                booked_count = 0
-                if os.path.exists(REQUESTS_DIR):
-                    for filename in os.listdir(REQUESTS_DIR):
-                        if filename.endswith(".json"):
-                            file_path = os.path.join(REQUESTS_DIR, filename)
-                            try:
-                                with open(file_path, "r", encoding="utf-8") as f:
-                                    data = json.load(f)
-                                if data.get("status") == "Scheduled":
-                                    sched_at = data.get("scheduled_at", 0)
-                                    if sched_at > 0:
-                                        sched_dt = datetime.fromtimestamp(sched_at / 1000)
-                                        if sched_dt.strftime("%Y-%m-%d") == reservation_date:
-                                            booked_count += 1
-                            except:
-                                pass
-                if booked_count >= 50:
-                    raise HTTPException(status_code=400, detail="선택하신 예약 날짜의 정원(50명)이 이미 초과 마감되었습니다.")
-                
-            # 3. 중복 신청 제한 검증 (이름 + 생년월일 + 연락처 기준 30일 제한)
-            if check_duplicate_application(request.name, request.birth_date, request.phone):
-                raise HTTPException(
-                    status_code=400, 
-                    detail="학생 1인당 월 1회 신청으로 제한됩니다. 최근 30일 이내에 이미 예약 또는 검사 완료된 이력이 있습니다."
-                )
-                
-            status = "Scheduled"
-            # Load default send time from config (e.g. "10:00")
-            default_send_time = "10:00"
+            if not found_date:
+                raise HTTPException(status_code=400, detail="현재 예약이 밀려 있어 신청이 불가능합니다. 관리자에게 문의해 주세요.")
+            
+            reservation_date = found_date
+        else:
+            # 지정 예약일을 선택한 경우 -> config에 열린 날짜인지 검증
+            open_dates = []
             if os.path.exists(CONFIG_FILE):
-                try:
-                    with open(CONFIG_FILE, "r", encoding="utf-8") as f:
-                        config_data = json.load(f)
-                        default_send_time = config_data.get("default_send_time", "10:00")
-                except:
-                    pass
-            if ":" not in default_send_time:
-                default_send_time = "10:00"
+                with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+                    config_data = json.load(f)
+                    open_dates = config_data.get("open_dates", [])
+            
+            if reservation_date not in open_dates:
+                raise HTTPException(status_code=400, detail="지정된 예약 오픈 날짜가 아닙니다.")
                 
-            dt = datetime.strptime(f"{reservation_date} {default_send_time}:00", "%Y-%m-%d %H:%M:%S")
-            scheduled_at = dt.timestamp() * 1000
+            today_str = datetime.now().strftime("%Y-%m-%d")
+            if reservation_date < today_str:
+                raise HTTPException(status_code=400, detail="이미 지난 날짜로는 예약 신청이 불가합니다.")
+                
+            # 50명 정원 체크
+            booked_count = 0
+            if os.path.exists(REQUESTS_DIR):
+                for filename in os.listdir(REQUESTS_DIR):
+                    if filename.endswith(".json"):
+                        file_path = os.path.join(REQUESTS_DIR, filename)
+                        try:
+                            with open(file_path, "r", encoding="utf-8") as f:
+                                data = json.load(f)
+                            if data.get("status") == "Scheduled":
+                                sched_at = data.get("scheduled_at", 0)
+                                if sched_at > 0:
+                                    sched_dt = datetime.fromtimestamp(sched_at / 1000)
+                                    if sched_dt.strftime("%Y-%m-%d") == reservation_date:
+                                        booked_count += 1
+                        except:
+                            pass
+            if booked_count >= 50:
+                raise HTTPException(status_code=400, detail="선택하신 예약 날짜의 정원(50명)이 이미 초과 마감되었습니다.")
+            
+        # 3. 중복 신청 제한 검증 (이름 + 생년월일 + 연락처 기준 30일 제한)
+        if check_duplicate_application(request.name, request.birth_date, request.phone):
+            raise HTTPException(
+                status_code=400, 
+                detail="학생 1인당 월 1회 신청으로 제한됩니다. 최근 30일 이내에 이미 예약 또는 검사 완료된 이력이 있습니다."
+            )
+            
+        status = "Scheduled"
+        # Load default send time from config (e.g. "10:00" or "00:01" for immediate dispatch)
+        default_send_time = "10:00"
+        if os.path.exists(CONFIG_FILE):
+            try:
+                with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+                    config_data = json.load(f)
+                    default_send_time = config_data.get("default_send_time", "10:00")
+            except:
+                pass
+        if ":" not in default_send_time:
+            default_send_time = "10:00"
+            
+        dt = datetime.strptime(f"{reservation_date} {default_send_time}:00", "%Y-%m-%d %H:%M:%S")
+        scheduled_at = dt.timestamp() * 1000
 
         # Calculate BioCode only if completed, otherwise generate dummy or skip AI comment draft
         ai_comment = ""

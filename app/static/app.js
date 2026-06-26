@@ -1,8 +1,6 @@
 // State management
 let surveyAnswers = {}; // key: question ID (16~39), value: int (1~5)
 let analysisResult = null;
-let currentWizardStep = 1;
-let currentReportSlide = 0;
 
 // Initialize elements
 document.addEventListener("DOMContentLoaded", () => {
@@ -174,6 +172,7 @@ async function submitAnalysis() {
         sports: document.getElementById("sports").value,
         position: document.getElementById("position").value,
         phone: document.getElementById("phone").value,
+        reservation_date: document.getElementById("reservation_date") ? document.getElementById("reservation_date").value : null,
         father_height: parseFloat(document.getElementById("father_height").value) || 175.0,
         mother_height: parseFloat(document.getElementById("mother_height").value) || 162.0,
         current_height: parseFloat(document.getElementById("current_height").value),
@@ -306,6 +305,7 @@ async function submitOnlineApplication() {
         sports: document.getElementById("sports").value,
         position: document.getElementById("position").value,
         phone: email, // use phone input for email recipient
+        reservation_date: document.getElementById("reservation_date") ? document.getElementById("reservation_date").value : null,
         father_height: parseFloat(document.getElementById("father_height").value) || 175.0,
         mother_height: parseFloat(document.getElementById("mother_height").value) || 162.0,
         current_height: parseFloat(document.getElementById("current_height").value),
@@ -439,6 +439,10 @@ function bindSummaryData() {
         document.getElementById("grade").value.trim() + " / " + document.getElementById("sports").value + 
         (document.getElementById("position").value.trim() ? ` (${document.getElementById("position").value.trim()})` : "");
     document.getElementById("summary-phone").innerText = document.getElementById("phone").value.trim();
+    if(document.getElementById("summary-reservation_date")) {
+        const resDate = document.getElementById("reservation_date") ? document.getElementById("reservation_date").value : null;
+        document.getElementById("summary-reservation_date").innerText = resDate ? resDate : "즉시 발송 (기본)";
+    }
     document.getElementById("summary-height-weight").innerText = 
         document.getElementById("current_height").value + " cm / " + document.getElementById("current_weight").value + " kg";
     document.getElementById("summary-muscle-fat").innerText = 
@@ -528,6 +532,7 @@ function saveLastInputs() {
             sports: document.getElementById("sports").value,
             position: document.getElementById("position").value,
             phone: document.getElementById("phone").value,
+            reservation_date: document.getElementById("reservation_date") ? document.getElementById("reservation_date").value : null,
             father_height: document.getElementById("father_height").value,
             mother_height: document.getElementById("mother_height").value,
             current_height: document.getElementById("current_height").value,
