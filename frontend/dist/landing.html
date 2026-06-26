@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>피지컬업333 · Physical UP 333</title>
+<meta name="description" content="유소년 엘리트 선수 체질 코드 분석. 333TEST로 우리 아이 맞춤 피지컬 솔루션을 찾아보세요."/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--navy:#060a14;--gold:#c9a84c;--gold2:#e8c76a;--white:#f0f4ff;--muted:#4a6080;--line:rgba(255,255,255,0.07);}
+html{scroll-behavior:smooth;}
+body{background:var(--navy);font-family:'Noto Sans KR',sans-serif;color:var(--white);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.1);}
+.nav-inner{max-width:760px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:52px;padding:0 20px;}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;}
+.logo img{width:28px;height:28px;object-fit:contain;}
+.logo-text .b1{color:var(--gold);font-size:11px;font-weight:900;letter-spacing:2px;line-height:1.2;white-space:nowrap;}
+.logo-text .b2{color:var(--muted);font-size:8px;letter-spacing:1px;white-space:nowrap;}
+.nav-links{display:flex;align-items:center;gap:2px;flex-shrink:0;}
+.nav-links a{color:var(--muted);font-size:9px;padding:4px 6px;border-radius:4px;text-decoration:none;white-space:nowrap;}
+.nav-links a.active{color:var(--white);font-weight:700;}
+.nav-test{color:var(--gold)!important;border:1px solid var(--gold);border-radius:4px;font-weight:700!important;}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+.sec{padding:72px 0;border-bottom:1px solid var(--line);}
+.sec:last-child{border-bottom:none;}
+.tag{color:var(--gold);font-size:9px;letter-spacing:4px;font-weight:700;margin-bottom:10px;}
+.title{font-size:22px;font-weight:900;line-height:1.5;margin-bottom:8px;}
+.sub{color:var(--muted);font-size:13px;line-height:1.9;margin-bottom:28px;}
+
+/* 히어로 */
+.hero{padding:96px 20px 60px;max-width:760px;margin:0 auto;border-bottom:1px solid var(--line);}
+.hero-tag{color:var(--gold);font-size:9px;letter-spacing:5px;font-weight:700;margin-bottom:16px;}
+.hero-title{font-size:28px;font-weight:900;line-height:1.5;margin-bottom:10px;}
+.hero-title em{color:var(--gold2);font-style:normal;}
+.hero-slogan{color:var(--muted);font-size:11px;letter-spacing:3px;margin-top:16px;padding-top:16px;border-top:1px solid var(--line);}
+
+/* 고민 리스트 */
+.q-list{display:flex;flex-direction:column;}
+.q-item{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);}
+.q-item:last-child{border-bottom:none;}
+.q-num{color:var(--gold);font-size:10px;font-weight:700;min-width:22px;padding-top:2px;}
+.q-title{color:var(--white);font-size:13px;font-weight:700;margin-bottom:3px;}
+.q-desc{color:var(--muted);font-size:12px;line-height:1.7;}
+
+/* 원인 섹션 */
+.cause-box{background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:20px 24px;margin-bottom:16px;}
+.cause-title{font-size:16px;font-weight:900;margin-bottom:8px;line-height:1.5;}
+.cause-title em{color:var(--gold2);font-style:normal;}
+.cause-desc{color:var(--muted);font-size:12px;line-height:1.9;}
+.insight{border-left:2px solid var(--gold);padding:10px 14px;margin-top:14px;}
+.insight p{color:var(--white);font-size:13px;font-weight:500;line-height:1.9;}
+
+/* 333 소개 */
+.three-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border-radius:10px;overflow:hidden;margin-bottom:16px;}
+.three-cell{background:rgba(13,27,62,0.5);padding:20px 14px;text-align:center;}
+.three-num{font-size:34px;font-weight:900;color:var(--gold);line-height:1;margin-bottom:6px;}
+.three-label{font-size:11px;font-weight:700;color:var(--white);margin-bottom:5px;}
+.three-desc{font-size:11px;color:var(--muted);line-height:1.6;}
+.type-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;}
+.type-card{background:rgba(13,27,62,0.4);border-radius:8px;padding:14px;border:1px solid var(--line);}
+.type-name{font-size:12px;font-weight:700;margin-bottom:5px;}
+.type-desc{font-size:11px;color:var(--muted);line-height:1.6;}
+
+/* CTA */
+.cta-box{background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:28px 24px;text-align:center;position:relative;overflow:hidden;}
+.cta-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.cta-title{font-size:18px;font-weight:900;margin-bottom:6px;}
+.cta-desc{color:var(--muted);font-size:12px;line-height:1.9;margin-bottom:20px;}
+.cta-btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#060a14;font-size:14px;font-weight:900;text-decoration:none;}
+.cta-note{display:block;color:var(--muted);font-size:11px;margin-top:10px;}
+
+footer{padding:24px 20px;text-align:center;border-top:1px solid var(--line);}
+footer .fb{color:var(--gold);font-size:10px;font-weight:700;letter-spacing:3px;margin-bottom:3px;}
+footer .fi{color:var(--muted);font-size:10px;}
+
+@media(max-width:480px){
+  .three-grid{grid-template-columns:1fr;}
+  .type-row{grid-template-columns:1fr;}
+  .hero-title{font-size:22px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/landing.html" class="logo">
+      <img src="/logo.png" alt="피지컬업333"/>
+      <div class="logo-text">
+        <div class="b1">Physical UP 333</div>
+        <div class="b2">ELITE SPORTS LAB</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="/landing.html" class="active">ABOUT</a>
+      <a href="/worry.html">LAB</a>
+      <a href="/shop.html">SHOP</a>
+      <a href="/app?start=test" class="nav-test">333TEST</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap" style="padding-top:72px;">
+
+<!-- 1. 공감 -->
+<div class="sec">
+  <div class="tag">01 · COMMON CONCERNS</div>
+  <div class="title">이런 고민, 있으신가요?</div>
+  <div class="q-list">
+    <div class="q-item">
+      <div class="q-num">01</div>
+      <div><div class="q-title">잘 먹이는데 살이 안 찌고 힘이 안 붙어요</div><div class="q-desc">아무리 먹여도 영양이 근육으로 가지 않습니다. 퍼포먼스가 제자리인 이유입니다.</div></div>
+    </div>
+    <div class="q-item">
+      <div class="q-num">02</div>
+      <div><div class="q-title">감독님이 체중 못 늘리면 주전 못 준다고 해요</div><div class="q-desc">체급은 경기력과 직결됩니다. 체격에서 밀리면 경기 자체가 성립되지 않습니다.</div></div>
+    </div>
+    <div class="q-item">
+      <div class="q-num">03</div>
+      <div><div class="q-title">영양제를 먹여도 달라지는 게 없어요</div><div class="q-desc">체질에 맞지 않는 영양제는 효과가 없습니다. 순서와 종류가 핵심입니다.</div></div>
+    </div>
+    <div class="q-item">
+      <div class="q-num">04</div>
+      <div><div class="q-title">살이 쪄서 오히려 몸이 둔해졌어요</div><div class="q-desc">지방형 체중 증가는 스피드와 순발력을 떨어뜨립니다. 근육형 증량이 답입니다.</div></div>
+    </div>
+    <div class="q-item">
+      <div class="q-num">05</div>
+      <div><div class="q-title">체격이 작아서 경기에서 밀려요</div><div class="q-desc">체격 차이는 경기 시작 전 이미 승부가 납니다. 체질 기반 성장 전략이 필요합니다.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. 원인 -->
+<div class="sec">
+  <div class="tag">02 · ROOT CAUSE</div>
+  <div class="title">우리 아이가 경기에서 밀리는 이유</div>
+  <div class="cause-box">
+    <div class="cause-title">문제는 <em>체질을 모르고 접근하기 때문</em>입니다.</div>
+    <div class="cause-desc">잘 먹이고, 운동도 시키고, 영양제도 먹이는데 왜 효과가 없을까요? 체질마다 흡수하는 방식, 에너지를 태우는 속도, 살이 붙는 경로가 전혀 다르기 때문입니다. 체질을 모르면 아무리 좋은 방법도 역효과가 납니다.</div>
+  </div>
+  <div class="insight">
+    <p>흡수력·연소력·축적력 — 이 3축의 조합이 우리 아이만의 체질 코드입니다. 코드를 알면 해답이 보입니다.</p>
+  </div>
+</div>
+
+<!-- 3. 해결책 -->
+<div class="sec">
+  <div class="tag">03 · SOLUTION</div>
+  <div class="title">피지컬업333이 하는 일</div>
+  <div class="sub">흡수·연소·축적 3축을 분석해 27가지 체질 코드를 산출합니다. 우리 아이에게 딱 맞는 영양·운동·식단 전략을 데이터로 제시합니다.</div>
+  <div class="three-grid">
+    <div class="three-cell">
+      <div class="three-num">3</div>
+      <div class="three-label">축 분석</div>
+      <div class="three-desc">흡수력<br/>연소력<br/>축적력</div>
+    </div>
+    <div class="three-cell">
+      <div class="three-num">27</div>
+      <div class="three-label">체질 코드</div>
+      <div class="three-desc">3×3×3<br/>27가지 분류<br/>맞춤 솔루션</div>
+    </div>
+    <div class="three-cell">
+      <div class="three-num">5분</div>
+      <div class="three-label">무료 검사</div>
+      <div class="three-desc">간단한 설문<br/>즉시 결과<br/>완전 무료</div>
+    </div>
+  </div>
+  <div class="type-row">
+    <div class="type-card">
+      <div class="type-name" style="color:#4fcfa0;">소비형 · BURNER</div>
+      <div class="type-desc">살이 안 찌는 체질. 흡수력 강화와 근력 운동이 핵심입니다.</div>
+    </div>
+    <div class="type-card">
+      <div class="type-name" style="color:var(--gold2);">균형형 · BALANCED</div>
+      <div class="type-desc">이상적 균형 체질. 잔근육 밀도를 높이는 훈련이 필요합니다.</div>
+    </div>
+    <div class="type-card">
+      <div class="type-name" style="color:#f76f8e;">저장형 · STORER</div>
+      <div class="type-desc">지방 축적이 쉬운 체질. 대사 활성화와 유산소 운동이 중요합니다.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. CTA -->
+<div class="sec" style="border-bottom:none;">
+  <div class="cta-box">
+    <div class="tag" style="text-align:center;margin-bottom:12px;">FREE · 무료 · 5분</div>
+    <div class="cta-title">우리 아이 체질 코드, 지금 바로 찾아보세요</div>
+    <div class="cta-desc">27가지 체질 코드 중 우리 아이의 코드를 찾고 맞춤 영양·운동·식단 방향을 지금 바로 확인하세요.</div>
+    <a href="/app?start=test" class="cta-btn">333TEST 무료 시작 →</a>
+    <span class="cta-note">완전 무료 · 5분 소요 · 카톡 공유 가능</span>
+  </div>
+</div>
+
+</div>
+
+<footer>
+  <div class="fb">PHYSICAL UP 333 · ELITE SPORTS LAB</div>
+  <div class="fi">피지컬은 데이터다 · Physical is Data · www.physicalup333.com</div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+# Docker 빌드 시 제외할 파일 목록 (.dockerignore)
+.git
+.gitignore
+.pytest_cache
+__pycache__
+*.pyc
+.gemini
+tests
+.env
+.env.example
+deployment_guide.md
+README.md
+task.md
+implementation_plan.md
+
+# 로컬 사용자 임시 데이터 제외
+app/data/requests/*.json
+app/data/reports/*.pdf
+pdf_text.txt
+PU333_04_보고서_홍길동_테스트.pdf

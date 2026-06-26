@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>맞춤 제품 추천 · Physical UP 333</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--navy:#060a14;--navy2:#0d1b3e;--gold:#c9a84c;--gold2:#e8c76a;--white:#f0f4ff;--muted:#4a6080;--green:#4fcfa0;--pink:#f76f8e;}
+html{scroll-behavior:smooth;}
+body{background:#050e18;font-family:'Noto Sans KR',sans-serif;color:var(--white);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,10,20,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.12);}
+.nav-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 20px;}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+.logo img{width:32px;height:32px;object-fit:contain;}
+.logo-text .b1{color:var(--gold);font-size:12px;font-weight:900;letter-spacing:3px;line-height:1;}
+.logo-text .b2{color:var(--muted);font-size:8px;letter-spacing:2px;}
+.nav-links{display:flex;align-items:center;gap:2px;}
+.nav-links a{color:var(--muted);font-size:9px;padding:4px 5px;border-radius:6px;text-decoration:none;white-space:nowrap;}
+.nav-links a:hover{color:var(--gold);}
+.nav-links a.active{color:var(--white);font-weight:700;}
+.nav-test{color:var(--gold)!important;border:1px solid var(--gold);font-weight:700!important;border-radius:6px;}
+.hero{padding:80px 20px 24px;max-width:720px;margin:0 auto;text-align:center;}
+.hero .label{color:var(--gold);font-size:10px;letter-spacing:4px;margin-bottom:8px;}
+.hero h1{font-size:20px;font-weight:900;margin-bottom:6px;}
+.hero p{color:var(--muted);font-size:13px;line-height:1.8;}
+#loading{text-align:center;padding:60px 20px;color:var(--muted);font-size:13px;}
+#empty{display:none;text-align:center;padding:60px 20px;color:var(--muted);}
+#products-container{max-width:720px;margin:0 auto;padding:0 20px 60px;}
+.cat-section{margin-bottom:32px;}
+.cat-title{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(201,168,76,0.1);}
+.cat-title .icon{font-size:16px;}
+.cat-title .name{font-size:14px;font-weight:900;color:var(--gold2);}
+.cat-title .count{color:var(--muted);font-size:11px;}
+.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(min-width:600px){.product-grid{grid-template-columns:1fr 1fr 1fr 1fr;}}
+.product-card{background:rgba(13,27,62,0.5);border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);transition:all 0.2s;}
+.product-card:hover{border-color:rgba(201,168,76,0.2);transform:translateY(-2px);}
+.product-img{width:100%;aspect-ratio:1;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.product-img img{width:100%;height:100%;object-fit:cover;}
+.product-img .no-img{color:rgba(255,255,255,0.1);font-size:28px;}
+.product-info{padding:12px;}
+.product-name{color:var(--white);font-size:13px;font-weight:700;margin-bottom:4px;line-height:1.4;}
+.product-desc{color:var(--muted);font-size:11px;line-height:1.5;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer;}
+.product-desc.expanded{-webkit-line-clamp:unset;}
+.product-desc.has-more::after{content:' ⋯더보기';color:var(--gold);font-size:10px;font-weight:700;}
+.product-desc.expanded.has-more::after{content:' 접기';}
+.type-badges{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;}
+.badge{padding:2px 7px;border-radius:10px;font-size:9px;font-weight:700;}
+.badge-burner{background:rgba(79,207,160,0.15);color:#4fcfa0;border:1px solid rgba(79,207,160,0.3);}
+.badge-balanced{background:rgba(201,168,76,0.15);color:var(--gold2);border:1px solid rgba(201,168,76,0.3);}
+.badge-storer{background:rgba(247,111,142,0.15);color:#f76f8e;border:1px solid rgba(247,111,142,0.3);}
+.product-links{display:flex;gap:5px;flex-wrap:wrap;}
+.link-btn{padding:5px 10px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;}
+.link-coupang{background:rgba(229,48,42,0.12);border:1px solid rgba(229,48,42,0.25);color:#ff7070;}
+.link-naver{background:rgba(3,199,90,0.1);border:1px solid rgba(3,199,90,0.2);color:#4fcfa0;}
+.link-olive{background:rgba(165,0,52,0.1);border:1px solid rgba(165,0,52,0.2);color:#f76f8e;}
+footer{border-top:1px solid rgba(201,168,76,0.1);padding:24px 20px;text-align:center;}
+footer .fb{color:var(--gold);font-size:11px;font-weight:700;letter-spacing:3px;margin-bottom:3px;}
+footer .fi{color:var(--muted);font-size:10px;}
+
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;max-width:720px;margin:0 auto 20px;padding:0 20px;justify-content:center;}
+
+.guide-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;max-width:720px;margin:0 auto 28px;padding:0 20px;}
+.guide-card{background:rgba(13,27,62,0.5);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.06);}
+.guide-burner{border-top:2px solid #4fcfa0;}
+.guide-balanced{border-top:2px solid var(--gold);}
+.guide-storer{border-top:2px solid #f76f8e;}
+.guide-hd{font-size:13px;font-weight:900;margin-bottom:4px;}
+.guide-hd span{font-size:8px;font-weight:700;opacity:0.5;letter-spacing:1px;margin-left:2px;}
+.guide-burner .guide-hd{color:#4fcfa0;}
+.guide-balanced .guide-hd{color:var(--gold2);}
+.guide-storer .guide-hd{color:#f76f8e;}
+.guide-desc{color:var(--muted);font-size:10px;line-height:1.5;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.05);}
+.guide-items{color:var(--white);font-size:11px;line-height:1.7;font-weight:500;}
+@media(max-width:560px){.guide-row{grid-template-columns:1fr;}}
+.filter-btn{padding:7px 16px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid;transition:all 0.2s;background:transparent;}
+.filter-btn:hover{opacity:0.8;}
+.filter-btn.active{opacity:1;}
+.filter-all{color:var(--gold2);border-color:var(--gold);}
+.filter-all.active{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy2);}
+.filter-burner{color:#4fcfa0;border-color:#4fcfa0;}
+.filter-burner.active{background:#4fcfa0;color:var(--navy2);}
+.filter-balanced{color:var(--gold2);border-color:var(--gold);}
+.filter-balanced.active{background:var(--gold);color:var(--navy2);}
+.filter-storer{color:#f76f8e;border-color:#f76f8e;}
+.filter-storer.active{background:#f76f8e;color:var(--navy2);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/landing.html" class="logo">
+      <img src="/logo.png" alt="Physical UP 333"/>
+      <div class="logo-text">
+        <div class="b1">Physical UP 333</div>
+        <div class="b2">ELITE SPORTS LAB</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="/landing.html">ABOUT</a>
+      <a href="/worry.html">LAB</a>
+      <a href="/shop.html" class="active">SHOP</a>
+      <a href="/app?start=test" class="nav-test">333TEST</a>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="label">SHOPPING</div>
+  <h1>🛒 BIO CODE 맞춤 제품</h1>
+  <p>우리 아이 체질에 딱 맞는 제품을 추천해드립니다</p>
+</div>
+
+<div class="filter-row">
+  <button class="filter-btn filter-all active" onclick="filterType('all')">전체</button>
+  <button class="filter-btn filter-burner" onclick="filterType('소비형')">🏃 소비형</button>
+  <button class="filter-btn filter-balanced" onclick="filterType('균형형')">💪 균형형</button>
+  <button class="filter-btn filter-storer" onclick="filterType('저장형')">🏋️ 저장형</button>
+</div>
+
+<div class="guide-row">
+  <div class="guide-card guide-burner">
+    <div class="guide-hd">🏃 소비형 <span>BURNER</span></div>
+    <div class="guide-desc">잘 안 찌는 체질 · 흡수와 증량 집중</div>
+    <div class="guide-items">유산균 · 소화효소 · 아연 · 고칼로리 간식 · 단백질</div>
+  </div>
+  <div class="guide-card guide-balanced">
+    <div class="guide-hd">💪 균형형 <span>BALANCED</span></div>
+    <div class="guide-desc">이상적 균형 · 현 상태 유지 강화</div>
+    <div class="guide-items">종합비타민 · 오메가3 · 비타민D · 칼슘 · 마그네슘</div>
+  </div>
+  <div class="guide-card guide-storer">
+    <div class="guide-hd">🏋️ 저장형 <span>STORER</span></div>
+    <div class="guide-desc">잘 찌는 체질 · 대사 활성·체중 관리</div>
+    <div class="guide-items">식이섬유 · 마그네슘 · 오메가3 · 비타민D · 유산균</div>
+  </div>
+</div>
+
+<div id="loading">제품 불러오는 중...</div>
+<div id="empty">등록된 제품이 없어요</div>
+<div id="products-container"></div>
+
+<footer>
+  <div class="fb">Physical UP 333 · ELITE SPORTS LAB</div>
+  <div class="fi">www.physicalup333.com</div>
+  <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.05);color:var(--muted);font-size:10px;line-height:1.7;max-width:480px;margin-left:auto;margin-right:auto;">
+    이 사이트는 쿠팡 파트너스 · 네이버 쇼핑 파트너스 활동의 일환으로,<br/>
+    이에 따른 일정액의 수수료를 제공받습니다.
+  </div>
+</footer>
+
+<script>
+const SHEET_ID = "1OMyEfRy0pbpqHf33iZTYQc07xknM5gcZ6s7J_mAf9wg";
+const PRODUCTS_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=shop`;
+const CATS_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&headers=1&sheet=shop_categories`;
+const CHANNEL = "야구아들 살찌우기 !!";
+
+let allProductsData = [];
+let catOrderData = [];
+let catIconsData = {};
+
+function parseGviz(text){
+  const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/);
+  if(!match) return [];
+  const data = JSON.parse(match[1]);
+  const cols = data.table.cols.map(c=>c.label);
+  return (data.table.rows||[]).map(r=>{
+    const obj={};
+    cols.forEach((c,i)=>obj[c]=(r.c[i]&&r.c[i].v!=null)?String(r.c[i].v).trim():'');
+    return obj;
+  }).filter(r=>Object.values(r).some(v=>v));
+}
+
+function typeBadges(types){
+  if(!types) return '';
+  return types.split(',').map(t=>{
+    t=t.trim();
+    if(t==='소비형') return `<span class="badge badge-burner">소비형</span>`;
+    if(t==='균형형') return `<span class="badge badge-balanced">균형형</span>`;
+    if(t==='저장형') return `<span class="badge badge-storer">저장형</span>`;
+    return '';
+  }).join('');
+}
+
+function renderProducts(products){
+  const container = document.getElementById('products-container');
+  container.innerHTML = '';
+  if(!products.length){
+    document.getElementById('empty').style.display = 'block';
+    return;
+  }
+  document.getElementById('empty').style.display = 'none';
+
+  const usedCats = [...new Set(products.map(p=>p.cat))];
+  const orderedCats = [
+    ...catOrderData.filter(c=>usedCats.includes(c)),
+    ...usedCats.filter(c=>!catOrderData.includes(c))
+  ];
+
+  orderedCats.forEach(cat=>{
+    const items = products.filter(p=>p.cat===cat);
+    if(!items.length) return;
+    const icon = catIconsData[cat] || '🛍️';
+    const section = document.createElement('div');
+    section.className = 'cat-section';
+    section.innerHTML = `
+      <div class="cat-title">
+        <span class="icon">${icon}</span>
+        <span class="name">${cat}</span>
+        <span class="count">${items.length}개</span>
+      </div>
+      <div class="product-grid">
+        ${items.map(p=>`
+          <div class="product-card">
+            <div class="product-img">
+              ${p.image?`<img src="${p.image}" alt="${p.name}" onerror="this.parentElement.innerHTML='<div class=no-img>🛍️</div>'">`:'<div class="no-img">🛍️</div>'}
+            </div>
+            <div class="product-info">
+              <div class="product-name">${p.name}</div>
+              ${p.desc?`<div class="product-desc" onclick="if(this.classList.contains('has-more'))this.classList.toggle('expanded')">${p.desc}</div>`:''}
+              ${p.types?`<div class="type-badges">${typeBadges(p.types)}</div>`:''}
+              <div class="product-links">
+                ${p.coupang?`<a href="${p.coupang}" target="_blank" class="link-btn link-coupang">쿠팡 →</a>`:''}
+                ${p.naver?`<a href="${p.naver}" target="_blank" class="link-btn link-naver">네이버 →</a>`:''}
+                ${p.olive?`<a href="${p.olive}" target="_blank" class="link-btn link-olive">올리브영 →</a>`:''}
+              </div>
+            </div>
+          </div>`).join('')}
+      </div>`;
+    container.appendChild(section);
+  });
+  // 2줄 넘치는 설명에만 더보기 표시
+  setTimeout(()=>{
+    document.querySelectorAll('.product-desc').forEach(el=>{
+      if(el.scrollHeight>el.clientHeight+2){el.classList.add('has-more');}
+    });
+  },50);
+}
+
+function filterType(type){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  if(type==='all') document.querySelector('.filter-all').classList.add('active');
+  else if(type==='소비형') document.querySelector('.filter-burner').classList.add('active');
+  else if(type==='균형형') document.querySelector('.filter-balanced').classList.add('active');
+  else if(type==='저장형') document.querySelector('.filter-storer').classList.add('active');
+
+  // 안내 카드 강조
+  const cardMap={'소비형':'guide-burner','균형형':'guide-balanced','저장형':'guide-storer'};
+  document.querySelectorAll('.guide-card').forEach(c=>{c.style.opacity=type==='all'?'1':'0.35';});
+  if(type!=='all'){const el=document.querySelector('.'+cardMap[type]);if(el)el.style.opacity='1';}
+
+  if(type==='all'){
+    renderProducts(allProductsData);
+  } else {
+    const filtered = allProductsData.filter(p=>p.types&&p.types.includes(type));
+    renderProducts(filtered);
+  }
+}
+
+window.addEventListener('load', async function(){
+  try{
+    const [pRes, cRes] = await Promise.all([fetch(PRODUCTS_URL), fetch(CATS_URL)]);
+    const [pText, cText] = await Promise.all([pRes.text(), cRes.text()]);
+    
+    allProductsData = parseGviz(pText).filter(p=>p.name && p.channel===CHANNEL);
+    const categories = parseGviz(cText).filter(c=>c.cat);
+    catOrderData = categories.map(c=>c.cat);
+    categories.forEach(c=>catIconsData[c.cat]=c.icon||'🛍️');
+    
+    document.getElementById('loading').style.display = 'none';
+    
+    if(!allProductsData.length){
+      document.getElementById('empty').style.display = 'block';
+      return;
+    }
+    renderProducts(allProductsData);
+  }catch(e){
+    document.getElementById('loading').textContent = '제품을 불러오지 못했어요';
+    console.log('오류:', e);
+  }
+});
+</script>
+</body>
+</html>
