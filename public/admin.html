@@ -1547,8 +1547,7 @@
                 const safeName = (req.name || "").replace(/teat/gi, "").replace(/test/gi, "");
                 
                 // 스펙 및 연도 가공
-                const biocodeResult = calculateLocalBiocode(req);
-                const biocode = biocodeResult.biocode;
+                const biocode = req.biocode || calculateLocalBiocode(req).biocode;
                 
                 const date = new Date(req.timestamp);
                 const yy = date.getFullYear().toString().slice(-2);
@@ -1843,11 +1842,7 @@
             const biocodeMapTotal = {};
             biocodes27.forEach(code => { biocodeMapTotal[code] = 0; });
             allRequests.forEach(req => {
-                let code = "";
-                if (req.survey_responses && req.survey_responses.length > 0) {
-                    const biocodeResult = calculateLocalBiocode(req);
-                    code = biocodeResult.biocode;
-                }
+                const code = req.biocode || (req.survey_responses && req.survey_responses.length > 0 ? calculateLocalBiocode(req).biocode : "");
                 if (code && biocodes27.includes(code)) {
                     biocodeMapTotal[code]++;
                 }
@@ -2080,17 +2075,17 @@
             // Bind Formulas & Guide Values
             bindFormulaHelper(req);
 
-            // Set Preview Frame Data
+            // Set Preview Frame Data - Prioritize real backend engine results
             const biocodeResult = calculateLocalBiocode(req);
             const reportPayload = {
-                biocode: biocodeResult.biocode,
-                pattern_name: biocodeResult.pattern_name,
-                constitution: biocodeResult.constitution,
-                lag_cause: biocodeResult.lag_cause,
-                metab_score: biocodeResult.metab_score,
-                behavior_score: biocodeResult.behavior_score,
-                body_score: biocodeResult.body_score,
-                height_gap: biocodeResult.height_gap,
+                biocode: req.biocode || biocodeResult.biocode,
+                pattern_name: req.pattern_name || biocodeResult.pattern_name,
+                constitution: req.constitution || biocodeResult.constitution,
+                lag_cause: req.lag_cause || biocodeResult.lag_cause,
+                metab_score: req.metab_score !== undefined ? req.metab_score : biocodeResult.metab_score,
+                behavior_score: req.behavior_score !== undefined ? req.behavior_score : biocodeResult.behavior_score,
+                body_score: req.body_score !== undefined ? req.body_score : biocodeResult.body_score,
+                height_gap: req.height_gap !== undefined ? req.height_gap : biocodeResult.height_gap,
                 ai_comment: document.getElementById("txt-comment").value,
                 inputs: req
             };
@@ -2527,8 +2522,7 @@
             if (!selectedRequest) return;
             
             const name = selectedRequest.name;
-            const biocodeResult = calculateLocalBiocode(selectedRequest);
-            const biocode = biocodeResult.biocode;
+            const biocode = selectedRequest.biocode || calculateLocalBiocode(selectedRequest).biocode;
             
             const smsText = `안녕하세요 ${name} 보호자님, PHYSICAL UP 333입니다. 우리 아이의 무료 성장 분석 결과(${biocode} 체질)를 바탕으로 한 18페이지 분량의 정밀 성장 솔루션 리포트가 준비되어 있습니다. 지금 유료 정밀 분석으로 전환하시어 상세 백서를 받아보세요!\n▶ 신청하기: www.physicalup333.com`;
             
