@@ -322,11 +322,25 @@
     table, .box, .scoreline, .ftrack, figure, svg, img, tr{
       break-inside: avoid; page-break-inside: avoid;
     }
+  
+  /* 브리핑보드 전용 사이드바 레이아웃 */
+  #report-view-container {
+      margin-right: 380px;
+      transition: margin 0.3s ease;
   }
-</style>
+  @media print {
+      #briefing-sidebar { display: none !important; }
+      #report-view-container { margin-right: 0 !important; }
+  }
+  @media (max-width: 1200px) {
+      #report-view-container { margin-right: 0 !important; }
+      #briefing-sidebar { position: relative !important; width: 100% !important; height: auto !important; border-left: none !important; border-bottom: 1px solid #dadce0 !important; }
+  }
+  </style>
 </head>
 <body>
 
+<div id="report-view-container">
 <!-- ============ PAGE 1 : COVER ============ -->
 <div class="page cover">
   <img class="logo-img" src="/static/logo.png?v=2">
@@ -1004,17 +1018,283 @@
 </div>
 
 </div>
+</div><!-- end of report-view-container -->
+
+<!-- ============ 학부모 브리핑 검색 사이드바 ============ -->
+<div id="briefing-sidebar" style="position: fixed; right: 0; top: 0; width: 360px; height: 100vh; background: #ffffff; border-left: 1px solid #dadce0; box-shadow: -2px 0 10px rgba(0,0,0,0.05); z-index: 1000; padding: 20px; display: flex; flex-direction: column; gap: 15px; font-family: 'Noto Sans KR', sans-serif;">
+    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #1a73e8; padding-bottom: 10px;">
+        <h3 style="font-size: 15px; font-weight: 800; color: #1a73e8; margin: 0; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-graduation-cap"></i> 학부모 브리핑 검색 보드
+        </h3>
+        <span style="font-size: 11px; background: #1a73e8; color: #fff; padding: 2px 6px; border-radius: 10px; font-weight: bold;">베타</span>
+    </div>
+    
+    <!-- 실시간 검색 인풋 -->
+    <div style="position: relative;">
+        <input type="text" id="briefing-search-input" placeholder="학생 이름을 입력하세요..." 
+               style="width: 100%; padding: 10px 12px 10px 35px; border: 1px solid #dadce0; border-radius: 8px; font-size: 13px; outline: none; transition: border-color 0.2s;"
+               oninput="filterBriefingList(this.value)">
+        <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 12px; color: #5f6368; font-size: 13px;"></i>
+    </div>
+    
+    <!-- 접수 건 리스트 컨테이너 -->
+    <div id="briefing-list-container" style="flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 4px;">
+        <div style="text-align: center; color: #5f6368; font-size: 12px; margin-top: 50px;">
+            <i class="fa-solid fa-spinner fa-spin" style="font-size: 20px; display: block; margin-bottom: 10px; color: #1a73e8;"></i>
+            접수 데이터를 불러오는 중...
+        </div>
+    </div>
+    
+    <!-- 하단 상태 표시 또는 안내 -->
+    <div style="font-size: 11px; color: #5f6368; border-top: 1px dashed #dadce0; padding-top: 10px; line-height: 1.4;">
+        💡 접수 건을 클릭하면 왼편 보고서 뷰가 실시간 전환됩니다. 여러 학생의 이전 기록까지 연속 브리핑이 가능합니다.
+    </div>
+</div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const rawData = localStorage.getItem("physicalup_analysis");
-    if (!rawData) {
-        console.warn("No physicalup_analysis data found in localStorage. Running in demo mode.");
+let originalHTML = "";
+let allBriefingRequests = [];
+
+// Local Calculator matching python's app/engine.py
+function calculateLocalBiocode(req) {
+    const h = req.current_height || 165;
+    const w = req.current_weight || 50;
+    const smm = req.skeletal_muscle || 22;
+    const responses = req.survey_responses || [];
+
+    const metab_score = Math.min(35, Math.max(5, responses.slice(0, 8).reduce((a,b)=>a+b, 0) || 24));
+    const behavior_score = Math.min(25, Math.max(5, responses.slice(8, 16).reduce((a,b)=>a+b, 0) || 16));
+    const body_score = Math.min(40, Math.max(5, responses.slice(16, 24).reduce((a,b)=>a+b, 0) || 24));
+
+    const body_g = body_score >= 26 ? 3 : body_score >= 15 ? 2 : 1;
+    const metab_g = metab_score >= 23 ? 3 : metab_score >= 13 ? 2 : 1;
+    const behavior_g = behavior_score >= 17 ? 3 : behavior_score >= 10 ? 2 : 1;
+    
+    const biocode = `${body_g}-${metab_g}-${behavior_g}`;
+    
+    let pattern_name = "균형잡힌 표준 피지컬";
+    if (body_g === 3 && metab_g === 3) pattern_name = "타고난 강골 완성형";
+    else if (body_g === 1) pattern_name = "세심한 골격 채움형";
+    
+    let constitution = "발산-순환형 (소양인)";
+    if (responses[0] % 3 === 0) constitution = "수렴-저장형 (태음인)";
+    else if (responses[0] % 3 === 1) constitution = "민감-조율형 (소음인)";
+
+    return {
+        biocode,
+        pattern_name,
+        constitution,
+        lag_cause: metab_g === 1 ? "장내 영양 흡수 정체" : (behavior_g === 1 ? "성장호르몬 분비 부족" : "골격 자극 결핍"),
+        metab_score,
+        behavior_score,
+        body_score,
+        height_gap: (h - 165.0)
+    };
+}
+
+async function loadBriefingRequests() {
+    try {
+        const res = await fetch("/api/admin/requests");
+        if (res.ok) {
+            allBriefingRequests = await res.json();
+            allBriefingRequests.sort((a, b) => b.timestamp - a.timestamp);
+            renderBriefingList(allBriefingRequests);
+        }
+    } catch(err) {
+        console.error("Error loadBriefingRequests:", err);
+    }
+}
+
+function renderBriefingList(list) {
+    const container = document.getElementById("briefing-list-container");
+    if (!container) return;
+    container.innerHTML = "";
+
+    if (list.length === 0) {
+        container.innerHTML = `<div style="text-align: center; color: #5f6368; font-size: 12px; margin-top: 50px;">검색된 접수 건이 없습니다.</div>`;
         return;
     }
-    const data = JSON.parse(rawData);
-    const inputs = data.inputs || {};
+
+    list.forEach(req => {
+        const date = new Date(req.timestamp);
+        const dateStr = `${date.getMonth()+1}/${date.getDate()} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
+        const safeName = (req.name || "").replace(/teat/gi, "").replace(/test/gi, "");
+        
+        const card = document.createElement("div");
+        card.style.cssText = `
+            background: #ffffff;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        `;
+        
+        card.onmouseenter = () => {
+            card.style.borderColor = "#1a73e8";
+            card.style.boxShadow = "0 2px 8px rgba(26,115,232,0.12)";
+            card.style.background = "rgba(26,115,232,0.01)";
+        };
+        card.onmouseleave = () => {
+            card.style.borderColor = "#dadce0";
+            card.style.boxShadow = "none";
+            card.style.background = "#ffffff";
+        };
+        
+        card.onclick = () => {
+            selectBriefingRequest(req);
+        };
+
+        let statusText = "대기중";
+        let statusColor = "#9c4536";
+        if (req.status === "Approved") {
+            statusText = "완료";
+            statusColor = "#137333";
+        } else if (req.status === "Scheduled") {
+            statusText = "예약";
+            statusColor = "#1a73e8";
+        }
+
+        card.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-weight: 800; font-size: 13.5px; color: #202124;">${safeName}</span>
+                <span style="font-size: 10px; font-weight: 700; color: ${statusColor}; background: ${statusColor}15; padding: 2px 6px; border-radius: 4px;">${statusText}</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size: 11.5px; color: #5f6368;">
+                <span>${req.gender} · ${req.grade || "학년미지정"} · ${req.sports || "일반"}</span>
+                <span style="font-size: 10.5px; color: #9aa0a6;">${dateStr}</span>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function filterBriefingList(query) {
+    const cleanQuery = query.toLowerCase().trim();
+    if (!cleanQuery) {
+        renderBriefingList(allBriefingRequests);
+        return;
+    }
+    const filtered = allBriefingRequests.filter(req => {
+        const name = (req.name || "").toLowerCase();
+        const phone = (req.phone || "");
+        const sports = (req.sports || "").toLowerCase();
+        return name.includes(cleanQuery) || phone.includes(cleanQuery) || sports.includes(cleanQuery);
+    });
+    renderBriefingList(filtered);
+}
+
+function selectBriefingRequest(req) {
+    let biocode = req.biocode;
+    let pattern_name = req.pattern_name;
+    let constitution = req.constitution;
+    let lag_cause = req.lag_cause;
+    let metab_score = req.metab_score;
+    let behavior_score = req.behavior_score;
+    let body_score = req.body_score;
+    let height_gap = req.height_gap;
     
+    const localCalc = calculateLocalBiocode(req);
+    if (!biocode) biocode = localCalc.biocode;
+    if (!pattern_name) pattern_name = localCalc.pattern_name;
+    if (!constitution) constitution = localCalc.constitution;
+    if (!lag_cause) lag_cause = localCalc.lag_cause;
+    if (!metab_score) metab_score = localCalc.metab_score;
+    if (!behavior_score) behavior_score = localCalc.behavior_score;
+    if (!body_score) body_score = localCalc.body_score;
+    if (height_gap === undefined || height_gap === null) height_gap = localCalc.height_gap;
+
+    const payload = {
+        biocode: biocode,
+        pattern_name: pattern_name,
+        constitution: constitution,
+        lag_cause: lag_cause,
+        metab_score: metab_score,
+        behavior_score: behavior_score,
+        body_score: body_score,
+        height_gap: height_gap,
+        ai_comment: req.ai_comment || "",
+        inputs: req
+    };
+    
+    localStorage.setItem("physicalup_analysis", JSON.stringify(payload));
+    renderReportWithData(payload);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    originalHTML = document.getElementById("report-view-container").innerHTML;
+    loadBriefingRequests();
+
+    const rawData = localStorage.getItem("physicalup_analysis");
+    let data = null;
+    if (rawData) {
+        try { data = JSON.parse(rawData); } catch(e) {}
+    }
+    renderReportWithData(data);
+
+    // Live update listener for admin real-time preview editing
+    window.addEventListener("message", (event) => {
+        if (event.data && event.data.type === "updateComment") {
+            const rawData = localStorage.getItem("physicalup_analysis");
+            if (rawData) {
+                const data = JSON.parse(rawData);
+                data.ai_comment = event.data.comment;
+                localStorage.setItem("physicalup_analysis", JSON.stringify(data));
+                renderReportWithData(data);
+            }
+        }
+    });
+
+    // 외부 단독 탭 브리핑 시, 다른 학생 클릭 시 데이터 자동 동기화 및 새로고침 연동
+    window.addEventListener("storage", (event) => {
+        if (event.key === "physicalup_analysis") {
+            try {
+                const data = JSON.parse(event.newValue);
+                renderReportWithData(data);
+            } catch(e) {}
+        }
+    });
+});
+
+function renderReportWithData(data) {
+    document.getElementById("report-view-container").innerHTML = originalHTML;
+
+    if (!data) {
+        data = {
+            inputs: {
+                name: "신지오",
+                gender: "남",
+                birth_date: "120828",
+                grade: "중1",
+                sports: "야구",
+                position: "내야수",
+                phone: "01012345678",
+                father_height: 180,
+                mother_height: 162,
+                current_height: 165,
+                current_weight: 48,
+                skeletal_muscle: 21.6,
+                body_fat: 8.8,
+                wingspan: 168,
+                survey_responses: [3,3,3,3,3,3,3,3, 3,3,3,3,3,3,3,3, 3,3,3,3,3,3,3,3],
+                is_free: false
+            },
+            biocode: "2-1-2",
+            pattern_name: "내일향한 숨고르기",
+            constitution: "이화-발산형 (소양인)",
+            lag_cause: "흡수력",
+            metab_score: 8.75,
+            behavior_score: 15.5,
+            body_score: 20.0,
+            height_gap: 7.5,
+            ai_comment: ""
+        };
+    }
+
+    const inputs = data.inputs || {};
     const targetName = inputs.name || "신지오";
     const targetSports = inputs.sports || "야구";
     const targetPosition = inputs.position || "내야수";
@@ -1873,20 +2153,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     renderAIComment(data.ai_comment);
 
-    // Live update listener for admin real-time preview editing
-    window.addEventListener("message", (event) => {
-        if (event.data && event.data.type === "updateComment") {
-            renderAIComment(event.data.comment);
-        }
-    });
-
-    // 외부 단독 탭 브리핑 시, 다른 학생 클릭 시 데이터 자동 동기화 및 새로고침 연동
-    window.addEventListener("storage", (event) => {
-        if (event.key === "physicalup_analysis") {
-            window.location.reload();
-        }
-    });
-});
+}
 </script>
 </body>
 </html>
