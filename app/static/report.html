@@ -1879,6 +1879,13 @@ document.addEventListener("DOMContentLoaded", () => {
             renderAIComment(event.data.comment);
         }
     });
+
+    // 외부 단독 탭 브리핑 시, 다른 학생 클릭 시 데이터 자동 동기화 및 새로고침 연동
+    window.addEventListener("storage", (event) => {
+        if (event.key === "physicalup_analysis") {
+            window.location.reload();
+        }
+    });
 });
 </script>
 </body>
