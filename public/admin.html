@@ -1072,27 +1072,44 @@
                 </div>
 
                 <!-- Right Helper & Editor Desk (40%) -->
-                <div class="consultant-desk-panel">
+                <div class="consultant-desk-panel" style="display: flex; flex-direction: column; gap: 15px; height: 100%; overflow-y: auto;">
                     
+                    <!-- 브리핑 대상 학생 검색 및 선택 -->
+                    <div class="desk-card" style="display: flex; flex-direction: column; gap: 10px; padding: 15px; flex-shrink: 0;">
+                        <label class="rich-editor-label" style="font-size: 13px; font-weight: 700; color: var(--gold); display: flex; align-items: center; gap: 6px; margin: 0;">
+                            <i class="fa-solid fa-graduation-cap"></i> 브리핑 대상 학생 검색 & 선택
+                        </label>
+                        <div style="position: relative;">
+                            <input type="text" id="briefing-desk-search" placeholder="학생 이름을 입력하여 실시간 검색..." 
+                                   style="width: 100%; padding: 8px 10px 8px 30px; background: #1e293b; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; color: #fff; font-size: 12.5px; outline: none;"
+                                   oninput="filterBriefingDeskList(this.value)">
+                            <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 10px; top: 10px; color: #9aa0a6; font-size: 11px;"></i>
+                        </div>
+                        <!-- 학생 접수 리스트 (가로 100%, 스크롤 가능) -->
+                        <div id="briefing-desk-list" style="max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding-right: 2px; border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; background: rgba(0,0,0,0.15); padding: 6px;">
+                            <!-- JS로 동적 주입 -->
+                        </div>
+                    </div>
+
                     <!-- Student Profile Editable Card -->
-                    <div class="desk-card" id="student-profile-card">
-                        <div class="profile-header-area">
-                            <h2 class="profile-name-title" id="lbl-name">홍길동</h2>
-                            <button class="btn-premium" id="btn-toggle-edit" style="padding: 4px 8px; font-size: 11px;" onclick="toggleProfileEdit()">
+                    <div class="desk-card" id="student-profile-card" style="padding: 15px; flex-shrink: 0;">
+                        <div class="profile-header-area" style="margin-bottom: 8px;">
+                            <h2 class="profile-name-title" id="lbl-name" style="font-size: 16px; font-weight: 800;">홍길동</h2>
+                            <button class="btn-premium" id="btn-toggle-edit" style="padding: 4px 8px; font-size: 10px; border-radius: 4px;" onclick="toggleProfileEdit()">
                                 <i class="fa-solid fa-pen-to-square"></i> 스펙 수정
                             </button>
                         </div>
-                        <div class="chip-container">
-                            <div class="info-chip"><label>성별</label><input type="text" id="edit-gender" value="남" style="width:25px;"></div>
-                            <div class="info-chip"><label>생일</label><input type="text" id="edit-birth" value="2012-05-15" style="width:80px;"></div>
-                            <div class="info-chip"><label>학년</label><input type="text" id="edit-grade" value="중2" style="width:35px;"></div>
-                            <div class="info-chip" style="width:100%; margin-top:4px;"><label>이메일</label><input type="text" id="edit-email" value="parent@email.com" style="width:190px; text-align:left;"></div>
+                        <div class="chip-container" style="gap: 4px 8px;">
+                            <div class="info-chip"><label>성별</label><input type="text" id="edit-gender" value="남" style="width:20px;"></div>
+                            <div class="info-chip"><label>생일</label><input type="text" id="edit-birth" value="2012-05-15" style="width:70px;"></div>
+                            <div class="info-chip"><label>학년</label><input type="text" id="edit-grade" value="중2" style="width:30px;"></div>
+                            <div class="info-chip" style="width:100%; margin-top:2px;"><label>이메일</label><input type="text" id="edit-email" value="parent@email.com" style="width:180px; text-align:left;"></div>
                         </div>
-                        <div class="chip-container" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:10px; margin-top:5px;">
-                            <div class="info-chip"><label>키</label><input type="text" id="edit-height" value="165.0" style="width:45px;"><b>cm</b></div>
-                            <div class="info-chip"><label>체중</label><input type="text" id="edit-weight" value="52.0" style="width:45px;"><b>kg</b></div>
-                            <div class="info-chip"><label>골격근</label><input type="text" id="edit-muscle" value="25.0" style="width:45px;"><b>kg</b></div>
-                            <div class="info-chip"><label>지방률</label><input type="text" id="edit-fat" value="15.0" style="width:35px;"><b>%</b></div>
+                        <div class="chip-container" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:8px; margin-top:6px; gap: 4px 8px;">
+                            <div class="info-chip"><label>키</label><input type="text" id="edit-height" value="165.0" style="width:40px;"><b>cm</b></div>
+                            <div class="info-chip"><label>체중</label><input type="text" id="edit-weight" value="52.0" style="width:40px;"><b>kg</b></div>
+                            <div class="info-chip"><label>골격근</label><input type="text" id="edit-muscle" value="25.0" style="width:40px;"><b>kg</b></div>
+                            <div class="info-chip"><label>지방률</label><input type="text" id="edit-fat" value="15.0" style="width:30px;"><b>%</b></div>
                         </div>
                         <div id="marketing-area" style="border-top:1px dashed rgba(0,0,0,0.1); padding-top:12px; margin-top:10px; display:none; justify-content:space-between; align-items:center;">
                             <span id="marketing-badge" class="badge-status" style="font-size:11.5px; font-weight:700;"></span>
@@ -1103,43 +1120,39 @@
                     </div>
 
                     <!-- AI Comment Editor -->
-                    <div class="desk-card" style="flex-grow: 1; display: flex; flex-direction: column;">
-                        <label class="rich-editor-label">
+                    <div class="desk-card" style="flex-grow: 1; display: flex; flex-direction: column; padding: 15px; min-height: 250px;">
+                        <label class="rich-editor-label" style="font-size: 13px; font-weight: 700; color: var(--gold); display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
                             <i class="fa-solid fa-signature"></i> 피지컬업333 맞춤소견 교열
                         </label>
-                        <textarea class="editor-textarea" id="txt-comment" oninput="syncCommentToPreview(this.value)" placeholder="소견서를 불러오는 중입니다..."></textarea>
+                        <textarea class="editor-textarea" id="txt-comment" oninput="syncCommentToPreview(this.value)" placeholder="소견서를 불러오는 중입니다..." style="flex-grow: 1; min-height: 120px; resize: none; margin-bottom: 8px;"></textarea>
                         
                         <div id="status-msg" class="status-message"></div>
                         
                         <!-- Reservation Config Panel -->
-                        <div class="reservation-panel" id="reservation-config-panel" style="margin-top: 10px; padding: 12px; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px;">
-                            <label style="display:none; align-items:center; gap: 8px; font-size: 12px; color: var(--gold); cursor: pointer; margin-bottom:8px; font-weight:600;">
+                        <div class="reservation-panel" id="reservation-config-panel" style="padding: 10px; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.1); border-radius: 6px; margin-bottom: 8px; font-size: 11px;">
+                            <label style="display:none; align-items:center; gap: 8px; font-size: 11px; color: var(--gold); cursor: pointer; margin-bottom:6px; font-weight:600;">
                                 <input type="checkbox" id="chk-use-reserve" onchange="toggleReserveTimeSelector(this.checked)" style="accent-color: var(--gold);" checked>
                                 <i class="fa-solid fa-clock"></i> 예약 발송 설정하기
                             </label>
-                            <div id="reserve-time-selector" style="display:flex; flex-direction:column; gap:8px;">
-                                <div style="display:flex; align-items:center; gap: 6px; margin-bottom:4px;">
-                                    <span style="font-size: 12px; color: var(--gold); font-weight: 600;"><i class="fa-solid fa-clock"></i> 발송 예약 일시</span>
-                                </div>
-                                <div style="display:flex; gap:6px;">
-                                    <select class="editor-select" id="sel-reserve-preset" onchange="applyReservePreset(this.value)" style="flex:1; padding:6px; background:#1e293b; border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:#fff; font-size:12px;">
-                                        <option value="10min">10분 후 예약</option>
-                                        <option value="30min">30분 후 예약</option>
-                                        <option value="1hour">1시간 후 예약</option>
-                                        <option value="custom">직접 지정 (날짜/시간)</option>
-                                    </select>
-                                </div>
-                                <div id="custom-time-wrapper" style="display:none;">
-                                    <input type="datetime-local" id="input-reserve-time" style="width:100%; padding:6px; background:#1e293b; border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:#fff; font-size:12px;">
+                            <div id="reserve-time-selector" style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                                <span style="color: var(--gold); font-weight: 600;"><i class="fa-solid fa-clock"></i> 발송 예약</span>
+                                <select class="editor-select" id="sel-reserve-preset" onchange="applyReservePreset(this.value)" style="padding:4px; background:#1e293b; border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:#fff; font-size:11px; width: 130px;">
+                                    <option value="10min">10분 후 예약</option>
+                                    <option value="30min">30분 후 예약</option>
+                                    <option value="1hour">1시간 후 예약</option>
+                                    <option value="custom">직접 지정</option>
+                                </select>
+                                <div id="custom-time-wrapper" style="display:none; flex-grow:1; margin-left:4px;">
+                                    <input type="datetime-local" id="input-reserve-time" style="width:100%; padding:4px; background:#1e293b; border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:#fff; font-size:11px;">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="action-button-group" style="margin-top: 10px; display: flex; gap: 8px;">
-                            <button class="btn-premium btn-gold" id="btn-approve" style="flex:1; padding: 14px 20px; font-size: 14px;" onclick="approveAndSend(true)">
+                        <div class="action-button-group" style="display: flex; gap: 8px; flex-shrink: 0;">
+                            <button class="btn-premium btn-gold" id="btn-approve" style="flex:1; padding: 10px; font-size: 13px;" onclick="approveAndSend(true)">
                                 <i class="fa-solid fa-circle-check"></i> 검토완료
                             </button>
-                            <button class="btn-premium" id="btn-instant-send" style="flex:1; padding: 14px 20px; font-size: 14px; background:#10b981; color:#fff; border:1px solid #10b981;" onclick="approveAndSend(false)">
+                            <button class="btn-premium" id="btn-instant-send" style="flex:1; padding: 10px; font-size: 13px; background:#10b981; color:#fff; border:1px solid #10b981;" onclick="approveAndSend(false)">
                                 <i class="fa-solid fa-paper-plane"></i> 즉시발송
                             </button>
                         </div>
@@ -1495,6 +1508,111 @@
                 `;
                 tbody.appendChild(tr);
             });
+
+            // 우측 브리핑 데스크 검색용 리스트 동기화
+            renderBriefingDeskList(allRequests);
+        }
+
+        // --- 브리핑 데스크용 학생 리스트 렌더링 및 필터링 ---
+        function renderBriefingDeskList(list) {
+            const container = document.getElementById("briefing-desk-list");
+            if (!container) return;
+            container.innerHTML = "";
+
+            if (!list || list.length === 0) {
+                container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 11px; padding: 15px;">검색 결과가 없습니다.</div>`;
+                return;
+            }
+
+            list.forEach(req => {
+                const card = document.createElement("div");
+                const safeName = (req.name || "").replace(/teat/gi, "").replace(/test/gi, "");
+                
+                card.style.cssText = `
+                    padding: 8px 12px;
+                    background: rgba(255, 255, 255, 0.05);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 6px;
+                    cursor: pointer;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    font-size: 12px;
+                    transition: all 0.2s ease;
+                `;
+                
+                if (selectedRequest && selectedRequest.id === req.id) {
+                    card.style.borderColor = "var(--gold)";
+                    card.style.background = "rgba(218, 165, 32, 0.15)";
+                    card.style.boxShadow = "0 0 8px rgba(218, 165, 32, 0.2)";
+                }
+
+                card.onmouseenter = () => {
+                    if (!selectedRequest || selectedRequest.id !== req.id) {
+                        card.style.background = "rgba(255, 255, 255, 0.08)";
+                        card.style.borderColor = "rgba(255, 255, 255, 0.2)";
+                    }
+                };
+                card.onmouseleave = () => {
+                    if (!selectedRequest || selectedRequest.id !== req.id) {
+                        card.style.background = "rgba(255, 255, 255, 0.05)";
+                        card.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                    }
+                };
+
+                card.onclick = () => {
+                    document.querySelectorAll("#briefing-desk-list > div").forEach(el => {
+                        el.style.borderColor = "rgba(255, 255, 255, 0.1)";
+                        el.style.background = "rgba(255, 255, 255, 0.05)";
+                        el.style.boxShadow = "none";
+                    });
+                    card.style.borderColor = "var(--gold)";
+                    card.style.background = "rgba(218, 165, 32, 0.15)";
+                    card.style.boxShadow = "0 0 8px rgba(218, 165, 32, 0.2)";
+
+                    activateConsultation(req);
+                    
+                    document.querySelectorAll("#requests-tbody tr").forEach(r => r.classList.remove("active-row"));
+                    const mainRows = Array.from(document.querySelectorAll("#requests-tbody tr"));
+                    const matchingRow = mainRows.find(r => r.innerHTML.includes(req.name));
+                    if (matchingRow) matchingRow.classList.add("active-row");
+                };
+
+                let statusBadgeColor = "#ef4444";
+                let statusLabel = "대기";
+                if (req.status === "Approved") {
+                    statusBadgeColor = "#10b981";
+                    statusLabel = "완료";
+                } else if (req.status === "Scheduled") {
+                    statusBadgeColor = "#3b82f6";
+                    statusLabel = "예약";
+                }
+
+                card.innerHTML = `
+                    <div style="display:flex; flex-direction:column; gap:2px;">
+                        <span style="font-weight: 700; color: #fff;">${safeName} <span style="font-size:10px; color:rgba(255,255,255,0.5); font-weight:normal;">(${req.gender} · ${req.grade || "일반"})</span></span>
+                        <span style="font-size: 10px; color: rgba(255,255,255,0.4);">${req.sports || "종목없음"}</span>
+                    </div>
+                    <span style="font-size: 9.5px; font-weight: 700; padding: 2px 6px; border-radius: 4px; color: ${statusBadgeColor}; background: ${statusBadgeColor}20; border: 1px solid ${statusBadgeColor}40;">${statusLabel}</span>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterBriefingDeskList(query) {
+            const cleanQuery = query.toLowerCase().trim();
+            if (!cleanQuery) {
+                renderBriefingDeskList(allRequests);
+                return;
+            }
+            const filtered = allRequests.filter(req => {
+                const name = (req.name || "").toLowerCase();
+                const sports = (req.sports || "").toLowerCase();
+                const phone = (req.phone || "");
+                return name.includes(cleanQuery) || sports.includes(cleanQuery) || phone.includes(cleanQuery);
+            });
+            renderBriefingDeskList(filtered);
+        }
         }
 
         function switchTab(status) {
@@ -1529,23 +1647,16 @@
         function openBriefingBoard() {
             if (allRequests && allRequests.length > 0) {
                 const target = selectedRequest || allRequests[0];
-                const biocodeResult = calculateLocalBiocode(target);
-                const reportPayload = {
-                    biocode: biocodeResult.biocode,
-                    pattern_name: biocodeResult.pattern_name,
-                    constitution: biocodeResult.constitution,
-                    lag_cause: biocodeResult.lag_cause,
-                    metab_score: biocodeResult.metab_score,
-                    behavior_score: biocodeResult.behavior_score,
-                    body_score: biocodeResult.body_score,
-                    height_gap: biocodeResult.height_gap,
-                    ai_comment: target.ai_comment || "",
-                    inputs: target
-                };
-                localStorage.setItem("physicalup_analysis", JSON.stringify(reportPayload));
-                window.open('/static/report.html', '_blank');
+                
+                // Dashboard 상태라면 목록 탭으로 전환
+                if (currentTab === 'Dashboard') {
+                    switchTab('InProgress');
+                }
+                
+                activateConsultation(target);
+                renderList(); // 목록 하이라이트 갱신
             } else {
-                window.open('/static/report.html', '_blank');
+                alert("현재 등록된 접수 건이 없습니다.");
             }
         }
 
