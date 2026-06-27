@@ -1092,29 +1092,29 @@
                         </div>
                     </div>
 
-                    <!-- Student Profile Editable Card -->
+                    <!-- Student Profile ReadOnly Card -->
                     <div class="desk-card" id="student-profile-card" style="padding: 15px; flex-shrink: 0;">
                         <div class="profile-header-area" style="margin-bottom: 8px;">
-                            <h2 class="profile-name-title" id="lbl-name" style="font-size: 16px; font-weight: 800;">홍길동</h2>
-                            <button class="btn-premium" id="btn-toggle-edit" style="padding: 4px 8px; font-size: 10px; border-radius: 4px;" onclick="toggleProfileEdit()">
+                            <h2 class="profile-name-title" id="lbl-name" style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0;">홍길동</h2>
+                            <button class="btn-premium" id="btn-toggle-edit" style="display: none;" onclick="toggleProfileEdit()">
                                 <i class="fa-solid fa-pen-to-square"></i> 스펙 수정
                             </button>
                         </div>
                         <div class="chip-container" style="gap: 4px 8px;">
-                            <div class="info-chip"><label>성별</label><input type="text" id="edit-gender" value="남" style="width:20px;"></div>
-                            <div class="info-chip"><label>생일</label><input type="text" id="edit-birth" value="2012-05-15" style="width:70px;"></div>
-                            <div class="info-chip"><label>학년</label><input type="text" id="edit-grade" value="중2" style="width:30px;"></div>
-                            <div class="info-chip" style="width:100%; margin-top:2px;"><label>이메일</label><input type="text" id="edit-email" value="parent@email.com" style="width:180px; text-align:left;"></div>
+                            <div class="info-chip" style="background: #f8fafc; border: 1px solid #e2e8f0; pointer-events: none;"><label>성별</label><input type="text" id="edit-gender" value="남" style="width:20px; background:transparent; border:none; color:#1e293b; font-weight:700; padding:0;" readonly></div>
+                            <div class="info-chip" style="background: #f8fafc; border: 1px solid #e2e8f0; pointer-events: none;"><label>생일</label><input type="text" id="edit-birth" value="2012-05-15" style="width:75px; background:transparent; border:none; color:#1e293b; font-weight:700; padding:0;" readonly></div>
+                            <div class="info-chip" style="background: #f8fafc; border: 1px solid #e2e8f0; pointer-events: none;"><label>학년</label><input type="text" id="edit-grade" value="중2" style="width:30px; background:transparent; border:none; color:#1e293b; font-weight:700; padding:0;" readonly></div>
+                            <div class="info-chip" style="width:100%; margin-top:2px; background: #f8fafc; border: 1px solid #e2e8f0; pointer-events: none;"><label>연락처</label><input type="text" id="edit-email" value="010-0000-0000" style="width:180px; text-align:left; background:transparent; border:none; color:#1e293b; font-weight:700; padding:0;" readonly></div>
                         </div>
-                        <div class="chip-container" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:8px; margin-top:6px; gap: 4px 8px;">
-                            <div class="info-chip"><label>키</label><input type="text" id="edit-height" value="165.0" style="width:40px;"><b>cm</b></div>
-                            <div class="info-chip"><label>체중</label><input type="text" id="edit-weight" value="52.0" style="width:40px;"><b>kg</b></div>
-                            <div class="info-chip"><label>골격근</label><input type="text" id="edit-muscle" value="25.0" style="width:40px;"><b>kg</b></div>
-                            <div class="info-chip"><label>지방률</label><input type="text" id="edit-fat" value="15.0" style="width:30px;"><b>%</b></div>
+                        <div class="chip-container" style="border-top:1px solid rgba(0,0,0,0.05); padding-top:8px; margin-top:6px; gap: 4px 8px;">
+                            <div class="info-chip" style="background: #f8fafc; border: 1px solid #e2e8f0; pointer-events: none;"><label>키</label><input type="text" id="edit-height" value="165.0" style="width:40px; background:transparent; border:none; color:#1e293b; font-weight:700; padding:0; text-align:right;" readonly><b style="color:#64748b;">cm</b></div>
+                            <div class="info-chip" style="background: #f8fafc; border: 1px solid #e2e8f0; pointer-events: none;"><label>체중</label><input type="text" id="edit-weight" value="52.0" style="width:40px; background:transparent; border:none; color:#1e293b; font-weight:700; padding:0; text-align:right;" readonly><b style="color:#64748b;">kg</b></div>
+                            <div class="info-chip" style="background: #f8fafc; border: 1px solid #e2e8f0; pointer-events: none;"><label>골격근</label><input type="text" id="edit-muscle" value="25.0" style="width:40px; background:transparent; border:none; color:#1e293b; font-weight:700; padding:0; text-align:right;" readonly><b style="color:#64748b;">kg</b></div>
+                            <div class="info-chip" style="background: #f8fafc; border: 1px solid #e2e8f0; pointer-events: none;"><label>지방률</label><input type="text" id="edit-fat" value="15.0" style="width:30px; background:transparent; border:none; color:#1e293b; font-weight:700; padding:0; text-align:right;" readonly><b style="color:#64748b;">%</b></div>
                         </div>
-                        <div id="marketing-area" style="border-top:1px dashed rgba(0,0,0,0.1); padding-top:12px; margin-top:10px; display:none; justify-content:space-between; align-items:center;">
-                            <span id="marketing-badge" class="badge-status" style="font-size:11.5px; font-weight:700;"></span>
-                            <button class="btn-premium btn-gold" id="btn-copy-sms" style="padding:6px 12px; font-size:11.5px; border-radius:8px;" onclick="copyMarketingSMS()">
+                        <div id="marketing-area" style="display: none !important;">
+                            <span id="marketing-badge" class="badge-status"></span>
+                            <button class="btn-premium btn-gold" id="btn-copy-sms" onclick="copyMarketingSMS()">
                                 <i class="fa-solid fa-copy"></i> 안내 문자 복사
                             </button>
                         </div>
