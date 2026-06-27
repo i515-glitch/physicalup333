@@ -110,9 +110,12 @@
                                         <input type="text" id="phone" placeholder="예: parent@example.com">
                                     </div>
                                     <div class="form-group-full form-group-inline" style="margin-top: 15px;">
-                                        <label for="reservation_date">보고서 발송 희망일 (선택사항)</label>
-                                        <input type="date" id="reservation_date" placeholder="예약 날짜">
-                                        <p style="font-size: 11px; color: #a1b2d3; margin-top: 5px;"><i class="fa-solid fa-circle-info"></i> 1일 한정 50명까지만 발송을 예약받습니다.</p>
+                                        <label><i class="fa-solid fa-calendar-check"></i> 보고서 발송 일정 예약</label>
+                                        <div style="padding: 10px 14px; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.25); border-radius: 6px; color: var(--gold2); font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                                            <i class="fa-solid fa-bolt"></i>
+                                            <span>제출 완료 시 가장 빠른 분석 완료 및 발송 가능일로 즉시 자동 예약됩니다.</span>
+                                        </div>
+                                        <input type="hidden" id="reservation_date" value="">
                                     </div>
                                 </div>
 

@@ -9,12 +9,23 @@ GIRL_GROWTH_CURVE = {
     10: 0.85, 11: 0.89, 12: 0.93, 13: 0.965, 14: 0.985, 15: 0.995, 16: 1.0, 17: 1.0, 18: 1.0
 }
 
+def normalize_birth_date(birth_str):
+    if not birth_str:
+        return "2012-01-01"
+    clean = "".join(c for c in str(birth_str) if c.isdigit())
+    if len(clean) == 6:
+        return f"20{clean[0:2]}-{clean[2:4]}-{clean[4:6]}"
+    elif len(clean) == 8:
+        return f"{clean[0:4]}-{clean[4:6]}-{clean[6:8]}"
+    return str(birth_str)
+
 def calculate_age(birth_date_str):
     """
     Calculate Korean standard age (or international age for growth charts)
     """
     try:
-        birth_date = datetime.strptime(birth_date_str, "%Y-%m-%d")
+        norm_date = normalize_birth_date(birth_date_str)
+        birth_date = datetime.strptime(norm_date, "%Y-%m-%d")
         today = datetime.now()
         age = today.year - birth_date.year
         # Adjust based on month/day for precise decimal age if needed, 
@@ -26,6 +37,7 @@ def calculate_age(birth_date_str):
         return 14 # default middle school age
 
 def calculate_biocode(input_data):
+
     """
     input_data structure:
     {
@@ -46,7 +58,7 @@ def calculate_biocode(input_data):
     }
     """
     gender = input_data.get("gender", "남")
-    birth_date = input_data.get("birth_date", "2012-01-01")
+    birth_date = normalize_birth_date(input_data.get("birth_date", "2012-01-01"))
     father = input_data.get("father_height", 173.0)
     mother = input_data.get("mother_height", 160.0)
     height = input_data.get("current_height", 160.0)

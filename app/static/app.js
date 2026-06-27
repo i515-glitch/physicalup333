@@ -330,7 +330,11 @@ async function submitOnlineApplication() {
         const data = await response.json();
         
         if (data.success) {
-            alert(`✅ 온라인 성장분석 신청이 완료되었습니다!\n대기 번호: ${data.id.substring(0, 8)}\n\n관리자가 데이터 검토 및 소견 수정을 마친 후, 입력하신 이메일(${email})로 18페이지 프리미엄 PDF 보고서를 자동 발송해 드립니다.`);
+            const reserveDate = new Date(data.scheduled_at);
+            const days = ["일", "월", "화", "수", "목", "금", "토"];
+            const dateStr = `${reserveDate.getFullYear()}년 ${reserveDate.getMonth()+1}월 ${reserveDate.getDate()}일 (${days[reserveDate.getDay()]}) ${reserveDate.getHours()}시 ${reserveDate.getMinutes().toString().padStart(2, '0')}분`;
+            
+            alert(`✅ 온라인 정밀 분석 접수 및 예약 완료!\n대기 번호: ${data.id.substring(0, 8)}\n\n부모님, 가장 빨리 분석 결과를 발송받으실 수 있는 예약일은\n[ ${dateStr} ] 입니다!\n\n입력하신 이메일(${email})로 18페이지 분량의 초정밀 PDF 보고서가 자동 발송됩니다.`);
             // Reset form name
             document.getElementById("name").value = "";
         } else {

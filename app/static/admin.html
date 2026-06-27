@@ -6,6 +6,8 @@
     <title>PHYSICAL UP 333 - Elite Sports Lab 컨설턴트 보드</title>
     <!-- FontAwesome Premium Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
 
@@ -49,6 +51,9 @@
             flex-direction: column;
             height: 100vh;
             padding: 20px;
+            max-width: 1300px;
+            margin: 0 auto;
+            width: 100%;
         }
 
         header {
@@ -224,7 +229,7 @@
             background: #f8f9fa;
             color: var(--text-muted);
             font-weight: 600;
-            padding: 12px 16px;
+            padding: 12px 10px;
             border-bottom: 2px solid #dadce0;
             border-right: 1px solid #dadce0;
             cursor: pointer;
@@ -233,6 +238,7 @@
             top: 0;
             z-index: 5;
             transition: background 0.2s;
+            white-space: nowrap;
         }
 
         .sheets-table th:hover {
@@ -244,7 +250,7 @@
         }
 
         .sheets-table td {
-            padding: 10px 16px;
+            padding: 10px 10px;
             border-bottom: 1px solid #dadce0;
             border-right: 1px solid #dadce0;
             color: var(--text-main);
@@ -324,6 +330,7 @@
         .traffic-light-dot.yellow { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; }
         .traffic-light-dot.red { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
         .traffic-light-dot.blue { background: #3b82f6; box-shadow: 0 0 6px #3b82f6; }
+        .traffic-light-dot.black { background: #1a1a1a; box-shadow: 0 0 6px #1a1a1a; }
 
 
 
@@ -650,6 +657,132 @@
             border-radius: 4px;
             border: 1px solid rgba(255,255,255,0.1);
         }
+
+        /* Compact Sheets Table */
+        .compact-sheets-table th, .compact-sheets-table td {
+            padding: 7px 10px;
+            border-bottom: 1px solid #dadce0;
+            border-right: 1px solid #dadce0;
+            vertical-align: middle;
+            font-size: 12.5px;
+            line-height: 1.3;
+        }
+        .compact-sheets-table th:last-child, .compact-sheets-table td:last-child {
+            border-right: none;
+        }
+        .compact-sheets-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Global Config Panel styles */
+        .global-config-card {
+            background: #ffffff;
+            border: 1px solid #dadce0;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(60,64,67,0.1);
+            margin-top: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .global-config-header {
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dadce0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
+        .global-config-header:hover {
+            background: #f1f3f4;
+        }
+        .global-config-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #1a73e8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .global-config-summary {
+            font-size: 11px;
+            color: #5f6368;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .global-config-content {
+            padding: 16px;
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            background: #ffffff;
+        }
+        .global-config-content.active {
+            display: flex;
+        }
+        .config-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .config-col {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .config-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #3c4043;
+        }
+        .config-input, .config-select {
+            padding: 8px 10px;
+            border: 1px solid #dadce0;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #202124;
+            outline: none;
+            transition: border 0.2s;
+            background: #fff;
+        }
+        .config-input:focus, .config-select:focus {
+            border-color: #1a73e8;
+        }
+        .chip-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            min-height: 38px;
+            padding: 6px;
+            border: 1px solid #dadce0;
+            border-radius: 6px;
+            background: #f8f9fa;
+            align-items: center;
+        }
+        .date-chip {
+            background: #e8f0fe;
+            color: #1a73e8;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .date-chip-delete {
+            cursor: pointer;
+            color: #d93025;
+            font-weight: 700;
+            margin-left: 2px;
+        }
+        .date-chip-delete:hover {
+            color: #a50202;
+        }
     </style>
 </head>
 <body>
@@ -686,7 +819,7 @@
                 <div class="filter-header">
                     <div class="tab-menu">
                         <div class="tab-item active" id="tab-dashboard" onclick="switchTab('Dashboard')">
-                            📊 경영 통계 요약 (Dashboard)
+                            📊 데이터분석 대시보드
                         </div>
                         <div class="tab-item" id="tab-in-progress" onclick="switchTab('InProgress')">
                             🕒 진행중
@@ -695,64 +828,196 @@
                             ✅ 처리완료
                         </div>
                     </div>
-                </div>
-                
-                <!-- 📊 Executive Dashboard Area (경영자 모드) -->
-                <div id="dashboard-container" style="display:block; flex-grow:1; overflow-y:auto; padding:20px; background:#ffffff; border:1px solid #dadce0; border-radius:12px; box-shadow:0 1px 3px rgba(60,64,67,0.1); margin-top:10px;">
-                    <!-- Top KPI Summary Cards -->
-                    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:16px; margin-bottom:24px;">
-                        <div style="background:#f8f9fa; border:1px solid #dadce0; border-radius:8px; padding:16px; text-align:center;">
-                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:6px;"><i class="fa-solid fa-file-invoice"></i> 총 접수 건수</div>
-                            <div style="font-size:24px; font-weight:700; color:#1a73e8;" id="kpi-total-count">0건</div>
+
+                    <!-- 📊 KPI Mini Cards (오른쪽 끝 배치, 폭/높이 축소) -->
+                    <div id="kpi-summary-cards" style="display:flex; gap:10px; align-items:center;">
+                        <div style="background:#f8f9fa; border:1px solid #dadce0; border-radius:8px; padding:6px 12px; text-align:center; min-width:80px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                            <div style="font-size:10px; color:var(--text-muted); display:flex; align-items:center; gap:3px;"><i class="fa-solid fa-file-invoice" style="font-size:9px;"></i> 총 접수</div>
+                            <div style="font-size:14px; font-weight:700; color:#1a73e8; margin-top:2px;" id="kpi-total-count">0건</div>
                         </div>
-                        <div style="background:#f8f9fa; border:1px solid #dadce0; border-radius:8px; padding:16px; text-align:center;">
-                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:6px;"><i class="fa-solid fa-circle-exclamation"></i> 대기 중인 건</div>
-                            <div style="font-size:24px; font-weight:700; color:#b08a3e;" id="kpi-pending-count">0건</div>
+                        <div style="background:#f8f9fa; border:1px solid #dadce0; border-radius:8px; padding:6px 12px; text-align:center; min-width:80px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                            <div style="font-size:10px; color:var(--text-muted); display:flex; align-items:center; gap:3px;"><i class="fa-solid fa-circle-exclamation" style="font-size:9px;"></i> 대기중</div>
+                            <div style="font-size:14px; font-weight:700; color:#b08a3e; margin-top:2px;" id="kpi-pending-count">0건</div>
                         </div>
-                        <div style="background:#f8f9fa; border:1px solid #dadce0; border-radius:8px; padding:16px; text-align:center;">
-                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:6px;"><i class="fa-solid fa-clock"></i> 발송 예약 대기</div>
-                            <div style="font-size:24px; font-weight:700; color:#fb923c;" id="kpi-scheduled-count">0건</div>
+                        <div style="background:#f8f9fa; border:1px solid #dadce0; border-radius:8px; padding:6px 12px; text-align:center; min-width:80px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                            <div style="font-size:10px; color:var(--text-muted); display:flex; align-items:center; gap:3px;"><i class="fa-solid fa-clock" style="font-size:9px;"></i> 발송예약</div>
+                            <div style="font-size:14px; font-weight:700; color:#fb923c; margin-top:2px;" id="kpi-scheduled-count">0건</div>
                         </div>
-                        <div style="background:#f8f9fa; border:1px solid #dadce0; border-radius:8px; padding:16px; text-align:center;">
-                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:6px;"><i class="fa-solid fa-circle-check"></i> 발송 완료 건</div>
-                            <div style="font-size:24px; font-weight:700; color:#137333;" id="kpi-approved-count">0건</div>
+                        <div style="background:#f8f9fa; border:1px solid #dadce0; border-radius:8px; padding:6px 12px; text-align:center; min-width:80px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                            <div style="font-size:10px; color:var(--text-muted); display:flex; align-items:center; gap:3px;"><i class="fa-solid fa-circle-check" style="font-size:9px;"></i> 발송완료</div>
+                            <div style="font-size:14px; font-weight:700; color:#137333; margin-top:2px;" id="kpi-approved-count">0건</div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Pivot Tables Grid (2 Columns) -->
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px;">
-                        <!-- Sports Distribution Sheet -->
-                        <div style="border:1px solid #dadce0; border-radius:8px; overflow:hidden;">
-                            <div style="background:#f8f9fa; border-bottom:1px solid #dadce0; padding:10px 16px; font-weight:700; font-size:13px; color:var(--text-dark);"><i class="fa-solid fa-baseball-bat-ball"></i> 종목별 접수 분포 시트</div>
-                            <table class="sheets-table" style="box-shadow:none; border:none; border-radius:0;">
-                                <thead>
-                                    <tr>
-                                        <th>희망 종목</th>
-                                        <th style="text-align:right;">접수 건수</th>
-                                        <th style="text-align:right;">점유율</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="dashboard-sports-tbody">
-                                    <!-- Dynamic -->
-                                </tbody>
-                            </table>
+                <!-- 📊 Executive Dashboard Area (경영자 모드) -->
+                <div id="dashboard-container" style="display:block; flex-grow:1; overflow:hidden; padding:10px; background:#ffffff; border:1px solid #dadce0; border-radius:12px; box-shadow:0 1px 3px rgba(60,64,67,0.1); margin-top:6px; height:0; min-height:0; box-sizing:border-box;">
+                    <!-- Dashboard 3-Column Grid Layout (No Scroll, Full Screen Fit) -->
+                    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; height:100%; box-sizing:border-box; min-height:0;">
+                        
+                        <!-- 1. 기본 유소년 데이터 분포 (왼쪽 열) -->
+                        <div style="background:#ffffff; border:1px solid #dadce0; border-radius:12px; padding:8px 10px; box-shadow:0 1px 2px rgba(0,0,0,0.05); display:flex; flex-direction:column; gap:8px; height:100%; box-sizing:border-box; min-height:0;">
+                            <h3 style="font-size:12.5px; font-weight:700; color:var(--text-dark); margin:0; display:flex; align-items:center; gap:6px;"><i class="fa-solid fa-chart-simple"></i> 기본 유소년 데이터 분포</h3>
+                            
+                            <!-- 종목별 (위) -->
+                            <div style="border:1px solid #e0e0e0; border-radius:8px; overflow:hidden; flex:1.25; overflow-y:auto; width:100%;">
+                                <table class="compact-sheets-table" style="width:100%; border-collapse:collapse; font-size:10.5px;">
+                                    <thead style="position:sticky; top:0; background:#f8f9fa; z-index:1;">
+                                        <tr style="border-bottom:1px solid #e0e0e0; text-align:left; color:#5f6368;">
+                                            <th style="padding:3px 5px;">종목</th>
+                                            <th style="padding:3px 5px; text-align:right;">남</th>
+                                            <th style="padding:3px 5px; text-align:right;">여</th>
+                                            <th style="padding:3px 5px; text-align:right;">합계</th>
+                                            <th style="padding:3px 5px; text-align:right;">비율</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dashboard-sports-tbody"></tbody>
+                                </table>
+                            </div>
+
+                            <!-- 학년별 (아래) -->
+                            <div style="border:1px solid #e0e0e0; border-radius:8px; overflow:hidden; flex:0.75; overflow-y:auto; width:100%; border-top:1px dashed #dadce0; margin-top:4px; padding-top:4px;">
+                                <table class="compact-sheets-table" style="width:100%; border-collapse:collapse; font-size:10.5px;">
+                                    <thead style="position:sticky; top:0; background:#f8f9fa; z-index:1;">
+                                        <tr style="border-bottom:1px solid #e0e0e0; text-align:left; color:#5f6368;">
+                                            <th style="padding:3px 5px;">학년</th>
+                                            <th style="padding:3px 5px; text-align:right;">남</th>
+                                            <th style="padding:3px 5px; text-align:right;">여</th>
+                                            <th style="padding:3px 5px; text-align:right;">합계</th>
+                                            <th style="padding:3px 5px; text-align:right;">비율</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dashboard-grade-tbody"></tbody>
+                                </table>
+                            </div>
                         </div>
 
-                        <!-- Grade Distribution Sheet -->
-                        <div style="border:1px solid #dadce0; border-radius:8px; overflow:hidden;">
-                            <div style="background:#f8f9fa; border-bottom:1px solid #dadce0; padding:10px 16px; font-weight:700; font-size:13px; color:var(--text-dark);"><i class="fa-solid fa-graduation-cap"></i> 학년별 접수 현황 시트</div>
-                            <table class="sheets-table" style="box-shadow:none; border:none; border-radius:0;">
-                                <thead>
-                                    <tr>
-                                        <th>학년군</th>
-                                        <th style="text-align:right;">접수 건수</th>
-                                        <th style="text-align:right;">점유율</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="dashboard-grade-tbody">
-                                    <!-- Dynamic -->
-                                </tbody>
-                            </table>
+                        <!-- 2. BioCode 27패턴 분포 분석 (가운데 열) -->
+                        <div style="background:#ffffff; border:1px solid #dadce0; border-radius:12px; padding:8px 10px; box-shadow:0 1px 2px rgba(0,0,0,0.05); display:flex; flex-direction:column; gap:6px; height:100%; box-sizing:border-box; min-height:0;">
+                            <h3 style="font-size:12.5px; font-weight:700; color:var(--text-dark); margin:0; display:flex; align-items:center; gap:6px;"><i class="fa-solid fa-dna"></i> BioCode 27패턴 분포 분석</h3>
+                            
+                            <!-- BioCode 표 -->
+                            <div style="border:1px solid #e0e0e0; border-radius:8px; overflow:hidden; flex:1; overflow-y:auto; width:100%;">
+                                <table class="compact-sheets-table" style="width:100%; border-collapse:collapse; font-size:10.5px;">
+                                    <thead style="position:sticky; top:0; background:#f8f9fa; z-index:1;">
+                                        <tr style="border-bottom:1px solid #e0e0e0; text-align:left; color:#5f6368;">
+                                            <th style="padding:3px 5px;">순위</th>
+                                            <th style="padding:3px 5px;">BioCode</th>
+                                            <th style="padding:3px 5px;">유형 특징</th>
+                                            <th style="padding:3px 5px; text-align:right;">건수</th>
+                                            <th style="padding:3px 5px; text-align:right;">점유율</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dashboard-biocode-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- 3. 성장 환경 & 신체 발달 분석 (오른쪽 열) -->
+                        <div style="background:#ffffff; border:1px solid #dadce0; border-radius:12px; padding:8px 10px; box-shadow:0 1px 2px rgba(0,0,0,0.05); display:flex; flex-direction:column; gap:8px; height:100%; box-sizing:border-box; min-height:0;">
+                            <!-- 3대 핵심 성장 환경 설문 점수 (위) -->
+                            <div style="display:flex; flex-direction:column; gap:4px; flex:1.25; min-height:0;">
+                                <h3 style="font-size:12.5px; font-weight:700; color:var(--text-dark); margin:0; display:flex; align-items:center; gap:6px;"><i class="fa-solid fa-square-poll-vertical"></i> 핵심 성장 설문 점수</h3>
+                                <div style="border:1px solid #e0e0e0; border-radius:8px; overflow:hidden; flex:1; overflow-y:auto; width:100%;">
+                                    <table class="compact-sheets-table" style="width:100%; border-collapse:collapse; font-size:10.5px;">
+                                        <thead style="position:sticky; top:0; background:#f8f9fa; z-index:1;">
+                                            <tr style="border-bottom:1px solid #e0e0e0; text-align:left; color:#5f6368;">
+                                                <th style="padding:3px 5px;">설문 영역</th>
+                                                <th style="padding:3px 5px; text-align:right;">평균</th>
+                                                <th style="padding:3px 5px; text-align:right;">최저</th>
+                                                <th style="padding:3px 5px; text-align:right;">최고</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="dashboard-survey-tbody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- 평균 피지컬 발달 지표 (아래) -->
+                            <div style="display:flex; flex-direction:column; gap:4px; flex:0.75; min-height:0; border-top:1px dashed #dadce0; padding-top:4px;">
+                                <h3 style="font-size:12.5px; font-weight:700; color:var(--text-dark); margin:0; display:flex; align-items:center; gap:6px;"><i class="fa-solid fa-child"></i> 평균 피지컬 발달 지표</h3>
+                                <div style="border:1px solid #e0e0e0; border-radius:8px; overflow:hidden; flex:1; overflow-y:auto; width:100%;">
+                                    <table class="compact-sheets-table" style="width:100%; border-collapse:collapse; font-size:10.5px; text-align:center;">
+                                        <thead style="position:sticky; top:0; background:#f8f9fa; z-index:1;">
+                                            <tr style="border-bottom:1px solid #e0e0e0; color:#5f6368;">
+                                                <th style="padding:3px 5px; text-align:left;">학년군 (성별)</th>
+                                                <th style="padding:3px 5px;">신장</th>
+                                                <th style="padding:3px 5px;">체중</th>
+                                                <th style="padding:3px 5px;">근육</th>
+                                                <th style="padding:3px 5px;">지방</th>
+                                                <th style="padding:3px 5px;">표본</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="dashboard-physical-tbody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- 📅 Global Reservation & Dispatch Config Panel -->
+                <div class="global-config-card" style="margin-top: 10px; margin-bottom: 5px;">
+                    <div class="global-config-header" onclick="toggleGlobalConfigCollapse()">
+                        <div class="global-config-title">
+                            <i class="fa-solid fa-calendar-check"></i>
+                            <span>글로벌 발송 예약 및 자동발송 환경 설정</span>
+                        </div>
+                        <div class="global-config-summary">
+                            <span id="summary-sys-limit" style="font-weight:600;"><i class="fa-solid fa-calculator"></i> 하루 50건 제한</span>
+                            <span id="summary-sys-rule" style="font-weight:600;"><i class="fa-solid fa-clock"></i> 익일 오전 10시</span>
+                            <span id="summary-sys-mode" style="font-weight:600;"><i class="fa-solid fa-robot"></i> AI 자동 발송</span>
+                            <span style="color:#0f9d58; font-weight:700;"><i class="fa-solid fa-circle-play"></i> 스케줄러 작동 중</span>
+                            <i class="fa-solid fa-chevron-down" id="global-config-chevron" style="transition: transform 0.2s;"></i>
+                        </div>
+                    </div>
+                    <div class="global-config-content" id="global-config-content-area" style="display: none; border-top: 1px solid #dadce0;">
+                        <div class="config-row">
+                            <!-- 1. 일일 최대 발송 가능 건수 -->
+                            <div class="config-col" style="max-width:180px;">
+                                <label class="config-label"><i class="fa-solid fa-calculator"></i> 하루 최대 발송 가능 건수</label>
+                                <input type="number" class="config-input" id="cfg-daily-limit" value="50" min="1" max="500" style="text-align: center; font-weight: bold;">
+                                <span style="font-size:10.5px; color:#5f6368; line-height:1.4;">* 밀리는 경우 자동으로 다음날 배정</span>
+                            </div>
+
+                            <!-- 2. 기본 발송 규칙 유형 -->
+                            <div class="config-col" style="min-width: 250px;">
+                                <label class="config-label"><i class="fa-solid fa-business-time"></i> 발송 예정 시각 규칙</label>
+                                <select class="config-select" id="cfg-send-time-type" onchange="toggleSendTimeCustomInput(this.value)">
+                                    <option value="next_day_10">익일 오전 10시 일괄 발송 (기본값)</option>
+                                    <option value="custom_time">배정일 지정 시각 발송</option>
+                                    <option value="instant">검수 후 즉시 발송 (1분 이내)</option>
+                                </select>
+                                <span style="font-size:10.5px; color:#5f6368; line-height:1.4;">* 익일 10시는 신청 다음 날 10:00에 발송되며, 즉시 발송은 검수 즉시 이메일 발송됩니다.</span>
+                            </div>
+
+                            <!-- 3. 지정 발송 예정 시각 (custom_time 전용) -->
+                            <div class="config-col" id="cfg-custom-time-col" style="max-width:180px; display: none;">
+                                <label class="config-label"><i class="fa-solid fa-clock"></i> 배정일 발송 시간 지정</label>
+                                <input type="time" class="config-input" id="cfg-custom-send-time" value="10:00">
+                                <span style="font-size:10.5px; color:#5f6368; line-height:1.4;">* 지정된 시간에 일괄 자동 발송</span>
+                            </div>
+                        </div>
+
+                        <div class="config-row" style="margin-top:5px; border-top:1px dashed #dadce0; padding-top:15px;">
+                            <!-- 4. 자동 발송 승인 모드 -->
+                            <div class="config-col">
+                                <label class="config-label"><i class="fa-solid fa-sliders"></i> 자동 발송 승인 모드</label>
+                                <select class="config-select" id="cfg-approval-mode" style="max-width:350px;">
+                                    <option value="ai">즉시 AI 자동 발송 (예약 시간 도달 시 바로 부모 발송)</option>
+                                    <option value="representative">대표 수동 검수 대기 (예약 시간 도달 시 검수대기 리스트로 전환)</option>
+                                </select>
+                                <span style="font-size:10.5px; color:#5f6368; line-height:1.4;">* AI 모드는 예약 시각에 소견 수정본을 이메일로 자동 전송하며, 대표 모드는 관리자가 직접 대시보드에서 보낸 보고서만 발송됩니다.</span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:5px; border-top:1px solid #dadce0; padding-top:12px; align-items: center;">
+                            <span id="cfg-status-msg" style="font-size:12px; font-weight:600; color:#1a73e8; margin-right:auto;"></span>
+                            <button class="btn-premium btn-gold" style="padding:10px 24px; font-size:13px; cursor:pointer;" onclick="saveGlobalConfig()">
+                                <i class="fa-solid fa-floppy-disk"></i> 글로벌 예약 설정 저장
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -762,23 +1027,23 @@
                     <table class="sheets-table">
                         <thead>
                             <tr>
+                                <th onclick="sortBy('timestamp')">접수시간 <span id="sort-timestamp" class="sort-icon"></span></th>
                                 <th onclick="sortBy('name')">이름 <span id="sort-name" class="sort-icon"></span></th>
                                 <th onclick="sortBy('gender')">성별 <span id="sort-gender" class="sort-icon"></span></th>
                                 <th onclick="sortBy('birth_date')">생년월일 <span id="sort-birth_date" class="sort-icon"></span></th>
                                 <th onclick="sortBy('grade')">학년 <span id="sort-grade" class="sort-icon"></span></th>
                                 <th onclick="sortBy('sports')">희망종목 <span id="sort-sports" class="sort-icon"></span></th>
                                 <th onclick="sortBy('phone')">보호자 이메일 <span id="sort-phone" class="sort-icon"></span></th>
-                                <th style="text-align:center;">접수완료</th>
-                                <th style="text-align:center;">기초분석</th>
-                                <th style="text-align:center;">2차검수</th>
-                                <th style="text-align:center;">발송예약</th>
-                                <th style="text-align:center;">발송완료</th>
+                                <th style="text-align:center;">접수<br>완료</th>
+                                <th style="text-align:center;">기초<br>분석</th>
+                                <th style="text-align:center;">2차<br>검수</th>
+                                <th style="text-align:center;">발송<br>예약</th>
+                                <th style="text-align:center;">발송<br>완료</th>
                                 <th style="text-align:center;">BioCode</th>
                                 <th onclick="sortBy('current_height')">신장 (cm) <span id="sort-current_height" class="sort-icon"></span></th>
                                 <th onclick="sortBy('current_weight')">체중 (kg) <span id="sort-current_weight" class="sort-icon"></span></th>
-                                <th onclick="sortBy('skeletal_muscle')">골격근 (kg) <span id="sort-skeletal_muscle" class="sort-icon"></span></th>
-                                <th onclick="sortBy('body_fat')">지방률 (%) <span id="sort-body_fat" class="sort-icon"></span></th>
-                                <th onclick="sortBy('timestamp')">접수시간 <span id="sort-timestamp" class="sort-icon"></span></th>
+                                <th onclick="sortBy('skeletal_muscle')">골격근<br>(kg) <span id="sort-skeletal_muscle" class="sort-icon"></span></th>
+                                <th onclick="sortBy('body_fat')">지방률<br>(%) <span id="sort-body_fat" class="sort-icon"></span></th>
                             </tr>
                         </thead>
                         <tbody id="requests-tbody">
@@ -835,7 +1100,7 @@
                     <!-- AI Comment Editor -->
                     <div class="desk-card" style="flex-grow: 1; display: flex; flex-direction: column;">
                         <label class="rich-editor-label">
-                            <i class="fa-solid fa-signature"></i> 제미나이 2.5 플래시 맞춤 소견서 교열
+                            <i class="fa-solid fa-signature"></i> 피지컬업333 맞춤소견 교열
                         </label>
                         <textarea class="editor-textarea" id="txt-comment" oninput="syncCommentToPreview(this.value)" placeholder="소견서를 불러오는 중입니다..."></textarea>
                         
@@ -843,14 +1108,16 @@
                         
                         <!-- Reservation Config Panel -->
                         <div class="reservation-panel" id="reservation-config-panel" style="margin-top: 10px; padding: 12px; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px;">
-                            <label style="display:flex; align-items:center; gap: 8px; font-size: 12px; color: var(--gold); cursor: pointer; margin-bottom:8px; font-weight:600;">
-                                <input type="checkbox" id="chk-use-reserve" onchange="toggleReserveTimeSelector(this.checked)" style="accent-color: var(--gold);">
+                            <label style="display:none; align-items:center; gap: 8px; font-size: 12px; color: var(--gold); cursor: pointer; margin-bottom:8px; font-weight:600;">
+                                <input type="checkbox" id="chk-use-reserve" onchange="toggleReserveTimeSelector(this.checked)" style="accent-color: var(--gold);" checked>
                                 <i class="fa-solid fa-clock"></i> 예약 발송 설정하기
                             </label>
-                            <div id="reserve-time-selector" style="display:none; flex-direction:column; gap:8px;">
+                            <div id="reserve-time-selector" style="display:flex; flex-direction:column; gap:8px;">
+                                <div style="display:flex; align-items:center; gap: 6px; margin-bottom:4px;">
+                                    <span style="font-size: 12px; color: var(--gold); font-weight: 600;"><i class="fa-solid fa-clock"></i> 발송 예약 일시</span>
+                                </div>
                                 <div style="display:flex; gap:6px;">
                                     <select class="editor-select" id="sel-reserve-preset" onchange="applyReservePreset(this.value)" style="flex:1; padding:6px; background:#1e293b; border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:#fff; font-size:12px;">
-                                        <option value="immediate">즉시 발송 (기본)</option>
                                         <option value="10min">10분 후 예약</option>
                                         <option value="30min">30분 후 예약</option>
                                         <option value="1hour">1시간 후 예약</option>
@@ -864,11 +1131,11 @@
                         </div>
 
                         <div class="action-button-group" style="margin-top: 10px; display: flex; gap: 8px;">
-                            <button class="btn-premium btn-gold" id="btn-approve" style="flex-grow:1; padding: 14px 20px; font-size: 14px;" onclick="approveAndSend()">
-                                <i class="fa-solid fa-paper-plane"></i> 검토 완료 및 이메일 발송
+                            <button class="btn-premium btn-gold" id="btn-approve" style="flex:1; padding: 14px 20px; font-size: 14px;" onclick="approveAndSend(true)">
+                                <i class="fa-solid fa-circle-check"></i> 검토완료
                             </button>
-                            <button class="btn-premium" id="btn-cancel-reserve" style="display:none; padding: 14px 20px; font-size: 14px; background:#ef4444; color:#fff; border:1px solid #ef4444;" onclick="cancelReservation()">
-                                <i class="fa-solid fa-circle-xmark"></i> 예약 취소
+                            <button class="btn-premium" id="btn-instant-send" style="flex:1; padding: 14px 20px; font-size: 14px; background:#10b981; color:#fff; border:1px solid #10b981;" onclick="approveAndSend(false)">
+                                <i class="fa-solid fa-paper-plane"></i> 즉시발송
                             </button>
                         </div>
                     </div>
@@ -922,14 +1189,151 @@
         let currentSortDir = 'desc';
         let selectedRequest = null;
 
+        // Chart.js 인스턴스 전역 관리 객체
+        let charts = {
+            sports: null,
+            grade: null,
+            biocode: null,
+            survey: null,
+            physical: null
+        };
+
+        let globalOpenDates = [];
+
         document.addEventListener("DOMContentLoaded", () => {
             refreshRequests();
+            loadGlobalConfig(); // Load global config on page init
         });
+
+        // --- Global Config Panel Functions ---
+        function toggleGlobalConfigCollapse() {
+            const content = document.getElementById("global-config-content-area");
+            const chevron = document.getElementById("global-config-chevron");
+            if (content.style.display === "none") {
+                content.style.display = "flex";
+                chevron.style.transform = "rotate(180deg)";
+            } else {
+                content.style.display = "none";
+                chevron.style.transform = "rotate(0deg)";
+            }
+        }
+
+        function toggleSendTimeCustomInput(type) {
+            const customTimeCol = document.getElementById("cfg-custom-time-col");
+            if (type === "custom_time") {
+                customTimeCol.style.display = "flex";
+            } else {
+                customTimeCol.style.display = "none";
+            }
+        }
+
+        async function loadGlobalConfig() {
+            try {
+                const res = await fetch("/api/admin/config");
+                if (!res.ok) throw new Error("설정 로드 실패");
+                const data = await res.json();
+
+                // Bind elements
+                document.getElementById("cfg-daily-limit").value = data.daily_limit || 50;
+                document.getElementById("cfg-send-time-type").value = data.send_time_type || "next_day_10";
+                document.getElementById("cfg-custom-send-time").value = data.custom_send_time || "10:00";
+                document.getElementById("cfg-approval-mode").value = data.approval_mode || "ai";
+
+                // Toggle visibility
+                toggleSendTimeCustomInput(data.send_time_type);
+
+                // Update summary bar
+                updateGlobalConfigSummary(
+                    data.daily_limit || 50,
+                    data.send_time_type || "next_day_10",
+                    data.custom_send_time || "10:00",
+                    data.approval_mode || "ai"
+                );
+            } catch (err) {
+                console.error("[Config] Load error:", err);
+            }
+        }
+
+        function updateGlobalConfigSummary(limit, timeType, customTime, mode) {
+            // 1. Limit Text
+            document.getElementById("summary-sys-limit").innerHTML = `<i class="fa-solid fa-calculator"></i> 하루 ${limit}건 제한`;
+
+            // 2. Rule Text
+            let ruleText = "";
+            if (timeType === "next_day_10") {
+                ruleText = `<i class="fa-solid fa-clock"></i> 익일 오전 10시`;
+            } else if (timeType === "custom_time") {
+                ruleText = `<i class="fa-solid fa-clock"></i> 지정시각 ${customTime}`;
+            } else {
+                ruleText = `<i class="fa-solid fa-bolt"></i> 검수후 즉시`;
+            }
+            document.getElementById("summary-sys-rule").innerHTML = ruleText;
+
+            // 3. Mode Text
+            const modeText = mode === "ai"
+                ? `<i class="fa-solid fa-robot"></i> AI 자동 발송`
+                : `<i class="fa-solid fa-user-shield"></i> 대표 수동 검수`;
+            document.getElementById("summary-sys-mode").innerHTML = modeText;
+        }
+
+        async function saveGlobalConfig() {
+            const dailyLimit = parseInt(document.getElementById("cfg-daily-limit").value) || 50;
+            const sendTimeType = document.getElementById("cfg-send-time-type").value;
+            const customSendTime = document.getElementById("cfg-custom-send-time").value;
+            const approvalMode = document.getElementById("cfg-approval-mode").value;
+            const statusMsg = document.getElementById("cfg-status-msg");
+
+            statusMsg.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> 글로벌 설정 저장 중...`;
+
+            try {
+                const res = await fetch("/api/admin/config", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        daily_limit: dailyLimit,
+                        send_time_type: sendTimeType,
+                        custom_send_time: customSendTime,
+                        approval_mode: approvalMode
+                    })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    statusMsg.innerHTML = `<span style="color:#0f9d58;"><i class="fa-solid fa-circle-check"></i> 성공적으로 저장되었습니다!</span>`;
+                    updateGlobalConfigSummary(dailyLimit, sendTimeType, customSendTime, approvalMode);
+                    setTimeout(() => {
+                        statusMsg.innerHTML = "";
+                    }, 3000);
+                } else {
+                    throw new Error(data.detail || "저장 실패");
+                }
+            } catch (err) {
+                statusMsg.innerHTML = `<span style="color:#d93025;"><i class="fa-solid fa-circle-xmark"></i> 실패: ${err.message}</span>`;
+            }
+        }
+
+        function updateKPICards() {
+            const totalCount = allRequests.length;
+            const pendingCount = allRequests.filter(req => req.status === 'Pending').length;
+            const scheduledCount = allRequests.filter(req => req.status === 'Scheduled').length;
+            const approvedCount = allRequests.filter(req => req.status === 'Approved').length;
+
+            const totalEl = document.getElementById("kpi-total-count");
+            const pendingEl = document.getElementById("kpi-pending-count");
+            const scheduledEl = document.getElementById("kpi-scheduled-count");
+            const approvedEl = document.getElementById("kpi-approved-count");
+
+            if (totalEl) totalEl.innerText = `${totalCount}건`;
+            if (pendingEl) pendingEl.innerText = `${pendingCount}건`;
+            if (scheduledEl) scheduledEl.innerText = `${scheduledCount}건`;
+            if (approvedEl) approvedEl.innerText = `${approvedCount}건`;
+        }
 
         async function refreshRequests() {
             try {
                 const res = await fetch("/api/admin/requests");
                 allRequests = await res.json();
+                updateKPICards();
                 if (currentTab === 'Dashboard') {
                     renderDashboard();
                 } else {
@@ -1036,22 +1440,24 @@
                     statusBadge = `<span class="badge-status badge-pending">🔴 대기중</span>`;
                 }
 
-                // 1. 접수완료 (항상 Green)
-                let s1 = `<span class="traffic-light-dot green"></span>`;
-                // 2. 기초분석 (설문이 완료되었거나 결제가 완료된 경우 Green, 아니면 Red)
-                let s2 = req.is_completed ? `<span class="traffic-light-dot green"></span>` : `<span class="traffic-light-dot red"></span>`;
-                // 3. 2차검수 (ReviewNeeded 이상이면 Yellow 또는 Green)
-                let s3 = `<span class="traffic-light-dot red"></span>`;
-                if (req.status === "ReviewNeeded") s3 = `<span class="traffic-light-dot yellow" title="검수 대기중"></span>`;
-                else if (req.status === "Scheduled" || req.status === "Approved") s3 = `<span class="traffic-light-dot green"></span>`;
-                
-                // 4. 발송예약 (Scheduled 이면 Blue, Approved 이면 Green)
-                let s4 = `<span class="traffic-light-dot red"></span>`;
-                if (req.status === "Scheduled") s4 = `<span class="traffic-light-dot blue" title="예약됨"></span>`;
-                else if (req.status === "Approved") s4 = `<span class="traffic-light-dot green"></span>`;
-                
-                // 5. 발송완료
-                let s5 = req.status === "Approved" ? `<span class="traffic-light-dot green"></span>` : `<span class="traffic-light-dot red"></span>`;
+                // 단계별 단일 켜짐 신호등 설정 (1: 접수완료[yellow], 2: 기초분석[blue], 3: 2차검수[green], 4: 발송예약[red], 5: 발송완료[black])
+                let s1 = `<span class="traffic-light-dot"></span>`;
+                let s2 = `<span class="traffic-light-dot"></span>`;
+                let s3 = `<span class="traffic-light-dot"></span>`;
+                let s4 = `<span class="traffic-light-dot"></span>`;
+                let s5 = `<span class="traffic-light-dot"></span>`;
+
+                if (req.status === "Approved") {
+                    s5 = `<span class="traffic-light-dot black" title="발송완료"></span>`;
+                } else if (req.status === "Scheduled") {
+                    s4 = `<span class="traffic-light-dot red" title="발송예약"></span>`;
+                } else if (req.status === "ReviewNeeded") {
+                    s3 = `<span class="traffic-light-dot green" title="2차검수"></span>`;
+                } else if (req.status === "Pending" && req.is_completed) {
+                    s2 = `<span class="traffic-light-dot blue" title="기초분석 완료"></span>`;
+                } else {
+                    s1 = `<span class="traffic-light-dot yellow" title="접수완료"></span>`;
+                }
 
                 // BioCode 추출 로직 (ai_comment 내 존재 여부 확인)
                 let bioCodeStr = "-";
@@ -1062,8 +1468,10 @@
                     }
                 }
 
+                const safeName = (req.name || "").replace(/teat/gi, "").replace(/test/gi, "");
                 tr.innerHTML = `
-                    <td style="font-weight: 600; color: #1a73e8;">${req.name}</td>
+                    <td style="font-size:12px; color:var(--text-muted);">${dateStr}</td>
+                    <td style="font-weight: 600; color: #1a73e8;">${safeName}</td>
                     <td>${req.gender}</td>
                     <td>${req.birth_date}</td>
                     <td>${req.grade}</td>
@@ -1079,7 +1487,6 @@
                     <td style="text-align:right;">${req.current_weight}</td>
                     <td style="font-weight: 600; text-align:right;">${req.skeletal_muscle}</td>
                     <td style="text-align:right;">${req.body_fat}</td>
-                    <td style="font-size:12px; color:var(--text-muted);">${dateStr}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1096,6 +1503,13 @@
                 filterWrapper.style.display = (status === 'Dashboard') ? 'none' : 'flex';
             }
 
+            const kpiCards = document.getElementById("kpi-summary-cards");
+            if (kpiCards) {
+                kpiCards.style.display = 'flex';
+            }
+
+            updateKPICards();
+
             if (status === 'Dashboard') {
                 document.getElementById("dashboard-container").style.display = "block";
                 document.getElementById("sheets-table-container").style.display = "none";
@@ -1109,95 +1523,322 @@
 
         function renderDashboard() {
             const totalCount = allRequests.length;
-            const pendingCount = allRequests.filter(req => req.status === 'Pending').length;
-            const scheduledCount = allRequests.filter(req => req.status === 'Scheduled').length;
-            const approvedCount = allRequests.filter(req => req.status === 'Approved').length;
+            updateKPICards();
 
-            document.getElementById("kpi-total-count").innerText = `${totalCount}건`;
-            document.getElementById("kpi-pending-count").innerText = `${pendingCount}건`;
-            document.getElementById("kpi-scheduled-count").innerText = `${scheduledCount}건`;
-            document.getElementById("kpi-approved-count").innerText = `${approvedCount}건`;
-
-            // 1. Sports Distribution
+            // 1. Sports Distribution with Gender Stats
             const sportsMap = {};
             allRequests.forEach(req => {
                 const s = req.sports || "미지정";
-                sportsMap[s] = (sportsMap[s] || 0) + 1;
+                const g = req.gender || "남";
+                if (!sportsMap[s]) {
+                    sportsMap[s] = { male: 0, female: 0, total: 0 };
+                }
+                if (g === "남" || g === "M" || g === "male") {
+                    sportsMap[s].male++;
+                } else {
+                    sportsMap[s].female++;
+                }
+                sportsMap[s].total++;
             });
             const sportsList = Object.keys(sportsMap).map(s => {
-                const cnt = sportsMap[s];
+                const data = sportsMap[s];
                 return {
                     name: s,
-                    count: cnt,
-                    ratio: totalCount > 0 ? (cnt / totalCount * 100).toFixed(1) : "0.0"
+                    male: data.male,
+                    female: data.female,
+                    total: data.total,
+                    ratio: totalCount > 0 ? (data.total / totalCount * 100).toFixed(1) : "0.0"
                 };
-            }).sort((a, b) => b.count - a.count);
+            }).sort((a, b) => b.total - a.total);
 
             const sportsTbody = document.getElementById("dashboard-sports-tbody");
             sportsTbody.innerHTML = "";
             sportsList.forEach(item => {
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
-                    <td style="font-weight:600; border-right: 1px solid #dadce0; border-bottom: 1px solid #dadce0; padding: 10px 16px;">${item.name}</td>
-                    <td style="text-align:right; border-right: 1px solid #dadce0; border-bottom: 1px solid #dadce0; padding: 10px 16px;">${item.count}건</td>
-                    <td style="text-align:right; color:var(--text-muted); border-bottom: 1px solid #dadce0; padding: 10px 16px;">${item.ratio}%</td>
+                    <td style="font-weight:600;">${item.name}</td>
+                    <td style="text-align:right;">${item.male}건</td>
+                    <td style="text-align:right;">${item.female}건</td>
+                    <td style="text-align:right; font-weight:700;">${item.total}건</td>
+                    <td style="text-align:right; color:var(--text-muted);">${item.ratio}%</td>
                 `;
                 sportsTbody.appendChild(tr);
             });
-            if (totalCount > 0) {
-                const trTotal = document.createElement("tr");
-                trTotal.style.background = "#f8f9fa";
-                trTotal.style.fontWeight = "bold";
-                trTotal.style.borderTop = "2px solid #dadce0";
-                trTotal.innerHTML = `
-                    <td style="border-right: 1px solid #dadce0; padding: 10px 16px;">합계 (Total)</td>
-                    <td style="text-align:right; border-right: 1px solid #dadce0; padding: 10px 16px;">${totalCount}건</td>
-                    <td style="text-align:right; padding: 10px 16px;">100.0%</td>
-                `;
-                sportsTbody.appendChild(trTotal);
-            } else {
-                sportsTbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:30px; color:var(--text-muted);">데이터가 없습니다.</td></tr>`;
+            if (totalCount === 0) {
+                sportsTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:15px; color:var(--text-muted);">데이터 없음</td></tr>`;
             }
 
-            // 2. Grade Distribution
+            if (charts.sports) {
+                charts.sports.destroy();
+                charts.sports = null;
+            }
+
+            // 2. Grade Distribution with Gender Stats
             const gradeMap = {};
             allRequests.forEach(req => {
                 const g = req.grade || "미지정";
-                gradeMap[g] = (gradeMap[g] || 0) + 1;
+                const sex = req.gender || "남";
+                if (!gradeMap[g]) {
+                    gradeMap[g] = { male: 0, female: 0, total: 0 };
+                }
+                if (sex === "남" || sex === "M" || sex === "male") {
+                    gradeMap[g].male++;
+                } else {
+                    gradeMap[g].female++;
+                }
+                gradeMap[g].total++;
             });
             const gradeList = Object.keys(gradeMap).map(g => {
-                const cnt = gradeMap[g];
+                const data = gradeMap[g];
                 return {
                     name: g,
-                    count: cnt,
-                    ratio: totalCount > 0 ? (cnt / totalCount * 100).toFixed(1) : "0.0"
+                    male: data.male,
+                    female: data.female,
+                    total: data.total,
+                    ratio: totalCount > 0 ? (data.total / totalCount * 100).toFixed(1) : "0.0"
                 };
-            }).sort((a, b) => b.count - a.count);
+            }).sort((a, b) => b.total - a.total);
 
             const gradeTbody = document.getElementById("dashboard-grade-tbody");
             gradeTbody.innerHTML = "";
             gradeList.forEach(item => {
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
-                    <td style="font-weight:600; border-right: 1px solid #dadce0; border-bottom: 1px solid #dadce0; padding: 10px 16px;">${item.name}</td>
-                    <td style="text-align:right; border-right: 1px solid #dadce0; border-bottom: 1px solid #dadce0; padding: 10px 16px;">${item.count}건</td>
-                    <td style="text-align:right; color:var(--text-muted); border-bottom: 1px solid #dadce0; padding: 10px 16px;">${item.ratio}%</td>
+                    <td style="font-weight:600;">${item.name}</td>
+                    <td style="text-align:right;">${item.male}건</td>
+                    <td style="text-align:right;">${item.female}건</td>
+                    <td style="text-align:right; font-weight:700;">${item.total}건</td>
+                    <td style="text-align:right; color:var(--text-muted);">${item.ratio}%</td>
                 `;
                 gradeTbody.appendChild(tr);
             });
-            if (totalCount > 0) {
-                const trTotal = document.createElement("tr");
-                trTotal.style.background = "#f8f9fa";
-                trTotal.style.fontWeight = "bold";
-                trTotal.style.borderTop = "2px solid #dadce0";
-                trTotal.innerHTML = `
-                    <td style="border-right: 1px solid #dadce0; padding: 10px 16px;">합계 (Total)</td>
-                    <td style="text-align:right; border-right: 1px solid #dadce0; padding: 10px 16px;">${totalCount}건</td>
-                    <td style="text-align:right; padding: 10px 16px;">100.0%</td>
+            if (totalCount === 0) {
+                gradeTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:15px; color:var(--text-muted);">데이터 없음</td></tr>`;
+            }
+
+            if (charts.grade) {
+                charts.grade.destroy();
+                charts.grade = null;
+            }
+
+            // BioCode 유형 특징 해석 헬퍼 함수
+            function getBiocodeDesc(code) {
+                if (!code || !code.includes('-')) return "-";
+                const parts = code.split('-');
+                if (parts.length !== 3) return "-";
+                const c1 = parseInt(parts[0]);
+                const c2 = parseInt(parts[1]);
+                const c3 = parseInt(parts[2]);
+
+                let muscle = "";
+                if (c1 === 3) muscle = "근육우수";
+                else if (c1 === 2) muscle = "근육보통";
+                else muscle = "근육보완";
+
+                let absorb = "";
+                if (c2 === 3) absorb = "영양원활";
+                else if (c2 === 2) absorb = "영양보통";
+                else absorb = "영양정체";
+
+                let fat = "";
+                if (c3 === 3) fat = "지방높음";
+                else if (c3 === 2) fat = "지방보통";
+                else fat = "지방낮음";
+
+                return `${muscle}/${absorb}/${fat}`;
+            }
+
+            // 3. BioCode 27패턴 분포 분석
+            const biocodes27 = [];
+            for(let a=1; a<=3; a++) {
+                for(let b=1; b<=3; b++) {
+                    for(let c=1; c<=3; c++) {
+                        biocodes27.push(`${a}-${b}-${c}`);
+                    }
+                }
+            }
+            const biocodeMapTotal = {};
+            biocodes27.forEach(code => { biocodeMapTotal[code] = 0; });
+            allRequests.forEach(req => {
+                let code = "";
+                if (req.survey_responses && req.survey_responses.length > 0) {
+                    const biocodeResult = calculateLocalBiocode(req);
+                    code = biocodeResult.biocode;
+                }
+                if (code && biocodes27.includes(code)) {
+                    biocodeMapTotal[code]++;
+                }
+            });
+
+            const biocodeList = biocodes27.map(code => {
+                return { code, count: biocodeMapTotal[code] };
+            }).filter(item => item.count > 0)
+              .sort((a, b) => b.count - a.count);
+
+            const biocodeTbody = document.getElementById("dashboard-biocode-tbody");
+            biocodeTbody.innerHTML = "";
+            biocodeList.forEach((item, index) => {
+                const ratio = totalCount > 0 ? (item.count / totalCount * 100).toFixed(1) : "0.0";
+                const desc = getBiocodeDesc(item.code);
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td style="text-align:center; color:var(--text-muted);">${index + 1}</td>
+                    <td style="font-weight:600; color:#1a73e8;">${item.code}</td>
+                    <td style="color:#5f6368; font-size:10px;">${desc}</td>
+                    <td style="text-align:right; font-weight:700;">${item.count}건</td>
+                    <td style="text-align:right; color:var(--text-muted);">${ratio}%</td>
                 `;
-                gradeTbody.appendChild(trTotal);
-            } else {
-                gradeTbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:30px; color:var(--text-muted);">데이터가 없습니다.</td></tr>`;
+                biocodeTbody.appendChild(tr);
+            });
+            if (biocodeList.length === 0) {
+                biocodeTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">데이터가 없습니다.</td></tr>`;
+            }
+
+            if (charts.biocode) {
+                charts.biocode.destroy();
+                charts.biocode = null;
+            }
+
+            // 4. 3대 설문 영역 평균/최저/최고 분석
+            let absorbScores = [];
+            let metabScores = [];
+            let behaviorScores = [];
+
+            allRequests.forEach(req => {
+                const responses = req.survey_responses || [];
+                if (responses.length === 0) return;
+                
+                let absorbScore = 0, metabScore = 0, behaviorScore = 0;
+                let qCountPerArea = 0;
+                
+                if (responses.length === 18) {
+                    qCountPerArea = 6;
+                    absorbScore = responses.slice(0, 6).reduce((a,b)=>a+b, 0);
+                    metabScore = responses.slice(6, 12).reduce((a,b)=>a+b, 0);
+                    behaviorScore = responses.slice(12, 18).reduce((a,b)=>a+b, 0);
+                } else if (responses.length >= 24) {
+                    qCountPerArea = 8;
+                    absorbScore = responses.slice(0, 8).reduce((a,b)=>a+b, 0);
+                    metabScore = responses.slice(8, 16).reduce((a,b)=>a+b, 0);
+                    behaviorScore = responses.slice(16, 24).reduce((a,b)=>a+b, 0);
+                } else {
+                    return;
+                }
+
+                absorbScores.push(absorbScore / qCountPerArea);
+                metabScores.push(metabScore / qCountPerArea);
+                behaviorScores.push(behaviorScore / qCountPerArea);
+            });
+
+            const getStats = (arr) => {
+                if (arr.length === 0) return { avg: 0, min: 0, max: 0 };
+                const sum = arr.reduce((a, b) => a + b, 0);
+                const avg = sum / arr.length;
+                const min = Math.min(...arr);
+                const max = Math.max(...arr);
+                return { avg, min, max };
+            };
+
+            const absorbStats = getStats(absorbScores);
+            const metabStats = getStats(metabScores);
+            const behaviorStats = getStats(behaviorScores);
+
+            const surveyTbody = document.getElementById("dashboard-survey-tbody");
+            surveyTbody.innerHTML = `
+                <tr>
+                    <td style="font-weight:600;"><i class="fa-solid fa-utensils"></i> 영양 흡수력</td>
+                    <td style="text-align:right; font-weight:700; color:#1a73e8;">${absorbStats.avg.toFixed(2)}점</td>
+                    <td style="text-align:right; color:#d32f2f;">${absorbStats.min.toFixed(1)}점</td>
+                    <td style="text-align:right; color:#2e7d32;">${absorbStats.max.toFixed(1)}점</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:600;"><i class="fa-solid fa-bed"></i> 수면 / 루틴</td>
+                    <td style="text-align:right; font-weight:700; color:#1a73e8;">${metabStats.avg.toFixed(2)}점</td>
+                    <td style="text-align:right; color:#d32f2f;">${metabStats.min.toFixed(1)}점</td>
+                    <td style="text-align:right; color:#2e7d32;">${metabStats.max.toFixed(1)}점</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:600;"><i class="fa-solid fa-dumbbell"></i> 운동 자극</td>
+                    <td style="text-align:right; font-weight:700; color:#1a73e8;">${behaviorStats.avg.toFixed(2)}점</td>
+                    <td style="text-align:right; color:#d32f2f;">${behaviorStats.min.toFixed(1)}점</td>
+                    <td style="text-align:right; color:#2e7d32;">${behaviorStats.max.toFixed(1)}점</td>
+                </tr>
+            `;
+
+            if (absorbScores.length === 0) {
+                surveyTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:15px; color:var(--text-muted);">데이터 없음</td></tr>`;
+            }
+
+            if (charts.survey) {
+                charts.survey.destroy();
+                charts.survey = null;
+            }
+
+            // 5. 평균 신체 발달 프로필 (성별 세분화)
+            const physicalGroups = {
+                "초등(남)": { heightSum: 0, weightSum: 0, muscleSum: 0, fatSum: 0, count: 0 },
+                "초등(여)": { heightSum: 0, weightSum: 0, muscleSum: 0, fatSum: 0, count: 0 },
+                "중등(남)": { heightSum: 0, weightSum: 0, muscleSum: 0, fatSum: 0, count: 0 },
+                "중등(여)": { heightSum: 0, weightSum: 0, muscleSum: 0, fatSum: 0, count: 0 },
+                "고등(남)": { heightSum: 0, weightSum: 0, muscleSum: 0, fatSum: 0, count: 0 },
+                "고등(여)": { heightSum: 0, weightSum: 0, muscleSum: 0, fatSum: 0, count: 0 }
+            };
+
+            allRequests.forEach(req => {
+                const g = req.grade || "";
+                const sex = req.gender || "남";
+                let groupKey = "";
+                
+                if (g.startsWith("초")) {
+                    groupKey = (sex === "남" || sex === "M" || sex === "male") ? "초등(남)" : "초등(여)";
+                } else if (g.startsWith("중")) {
+                    groupKey = (sex === "남" || sex === "M" || sex === "male") ? "중등(남)" : "중등(여)";
+                } else if (g.startsWith("고")) {
+                    groupKey = (sex === "남" || sex === "M" || sex === "male") ? "고등(남)" : "고등(여)";
+                } else {
+                    return;
+                }
+
+                physicalGroups[groupKey].heightSum += req.current_height || 0;
+                physicalGroups[groupKey].weightSum += req.current_weight || 0;
+                physicalGroups[groupKey].muscleSum += req.skeletal_muscle || 0;
+                physicalGroups[groupKey].fatSum += req.body_fat || 0;
+                physicalGroups[groupKey].count++;
+            });
+
+            const physicalTbody = document.getElementById("dashboard-physical-tbody");
+            physicalTbody.innerHTML = "";
+            let hasPhysicalData = false;
+
+            ["초등(남)", "초등(여)", "중등(남)", "중등(여)", "고등(남)", "고등(여)"].forEach(key => {
+                const gData = physicalGroups[key];
+                if (gData.count > 0) {
+                    hasPhysicalData = true;
+                    const avgH = gData.heightSum / gData.count;
+                    const avgW = gData.weightSum / gData.count;
+                    const avgM = gData.muscleSum / gData.count;
+                    const avgF = gData.fatSum / gData.count;
+
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td style="text-align:left; font-weight:600;">${key}</td>
+                        <td>${avgH.toFixed(1)}cm</td>
+                        <td>${avgW.toFixed(1)}kg</td>
+                        <td>${avgM.toFixed(1)}kg</td>
+                        <td>${avgF.toFixed(1)}%</td>
+                        <td style="color:var(--text-muted);">${gData.count}명</td>
+                    `;
+                    physicalTbody.appendChild(tr);
+                }
+            });
+
+            if (!hasPhysicalData) {
+                physicalTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:15px; color:var(--text-muted);">데이터 없음</td></tr>`;
+            }
+
+            if (charts.physical) {
+                charts.physical.destroy();
+                charts.physical = null;
             }
         }
 
@@ -1227,7 +1868,8 @@
             document.getElementById("btn-back-to-list").style.display = "inline-flex";
 
             // Bind Student Profile Info Inputs
-            document.getElementById("lbl-name").innerText = req.name;
+            const safeName = (req.name || "").replace(/teat/gi, "").replace(/test/gi, "");
+            document.getElementById("lbl-name").innerText = safeName;
             document.getElementById("edit-gender").value = req.gender;
             document.getElementById("edit-birth").value = req.birth_date;
             document.getElementById("edit-grade").value = req.grade;
@@ -1244,37 +1886,32 @@
             bindFormulaHelper(req);
 
             // Set Preview Frame Data
-            const iframe = document.getElementById("report-iframe");
-            iframe.src = "about:blank"; // Reset
-            
-            // 2. Pre-inject data into iframe context via localStorage after mock load
             const biocodeResult = calculateLocalBiocode(req);
-            
-            iframe.src = `/static/report.html?t=${Date.now()}`;
-            iframe.onload = () => {
-                const reportPayload = {
-                    biocode: biocodeResult.biocode,
-                    pattern_name: biocodeResult.pattern_name,
-                    constitution: biocodeResult.constitution,
-                    lag_cause: biocodeResult.lag_cause,
-                    metab_score: biocodeResult.metab_score,
-                    behavior_score: biocodeResult.behavior_score,
-                    body_score: biocodeResult.body_score,
-                    height_gap: biocodeResult.height_gap,
-                    ai_comment: document.getElementById("txt-comment").value,
-                    inputs: req
-                };
-                
-                iframe.contentWindow.localStorage.setItem("physicalup_analysis", JSON.stringify(reportPayload));
-                iframe.contentWindow.location.reload();
+            const reportPayload = {
+                biocode: biocodeResult.biocode,
+                pattern_name: biocodeResult.pattern_name,
+                constitution: biocodeResult.constitution,
+                lag_cause: biocodeResult.lag_cause,
+                metab_score: biocodeResult.metab_score,
+                behavior_score: biocodeResult.behavior_score,
+                body_score: biocodeResult.body_score,
+                height_gap: biocodeResult.height_gap,
+                ai_comment: document.getElementById("txt-comment").value,
+                inputs: req
             };
+            
+            localStorage.setItem("physicalup_analysis", JSON.stringify(reportPayload));
+            
+            const iframe = document.getElementById("report-iframe");
+            iframe.onload = null;
+            iframe.src = `/static/report.html?t=${Date.now()}`;
 
             // Set Preview Top label
             document.getElementById("preview-student-label").innerText = `대상 아동: ${req.name} (${req.birth_date})`;
 
             // Configure button disable if already Approved or Scheduled
             const btn = document.getElementById("btn-approve");
-            const btnCancel = document.getElementById("btn-cancel-reserve");
+            const btnInstant = document.getElementById("btn-instant-send");
             const reservePanel = document.getElementById("reservation-config-panel");
             const chkReserve = document.getElementById("chk-use-reserve");
             const selReserve = document.getElementById("sel-reserve-preset");
@@ -1282,33 +1919,52 @@
             const customTimeWrapper = document.getElementById("custom-time-wrapper");
             const reserveSelector = document.getElementById("reserve-time-selector");
 
+            // Dynamic Preset Option Addition / Reset
+            let originalOption = selReserve.querySelector("option[value='scheduled_original']");
+            if (!originalOption) {
+                originalOption = document.createElement("option");
+                originalOption.value = "scheduled_original";
+                selReserve.insertBefore(originalOption, selReserve.firstChild);
+            }
+
+            if (req.scheduled_at) {
+                const reserveDate = new Date(req.scheduled_at);
+                const dateStr = `${reserveDate.getFullYear()}-${(reserveDate.getMonth()+1).toString().padStart(2,'0')}-${reserveDate.getDate().toString().padStart(2,'0')} ${reserveDate.getHours().toString().padStart(2,'0')}:${reserveDate.getMinutes().toString().padStart(2,'0')}`;
+                originalOption.innerText = `신청 지정일 발송 (${dateStr})`;
+                originalOption.style.display = "block";
+                selReserve.value = "scheduled_original";
+            } else {
+                originalOption.innerText = "신청 지정일 발송 (미지정)";
+                originalOption.style.display = "none";
+                selReserve.value = "10min";
+            }
+
             // Reset Reservation Panel state
-            chkReserve.checked = false;
-            selReserve.value = "immediate";
+            chkReserve.checked = true;
             inputReserve.value = "";
             customTimeWrapper.style.display = "none";
-            reserveSelector.style.display = "none";
-            btnCancel.style.display = "none";
+            reserveSelector.style.display = "flex";
             reservePanel.style.display = "block";
+            btnInstant.style.display = "inline-block";
 
             if (req.status === "Approved") {
                 btn.disabled = true;
                 btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> 이미 발송 완료된 보고서입니다`;
+                btnInstant.disabled = true;
+                btnInstant.innerHTML = `<i class="fa-solid fa-check-double"></i> 발송 완료`;
                 reservePanel.style.display = "none";
             } else if (req.status === "Scheduled") {
-                btn.disabled = true;
-                const reserveDate = req.scheduled_at ? new Date(req.scheduled_at) : null;
-                const reserveStr = reserveDate 
-                    ? `${reserveDate.getMonth()+1}/${reserveDate.getDate()} ${reserveDate.getHours().toString().padStart(2,'0')}:${reserveDate.getMinutes().toString().padStart(2,'0')}`
-                    : "예정";
-                btn.innerHTML = `<i class="fa-solid fa-clock"></i> ${reserveStr} 발송 예정 상태`;
-                
-                // Show cancel button
-                btnCancel.style.display = "block";
-                reservePanel.style.display = "none";
+                // 발송 예약 대기 상태일 때도 소견 수정 후 "검토완료"로 덮어쓸 수 있도록 검토완료 버튼 활성화 상태 유지!
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> 검토완료 (수정사항 저장)`;
+                btnInstant.disabled = false;
+                btnInstant.innerHTML = `<i class="fa-solid fa-paper-plane"></i> 즉시발송`;
+                reservePanel.style.display = "block";
             } else {
                 btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> 검토 완료 및 이메일 발송`;
+                btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> 검토완료`;
+                btnInstant.disabled = false;
+                btnInstant.innerHTML = `<i class="fa-solid fa-paper-plane"></i> 즉시발송`;
             }
             
             // Check conversion status for marketing
@@ -1526,12 +2182,6 @@
         function toggleReserveTimeSelector(checked) {
             const selector = document.getElementById("reserve-time-selector");
             selector.style.display = checked ? "flex" : "none";
-            const btn = document.getElementById("btn-approve");
-            if (checked) {
-                btn.innerHTML = `<i class="fa-solid fa-clock"></i> 검토 완료 및 발송 예약 등록`;
-            } else {
-                btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> 검토 완료 및 이메일 발송`;
-            }
         }
 
         function applyReservePreset(value) {
@@ -1596,7 +2246,7 @@
             }
         }
 
-        async function approveAndSend() {
+        async function approveAndSend(isReserve) {
             if (!selectedRequest) return;
 
             const comment = document.getElementById("txt-comment").value;
@@ -1605,13 +2255,13 @@
                 return;
             }
 
-            // Calculate scheduled_at time
             let scheduled_at = null;
-            const useReserve = document.getElementById("chk-use-reserve").checked;
-            if (useReserve) {
+            if (isReserve) {
                 const preset = document.getElementById("sel-reserve-preset").value;
                 const now = Date.now();
-                if (preset === "10min") {
+                if (preset === "scheduled_original") {
+                    scheduled_at = selectedRequest.scheduled_at || (now + 10 * 60 * 1000);
+                } else if (preset === "10min") {
                     scheduled_at = now + 10 * 60 * 1000;
                 } else if (preset === "30min") {
                     scheduled_at = now + 30 * 60 * 1000;
@@ -1637,17 +2287,19 @@
             const msgDiv = document.getElementById("status-msg");
             msgDiv.className = "status-message loading";
             
-            if (useReserve) {
+            if (isReserve) {
                 const reserveDate = new Date(scheduled_at);
                 const reserveStr = `${reserveDate.getMonth()+1}월 ${reserveDate.getDate()}일 ${reserveDate.getHours()}시 ${reserveDate.getMinutes().toString().padStart(2,'0')}분`;
                 msgDiv.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> [${reserveStr}] 예약 발송 설정 중...`;
             } else {
-                msgDiv.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> 백그라운드에서 18페이지 프리미엄 PDF 생성 및 이메일 전송 중... (약 10초 소요)`;
+                msgDiv.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> 백그라운드에서 18페이지 프리미엄 PDF 생성 및 즉시 전송 중... (약 10초 소요)`;
             }
             msgDiv.style.display = "block";
             
             const btn = document.getElementById("btn-approve");
+            const btnInstant = document.getElementById("btn-instant-send");
             btn.disabled = true;
+            btnInstant.disabled = true;
 
             try {
                 const res = await fetch("/api/admin/approve", {
@@ -1655,7 +2307,7 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         id: selectedRequest.id,
-                        email: selectedRequest.phone || "user@example.com", // recipient email
+                        email: selectedRequest.phone || "user@example.com",
                         comment: comment,
                         scheduled_at: scheduled_at
                     })
@@ -1664,11 +2316,20 @@
                 const data = await res.json();
                 if (res.ok && data.success) {
                     msgDiv.className = "status-message success";
-                    msgDiv.innerHTML = `<i class="fa-solid fa-circle-check"></i> 성공! PDF가 성공적으로 생성 및 발송 완료되었습니다.`;
-                    btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> 이미 발송 완료된 보고서입니다`;
+                    if (isReserve) {
+                        msgDiv.innerHTML = `<i class="fa-solid fa-circle-check"></i> 성공! 예약 발송 설정이 완료되었습니다.`;
+                    } else {
+                        msgDiv.innerHTML = `<i class="fa-solid fa-circle-check"></i> 성공! PDF가 성공적으로 생성 및 즉시 발송 완료되었습니다.`;
+                    }
                     
                     // Refresh requests list
                     await refreshRequests();
+                    
+                    // Re-activate active request to sync UI states
+                    const updatedReq = allRequests.find(r => r.id === selectedRequest.id);
+                    if (updatedReq) {
+                        activateConsultation(updatedReq);
+                    }
                 } else {
                     throw new Error(data.detail || "알 수 없는 전송 실패");
                 }
@@ -1676,6 +2337,7 @@
                 msgDiv.className = "status-message error";
                 msgDiv.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> 실패: ${err.message}`;
                 btn.disabled = false;
+                btnInstant.disabled = false;
             }
         }
 

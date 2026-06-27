@@ -42,6 +42,8 @@
   /* ===== A4 PAGE ===== */
   .sheet{
     width:160mm;
+    min-height:297mm;
+    box-sizing:border-box;
     background:var(--page);
     margin:0 auto 22px;
     padding:6mm 13mm 6mm;
@@ -979,6 +981,24 @@
 
     <div style="margin-top:auto;padding-top:24px;border-top:1px solid var(--line2);">
       <p class="fn" style="font-style:normal;">본 보고서는 생년월일·설문·인바디 입력값에 기반한 성장 분석 자료로, 의학적 진단이나 키 예측이 아니며 실제 성장은 개인차가 있습니다. 급격한 체중 감소·지속되는 통증·심한 식욕 저하 등이 관찰되면 소아청소년과 전문의와 상담하시기 바랍니다. 타고난 체질 분석은 참고적 해석입니다. · 본 문서는 의뢰자 전용이며 무단 배포를 금합니다.</p>
+      
+      <!-- 부록용 직인 및 서명 영역 (유료 버전 시 활성화) -->
+      <p class="serif appendix-serif" style="text-align:center;font-size:11pt;color:var(--gold-d);margin-top:40px;margin-bottom:20px;display:none;">
+          우리는 아이의 몸을 판정하지 않습니다. 설명하고, 함께 바꿉니다.<br>
+          타고났으나, 더 클 수 있습니다.
+      </p>
+      <div class="seal-wrap appendix-seal" style="margin-top:20px;display:none;">
+          <div class="seal-text">
+              <b>PHYSICAL UP 333 Elite Sports Lab</b><br>
+              본 보고서는 위 기관이 공식 발행하였습니다.<br>
+              문서번호 PU-333-0418 · 발행일 2026.06.24
+          </div>
+          <div class="seal">
+              <span class="s-top">PHYSICAL UP</span>
+              <span class="s-mid">333</span>
+              <span class="s-bot">OFFICIAL · 0418</span>
+          </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1039,8 +1059,14 @@ document.addEventListener("DOMContentLoaded", () => {
             let birthDate;
             if (clean.length === 8) {
                 const y = parseInt(clean.substring(0, 4));
-                const m = parseInt(clean.substring(4, 6) - 1);
+                const m = parseInt(clean.substring(4, 6)) - 1;
                 const d = parseInt(clean.substring(6, 8));
+                birthDate = new Date(y, m, d);
+            } else if (clean.length === 6) {
+                const yy = parseInt(clean.substring(0, 2));
+                const y = yy < 50 ? 2000 + yy : 1900 + yy;
+                const m = parseInt(clean.substring(2, 4)) - 1;
+                const d = parseInt(clean.substring(4, 6));
                 birthDate = new Date(y, m, d);
             } else {
                 birthDate = new Date(birthStr);
@@ -1750,14 +1776,83 @@ document.addEventListener("DOMContentLoaded", () => {
         return html;
     }
 
-    const verdictVq = document.querySelector(".verdict .vq");
-    if (verdictVq) {
-        if (data.ai_comment) {
-            verdictVq.innerHTML = parseMarkdown(data.ai_comment);
+    function renderAIComment(comment) {
+        const verdictVq = document.querySelector(".verdict .vq");
+        const parentSheet = verdictVq ? verdictVq.closest(".sheet") : null;
+        
+        // Remove previously created dynamic sheets (for re-render safety)
+        document.querySelectorAll(".temp-ai-sheet").forEach(el => el.remove());
+        
+        const serifEl = parentSheet ? parentSheet.querySelector("p.serif") : null;
+        const sealEl = parentSheet ? parentSheet.querySelector(".seal-wrap") : null;
+        
+        const appendixSheet = document.getElementById("sheet-appendix");
+        const appSerifEl = appendixSheet ? appendixSheet.querySelector(".appendix-serif") : null;
+        const appSealEl = appendixSheet ? appendixSheet.querySelector(".appendix-seal") : null;
+
+        // Reset visibility to defaults first
+        if (serifEl) serifEl.style.display = "block";
+        if (sealEl) sealEl.style.display = "flex";
+        if (appSerifEl) appSerifEl.style.display = "none";
+        if (appSealEl) appSealEl.style.display = "none";
+
+        if (comment) {
+            const cleanedComment = comment.replace(/teat/gi, "").replace(/test/gi, "");
+            const parts = cleanedComment.split(/(?=###)/g);
+            
+            if (verdictVq) {
+                verdictVq.innerHTML = parseMarkdown(parts[0] || "");
+            }
+            
+            const bodyParts = parts.slice(1);
+            if (bodyParts.length > 0) {
+                let insertTarget = parentSheet;
+                
+                bodyParts.forEach((partContent, index) => {
+                    const newSheet = document.createElement("div");
+                    newSheet.className = "sheet temp-ai-sheet";
+                    
+                    let parsedHTML = parseMarkdown(partContent);
+                    
+                    newSheet.innerHTML = `
+                        <div class="ph">
+                            <span class="crest-sm"><i></i>PHYSICAL UP 333</span>
+                            <span class="doc-id" style="color:var(--gold-d);font-weight:700;font-size:9.5pt;">피지컬업333 맞춤소견</span>
+                        </div>
+                        <div class="section" style="padding-top:25px; min-height:230mm; display:flex; flex-direction:column; justify-content:space-between;">
+                            <div class="body" style="font-size:10.5pt; line-height:1.75; color:var(--text-main); flex-grow:1;">
+                                ${parsedHTML}
+                            </div>
+                        </div>
+                        <div class="pf">
+                            <span class="copyright">© Elite Sports Lab</span>
+                        </div>
+                    `;
+                    
+                    insertTarget.parentNode.insertBefore(newSheet, insertTarget.nextSibling);
+                    insertTarget = newSheet;
+                });
+            }
         } else {
-            verdictVq.innerHTML = `현재 상태는 <em>${biocode.replaceAll("-", "·")} · ${persona}</em>입니다.<br>아동 고유의 생활 루틴 and 대사 작용을 교정하여 잠재력을 최대로 실현하도록 권장합니다.`;
+            if (verdictVq) {
+                verdictVq.innerHTML = `현재 상태는 <em>${biocode.replaceAll("-", "·")} · ${persona}</em>입니다.<br>아동 고유의 생활 루틴 및 대사 작용을 교정하여 잠재력을 최대로 실현하도록 권장합니다.`;
+            }
+        }
+
+        // Apply final seal/signature routing based on isFree (Free vs Premium)
+        if (isFree) {
+            if (serifEl) serifEl.style.display = "block";
+            if (sealEl) sealEl.style.display = "flex";
+            if (appSerifEl) appSerifEl.style.display = "none";
+            if (appSealEl) appSealEl.style.display = "none";
+        } else {
+            if (serifEl) serifEl.style.display = "none";
+            if (sealEl) sealEl.style.display = "none";
+            if (appSerifEl) appSerifEl.style.display = "block";
+            if (appSealEl) appSealEl.style.display = "flex";
         }
     }
+
     // 누적 성장 추이 차트 바인딩
     const growthHistorySection = document.getElementById("growth-history-section");
     const growthHistoryChartImg = document.getElementById("growth-history-chart-img");
@@ -1776,14 +1871,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    
+    renderAIComment(data.ai_comment);
+
     // Live update listener for admin real-time preview editing
     window.addEventListener("message", (event) => {
         if (event.data && event.data.type === "updateComment") {
-            const vq = document.querySelector(".verdict .vq");
-            if (vq) {
-                vq.innerHTML = parseMarkdown(event.data.comment);
-            }
+            renderAIComment(event.data.comment);
         }
     });
 });
