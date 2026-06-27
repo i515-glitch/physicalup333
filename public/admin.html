@@ -829,7 +829,7 @@
                         <div class="tab-item" id="tab-approved" onclick="switchTab('Approved')">
                             ✅ 처리완료
                         </div>
-                        <div class="tab-item" id="tab-briefing" onclick="window.open('/static/report.html', '_blank')" style="background: rgba(26, 115, 232, 0.05); color: #1a73e8; font-weight: bold; border: 1px solid rgba(26, 115, 232, 0.15);">
+                        <div class="tab-item" id="tab-briefing" onclick="openBriefingBoard()" style="background: rgba(26, 115, 232, 0.05); color: #1a73e8; font-weight: bold; border: 1px solid rgba(26, 115, 232, 0.15);">
                             📢 브리핑보드
                         </div>
                     </div>
@@ -1523,6 +1523,22 @@
                 document.getElementById("dashboard-container").style.display = "none";
                 document.getElementById("sheets-table-container").style.display = "block";
                 renderList();
+            }
+        }
+
+        function openBriefingBoard() {
+            if (allRequests && allRequests.length > 0) {
+                const target = selectedRequest || allRequests[0];
+                
+                // Dashboard 상태라면 목록 탭으로 전환
+                if (currentTab === 'Dashboard') {
+                    switchTab('InProgress');
+                }
+                
+                activateConsultation(target);
+                renderList(); // 목록 하이라이트 갱신
+            } else {
+                alert("현재 등록된 접수 건이 없습니다.");
             }
         }
 
