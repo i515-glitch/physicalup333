@@ -1117,6 +1117,18 @@
                             <div class="info-chip" style="background: #f8fafc; border: 1px solid #e2e8f0; pointer-events: none;"><label>골격근</label><input type="text" id="edit-muscle" value="25.0" style="width:40px; background:transparent; border:none; color:#1e293b; font-weight:700; padding:0; text-align:right;" readonly><b style="color:#64748b;">kg</b></div>
                             <div class="info-chip" style="background: #f8fafc; border: 1px solid #e2e8f0; pointer-events: none;"><label>지방률</label><input type="text" id="edit-fat" value="15.0" style="width:30px; background:transparent; border:none; color:#1e293b; font-weight:700; padding:0; text-align:right;" readonly><b style="color:#64748b;">%</b></div>
                         </div>
+                        <!-- 설문 분석 요약 바 -->
+                        <div id="survey-briefing-summary" style="border-top:1px solid rgba(0,0,0,0.05); padding-top:6px; margin-top:6px; display:flex; justify-content:space-between; gap:4px; font-size:11px;">
+                            <span style="font-weight:600; color:var(--text-muted); display:flex; align-items:center; gap:4px;">
+                                <i class="fa-solid fa-utensils" style="color:#f59e0b; font-size:10px;"></i> 영양(위장): <b id="brief-survey-nutri" style="color:#1e293b; font-weight:700;">-</b>
+                            </span>
+                            <span style="font-weight:600; color:var(--text-muted); display:flex; align-items:center; gap:4px;">
+                                <i class="fa-solid fa-bed" style="color:#3b82f6; font-size:10px;"></i> 수면(루틴): <b id="brief-survey-sleep" style="color:#1e293b; font-weight:700;">-</b>
+                            </span>
+                            <span style="font-weight:600; color:var(--text-muted); display:flex; align-items:center; gap:4px;">
+                                <i class="fa-solid fa-dumbbell" style="color:#10b981; font-size:10px;"></i> 운동(자극): <b id="brief-survey-sports" style="color:#1e293b; font-weight:700;">-</b>
+                            </span>
+                        </div>
                         <div id="marketing-area" style="display: none !important;">
                             <span id="marketing-badge" class="badge-status"></span>
                             <button class="btn-premium btn-gold" id="btn-copy-sms" onclick="copyMarketingSMS()">
@@ -2049,6 +2061,18 @@
             document.getElementById("edit-weight").value = req.current_weight;
             document.getElementById("edit-muscle").value = req.skeletal_muscle;
             document.getElementById("edit-fat").value = req.body_fat;
+
+            // Bind Survey summary averages
+            const responses = req.survey_responses || [];
+            let nutriAvg = "-", sleepAvg = "-", sportsAvg = "-";
+            if (responses.length >= 24) {
+                nutriAvg = (responses.slice(0, 8).reduce((a,b)=>a+b, 0) / 8).toFixed(1) + "점";
+                sleepAvg = (responses.slice(8, 16).reduce((a,b)=>a+b, 0) / 8).toFixed(1) + "점";
+                sportsAvg = (responses.slice(16, 24).reduce((a,b)=>a+b, 0) / 8).toFixed(1) + "점";
+            }
+            document.getElementById("brief-survey-nutri").innerText = nutriAvg;
+            document.getElementById("brief-survey-sleep").innerText = sleepAvg;
+            document.getElementById("brief-survey-sports").innerText = sportsAvg;
 
             // Populate Editor
             document.getElementById("txt-comment").value = req.ai_comment || "";
