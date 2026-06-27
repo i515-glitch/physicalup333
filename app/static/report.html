@@ -1225,6 +1225,14 @@ function selectBriefingRequest(req) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    // iframe 내부인지 감지하여 어드민 내 미리보기 시 사이드바를 자동으로 숨깁니다.
+    if (window.self !== window.top) {
+        const sidebar = document.getElementById("briefing-sidebar");
+        const container = document.getElementById("report-view-container");
+        if (sidebar) sidebar.style.display = "none";
+        if (container) container.style.setProperty("margin-right", "0", "important");
+    }
+
     originalHTML = document.getElementById("report-view-container").innerHTML;
     loadBriefingRequests();
 

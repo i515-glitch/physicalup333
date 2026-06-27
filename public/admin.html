@@ -1529,16 +1529,23 @@
         function openBriefingBoard() {
             if (allRequests && allRequests.length > 0) {
                 const target = selectedRequest || allRequests[0];
-                
-                // Dashboard 상태라면 목록 탭으로 전환
-                if (currentTab === 'Dashboard') {
-                    switchTab('InProgress');
-                }
-                
-                activateConsultation(target);
-                renderList(); // 목록 하이라이트 갱신
+                const biocodeResult = calculateLocalBiocode(target);
+                const reportPayload = {
+                    biocode: biocodeResult.biocode,
+                    pattern_name: biocodeResult.pattern_name,
+                    constitution: biocodeResult.constitution,
+                    lag_cause: biocodeResult.lag_cause,
+                    metab_score: biocodeResult.metab_score,
+                    behavior_score: biocodeResult.behavior_score,
+                    body_score: biocodeResult.body_score,
+                    height_gap: biocodeResult.height_gap,
+                    ai_comment: target.ai_comment || "",
+                    inputs: target
+                };
+                localStorage.setItem("physicalup_analysis", JSON.stringify(reportPayload));
+                window.open('/static/report.html', '_blank');
             } else {
-                alert("현재 등록된 접수 건이 없습니다.");
+                window.open('/static/report.html', '_blank');
             }
         }
 
