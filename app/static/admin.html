@@ -966,7 +966,7 @@
                         </div>
                         <div class="global-config-summary">
                             <span id="summary-sys-limit" style="font-weight:600;"><i class="fa-solid fa-calculator"></i> 하루 50건 제한</span>
-                            <span id="summary-sys-rule" style="font-weight:600;"><i class="fa-solid fa-clock"></i> 익일 오전 10시</span>
+                            <span id="summary-sys-rule" style="font-weight:600;"><i class="fa-solid fa-clock"></i> 익일 10시발송</span>
                             <span id="summary-sys-mode" style="font-weight:600;"><i class="fa-solid fa-robot"></i> AI 자동 발송</span>
                             <span style="color:#0f9d58; font-weight:700;"><i class="fa-solid fa-circle-play"></i> 스케줄러 작동 중</span>
                             <i class="fa-solid fa-chevron-down" id="global-config-chevron" style="transition: transform 0.2s;"></i>
@@ -1261,11 +1261,11 @@
             // 2. Rule Text
             let ruleText = "";
             if (timeType === "next_day_10") {
-                ruleText = `<i class="fa-solid fa-clock"></i> 익일 오전 10시`;
+                ruleText = `<i class="fa-solid fa-clock"></i> 익일 10시발송`;
             } else if (timeType === "custom_time") {
                 ruleText = `<i class="fa-solid fa-clock"></i> 지정시각 ${customTime}`;
             } else {
-                ruleText = `<i class="fa-solid fa-bolt"></i> 검수후 즉시`;
+                ruleText = `<i class="fa-solid fa-bolt"></i> 즉시발송`;
             }
             document.getElementById("summary-sys-rule").innerHTML = ruleText;
 
