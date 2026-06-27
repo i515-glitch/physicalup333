@@ -348,7 +348,7 @@ async function submitOnlineApplication() {
             const days = ["일", "월", "화", "수", "목", "금", "토"];
             const dateStr = `${reserveDate.getFullYear()}년 ${reserveDate.getMonth()+1}월 ${reserveDate.getDate()}일 (${days[reserveDate.getDay()]}) ${reserveDate.getHours()}시 ${reserveDate.getMinutes().toString().padStart(2, '0')}분`;
             
-            alert(`✅ 온라인 정밀 분석 접수 및 예약 완료!\n대기 번호: ${data.id.substring(0, 8)}\n\n부모님, 가장 빨리 분석 결과를 발송받으실 수 있는 예약일은\n[ ${dateStr} ] 입니다!\n\n입력하신 휴대폰 번호(${phone})로 안내 문자 및 PDF 보고서 발송 일정이 예약되었습니다.`);
+            alert(`✅ 피지컬업 333 온라인 정밀 분석 접수 완료!\n\n부모님, 가장 빨리 분석 결과를 발송받으실 수 있는 예정일은\n[ ${dateStr} ] 입니다!\n\n입력하신 휴대폰 번호(${phone})로 분석 완료 안내 문자 및 PDF 보고서가 발송될 예정입니다.`);
             // Reset form name
             document.getElementById("name").value = "";
         } else {
