@@ -2133,30 +2133,9 @@
                 btnInstant.innerHTML = `<i class="fa-solid fa-paper-plane"></i> 즉시발송`;
             }
             
-            // Check conversion status for marketing
-            const premiumPhones = new Set(
-                allRequests.filter(r => !r.is_free && r.phone).map(r => r.phone.trim())
-            );
+            // Check conversion status for marketing (Disabled for Briefing Board)
             const marketingArea = document.getElementById("marketing-area");
-            const marketingBadge = document.getElementById("marketing-badge");
-            const copyBtn = document.getElementById("btn-copy-sms");
-            
-            if (req.is_free) {
-                marketingArea.style.display = "flex";
-                if (req.phone && premiumPhones.has(req.phone.trim())) {
-                    marketingBadge.innerText = "🎉 유료 전환 완료";
-                    marketingBadge.style.background = "rgba(19, 115, 51, 0.08)";
-                    marketingBadge.style.color = "var(--pos)";
-                    marketingBadge.style.border = "1.5px solid rgba(19, 115, 51, 0.15)";
-                    copyBtn.style.display = "none";
-                } else {
-                    marketingBadge.innerText = "📢 미전환 대상";
-                    marketingBadge.style.background = "rgba(245, 158, 11, 0.08)";
-                    marketingBadge.style.color = "#fb923c";
-                    marketingBadge.style.border = "1.5px solid rgba(245, 158, 11, 0.15)";
-                    copyBtn.style.display = "block";
-                }
-            } else {
+            if (marketingArea) {
                 marketingArea.style.display = "none";
             }
 
