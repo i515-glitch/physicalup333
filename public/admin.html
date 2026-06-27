@@ -1075,26 +1075,28 @@
                 <div class="consultant-desk-panel" style="display: flex; flex-direction: column; gap: 15px; height: 100%; overflow-y: auto;">
                     
                     <!-- 브리핑 대상 학생 검색 및 선택 -->
-                    <div class="desk-card" style="display: flex; flex-direction: column; gap: 10px; padding: 15px; flex-shrink: 0;">
-                        <label class="rich-editor-label" style="font-size: 13px; font-weight: 700; color: var(--gold); display: flex; align-items: center; gap: 6px; margin: 0;">
-                            <i class="fa-solid fa-graduation-cap"></i> 브리핑 대상 학생 검색 & 선택
-                        </label>
-                        <div style="position: relative;">
-                            <input type="text" id="briefing-desk-search" placeholder="학생 이름을 입력하여 실시간 검색..." 
-                                   style="width: 100%; padding: 8px 10px 8px 30px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 12.5px; outline: none;"
-                                   oninput="filterBriefingDeskList(this.value)"
-                                   onkeydown="handleBriefingSearchKey(event)">
-                            <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 10px; top: 10.5px; color: #64748b; font-size: 11px;"></i>
+                    <div class="desk-card" style="display: flex; flex-direction: column; gap: 8px; padding: 12px; flex-shrink: 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; gap: 15px;">
+                            <label class="rich-editor-label" style="font-size: 13px; font-weight: 700; color: var(--gold); display: flex; align-items: center; gap: 6px; margin: 0; flex-shrink: 0;">
+                                <i class="fa-solid fa-graduation-cap"></i> 학생 검색 & 선택
+                            </label>
+                            <div style="position: relative; flex-grow: 1; max-width: 250px;">
+                                <input type="text" id="briefing-desk-search" placeholder="이름 입력 후 엔터..." 
+                                       style="width: 100%; padding: 6px 10px 6px 28px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 12.5px; outline: none;"
+                                       oninput="filterBriefingDeskList(this.value)"
+                                       onkeydown="handleBriefingSearchKey(event)">
+                                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 9px; top: 8.5px; color: #64748b; font-size: 11px;"></i>
+                            </div>
                         </div>
                         <!-- 학생 접수 리스트 (가로 100%, 스크롤 가능) -->
-                        <div id="briefing-desk-list" style="max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding-right: 2px; border: 1px solid #e2e8f0; border-radius: 6px; background: #f8fafc; padding: 6px;">
+                        <div id="briefing-desk-list" style="max-height: 140px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding-right: 2px; border: 1px solid #e2e8f0; border-radius: 6px; background: #f8fafc; padding: 6px;">
                             <!-- JS로 동적 주입 -->
                         </div>
                     </div>
 
                     <!-- Student Profile ReadOnly Card -->
-                    <div class="desk-card" id="student-profile-card" style="padding: 15px; flex-shrink: 0;">
-                        <div class="profile-header-area" style="margin-bottom: 8px;">
+                    <div class="desk-card" id="student-profile-card" style="padding: 12px; flex-shrink: 0;">
+                        <div class="profile-header-area" style="margin-bottom: 6px;">
                             <h2 class="profile-name-title" id="lbl-name" style="font-size: 16px; font-weight: 800; color: #0f172a; margin: 0;">홍길동</h2>
                             <button class="btn-premium" id="btn-toggle-edit" style="display: none;" onclick="toggleProfileEdit()">
                                 <i class="fa-solid fa-pen-to-square"></i> 스펙 수정
