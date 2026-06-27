@@ -156,9 +156,23 @@ function updateSliderVal(sliderId, valId, val, unit) {
     if (label) label.innerText = val + unit;
 }
 
+// Helper to parse 6-digit birth date to YYYY-MM-DD
+function parseBirthDate(val) {
+    if (!val) return "";
+    val = val.replace(/[^0-9]/g, ""); // keep only digits
+    if (val.length === 6) {
+        const yy = parseInt(val.substring(0, 2));
+        const mm = val.substring(2, 4);
+        const dd = val.substring(4, 6);
+        const yyyy = yy >= 50 ? "19" + val.substring(0, 2) : "20" + val.substring(0, 2);
+        return `${yyyy}-${mm}-${dd}`;
+    }
+    return val;
+}
+
 // Submit Data to Engine
 async function submitAnalysis() {
-    const name = document.getElementById("name").value.strip ? document.getElementById("name").value.trim() : document.getElementById("name").value;
+    const name = document.getElementById("name").value.trim ? document.getElementById("name").value.trim() : document.getElementById("name").value;
     if (!name) {
         alert("학생 이름을 입력해주세요.");
         return;
@@ -167,7 +181,7 @@ async function submitAnalysis() {
     const payload = {
         name: name,
         gender: document.getElementById("gender").value,
-        birth_date: document.getElementById("birth_date").value,
+        birth_date: parseBirthDate(document.getElementById("birth_date").value),
         grade: document.getElementById("grade").value,
         sports: document.getElementById("sports").value,
         position: document.getElementById("position").value,
@@ -291,20 +305,20 @@ async function submitOnlineApplication() {
         return;
     }
 
-    const email = document.getElementById("phone").value.trim();
-    if (!email || !email.includes("@")) {
-        alert("온라인 접수를 위해 보호자 연락처 란에 발송받으실 [이메일 주소]를 입력해 주세요.");
+    const phone = document.getElementById("phone").value.trim();
+    if (!phone || phone.length < 10) {
+        alert("온라인 접수를 위해 보호자 연락처 [휴대폰 번호]를 정확히 입력해 주세요.");
         return;
     }
 
     const payload = {
         name: name,
         gender: document.getElementById("gender").value,
-        birth_date: document.getElementById("birth_date").value,
+        birth_date: parseBirthDate(document.getElementById("birth_date").value),
         grade: document.getElementById("grade").value,
         sports: document.getElementById("sports").value,
         position: document.getElementById("position").value,
-        phone: email, // use phone input for email recipient
+        phone: phone,
         reservation_date: document.getElementById("reservation_date") ? document.getElementById("reservation_date").value : null,
         father_height: parseFloat(document.getElementById("father_height").value) || 175.0,
         mother_height: parseFloat(document.getElementById("mother_height").value) || 162.0,
@@ -334,7 +348,7 @@ async function submitOnlineApplication() {
             const days = ["일", "월", "화", "수", "목", "금", "토"];
             const dateStr = `${reserveDate.getFullYear()}년 ${reserveDate.getMonth()+1}월 ${reserveDate.getDate()}일 (${days[reserveDate.getDay()]}) ${reserveDate.getHours()}시 ${reserveDate.getMinutes().toString().padStart(2, '0')}분`;
             
-            alert(`✅ 온라인 정밀 분석 접수 및 예약 완료!\n대기 번호: ${data.id.substring(0, 8)}\n\n부모님, 가장 빨리 분석 결과를 발송받으실 수 있는 예약일은\n[ ${dateStr} ] 입니다!\n\n입력하신 이메일(${email})로 18페이지 분량의 초정밀 PDF 보고서가 자동 발송됩니다.`);
+            alert(`✅ 온라인 정밀 분석 접수 및 예약 완료!\n대기 번호: ${data.id.substring(0, 8)}\n\n부모님, 가장 빨리 분석 결과를 발송받으실 수 있는 예약일은\n[ ${dateStr} ] 입니다!\n\n입력하신 휴대폰 번호(${phone})로 안내 문자 및 PDF 보고서 발송 일정이 예약되었습니다.`);
             // Reset form name
             document.getElementById("name").value = "";
         } else {
@@ -603,3 +617,19 @@ function loadLastInputs() {
         console.error("이전 입력값 복구 실패", e);
     }
 }
+
+// Auto-format phone input on typings
+window.addEventListener('load', () => {
+    const phoneInput = document.getElementById("phone");
+    if (phoneInput) {
+        phoneInput.oninput = function(e) {
+            let val = e.target.value.replace(/[^0-9]/g, "");
+            if (val.length > 3 && val.length <= 7) {
+                val = val.substring(0, 3) + "-" + val.substring(3);
+            } else if (val.length > 7) {
+                val = val.substring(0, 3) + "-" + val.substring(3, 7) + "-" + val.substring(7, 11);
+            }
+            e.target.value = val;
+        };
+    }
+});

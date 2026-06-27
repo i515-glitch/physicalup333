@@ -84,8 +84,8 @@
                                         </select>
                                     </div>
                                     <div class="form-group form-group-inline">
-                                        <label for="birth_date">생년월일</label>
-                                        <input type="date" id="birth_date" required value="2012-05-15">
+                                        <label for="birth_date">생년월일 (6자리)</label>
+                                        <input type="text" id="birth_date" required placeholder="예: 120515" maxlength="6" style="text-align: center;">
                                     </div>
                                     <div class="form-group form-group-inline">
                                         <label for="grade">학년</label>
@@ -103,11 +103,11 @@
                                     </div>
                                     <div class="form-group form-group-inline">
                                         <label for="position">포지션</label>
-                                        <input type="text" id="position" placeholder="예: 투수 (선택)">
+                                        <input type="text" id="position" placeholder="예: 투수, 내야수, 외야수, 포수">
                                     </div>
                                     <div class="form-group-full form-group-inline">
-                                        <label for="phone">보호자 연락처 (이메일)</label>
-                                        <input type="text" id="phone" placeholder="예: parent@example.com">
+                                        <label for="phone">보호자 휴대폰 번호</label>
+                                        <input type="tel" id="phone" placeholder="예: 010-0000-0000" maxlength="13">
                                     </div>
                                     <div class="form-group-full form-group-inline" style="margin-top: 15px;">
                                         <label><i class="fa-solid fa-calendar-check"></i> 보고서 발송 일정 예약</label>
@@ -348,11 +348,8 @@
                             </div>
 
                             <div class="action-buttons-vertical">
-                                <button class="btn-primary" type="button" onclick="submitAnalysis()">
-                                    <i class="fa-solid fa-calculator"></i> 즉시 분석 실행 (현장 상담용)
-                                </button>
-                                <button class="btn-primary btn-online-apply" type="button" onclick="submitOnlineApplication()">
-                                    <i class="fa-solid fa-paper-plane"></i> 온라인 접수 신청 (대기열 전송)
+                                <button class="btn-primary btn-online-apply" type="button" onclick="submitOnlineApplication()" style="width: 100%; font-size: 15px; padding: 14px;">
+                                    <i class="fa-solid fa-paper-plane"></i> 피지컬업 333 온라인 접수 신청 완료
                                 </button>
                             </div>
                             
