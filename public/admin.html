@@ -1126,39 +1126,39 @@
                     </div>
 
                     <!-- AI Comment Editor -->
-                    <div class="desk-card" style="flex-grow: 1; display: flex; flex-direction: column; padding: 15px; min-height: 250px;">
-                        <label class="rich-editor-label" style="font-size: 13px; font-weight: 700; color: var(--gold); display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+                    <div class="desk-card" style="flex-grow: 1; display: flex; flex-direction: column; padding: 12px; min-height: 200px;">
+                        <label class="rich-editor-label" style="font-size: 13px; font-weight: 700; color: var(--gold); display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
                             <i class="fa-solid fa-signature"></i> 피지컬업333 맞춤소견 교열
                         </label>
-                        <textarea class="editor-textarea" id="txt-comment" oninput="syncCommentToPreview(this.value)" placeholder="소견서를 불러오는 중입니다..." style="flex-grow: 1; min-height: 120px; resize: none; margin-bottom: 8px;"></textarea>
+                        <textarea class="editor-textarea" id="txt-comment" oninput="syncCommentToPreview(this.value)" placeholder="소견서를 불러오는 중입니다..." style="flex-grow: 1; min-height: 100px; resize: none; margin-bottom: 6px; padding: 8px; font-size: 12px;"></textarea>
                         
-                        <div id="status-msg" class="status-message"></div>
+                        <div id="status-msg" class="status-message" style="margin-bottom: 4px;"></div>
                         
                         <!-- Reservation Config Panel -->
-                        <div class="reservation-panel" id="reservation-config-panel" style="padding: 10px; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.1); border-radius: 6px; margin-bottom: 8px; font-size: 11px;">
+                        <div class="reservation-panel" id="reservation-config-panel" style="padding: 8px; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.1); border-radius: 6px; margin-bottom: 6px; font-size: 11px;">
                             <label style="display:none; align-items:center; gap: 8px; font-size: 11px; color: var(--gold); cursor: pointer; margin-bottom:6px; font-weight:600;">
                                 <input type="checkbox" id="chk-use-reserve" onchange="toggleReserveTimeSelector(this.checked)" style="accent-color: var(--gold);" checked>
                                 <i class="fa-solid fa-clock"></i> 예약 발송 설정하기
                             </label>
                             <div id="reserve-time-selector" style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
                                 <span style="color: var(--gold); font-weight: 600;"><i class="fa-solid fa-clock"></i> 발송 예약</span>
-                                <select class="editor-select" id="sel-reserve-preset" onchange="applyReservePreset(this.value)" style="padding:4px; background:#1e293b; border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:#fff; font-size:11px; width: 130px;">
+                                <select class="editor-select" id="sel-reserve-preset" onchange="applyReservePreset(this.value)" style="padding:3px; background:#1e293b; border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:#fff; font-size:11px; width: 130px;">
                                     <option value="10min">10분 후 예약</option>
                                     <option value="30min">30분 후 예약</option>
                                     <option value="1hour">1시간 후 예약</option>
                                     <option value="custom">직접 지정</option>
                                 </select>
                                 <div id="custom-time-wrapper" style="display:none; flex-grow:1; margin-left:4px;">
-                                    <input type="datetime-local" id="input-reserve-time" style="width:100%; padding:4px; background:#1e293b; border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:#fff; font-size:11px;">
+                                    <input type="datetime-local" id="input-reserve-time" style="width:100%; padding:3px; background:#1e293b; border:1px solid rgba(255,255,255,0.15); border-radius:4px; color:#fff; font-size:11px;">
                                 </div>
                             </div>
                         </div>
 
-                        <div class="action-button-group" style="display: flex; gap: 8px; flex-shrink: 0;">
-                            <button class="btn-premium btn-gold" id="btn-approve" style="flex:1; padding: 10px; font-size: 13px;" onclick="approveAndSend(true)">
+                        <div class="action-button-group" style="display: flex; gap: 8px; flex-shrink: 0; margin-top: 2px;">
+                            <button class="btn-premium btn-gold" id="btn-approve" style="flex:1; padding: 7px; font-size: 12px;" onclick="approveAndSend(true)">
                                 <i class="fa-solid fa-circle-check"></i> 검토완료
                             </button>
-                            <button class="btn-premium" id="btn-instant-send" style="flex:1; padding: 10px; font-size: 13px; background:#10b981; color:#fff; border:1px solid #10b981;" onclick="approveAndSend(false)">
+                            <button class="btn-premium" id="btn-instant-send" style="flex:1; padding: 7px; font-size: 12px; background:#10b981; color:#fff; border:1px solid #10b981;" onclick="approveAndSend(false)">
                                 <i class="fa-solid fa-paper-plane"></i> 즉시발송
                             </button>
                         </div>
