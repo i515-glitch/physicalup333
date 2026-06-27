@@ -1082,7 +1082,8 @@
                         <div style="position: relative;">
                             <input type="text" id="briefing-desk-search" placeholder="학생 이름을 입력하여 실시간 검색..." 
                                    style="width: 100%; padding: 8px 10px 8px 30px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px; color: #0f172a; font-size: 12.5px; outline: none;"
-                                   oninput="filterBriefingDeskList(this.value)">
+                                   oninput="filterBriefingDeskList(this.value)"
+                                   onkeydown="handleBriefingSearchKey(event)">
                             <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 10px; top: 10.5px; color: #64748b; font-size: 11px;"></i>
                         </div>
                         <!-- 학생 접수 리스트 (가로 100%, 스크롤 가능) -->
@@ -1629,6 +1630,16 @@
                 return name.includes(cleanQuery) || sports.includes(cleanQuery) || phone.includes(cleanQuery);
             });
             renderBriefingDeskList(filtered);
+        }
+
+        function handleBriefingSearchKey(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const firstCard = document.querySelector("#briefing-desk-list > div");
+                if (firstCard) {
+                    firstCard.click();
+                }
+            }
         }
 
         function switchTab(status) {
