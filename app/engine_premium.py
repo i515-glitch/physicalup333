@@ -1,4 +1,3 @@
-# PHYSICAL UP 333 - Scoring Engine v12.0 (Strict Concern Mode)
 from datetime import datetime
 from app.db import get_manse_info, get_biocode_pattern
 
@@ -87,6 +86,8 @@ def calculate_biocode(input_data):
     activity_score = sum(q[i] for i in range(24, 32))
     retention_score = sum(q[i] for i in range(32, 40))
 
+    # --- 1. 선천 점수 (Body Code - 40점 만점) ---
+    
     # --- 1. 선천 점수 (Body Code - 40점 만점) ---
     
     # 1-1. 유전키 (12.0점 만점)
