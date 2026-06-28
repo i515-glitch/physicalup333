@@ -157,84 +157,8 @@ def ai_double_check_comment(student_name, biocode, constitution, height, weight,
              f"[검수 및 최종 교열 가이드라인]\n" \
              f"1. **데이터 정합성 최종 확인**: 가이드 본문 내의 설명 중 아동의 실제 골격근량 수준이나 체지방량 기질이 수치 스펙과 모순되는 단어나 잘못 쓴 표현(예: 근육량이 표준 미달인데 높은 편이라고 언급된 오점 등)이 있다면 앞뒤 수치 정합성에 맞게 정교하게 문장을 수정해 주십시오.\n" \
              f"2. **맞춤법 및 문체 보정**: 오타와 띄어쓰기를 철저하게 보정하고, 문맥 흐름을 더욱 세련되게 다듬으십시오. 부모가 신뢰할 수 있도록 따뜻하면서도 과학적 권위가 있는 '~입니다', '~합니다' 톤을 견고하게 유지하십시오.\n" \
-             f"3. **의료법 저촉 방지**: 가이드 내부에 '의학', '의사', '의학적 진단', '소견', '처방', '치료', '의료' 등 병원/의료 오해 소지가 있는 표현이나 '젬마', '잼마', '제미나이', 'AI' 등 인공지능 또는 특정 인물 이름이 있다면 이를 '피지컬업 333 피지컬 코칭 팀'의 이름으로 정교하게 보정하십시오.\n" \
+             f"3. **의료법 저촉 방지**: 가이드 내부에 '의학', '의사', '의학적 진단', '소견', '처방', '치료', '의료' 등 병원/의료 오해 소지가 있는 표현이나 '젬마', '잼마', '제미나이', 'AI' 등 인공지능 또는 특정 인물 이름이 있다면 이를 '피지컬업 333 피지컬 코칭 팀'의 피지컬 가이드 내용으로 정교하게 보정하십시오.\n" \
              f"4. **헤더 규격 및 단락 구조 유지**: 원본 가이드의 4대 단락 구조인 '### [1. 피지컬 성장 분석]', '### [2. 영양 및 소화 흡수 전략]', '### [3. 맞춤형 운동 및 수면 설계]', '### [4. 피지컬 코칭 종합 총평]' 헤더 구조는 반드시 100% 동일하게 지켜 주십시오.\n" \
-             f"5. 가이드라인 외의 해석이나 잡담 없이 오직 '최종 교열 완료된 가이드 원문'만 텍스트로 깔끔하게 반환하십시오."
-
-    # 1. Try Google Gemini API first if API key is provided
-    gemini_key = os.environ.get("GEMINI_API_KEY")
-    if gemini_key:
-        try:
-            print(f"[AI Writer] Requesting Google Gemini API (gemini-2.5-flash) for {student_name} via native urllib...")
-            import urllib.request
-            import ssl
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={gemini_key}"
-            payload = {
-                "contents": [{
-                    "parts": [{"text": prompt}]
-                }]
-            }
-            data_bytes = json.dumps(payload).encode("utf-8")
-            req = urllib.request.Request(
-                url, 
-                data=data_bytes, 
-                headers={"Content-Type": "application/json"},
-                method="POST"
-            )
-            ctx = ssl._create_unverified_context()
-            with urllib.request.urlopen(req, context=ctx, timeout=30.0) as response:
-                if response.status == 200:
-                    res_data = json.loads(response.read().decode("utf-8"))
-                    comment = res_data["candidates"][0]["content"]["parts"][0]["text"].strip()
-                    comment = comment.replace("```html", "").replace("```json", "").replace("```", "").strip()
-                    if comment:
-                        print(f"[AI Writer] Successfully generated Gemini AI comment ({len(comment)} chars)")
-                        return comment
-        except Exception as e:
-            print(f"[AI Writer] Google Gemini API call failed: {e}. Trying local Ollama next.")
-
-    # 2. Try Local Ollama (Gemma) if offline/not configured
-    payload = {
-        "model": DEFAULT_MODEL,
-        "prompt": prompt,
-        "stream": False
-    }
-
-    try:
-        print(f"[AI Writer] Requesting local Ollama ({DEFAULT_MODEL}) for {student_name}...")
-        response = requests.post(OLLAMA_URL, json=payload, timeout=45.0)
-        if response.status_code == 200:
-            result = response.json()
-            comment = result.get("response", "").strip()
-            if comment:
-                print(f"[AI Writer] Successfully generated local LLM comment ({len(comment)} chars)")
-                return comment
-    except Exception as e:
-        print(f"[AI Writer] Local Ollama offline ({e}). Using rule-based fallback comment.")
-        
-    return fallback_comment
-
-
-def ai_double_check_comment(student_name, biocode, constitution, height, weight, muscle, fat, original_comment):
-    """
-    AI 2차 최종 검수: 기존 소견서 내용(대표님이 수동 수정했거나 AI가 1차 자동 생성한 글)을 바탕으로
-    아동의 실제 신체 스펙 데이터와의 수치적 모순을 최종 검증하고 오탈자와 문체 완성도를 정교하게 보정하는 2차 검수 모듈.
-    """
-    prompt = f"당신은 엘리트 유소년 피지컬 성장 분석 리포트의 수석 최종 검수관인 '피지컬업 333 피지컬 코칭 팀'입니다.\n" \
-             f"제공된 {student_name} 학생의 실제 피지컬 데이터와 1차로 작성된 가이드 본문을 정밀히 비교 분석하여 " \
-             f"오탈자를 최종 교열하고 내용적 모순을 수정한 완성도 극대화된 최종 피지컬 코칭 종합 가이드 본문만을 출력해 주세요. (잡담 및 ``` 등의 특수 기호는 제외할 것)\n\n" \
-             f"[아동 피지컬 스펙 정보]\n" \
-             f"- 아동 이름: {student_name}\n" \
-             f"- 성장 코드 (BioCode): {biocode}\n" \
-             f"- 사상 체질: {constitution}\n" \
-             f"- 실측 스펙: 신장 {height}cm, 체중 {weight}kg, 골격근량 {muscle}kg, 체지방률 {fat}%\n\n" \
-             f"[1차 작성 가이드 원본]\n" \
-             f"{original_comment}\n\n" \
-             f"[검수 및 최종 교열 가이드라인]\n" \
-             f"1. **데이터 정합성 최종 확인**: 가이드 본문 내의 설명 중 아동의 실제 골격근량 수준이나 체지방량 기질이 수치 스펙과 모순되는 단어나 잘못 쓴 표현(예: 근육량이 표준 미달인데 높은 편이라고 언급된 오점 등)이 있다면 앞뒤 수치 정합성에 맞게 정교하게 문장을 수정해 주십시오.\n" \
-             f"2. **맞춤법 및 문체 보정**: 오타와 띄어쓰기를 철저하게 보정하고, 문맥 흐름을 더욱 세련되게 다듬으십시오. 부모가 신뢰할 수 있도록 따뜻하면서도 과학적 권위가 있는 '~입니다', '~합니다' 톤을 견고하게 유지하십시오.\n" \
-             f"3. **의료법 저촉 방지**: 가이드 내부에 '의학', '의사', '의학적 진단', '소견', '처방', '치료', '의료' 등 병원/의료 오해 소지가 있는 표현이나 '젬마', '잼마' 등 특정 인물 이름이 있다면 이를 '피지컬업 333 피지컬 코칭 팀'의 피지컬 가이드 내용으로 정교하게 보정하십시오.\n" \
-             f"4. 원본 가이드의 주요 내용과 단락 구조([피지컬업 333 피지컬 성장 분석], [피지컬업 333 영양 및 소화 흡수 전략], [피지컬업 333 맞춤형 운동 및 수면 설계])는 그대로 계승하십시오.\n" \
              f"5. 가이드라인 외의 해석이나 잡담 없이 오직 '최종 교열 완료된 가이드 원문'만 텍스트로 깔끔하게 반환하십시오."
 
     # 1. Gemini API 우선 기동
@@ -288,4 +212,5 @@ def ai_double_check_comment(student_name, biocode, constitution, height, weight,
         print(f"[AI 2차 검수] Fallback 실패 ({e}). 원본 텍스트를 그대로 유지합니다.")
         
     return original_comment
+
 

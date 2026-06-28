@@ -10,9 +10,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 def find_latest_file(base_path, prefix, extension=".xlsx"):
     """
     Finds the latest version file matching the prefix in the base_path or its subdirectories.
-    Example: prefix="PU333_01_엔진_v", extension=".xlsx"
+    Example: prefix="PU333_01_엔진_v" or ["PU333_엔진_v", "PU333_01_엔진_v"], extension=".xlsx"
     """
     candidates = []
+    prefixes = [prefix] if isinstance(prefix, str) else prefix
     if os.path.exists(base_path):
         for root, dirs, files in os.walk(base_path):
             # Exclude cache or test directories
@@ -20,7 +21,9 @@ def find_latest_file(base_path, prefix, extension=".xlsx"):
                 continue
             for file in files:
                 normalized = unicodedata.normalize('NFC', file)
-                if normalized.startswith(prefix) and normalized.endswith(extension):
+                # Check if file starts with any of the specified prefixes
+                starts_with_prefix = any(normalized.startswith(p) for p in prefixes)
+                if starts_with_prefix and normalized.endswith(extension):
                     # Extract version number using regex (e.g. v11.1 -> 11.1)
                     match = re.search(r'v(\d+(?:\.\d+)*)', normalized)
                     if match:
@@ -37,7 +40,7 @@ def find_latest_file(base_path, prefix, extension=".xlsx"):
     return None
 
 # Locate the latest DB files
-ENGINE_PATH = find_latest_file(BASE_DIR, "PU333_01_엔진_v")
+ENGINE_PATH = find_latest_file(BASE_DIR, ["PU333_엔진_v", "PU333_01_엔진_v"])
 MANSE_DB_PATH = find_latest_file(BASE_DIR, "PU333_05_만세력DB_v")
 
 # Fallback values if autodetect fails
@@ -92,8 +95,35 @@ def load_databases():
         try:
             wb = openpyxl.load_workbook(ENGINE_PATH, data_only=True)
             
-            # Check sheet layout and adapt
-            if '27패턴 마스터(분포+처방)' in wb.sheetnames:
+            if '27코드마스터' in wb.sheetnames:
+                sheet = wb['27코드마스터']
+                print("[DB] Detecting v13.1 engine layout in '27코드마스터'")
+                for r in range(5, 45):
+                    code = sheet.cell(r, 1).value
+                    if code:
+                        code_str = str(code).strip()
+                        name_val = str(sheet.cell(r, 5).value or '').strip()
+                        body_born = str(sheet.cell(r, 6).value or '').strip()
+                        constitution = str(sheet.cell(r, 7).value or '').strip()
+                        mind = str(sheet.cell(r, 8).value or '').strip()
+                        body_curr = str(sheet.cell(r, 9).value or '').strip()
+                        absorption = str(sheet.cell(r, 10).value or '').strip()
+                        diet = str(sheet.cell(r, 11).value or '').strip()
+                        meal_method = str(sheet.cell(r, 12).value or '').strip()
+                        snack = str(sheet.cell(r, 13).value or '').strip()
+                        habit = str(sheet.cell(r, 14).value or '').strip()
+                        
+                        current_desc = f"타고난 체형: {body_born} / 기질 체질: {constitution} (정신성향: {mind})"
+                        flaw_desc = f"현재 몸 상태: {body_curr} (대사 흡수 수준: {absorption}) / 극복할 생활 습관: {habit}"
+                        solution_desc = f"추천 영양 식단: {diet} ({meal_method}) / 추천 맞춤 간식: {snack}"
+                        
+                        biocode_patterns[code_str] = {
+                            'name': name_val,
+                            'current': current_desc,
+                            'flaw': flaw_desc,
+                            'solution': solution_desc
+                        }
+            elif '27패턴 마스터(분포+처방)' in wb.sheetnames:
                 # v11.1+ layout: B col is Code, G is Name, H is Current, I is Flaw, J is Solution
                 sheet = wb['27패턴 마스터(분포+처방)']
                 print("[DB] Detecting v11.1+ engine layout in '27패턴 마스터(분포+처방)'")
