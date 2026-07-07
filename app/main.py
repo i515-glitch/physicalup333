@@ -21,7 +21,7 @@ import webbrowser
 from threading import Timer
 from fastapi import FastAPI, UploadFile, File, HTTPException, Header
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel
 from typing import List, Optional
 
@@ -358,8 +358,6 @@ def online_apply(request: AnalysisRequest):
         # Determine if data is fully completed (for scheduling / reports)
         if (request.current_height > 0 and 
             request.current_weight > 0 and 
-            request.body_fat is not None and 
-            request.skeletal_muscle is not None and 
             len(request.survey_responses) == 24):
             is_completed = True
             
@@ -645,9 +643,27 @@ def process_approval_and_send(req_id: str, email: str, comment: str, inspected_b
     # 5. Email PDF to customer
     email_success = send_report_email(email, req_data['name'], output_pdf_path)
 
+    # 6. Kakao Alimtalk sending to customer
+    phone_number = req_data.get("phone", "")
+    alimtalk_success = False
+    if phone_number:
+        base_url = os.environ.get("BASE_PUBLIC_URL", f"http://127.0.0.1:{PORT}")
+        report_url = f"{base_url}/static/report.html?id={req_id}"
+        from app.notifier import send_kakao_alimtalk
+        try:
+            alimtalk_success = send_kakao_alimtalk(
+                to_phone=phone_number,
+                student_name=req_data['name'],
+                biocode=result["biocode"],
+                report_url=report_url
+            )
+        except Exception as e:
+            print(f"[Notifier] Error sending Kakao Alimtalk on approval: {e}")
+
     return {
         "success": True,
         "email_sent": email_success,
+        "alimtalk_sent": alimtalk_success,
         "pdf_path": output_pdf_path
     }
 
@@ -695,8 +711,9 @@ def approve_request(approval: ApprovalRequest):
         )
         return {
             "success": True,
-            "message": "Report approved, PDF generated, and email sent.",
+            "message": "Report approved, PDF generated, and dispatch completed.",
             "email_sent": res["email_sent"],
+            "alimtalk_sent": res["alimtalk_sent"],
             "pdf_path": res["pdf_path"]
         }
     except Exception as e:
@@ -902,6 +919,339 @@ def get_reservation_status(req_id: str, phone: str):
         if isinstance(e, HTTPException):
             raise e
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/report/{req_id}")
+def get_report_data(req_id: str):
+    """
+    보호자가 발송받은 고유 링크(req_id)를 통해 분석 결과를 실시간으로 가져오는 API.
+    """
+    req_file = os.path.join(REQUESTS_DIR, f"{req_id}.json")
+    if not os.path.exists(req_file):
+        raise HTTPException(status_code=404, detail="요청하신 리포트 데이터를 찾을 수 없습니다.")
+    try:
+        with open(req_file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return {"success": True, "data": data}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ── Toss Payments Integration ──────────────────────────────────────────────────
+class TossPrepareRequest(BaseModel):
+    orderId: str
+    request: AnalysisRequest
+
+PENDING_TOSS_DIR = os.path.join(DATA_DIR, "pending_toss")
+os.makedirs(PENDING_TOSS_DIR, exist_ok=True)
+
+@app.post("/api/payment/toss/prepare")
+def toss_prepare(req: TossPrepareRequest):
+    """
+    Saves a pending analysis request linked to a Toss orderId before redirection.
+    """
+    try:
+        file_path = os.path.join(PENDING_TOSS_DIR, f"{req.orderId}.json")
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(req.request.dict(), f, ensure_ascii=False, indent=2)
+        return {"success": True}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/payment/toss/success")
+def toss_success(paymentKey: str, orderId: str, amount: int):
+    """
+    Verifies payment with Toss API and promotes the pending request to Scheduled.
+    """
+    import urllib.request
+    import base64
+    from datetime import datetime, timedelta
+    
+    # 1. Confirm payment with Toss Payments API
+    secret_key = os.environ.get("TOSS_SECRET_KEY", "test_sk_Z1aOwX7K8m0y1v6zY7J8y0n4")
+    auth_str = f"{secret_key}:"
+    auth_b64 = base64.b64encode(auth_str.encode("utf-8")).decode("utf-8")
+    
+    url = "https://api.tosspayments.com/v1/payments/confirm"
+    headers = {
+        "Authorization": f"Basic {auth_b64}",
+        "Content-Type": "application/json"
+    }
+    post_data = {
+        "paymentKey": paymentKey,
+        "orderId": orderId,
+        "amount": amount
+    }
+    
+    req = urllib.request.Request(
+        url, 
+        data=json.dumps(post_data).encode("utf-8"), 
+        headers=headers, 
+        method="POST"
+    )
+    
+    confirm_data = None
+    try:
+        with urllib.request.urlopen(req) as response:
+            res_body = response.read().decode("utf-8")
+            confirm_data = json.loads(res_body)
+    except Exception as e:
+        err_msg = str(e)
+        if hasattr(e, "read"):
+            try:
+                err_msg = e.read().decode("utf-8")
+            except:
+                pass
+        return HTMLResponse(content=f"""
+        <!DOCTYPE html>
+        <html lang="ko">
+        <head>
+            <meta charset="UTF-8">
+            <title>결제 승인 실패 · PHYSICAL UP</title>
+            <style>
+                body {{ background: #040711; color: #f1f5f9; font-family: sans-serif; text-align: center; padding: 80px 20px; }}
+                .box {{ max-width: 450px; margin: 0 auto; background: #0d1b3e; border: 1px solid #f76f8e; padding: 30px; border-radius: 16px; }}
+                h2 {{ color: #f76f8e; }}
+                p {{ color: #94a3b8; font-size: 14px; line-height: 1.6; }}
+                .btn {{ display: inline-block; margin-top: 20px; padding: 12px 28px; background: #c9a84c; color: #040711; text-decoration: none; font-weight: bold; border-radius: 8px; }}
+            </style>
+        </head>
+        <body>
+            <div class="box">
+                <h2>결제 승인 실패</h2>
+                <p>토스페이먼츠 승인 요청 중 오류가 발생했습니다.<br/>상세 오류: {err_msg}</p>
+                <a href="/app" class="btn">처음으로 돌아가기</a>
+            </div>
+        </body>
+        </html>
+        """, status_code=400)
+
+    # 2. Promote pending request to Scheduled
+    pending_file = os.path.join(PENDING_TOSS_DIR, f"{orderId}.json")
+    if not os.path.exists(pending_file):
+        return HTMLResponse(content=f"""
+        <!DOCTYPE html>
+        <html lang="ko">
+        <head>
+            <meta charset="UTF-8">
+            <title>신청 정보 누락 · PHYSICAL UP</title>
+            <style>
+                body {{ background: #040711; color: #f1f5f9; font-family: sans-serif; text-align: center; padding: 80px 20px; }}
+                .box {{ max-width: 450px; margin: 0 auto; background: #0d1b3e; border: 1px solid #c9a84c; padding: 30px; border-radius: 16px; }}
+                h2 {{ color: #c9a84c; }}
+                p {{ color: #94a3b8; font-size: 14px; line-height: 1.6; }}
+                .btn {{ display: inline-block; margin-top: 20px; padding: 12px 28px; background: #c9a84c; color: #040711; text-decoration: none; font-weight: bold; border-radius: 8px; }}
+            </style>
+        </head>
+        <body>
+            <div class="box">
+                <h2>결제 완료 · 신청서 누락</h2>
+                <p>결제는 성공했으나, 신청 데이터가 유실되었습니다.<br/>관리자에게 주문번호({orderId})와 함께 문의해 주세요.</p>
+                <a href="/app" class="btn">처음으로 돌아가기</a>
+            </div>
+        </body>
+        </html>
+        """)
+
+    try:
+        with open(pending_file, "r", encoding="utf-8") as f:
+            req_data = json.load(f)
+        
+        # Determine schedule date
+        scheduled_counts = {}
+        if os.path.exists(REQUESTS_DIR):
+            for filename in os.listdir(REQUESTS_DIR):
+                if filename.endswith(".json"):
+                    file_path = os.path.join(REQUESTS_DIR, filename)
+                    try:
+                        with open(file_path, "r", encoding="utf-8") as f:
+                            d = json.load(f)
+                        if d.get("status") in ["Scheduled", "Approved"]:
+                            sched_at = d.get("scheduled_at", 0)
+                            if sched_at > 0:
+                                sched_dt = datetime.fromtimestamp(sched_at / 1000)
+                                date_str = sched_dt.strftime("%Y-%m-%d")
+                                scheduled_counts[date_str] = scheduled_counts.get(date_str, 0) + 1
+                    except:
+                        pass
+        
+        daily_limit = 50
+        send_time_type = "next_day_10"
+        custom_send_time = "10:00"
+        if os.path.exists(CONFIG_FILE):
+            try:
+                with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+                    config_data = json.load(f)
+                    daily_limit = config_data.get("daily_limit", 50)
+                    send_time_type = config_data.get("send_time_type", "next_day_10")
+                    custom_send_time = config_data.get("custom_send_time", "10:00")
+            except:
+                pass
+                
+        search_date = datetime.now()
+        found_date = None
+        for _ in range(90):
+            date_str = search_date.strftime("%Y-%m-%d")
+            if scheduled_counts.get(date_str, 0) < daily_limit:
+                found_date = date_str
+                break
+            search_date += timedelta(days=1)
+            
+        assigned_date = found_date or datetime.now().strftime("%Y-%m-%d")
+        
+        # Calculate schedule timestamp
+        if send_time_type == "next_day_10":
+            assigned_dt = datetime.strptime(assigned_date, "%Y-%m-%d")
+            next_day_dt = assigned_dt + timedelta(days=1)
+            dt = datetime.strptime(f"{next_day_dt.strftime('%Y-%m-%d')} 10:00:00", "%Y-%m-%d %H:%M:%S")
+            scheduled_at = dt.timestamp() * 1000
+        elif send_time_type == "custom_time":
+            dt = datetime.strptime(f"{assigned_date} {custom_send_time}:00", "%Y-%m-%d %H:%M:%S")
+            scheduled_at = dt.timestamp() * 1000
+        else: # instant
+            scheduled_at = (time.time() * 1000) + 60 * 1000
+
+        # Calculate BioCode and AI Comment
+        ai_comment = ""
+        try:
+            result = calculate_biocode(req_data)
+            ai_comment = generate_ai_comment(
+                student_name=req_data.get("name"),
+                biocode=result["biocode"],
+                constitution=result["constitution"],
+                height_gap=result["height_gap"],
+                lag_cause=result["lag_cause"],
+                sports=req_data.get("sports")
+            )
+        except Exception as e:
+            print(f"Calculate biocode error: {str(e)}")
+
+        req_id = str(uuid.uuid4())
+        final_data = {
+            "id": req_id,
+            "name": req_data.get("name"),
+            "gender": req_data.get("gender"),
+            "birth_date": req_data.get("birth_date"),
+            "grade": req_data.get("grade"),
+            "sports": req_data.get("sports"),
+            "position": req_data.get("position", ""),
+            "phone": req_data.get("phone", ""),  # Contains contact email
+            "father_height": req_data.get("father_height", 173.0),
+            "mother_height": req_data.get("mother_height", 160.0),
+            "current_height": req_data.get("current_height"),
+            "current_weight": req_data.get("current_weight"),
+            "body_fat": req_data.get("body_fat"),
+            "skeletal_muscle": req_data.get("skeletal_muscle"),
+            "wingspan": req_data.get("wingspan"),
+            "survey_responses": req_data.get("survey_responses"),
+            "is_free": False,
+            "is_completed": True,
+            "status": "Scheduled",
+            "scheduled_at": scheduled_at,
+            "applied_at": time.time() * 1000,
+            "ai_comment": ai_comment,
+            "pdf_generated": False,
+            "email_sent": False,
+            "toss_payment_key": paymentKey,
+            "toss_order_id": orderId,
+            "toss_amount": amount
+        }
+        
+        # Save to requests directory
+        with open(os.path.join(REQUESTS_DIR, f"{req_id}.json"), "w", encoding="utf-8") as f:
+            json.dump(final_data, f, ensure_ascii=False, indent=2)
+            
+        # Remove pending file
+        try:
+            os.remove(pending_file)
+        except:
+            pass
+
+        return HTMLResponse(content=f"""
+        <!DOCTYPE html>
+        <html lang="ko">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>결제 및 신청 완료 · PHYSICAL UP</title>
+            <style>
+                body {{ background: #040711; color: #f1f5f9; font-family: sans-serif; text-align: center; padding: 60px 20px; }}
+                .box {{ max-width: 480px; margin: 0 auto; background: #0d1b3e; border: 1.5px solid #c9a84c; padding: 40px 24px; border-radius: 20px; box-shadow: 0 10px 40px rgba(201, 168, 76, 0.2); }}
+                .logo {{ color: #c9a84c; font-size: 14px; font-weight: 900; letter-spacing: 4px; margin-bottom: 24px; }}
+                .success-icon {{ font-size: 56px; color: #c9a84c; margin-bottom: 16px; }}
+                h2 {{ color: #f1f5f9; font-size: 22px; font-weight: 900; margin-bottom: 10px; }}
+                p {{ color: #94a3b8; font-size: 13.5px; line-height: 1.8; margin-bottom: 30px; }}
+                .btn {{ display: block; width: 100%; box-sizing: border-box; padding: 16px; background: linear-gradient(135deg, #c9a84c, #f5c754); color: #040711; text-decoration: none; font-weight: 800; border-radius: 12px; font-size: 15px; box-shadow: 0 4px 15px rgba(201,168,76,0.3); }}
+                .btn:hover {{ filter: brightness(1.05); }}
+            </style>
+        </head>
+        <body>
+            <div class="box">
+                <div class="logo">PHYSICAL UP 333</div>
+                <div class="success-icon">🏆</div>
+                <h2>프리미엄 성장 분석 신청 완료!</h2>
+                <p>결제 및 신청이 안전하게 완료되었습니다.<br/>
+                마스터 분석 엔진 v14.0의 정밀 분석 및 컨설턴트 2차 검수 후, <strong>24시간 이내에 입력하신 연락처(이메일 및 카카오 알림톡)</strong>로 정식 PDF 결과 리포트가 자동 발송됩니다.</p>
+                <a href="/app" class="btn">333TEST 메인으로 돌아가기</a>
+            </div>
+        </body>
+        </html>
+        """)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return HTMLResponse(content=f"""
+        <!DOCTYPE html>
+        <html lang="ko">
+        <head>
+            <meta charset="UTF-8">
+            <title>오류 발생 · PHYSICAL UP</title>
+            <style>
+                body {{ background: #040711; color: #f1f5f9; font-family: sans-serif; text-align: center; padding: 80px 20px; }}
+                .box {{ max-width: 450px; margin: 0 auto; background: #0d1b3e; border: 1px solid #f76f8e; padding: 30px; border-radius: 16px; }}
+                h2 {{ color: #f76f8e; }}
+                p {{ color: #94a3b8; font-size: 14px; line-height: 1.6; }}
+                .btn {{ display: inline-block; margin-top: 20px; padding: 12px 28px; background: #c9a84c; color: #040711; text-decoration: none; font-weight: bold; border-radius: 8px; }}
+            </style>
+        </head>
+        <body>
+            <div class="box">
+                <h2>시스템 처리 오류</h2>
+                <p>결제는 승인되었으나 데이터베이스 등록 중 오류가 발생했습니다.<br/>관리자에게 주문번호({orderId})와 함께 문의해 주세요.<br/>오류내용: {str(e)}</p>
+                <a href="/app" class="btn">처음으로 돌아가기</a>
+            </div>
+        </body>
+        </html>
+        """, status_code=500)
+
+@app.get("/payment/toss/fail")
+def toss_fail(code: str, message: str, orderId: str):
+    """
+    Renders Toss failure redirect page.
+    """
+    return HTMLResponse(content=f"""
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>결제 실패 · PHYSICAL UP</title>
+        <style>
+            body {{ background: #040711; color: #f1f5f9; font-family: sans-serif; text-align: center; padding: 80px 20px; }}
+            .box {{ max-width: 450px; margin: 0 auto; background: #0d1b3e; border: 1px solid #f76f8e; padding: 30px; border-radius: 16px; box-shadow: 0 8px 32px rgba(247,111,142,0.1); }}
+            h2 {{ color: #f76f8e; margin-bottom: 12px; }}
+            p {{ color: #94a3b8; font-size: 14.5px; line-height: 1.7; margin-bottom: 24px; }}
+            .btn {{ display: inline-block; padding: 12px 28px; background: #c9a84c; color: #040711; text-decoration: none; font-weight: bold; border-radius: 8px; }}
+        </style>
+    </head>
+    <body>
+        <div class="box">
+            <h2>결제가 취소되거나 실패했습니다</h2>
+            <p>메시지: {message}<br/>코드: {code}</p>
+            <a href="/app" class="btn">다시 시도하기</a>
+        </div>
+    </body>
+    </html>
+    """)
 
 
 @app.get("/app")

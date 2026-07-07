@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import TossCheckoutButton from "./components/payment/TossCheckoutButton";
+import PayPalCheckoutButton from "./components/payment/PayPalCheckoutButton";
+import { TOSS_PRODUCTS, generateOrderId } from "./lib/toss";
+import { PAYPAL_PRODUCTS } from "./lib/paypal";
 
 // ─── 브랜드 컬러 ──────────────────────────────────────────────────────────────
 const GOLD="#c9a84c", GOLD2="#e8c76a", GOLD3="#f5e0a0";
@@ -76,15 +80,15 @@ const mainType = {
 
 // ─── 세분류 ───────────────────────────────────────────────────────────────────
 const subType = {
-  결핍형: {emoji:"🫙",color:"#94a3b8",main:"소비형",codes:["111","112","121","211"],shortDesc:"흡수·연소·축적 세 축 모두 낮음",desc:"영양이 들어오는 양 자체가 부족합니다.",plus:"소화효소를 최우선으로 — 영양이 들어올 통로부터 열어야 합니다."},
-  버너형: {emoji:"🔥",color:"#f97316",main:"소비형",codes:["331","231","321"],shortDesc:"흡수↑ 연소↑↑ 축적↓ — 빠르게 태워버리는 체질",desc:"흡수는 잘 되지만 에너지를 너무 빠르게 태워버려 살이 붙지 않습니다.",plus:"고칼로리 간식을 하루 2~3회 추가 — 태워도 남을 만큼 넣어줘야 합니다."},
-  역류형: {emoji:"🌀",color:"#a78bfa",main:"소비형",codes:["131","132","133"],shortDesc:"흡수↓ 연소·축적 불안정",desc:"흡수가 안 되니 연소도 축적도 불안정합니다.",plus:"유산균·소화효소 집중 — 장 환경 개선이 최우선입니다."},
-  빈그릇형: {emoji:"🏺",color:"#67e8f9",main:"소비형",codes:["311","312"],shortDesc:"흡수↑ 연소↓ 축적↓ — 흡수는 되는데 어디로 가는지 모름",desc:"흡수는 잘 되는데 연소도 축적도 안 됩니다.",plus:"비타민 B군 집중 — 흡수된 영양이 에너지로 전환되도록 대사 경로를 열어줍니다."},
-  항온형: {emoji:"🌿",color:"#4ade80",main:"균형형",codes:["222","221","212","122"],shortDesc:"세 축 모두 보통 — 가장 안정적인 균형 체질",desc:"흡수·연소·축적이 모두 균형 잡혀 있습니다.",plus:"지금 이 상태가 이상적입니다. 규칙적인 식사와 수면만 잘 지켜주세요."},
-  엔진형: {emoji:"⚡",color:"#fbbf24",main:"균형형",codes:["333","323"],shortDesc:"흡수↑ 연소↑ 축적↑ — 세 축 모두 활발",desc:"흡수·연소·축적이 모두 강합니다. 성장기에 가장 이상적인 체질입니다.",plus:"활동량에 맞는 충분한 식사량이 핵심입니다."},
-  활화산형: {emoji:"🌋",color:"#fb923c",main:"균형형",codes:["332","322","232"],shortDesc:"흡수·연소 강 축적 보통 — 건강한 마름 경계",desc:"흡수와 연소가 강하고 축적은 보통입니다.",plus:"고칼로리 간식을 규칙적으로 추가 — 의식적으로 더 먹어야 균형이 유지됩니다."},
-  저장고형: {emoji:"🏦",color:"#f472b6",main:"저장형",codes:["113","213","313"],shortDesc:"연소↓ 축적↑↑ — 조금 먹어도 잘 찜",desc:"흡수력에 관계없이 축적력이 매우 강합니다.",plus:"식이섬유·유산균 집중 — 장내 환경을 개선해 과도한 축적을 조절합니다."},
-  둑형: {emoji:"🌊",color:"#38bdf8",main:"저장형",codes:["233","223","123"],shortDesc:"연소↓ 축적↑ — 먹은 게 그대로 쌓임",desc:"연소가 낮고 축적이 강합니다. 먹은 것이 그대로 체지방으로 쌓입니다.",plus:"유산소 운동이 최우선 — 낮은 연소력을 운동으로 끌어올리는 것이 핵심입니다."},
+  결핍형: {emoji:"🫙",color:"#94a3b8",main:"소비형",codes:["111","211","112","121"],shortDesc:"선천/대사/생활 세 축 모두 정체됨",desc:"영양이 들어오고 축적되는 효율이 다소 막혀 있습니다.",plus:"소화효소를 최우선으로 — 위장 대사 흡수력부터 활성화해야 합니다."},
+  버너형: {emoji:"🔥",color:"#f97316",main:"소비형",codes:["133","132","123"],shortDesc:"대사·생활은 활발하나 선천 골격이 가벼움",desc:"에너지는 잘 쓰지만 몸집을 키우는 축적력이 비교적 약합니다.",plus:"고칼로리 간식을 하루 2~3회 추가 — 에너지 소실을 막아주어야 합니다."},
+  역류형: {emoji:"🌀",color:"#a78bfa",main:"소비형",codes:["113","213","313"],shortDesc:"선천/생활 대비 대사 흡수율이 낮음",desc:"소화 흡수율이 낮아 먹는 에너지 중 손실되는 비율이 큽니다.",plus:"유산균·소화효소 집중 — 위장 기능 재생과 장 환경 개선이 최우선입니다."},
+  빈그릇형: {emoji:"🏺",color:"#67e8f9",main:"소비형",codes:["131","231"],shortDesc:"선천 보통/약함 · 대사 고흡수 · 생활 정적",desc:"소화 흡수력은 높지만 에너지를 쓰는 생활 활동량이 정체되어 있습니다.",plus:"비타민 B군 집중 — 흡수된 영양이 활동 에너지로 전환되도록 대사를 돕습니다."},
+  항온형: {emoji:"🌿",color:"#4ade80",main:"균형형",codes:["222","122","221","212"],shortDesc:"세 축 모두 보통 — 가장 안정적인 균형 체질",desc:"선천·대사·생활 3축이 고르게 균형을 잡고 있습니다.",plus:"성장기 최적의 상태입니다. 규칙적인 영양 식사와 숙면만 유지해 주세요."},
+  엔진형: {emoji:"⚡",color:"#fbbf24",main:"균형형",codes:["333","332"],shortDesc:"선천 장대 · 대사 보통/우수 · 생활 활발",desc:"선천 골격이 우수하고 흡수와 생활 에너지가 모두 강력합니다.",plus:"스포츠 꿈나무 최적 체질입니다. 칼로리와 고단백 공급량이 핵심입니다."},
+  활화산형: {emoji:"🌋",color:"#fb923c",main:"균형형",codes:["233","232","223"],shortDesc:"대사 고흡수 · 생활 활발 · 선천 보통",desc:"에너지 대사와 소화 흡수력이 우수하여 활발하게 에너지를 씁니다.",plus:"고단백질 및 고칼로리 간식 배치 — 활발한 대사 소모를 적극 채워야 합니다."},
+  저장고형: {emoji:"🏦",color:"#f472b6",main:"저장형",codes:["311","321","331"],shortDesc:"선천 골격 장대 · 대사 흡수 약함",desc:"타고난 골격에 비해 소화 대사 효율이 떨어져 뼈와 근육의 성장이 정체됩니다.",plus:"식이섬유·유산균 집중 — 장내 영양 통로를 복구하고 단백질 합성을 돕습니다."},
+  둑형: {emoji:"🌊",color:"#38bdf8",main:"저장형",codes:["323","322","312"],shortDesc:"선천 골격 장대 · 대사 보통 · 생활 정적",desc:"뼈대 잠재력은 우수하나 후천적 활동량 및 수면 불균형으로 에너지가 갇혀 있습니다.",plus:"유산소 및 플라이오메트릭 운동 — 성장판 혈류를 자극하는 운동 처방이 핵심입니다."},
 };
 
 // ─── 코드 매핑 ────────────────────────────────────────────────────────────────
@@ -104,33 +108,195 @@ for(let a=1;a<=3;a++) for(let b=1;b<=3;b++) for(let c=1;c<=3;c++){
 
 // ─── 27가지 멘트 ──────────────────────────────────────────────────────────────
 const codeMents = {
-  "111":{emoji:"🫙",nick:"텅빈창고",wit:"먹어도 먹어도 어디 가는지 모름. 몸이 블랙홀",tip:"소화효소 하나로 흡수 문 열면 게임 체인저!",rx:"아침 기상 직후 10분 내로 따뜻한 꿀물 한 잔부터 먹이세요. 식어버린 속을 데워야 다음 식사가 겨우 흡수됩니다."},
-  "112":{emoji:"🍃",nick:"깃털몸매",wit:"먹는 건 취미. 살 찌는 건 남 얘기",tip:"유산균으로 장 깨우면 영양 흡수 신세계 등극!",rx:"간식 타임에 천연 유기농 무가당 땅콩버터 한 스푼을 먹이세요. 밥 양을 늘리는 것보다 칼로리 밀도를 높여야 살이 붙습니다."},
-  "121":{emoji:"😶",nick:"식욕실종",wit:"식욕도 없고 소화도 안 됨. 위장이 휴가 중",tip:"아연 하나로 식욕 스위치 켜면 별세계 진입!",rx:"2주간 모든 가공음료와 이온음료를 전면 차단하세요. 입맛을 오염시키는 액상과당을 지워야 밥을 삼킵니다."},
-  "211":{emoji:"💸",nick:"지출본능",wit:"잘 먹는 척하지만 몸은 아무것도 못 받음",tip:"따뜻한 음식 습관만으로 흡수력 최강 등극!",rx:"식탁에 백김치(낙산균)를 매일 배치하여 장내 영양소 흡수 통로를 복구하고, 식사 직후 10초 내로 땅콩버터 한 스푼을 즉시 먹이세요."},
-  "331":{emoji:"🚀",nick:"소비대왕",wit:"살? 그런 거 모름. 먹으면 바로 연기됨 🔥",tip:"고칼로리 간식 하루 3번이면 근육맨 등극!",rx:"야간 훈련 종료 후 늦은 저녁밥을 전면 금지하세요. 훈련 직후 차 안에서 10분 내로 WPI 단백질 드링크를 신속 공급해야 합니다."},
-  "231":{emoji:"💨",nick:"연기체질",wit:"잘 흡수하고 바로 태움. 몸이 24시간 난로",tip:"견과류·아보카도로 칼로리 올리면 파워업 완성!",rx:"운동 직후 차 안에서 10분 내로 WPI 단백질 드링크에 초코우유를 섞어 즉시 공급하여 근손실을 철벽 방어하세요."},
-  "321":{emoji:"🪄",nick:"천생날씬",wit:"많이 먹어도 날씬. 친구들이 제일 부러워하는 타입",tip:"근력 운동 더하면 최강 스포츠 체질 완성!",rx:"밤늦게 야식으로 장기를 혹사하지 마세요. 저녁을 일찍 마감하고 완벽한 공복 상태로 숙면을 취해야 성장 호르몬이 폭발합니다."},
-  "131":{emoji:"🌪️",nick:"영양미로",wit:"들어오기 싫다는 영양소와 매일 협상 중",tip:"유산균+소화효소 세트면 장 환경 혁명 가능!",rx:"아침 식사로 딱딱한 고형식 대신 따뜻한 죽을 차려주세요. 밑 빠진 독을 막으려면 장벽 복구용 유산균이 필수입니다."},
-  "132":{emoji:"🤢",nick:"소화파업",wit:"소화기가 파업 선언. 먹어도 흡수 거부",tip:"식전 따뜻한 물 한 컵으로 소화기 레벨업!",rx:"구워 먹는 고기를 오늘부터 중단하세요. 기름기를 빼고 결을 연하게 찢은 부드러운 수육 형태로만 단백질을 공급해야 장벽이 열립니다."},
-  "133":{emoji:"🚄",nick:"무사통과",wit:"먹는 족족 그냥 통과. 위장이 고속도로",tip:"꼭꼭 씹기만 해도 흡수율 폭발적으로 올라감!",rx:"찬 우유와 차가운 요구르트를 즉시 끊으세요. 영양이 씻겨 내려가지 않도록 식물성 김치 낙산균 유산균이 필수 처방입니다."},
-  "311":{emoji:"🕳️",nick:"새는구멍",wit:"흡수는 천재. 저장은 꽝. 에너지 행방불명",tip:"비타민 B군으로 에너지 전환 경로 열면 최강!",rx:"훈련 전후 얼음물을 압수하세요. 급격한 방전을 막기 위해 상온 스포츠 카보샷 에너지젤을 차 안에 상시 지참시켜야 합니다."},
-  "312":{emoji:"🏜️",nick:"모래성몸",wit:"잘 받아들이는데 쌓이질 않음. 모래성 체질",tip:"단백질 식사 후 스쿼트 10개면 근육 장착 시작!",rx:"체중계 숫자에 속지 마세요. 비계가 아닌 골격근량 중심의 신체 추이를 실시간으로 추적해야 정체기를 깹니다."},
-  "222":{emoji:"⚖️",nick:"완벽균형",wit:"딱 평균. 근데 그게 제일 어려운 거임 💪",tip:"종합비타민 하나로 이미 상위 1% 관리 중!",rx:"시합 당일 6시간 영양 공백 타임라인을 스포츠 카보샷 영양젤로 철벽 방어하여 근손실을 원천 차단하세요."},
-  "221":{emoji:"🎯",nick:"딱맞춤형",wit:"균형의 신. 먹는 것도 쓰는 것도 딱 맞음",tip:"오메가3 더하면 두뇌까지 완전체 등극!",rx:"성장기 최적의 경로입니다. 뼈대와 근육 경로가 정체되지 않도록 꾸준히 관리하세요."},
-  "212":{emoji:"🔄",nick:"자동조절",wit:"몸이 알아서 다 조절함. 자동관리 체질",tip:"수면만 지키면 성장호르몬이 알아서 최강 만들어줌!",rx:"훈련 30분 전 바나나와 땅콩버터 조합을 필수 루틴으로 세팅하세요. 훈련 중 급격한 칼로리 방전을 막고 탄성 토크를 배가시킵니다."},
-  "122":{emoji:"🌿",nick:"효율달인",wit:"조금 덜 받아도 잘 버팀. 효율의 달인",tip:"비타민 D 하나면 면역까지 무적 체질 완성!",rx:"훈련 직후 골든타임에 구운 가래떡을 즉시 공급하여 잉여 탄수화물 서지를 근육 세포로 먼저 밀어 넣으세요."},
-  "333":{emoji:"⚙️",nick:"인간엔진",wit:"먹고 쓰고 쌓고. 다 잘함. 그냥 인간 엔진 ⚡",tip:"충분히 먹기만 해도 이미 운동선수 체질 완성!",rx:"경기 중 머리가 띵할 정도의 얼음물 섭취를 100% 금지하세요. 오직 상온 생수나 보리차만 마시게 제어해야 합니다."},
-  "323":{emoji:"🏆",nick:"선수체질",wit:"흡수·연소·축적 풀옵션. 운동선수 기본 스펙",tip:"칼슘+비타민 D 추가하면 뼈까지 철갑 완성!",rx:"성장판 가속도가 정점인 시기입니다. 고함량 비타민D3 & 미네랄 영양제를 필수로 상시 복용시켜 뼈대 동화작용을 가속하세요."},
-  "332":{emoji:"🌡️",nick:"인간화로",wit:"에너지 넘치는데 살은 안 찜. 인간 화로 🌋",tip:"운동 후 30분 내 단백질 간식으로 근육맨 등극!",rx:"시합 당일 갈증과 속열이 폭발할 때는 얼음물 대신 상온 보리차나 결명자차를 차 안에서 수시로 마시게 하여 대사 열을 식혀주세요."},
-  "322":{emoji:"🎽",nick:"균형운동",wit:"잘 먹고 잘 태움. 체중계 숫자가 안 변함",tip:"마그네슘으로 회복 속도 올리면 슈퍼 선수 등극!",rx:"밥과 반찬의 비율을 1:1로 통제하는 식판 통제법을 가동하여 영양 불균형 진입을 예방하세요."},
-  "232":{emoji:"🔋",nick:"항상웜업",wit:"보통으로 받아서 확 태움. 몸이 항상 웜업 중",tip:"고칼로리 간식으로 연료 채우면 무한 에너지 등극!",rx:"시합 당일 긴장으로 속이 미슥거릴 때는 억지로 밥을 먹이지 말고 소화 장벽에 부담 없는 액상 WPI 단백질로 대체하세요."},
-  "113":{emoji:"🏦",nick:"절약본능",wit:"조금만 먹어도 몸이 저장함. 절약 본능 만렙 🏦",tip:"유산소+식이섬유로 대사 깨우면 체지방 관리 고수!",rx:"식사 직전 천연 식이섬유 파우더를 물에 타서 먼저 먹이세요. 인슐린 과분비를 제어하여 열량이 비계로 가기 전에 차단합니다."},
-  "213":{emoji:"🪣",nick:"알뜰체질",wit:"흡수 보통인데 저장은 프로. 알뜰 체질",tip:"잡곡밥으로만 바꿔도 대사 혁명 시작!",rx:"밤늦게 편의점 삼각김밥이나 배달 야식을 가족 전체가 끈질기게 차단해야 합니다. 야식이 아침 기상 불능과 짜증의 주범입니다."},
-  "313":{emoji:"🧊",nick:"냉동창고",wit:"잘 흡수하고 꽁꽁 쌓음. 몸이 냉동창고",tip:"줄넘기 20분이면 냉동창고에서 화덕으로 레벨업!",rx:"단기적으로 천연 아연 미네랄 영양제를 복용시키세요. 미각을 리셋해야 당분을 끊고 진짜 단백질을 갈구하는 정상 입맛이 됩니다."},
-  "233":{emoji:"📦",nick:"적재본능",wit:"먹은 게 어디 안 감. 몸이 다 기억함 🌊",tip:"유산소 주 5회면 기억력 좋은 몸도 태울 수 있음!",rx:"탄산음료와 편의점 당류 간식을 집안에서 전면 퇴출하여 기민한 신체 탄성 토크를 회복시켜야 합니다."},
-  "223":{emoji:"🛢️",nick:"저축대왕",wit:"태우기 싫어하는 몸. 에너지 저축왕",tip:"천천히 먹기+야식 금지만으로 체질 개조 가능!",rx:"운동 중 이온음료를 당장 끊으세요. 순수 미네랄 워터와 천연 아연 영양제 조합으로 전면 교체해야 대사 꼬임을 방어합니다."},
-  "123":{emoji:"🔒",nick:"철벽저장",wit:"흡수는 적은데 저장은 철저. 알뜰의 끝판왕",tip:"단백질 식단으로 체지방 대신 근육 채우면 역대급!",rx:"억지로 밥 양을 늘리면 설사만 늘어납니다. 고강도 인터벌 줄넘기와 튜빙 밴드로 기초대사량을 강제로 끌어올려야 진짜 골격근이 됩니다."},
+  "111": {
+    emoji: "🌱",
+    nick: "무한성장 기대주",
+    wit: "타고난 체형: 슬림·작은 골격 / 기질 체질: 소음인(예민 위장) (정신성향: 情과다·예민)",
+    tip: "현재 몸 상태: 마름·저장약 (대사 흡수 수준: 막힘) / 극복할 생활 습관: 정적·활동부족",
+    rx: "추천 영양 식단: 소화쉬운 고영양밀도 (6끼 분할·소량자주) / 추천 맞춤 간식: 바나나·미숫가루"
+  },
+  "112": {
+    emoji: "🌱",
+    nick: "우리동네 골목대장",
+    wit: "타고난 체형: 슬림·작은 골격 / 기질 체질: 소음인(예민 위장) (정신성향: 情과다·예민)",
+    tip: "현재 몸 상태: 마름·저장약 (대사 흡수 수준: 막힘) / 극복할 생활 습관: 보통 활동",
+    rx: "추천 영양 식단: 소화쉬운 고영양밀도 (6끼 분할·소량자주) / 추천 맞춤 간식: 바나나·미숫가루"
+  },
+  "113": {
+    emoji: "🌱",
+    nick: "상큼발랄 팅커벨",
+    wit: "타고난 체형: 슬림·작은 골격 / 기질 체질: 소음인(예민 위장) (정신성향: 情과다·예민)",
+    tip: "현재 몸 상태: 마름·저장약 (대사 흡수 수준: 막힘) / 극복할 생활 습관: 활발·고활동",
+    rx: "추천 영양 식단: 소화쉬운 고영양밀도 (6끼 분할·소량자주) / 추천 맞춤 간식: 바나나·미숫가루"
+  },
+  "121": {
+    emoji: "🏃",
+    nick: "출동준비 비행기",
+    wit: "타고난 체형: 슬림·작은 골격 / 기질 체질: 소음인(예민 위장) (정신성향: 情과다·예민)",
+    tip: "현재 몸 상태: 보통 (대사 흡수 수준: 보통) / 극복할 생활 습관: 정적·활동부족",
+    rx: "추천 영양 식단: 균형식 (4~5끼) / 추천 맞춤 간식: 견과·유제품"
+  },
+  "122": {
+    emoji: "🏃",
+    nick: "작은고추 매운맛",
+    wit: "타고난 체형: 슬림·작은 골격 / 기질 체질: 소음인(예민 위장) (정신성향: 情과다·예민)",
+    tip: "현재 몸 상태: 보통 (대사 흡수 수준: 보통) / 극복할 생활 습관: 보통 활동",
+    rx: "추천 영양 식단: 균형식 (4~5끼) / 추천 맞춤 간식: 견과·유제품"
+  },
+  "123": {
+    emoji: "🏃",
+    nick: "의지만렙 작은거인",
+    wit: "타고난 체형: 슬림·작은 골격 / 기질 체질: 소음인(예민 위장) (정신성향: 情과다·예민)",
+    tip: "현재 몸 상태: 보통 (대사 흡수 수준: 보통) / 극복할 생활 습관: 활발·고활동",
+    rx: "추천 영양 식단: 균형식 (4~5끼) / 추천 맞춤 간식: 견과·유제품"
+  },
+  "131": {
+    emoji: "🚲",
+    nick: "엔진빵빵 클래식카",
+    wit: "타고난 체형: 슬림·작은 골격 / 기질 체질: 소음인(예민 위장) (정신성향: 情과다·예민)",
+    tip: "현재 몸 상태: 잘 찜·근육잘붙음 (대사 흡수 수준: 고흡수) / 극복할 생활 습관: 정적·활동부족",
+    rx: "추천 영양 식단: 일반식+양 충분 (3끼 충분) / 추천 맞춤 간식: 자유"
+  },
+  "132": {
+    emoji: "🚲",
+    nick: "알짜배기 깡다구",
+    wit: "타고난 체형: 슬림·작은 골격 / 기질 체질: 소음인(예민 위장) (정신성향: 情과다·예민)",
+    tip: "현재 몸 상태: 잘 찜·근육잘붙음 (대사 흡수 수준: 고흡수) / 극복할 생활 습관: 보통 활동",
+    rx: "추천 영양 식단: 일반식+양 충분 (3끼 충분) / 추천 맞춤 간식: 자유"
+  },
+  "133": {
+    emoji: "🚲",
+    nick: "대기만성 반전매력",
+    wit: "타고난 체형: 슬림·작은 골격 / 기질 체질: 소음인(예민 위장) (정신성향: 情과다·예민)",
+    tip: "현재 몸 상태: 잘 찜·근육잘붙음 (대사 흡수 수준: 고흡수) / 극복할 생활 습관: 활발·고활동",
+    rx: "추천 영양 식단: 일반식+양 충분 (3끼 충분) / 추천 맞춤 간식: 자유"
+  },
+  "211": {
+    emoji: "💪",
+    nick: "비상임박 유망주",
+    wit: "타고난 체형: 중간 프레임 / 기질 체질: 소양인(과연소) (정신성향: 心 주재·보통)",
+    tip: "현재 몸 상태: 마름·저장약 (대사 흡수 수준: 막힘) / 극복할 생활 습관: 정적·활동부족",
+    rx: "추천 영양 식단: 소화쉬운 고영양밀도 (6끼 분할·소량자주) / 추천 맞춤 간식: 바나나·미숫가루"
+  },
+  "212": {
+    emoji: "💪",
+    nick: "내일향한 숨고르기",
+    wit: "타고난 체형: 중간 프레임 / 기질 체질: 소양인(과연소) (정신성향: 心 주재·보통)",
+    tip: "현재 몸 상태: 마름·저장약 (대사 흡수 수준: 막힘) / 극복할 생활 습관: 보통 활동",
+    rx: "추천 영양 식단: 소화쉬운 고영양밀도 (6끼 분할·소량자주) / 추천 맞춤 간식: 바나나·미숫가루"
+  },
+  "213": {
+    emoji: "💪",
+    nick: "안절부절 바른생활",
+    wit: "타고난 체형: 중간 프레임 / 기질 체질: 소양인(과연소) (정신성향: 心 주재·보통)",
+    tip: "현재 몸 상태: 마름·저장약 (대사 흡수 수준: 막힘) / 극복할 생활 습관: 활발·고활동",
+    rx: "추천 영양 식단: 소화쉬운 고영양밀도 (6끼 분할·소량자주) / 추천 맞춤 간식: 바나나·미숫가루"
+  },
+  "221": {
+    emoji: "⚖️",
+    nick: "여유만만 도련님",
+    wit: "타고난 체형: 중간 프레임 / 기질 체질: 소양인(과연소) (정신성향: 心 주재·보통)",
+    tip: "현재 몸 상태: 보통 (대사 흡수 수준: 보통) / 극복할 생활 습관: 정적·활동부족",
+    rx: "추천 영양 식단: 균형식 (4~5끼) / 추천 맞춤 간식: 견과·유제품"
+  },
+  "222": {
+    emoji: "⚖️",
+    nick: "이세계의 무게중심",
+    wit: "타고난 체형: 중간 프레임 / 기질 체질: 소양인(과연소) (정신성향: 心 주재·보통)",
+    tip: "현재 몸 상태: 보통 (대사 흡수 수준: 보통) / 극복할 생활 습관: 보통 활동",
+    rx: "추천 영양 식단: 균형식 (4~5끼) / 추천 맞춤 간식: 견과·유제품"
+  },
+  "223": {
+    emoji: "⚖️",
+    nick: "바른생활 부반장",
+    wit: "타고난 체형: 중간 프레임 / 기질 체질: 소양인(과연소) (정신성향: 心 주재·보통)",
+    tip: "현재 몸 상태: 보통 (대사 흡수 수준: 보통) / 극복할 생활 습관: 활발·고활동",
+    rx: "추천 영양 식단: 균형식 (4~5끼) / 추천 맞춤 간식: 견과·유제품"
+  },
+  "231": {
+    emoji: "⚡",
+    nick: "폭풍흡수 먹방러",
+    wit: "타고난 체형: 중간 프레임 / 기질 체질: 소양인(과연소) (정신성향: 心 주재·보통)",
+    tip: "현재 몸 상태: 잘 찜·근육잘붙음 (대사 흡수 수준: 고흡수) / 극복할 생활 습관: 정적·활동부족",
+    rx: "추천 영양 식단: 일반식+양 충분 (3끼 충분) / 추천 맞춤 간식: 자유"
+  },
+  "232": {
+    emoji: "⚡",
+    nick: "뷔페 환영 보일러",
+    wit: "타고난 체형: 중간 프레임 / 기질 체질: 소양인(과연소) (정신성향: 心 주재·보통)",
+    tip: "현재 몸 상태: 잘 찜·근육잘붙음 (대사 흡수 수준: 고흡수) / 극복할 생활 습관: 보통 활동",
+    rx: "추천 영양 식단: 일반식+양 충분 (3끼 충분) / 추천 맞춤 간식: 자유"
+  },
+  "233": {
+    emoji: "⚡",
+    nick: "노력형 디젤엔진",
+    wit: "타고난 체형: 중간 프레임 / 기질 체질: 소양인(과연소) (정신성향: 心 주재·보통)",
+    tip: "현재 몸 상태: 잘 찜·근육잘붙음 (대사 흡수 수준: 고흡수) / 극복할 생활 습관: 활발·고활동",
+    rx: "추천 영양 식단: 일반식+양 충분 (3끼 충분) / 추천 맞춤 간식: 자유"
+  },
+  "311": {
+    emoji: "🏔️",
+    nick: "파업선언 장군님",
+    wit: "타고난 체형: 장대한 골격 / 기질 체질: 태음인(고흡수) (정신성향: 性 본연·강철멘탈)",
+    tip: "현재 몸 상태: 마름·저장약 (대사 흡수 수준: 막힘) / 극복할 생활 습관: 정적·활동부족",
+    rx: "추천 영양 식단: 소화쉬운 고영양밀도 (6끼 분할·소량자주) / 추천 맞춤 간식: 바나나·미숫가루"
+  },
+  "312": {
+    emoji: "🏔️",
+    nick: "멘탈소심 거인",
+    wit: "타고난 체형: 장대한 골격 / 기질 체질: 태음인(고흡수) (정신성향: 性 본연·강철멘탈)",
+    tip: "현재 몸 상태: 마름·저장약 (대사 흡수 수준: 막힘) / 극복할 생활 습관: 보통 활동",
+    rx: "추천 영양 식단: 소화쉬운 고영양밀도 (6끼 분할·소량자주) / 추천 맞춤 간식: 바나나·미숫가루"
+  },
+  "313": {
+    emoji: "🏔️",
+    nick: "예민보스 모범생",
+    wit: "타고난 체형: 장대한 골격 / 기질 체질: 태음인(고흡수) (정신성향: 性 본연·강철멘탈)",
+    tip: "현재 몸 상태: 마름·저장약 (대사 흡수 수준: 막힘) / 극복할 생활 습관: 활발·고활동",
+    rx: "추천 영양 식단: 소화쉬운 고영양밀도 (6끼 분할·소량자주) / 추천 맞춤 간식: 바나나·미숫가루"
+  },
+  "321": {
+    emoji: "🏆",
+    nick: "이중생활 천재선수",
+    wit: "타고난 체형: 장대한 골격 / 기질 체질: 태음인(고흡수) (정신성향: 性 본연·강철멘탈)",
+    tip: "현재 몸 상태: 보통 (대사 흡수 수준: 보통) / 극복할 생활 습관: 정적·활동부족",
+    rx: "추천 영양 식단: 균형식 (4~5끼) / 추천 맞춤 간식: 견과·유제품"
+  },
+  "322": {
+    emoji: "🏆",
+    nick: "성장계의 엄친아",
+    wit: "타고난 체형: 장대한 골격 / 기질 체질: 태음인(고흡수) (정신성향: 性 본연·강철멘탈)",
+    tip: "현재 몸 상태: 보통 (대사 흡수 수준: 보통) / 극복할 생활 습관: 보통 활동",
+    rx: "추천 영양 식단: 균형식 (4~5끼) / 추천 맞춤 간식: 견과·유제품"
+  },
+  "323": {
+    emoji: "🏆",
+    nick: "직진형 에너자이저",
+    wit: "타고난 체형: 장대한 골격 / 기질 체질: 태음인(고흡수) (정신성향: 性 본연·강철멘탈)",
+    tip: "현재 몸 상태: 보통 (대사 흡수 수준: 보통) / 극복할 생활 습관: 활발·고활동",
+    rx: "추천 영양 식단: 균형식 (4~5끼) / 추천 맞춤 간식: 견과·유제품"
+  },
+  "331": {
+    emoji: "🔥",
+    nick: "불타오른 야생마",
+    wit: "타고난 체형: 장대한 골격 / 기질 체질: 태음인(고흡수) (정신성향: 性 본연·강철멘탈)",
+    tip: "현재 몸 상태: 잘 찜·근육잘붙음 (대사 흡수 수준: 고흡수) / 극복할 생활 습관: 정적·활동부족",
+    rx: "추천 영양 식단: 일반식+양 충분 (3끼 충분) / 추천 맞춤 간식: 자유"
+  },
+  "332": {
+    emoji: "🔥",
+    nick: "성장가능 가치주",
+    wit: "타고난 체형: 장대한 골격 / 기질 체질: 태음인(고흡수) (정신성향: 性 본연·강철멘탈)",
+    tip: "현재 몸 상태: 잘 찜·근육잘붙음 (대사 흡수 수준: 고흡수) / 극복할 생활 습관: 보통 활동",
+    rx: "추천 영양 식단: 일반식+양 충분 (3끼 충분) / 추천 맞춤 간식: 자유"
+  },
+  "333": {
+    emoji: "🔥",
+    nick: "성장판 프리패스상",
+    wit: "타고난 체형: 장대한 골격 / 기질 체질: 태음인(고흡수) (정신성향: 性 본연·강철멘탈)",
+    tip: "현재 몸 상태: 잘 찜·근육잘붙음 (대사 흡수 수준: 고흡수) / 극복할 생활 습관: 활발·고활동",
+    rx: "추천 영양 식단: 일반식+양 충분 (3끼 충분) / 추천 맞춤 간식: 자유"
+  },
 };
 
 // ─── 성장 기준치 ──────────────────────────────────────────────────────────────
@@ -268,7 +434,7 @@ function analyze(pAns,kAns) {
   const aScore=toScore(a);
   const bScore=toScore(b);
   const cScore=toScore(c);
-  const code=`${aScore}${bScore}${cScore}`;
+  const code=`${cScore}${aScore}${bScore}`;
   const sub=codeMap[code]||"항온형";
   const main=(subType[sub]&&subType[sub].main)||"균형형";
   return {code,main,sub,scores:{absorb:aScore,burn:bScore,store:cScore}};
@@ -315,6 +481,117 @@ export default function App() {
   const [copied,setCopied]=useState(false);
   const [downloading,setDownloading]=useState(false);
   const [shopTab,setShopTab]=useState(null);
+
+  // ── 결제 및 유료 신청 관련 State ──
+  const [gender, setGender] = useState("남");
+  const [grade, setGrade] = useState("초등 4~6학년");
+  const [sports, setSports] = useState("");
+  const [position, setPosition] = useState("");
+  const [phone, setPhone] = useState(""); // 이메일 수신 주소
+  const [fatherHeight, setFatherHeight] = useState(173);
+  const [motherHeight, setMotherHeight] = useState(160);
+  const [bodyFat, setBodyFat] = useState("");
+  const [skeletalMuscle, setSkeletalMuscle] = useState("");
+  const [wingspan, setWingspan] = useState("");
+  
+  const [paymentMethod, setPaymentMethod] = useState("toss"); // toss or paypal
+  const [paymentStatus, setPaymentStatus] = useState(null); // null, 'processing', 'success', 'error'
+  const [paymentError, setPaymentError] = useState("");
+  const [orderId, setOrderId] = useState(() => generateOrderId());
+
+  // 토스페이먼츠 결제 요청 전 백엔드 임시 저장
+  async function prepareTossPayment(genOrderId) {
+    const surveyResponses = parentQuestions.map(q => {
+      const idx = pAns[q.id] !== undefined ? pAns[q.id] : 1;
+      const score = q.dir === -1 ? (3 - idx) : idx;
+      return Math.round(1 + (score * 4 / 3));
+    });
+
+    const payload = {
+      orderId: genOrderId,
+      request: {
+        name: childName,
+        gender: gender,
+        birth_date: birth,
+        grade: grade,
+        sports: sports,
+        position: position || "",
+        phone: phone,
+        father_height: parseFloat(fatherHeight) || 173.0,
+        mother_height: parseFloat(motherHeight) || 160.0,
+        current_height: parseFloat(heightVal) || 160.0,
+        current_weight: parseFloat(weightVal) || 50.0,
+        body_fat: bodyFat ? parseFloat(bodyFat) : null,
+        skeletal_muscle: skeletalMuscle ? parseFloat(skeletalMuscle) : null,
+        wingspan: wingspan ? parseFloat(wingspan) : null,
+        survey_responses: surveyResponses,
+        is_free: false
+      }
+    };
+
+    try {
+      const res = await fetch("/api/payment/toss/prepare", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!data.success) {
+        throw new Error(data.detail || "결제 준비 실패");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("결제 준비 중 오류가 발생했습니다: " + e.message);
+      throw e;
+    }
+  }
+
+  // 페이팔 결제 성공 콜백
+  async function handlePayPalSuccess(details) {
+    setPaymentStatus("processing");
+    const surveyResponses = parentQuestions.map(q => {
+      const idx = pAns[q.id] !== undefined ? pAns[q.id] : 1;
+      const score = q.dir === -1 ? (3 - idx) : idx;
+      return Math.round(1 + (score * 4 / 3));
+    });
+
+    const payload = {
+      name: childName,
+      gender: gender,
+      birth_date: birth,
+      grade: grade,
+      sports: sports,
+      position: position || "",
+      phone: phone,
+      father_height: parseFloat(fatherHeight) || 173.0,
+      mother_height: parseFloat(motherHeight) || 160.0,
+      current_height: parseFloat(heightVal) || 160.0,
+      current_weight: parseFloat(weightVal) || 50.0,
+      body_fat: bodyFat ? parseFloat(bodyFat) : null,
+      skeletal_muscle: skeletalMuscle ? parseFloat(skeletalMuscle) : null,
+      wingspan: wingspan ? parseFloat(wingspan) : null,
+      survey_responses: surveyResponses,
+      is_free: false
+    };
+
+    try {
+      const res = await fetch("/api/online/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (res.status === 200) {
+        setPaymentStatus("success");
+      } else {
+        throw new Error(data.detail || "신청서 등록 실패");
+      }
+    } catch (e) {
+      console.error(e);
+      setPaymentStatus("error");
+      setPaymentError(e.message);
+    }
+  }
 
   // 입력값 변경시 자동 저장
   const updateName=v=>{setChildName(v);try{localStorage.setItem("pu333_name",v);}catch{}};
@@ -386,11 +663,11 @@ export default function App() {
         window.Kakao.Share.sendDefault({
           objectType:"feed",
           content:{
-            title:`${ment.emoji} ${result.code} ${mi.emoji}${result.main} · ${ment.nick} | Physical UP 333 333TEST`,
-            description:`"${shortWit}" 💡${shortTip}`,
-            imageUrl:"https://pu333.kr/og.png",
-            imageWidth:1200,
-            imageHeight:630,
+            title:`[피지컬업 333] ${childName || '우리 아이'} 선수의 BioCode 결과는 [${result.code}]`,
+            description:`체질 유형: ${ment.nick}\n"타고난 잠재력을 깨우는 1년 성장 솔루션!"`,
+            imageUrl:"https://physicalup333.vercel.app/static/human_diesel_engine_hero_1782604389084.png",
+            imageWidth:800,
+            imageHeight:400,
             link:{
               mobileWebUrl:"https://www.physicalup333.com",
               webUrl:"https://www.physicalup333.com"
@@ -550,19 +827,19 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
   </div>
   <div class="axes">
     <div class="ax" style="background:rgba(79,207,160,0.12)">
-      <div class="ax-l" style="color:#4fcfa0">흡수력</div>
-      <div class="ax-d" style="color:#4fcfa0">${bar(result.scores.absorb)}</div>
-      <div class="ax-n" style="color:#4fcfa0">${result.scores.absorb}/3</div>
+      <div class="ax-l" style="color:#4fcfa0">선천 (유전)</div>
+      <div class="ax-d" style="color:#4fcfa0">${bar(result.scores.store)}</div>
+      <div class="ax-n" style="color:#4fcfa0">${result.scores.store}/3</div>
     </div>
     <div class="ax" style="background:rgba(247,149,79,0.12)">
-      <div class="ax-l" style="color:#f7954f">연소력</div>
-      <div class="ax-d" style="color:#f7954f">${bar(result.scores.burn)}</div>
-      <div class="ax-n" style="color:#f7954f">${result.scores.burn}/3</div>
+      <div class="ax-l" style="color:#f7954f">대사 (흡수)</div>
+      <div class="ax-d" style="color:#f7954f">${bar(result.scores.absorb)}</div>
+      <div class="ax-n" style="color:#f7954f">${result.scores.absorb}/3</div>
     </div>
     <div class="ax" style="background:rgba(247,111,142,0.12)">
-      <div class="ax-l" style="color:#f76f8e">축적력</div>
-      <div class="ax-d" style="color:#f76f8e">${bar(result.scores.store)}</div>
-      <div class="ax-n" style="color:#f76f8e">${result.scores.store}/3</div>
+      <div class="ax-l" style="color:#f76f8e">생활 (환경)</div>
+      <div class="ax-d" style="color:#f76f8e">${bar(result.scores.burn)}</div>
+      <div class="ax-n" style="color:#f76f8e">${result.scores.burn}/3</div>
     </div>
   </div>
   <div class="footer-row">
@@ -724,7 +1001,7 @@ function saveHtml(){
           </div>
         </div>
         <h1 style={{color:WHITE,fontSize:21,fontWeight:800,lineHeight:1.5,marginBottom:8}}>우리 아이 BIO CODE 찾기</h1>
-        <p style={{color:MUTED,fontSize:13,lineHeight:2,marginBottom:20}}>흡수력 · 연소력 · 축적력<br/>3축 점수로 BIO CODE를 측정합니다</p>
+        <p style={{color:MUTED,fontSize:13,lineHeight:2,marginBottom:20}}>선천(유전) · 대사(흡수) · 생활(환경)<br/>3축 점수로 BIO CODE를 측정합니다</p>
 
         {/* 신체 정보 입력 */}
         <div style={{background:"rgba(201,168,76,0.05)",borderRadius:14,padding:"14px",marginBottom:16,border:"1px solid rgba(201,168,76,0.15)"}}>
@@ -813,7 +1090,7 @@ function saveHtml(){
     const si=subType[result.sub]||subType["항온형"];
     const ment=codeMents[result.code]||{emoji:"⚖️",nick:"균형형",wit:"나만의 특별한 체질 코드",tip:"피지컬업333 Test로 맞춤 관리 시작!",rx:"체질 코드에 맞는 맞춤 관리를 시작하세요."};
     const bar=n=>"●".repeat(n)+"○".repeat(3-n);
-    const axes=[{label:"흡수력",val:result.scores.absorb,color:"#4fcfa0"},{label:"연소력",val:result.scores.burn,color:"#f7954f"},{label:"축적력",val:result.scores.store,color:"#f76f8e"}];
+    const axes=[{label:"선천 (유전)",val:result.scores.store,color:"#4fcfa0"},{label:"대사 (흡수)",val:result.scores.absorb,color:"#f7954f"},{label:"생활 (환경)",val:result.scores.burn,color:"#f76f8e"}];
     // NavBar는 결과 화면 최상단에
     const maxDist=Math.max(...Object.values(distData));
 
@@ -1162,19 +1439,177 @@ function saveHtml(){
             );
           })()}
 
-          {/* 유료 서비스 전환 준비 중 */}
+          {/* 1:1 프리미엄 성장 분석 보고서 신청 폼 */}
           <div style={{
-            padding:"16px",borderRadius:12,marginBottom:10,
-            background:"linear-gradient(135deg,rgba(201,168,76,0.06),rgba(13,27,62,0.5))",
-            border:"1px solid rgba(201,168,76,0.25)",
-            position:"relative",overflow:"hidden"
+            padding:"20px 16px",borderRadius:16,marginBottom:15,
+            background:"linear-gradient(135deg,rgba(13,27,62,0.85),rgba(4,7,17,0.95))",
+            border:"1px solid rgba(201,168,76,0.35)",
+            position:"relative",overflow:"hidden",
+            boxShadow:"0 10px 30px rgba(0,0,0,0.3)"
           }}>
-            <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${GOLD},${GOLD2},${GOLD})`}}/>
-            <div style={{color:GOLD2,fontSize:13,fontWeight:800,marginBottom:6}}>🏅 프리미엄 서비스 출시 예정</div>
-            <div style={{color:MUTED,fontSize:11,lineHeight:1.8}}>
-              <span style={{color:GOLD}}>인바디 분석 + 종목별 훈련 스케줄 + BIO CODE 맞춤 식단·영양</span>까지<br/>
-              더 정밀하게 관리해 드리는 1:1 프리미엄이 곧 출시됩니다.
-            </div>
+            <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:`linear-gradient(90deg,${GOLD},${GOLD2},${GOLD})`}}/>
+            
+            {paymentStatus === "success" ? (
+              <div style={{textAlign:"center",padding:"20px 10px"}}>
+                <div style={{fontSize:40,marginBottom:12}}>🏆</div>
+                <div style={{color:GOLD2,fontSize:18,fontWeight:900,marginBottom:10}}>분석 신청 완료!</div>
+                <div style={{color:WHITE,fontSize:13,lineHeight:1.7}}>
+                  결제가 정상 완료되었습니다.<br/>
+                  24시간 이내에 입력하신 이메일과 카카오 알림톡으로 정밀 분석 보고서가 전송됩니다.
+                </div>
+              </div>
+            ) : paymentStatus === "processing" ? (
+              <div style={{textAlign:"center",padding:"40px 10px"}}>
+                <div style={{color:GOLD2,fontSize:15,fontWeight:800,marginBottom:10}}>결제 승인 및 처리 중...</div>
+                <div style={{color:MUTED,fontSize:12}}>잠시만 기다려 주세요.</div>
+              </div>
+            ) : (
+              <>
+                <div style={{color:GOLD2,fontSize:15,fontWeight:900,marginBottom:6,display:"flex",alignItems:"center",gap:6}}>
+                  <span>🏆 1:1 프리미엄 분석 보고서 신청</span>
+                </div>
+                <div style={{color:MUTED,fontSize:11,lineHeight:1.6,marginBottom:18}}>
+                  인바디 분석, 윙스팬 측정치, 부모 유전 키를 적용하여 8페이지 분량의 정식 성장 솔루션 PDF 보고서를 카카오톡과 이메일로 자동 발송해 드립니다.
+                </div>
+
+                {/* 입력 폼 필드들 */}
+                <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:18}}>
+                  {/* 성별 선택 */}
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <span style={{color:WHITE,fontSize:12,fontWeight:700}}>성별</span>
+                    <div style={{display:"flex",gap:4}}>
+                      {["남", "여"].map(g => (
+                        <button key={g} onClick={() => setGender(g)} style={{
+                          padding:"6px 16px",borderRadius:8,fontSize:12,fontWeight:700,cursor:"pointer",
+                          background:gender===g ? GOLD : "rgba(255,255,255,0.03)",
+                          color:gender===g ? NAVY : WHITE,
+                          border:gender===g ? `1px solid ${GOLD}` : "1px solid rgba(255,255,255,0.1)"
+                        }}>{g}</button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 학년 선택 */}
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <span style={{color:WHITE,fontSize:12,fontWeight:700}}>학년</span>
+                    <select value={grade} onChange={e => setGrade(e.target.value)} style={{
+                      padding:"6px 10px",borderRadius:8,background:"#040711",color:GOLD2,border:"1px solid rgba(255,255,255,0.15)",outline:"none",fontSize:12,fontWeight:700
+                    }}>
+                      {["미취학", "초등 1~3학년", "초등 4~6학년", "중학교 1~3학년", "고등학교 1~3학년"].map(op => (
+                        <option key={op} value={op}>{op}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* 운동 종목 및 포지션 */}
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                    <div>
+                      <div style={{color:MUTED,fontSize:10,marginBottom:4}}>운동 종목</div>
+                      <input type="text" value={sports} onChange={e => setSports(e.target.value)} placeholder="예: 축구, 수영" style={{
+                        width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
+                      }}/>
+                    </div>
+                    <div>
+                      <div style={{color:MUTED,fontSize:10,marginBottom:4}}>포지션 (선택)</div>
+                      <input type="text" value={position} onChange={e => setPosition(e.target.value)} placeholder="예: 공격수, 피처" style={{
+                        width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
+                      }}/>
+                    </div>
+                  </div>
+
+                  {/* 이메일 주소 (필수) */}
+                  <div>
+                    <div style={{color:MUTED,fontSize:10,marginBottom:4}}>보고서 수신 이메일 주소 (필수)</div>
+                    <input type="email" value={phone} onChange={e => setPhone(e.target.value)} placeholder="example@gmail.com" style={{
+                      width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
+                    }}/>
+                  </div>
+
+                  {/* 부모 키 */}
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                    <div>
+                      <div style={{color:MUTED,fontSize:10,marginBottom:4}}>아버지 키 (cm)</div>
+                      <input type="number" value={fatherHeight} onChange={e => setFatherHeight(e.target.value)} style={{
+                        width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
+                      }}/>
+                    </div>
+                    <div>
+                      <div style={{color:MUTED,fontSize:10,marginBottom:4}}>어머니 키 (cm)</div>
+                      <input type="number" value={motherHeight} onChange={e => setMotherHeight(e.target.value)} style={{
+                        width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
+                      }}/>
+                    </div>
+                  </div>
+
+                  {/* 인바디 선택 입력 */}
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6}}>
+                    <div>
+                      <div style={{color:MUTED,fontSize:9,marginBottom:4}}>골격근량 (kg)</div>
+                      <input type="number" value={skeletalMuscle} onChange={e => setSkeletalMuscle(e.target.value)} placeholder="선택" style={{
+                        width:"100%",padding:"8px 8px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:11,fontWeight:700,outline:"none",boxSizing:"border-box"
+                      }}/>
+                    </div>
+                    <div>
+                      <div style={{color:MUTED,fontSize:9,marginBottom:4}}>체지방률 (%)</div>
+                      <input type="number" value={bodyFat} onChange={e => setBodyFat(e.target.value)} placeholder="선택" style={{
+                        width:"100%",padding:"8px 8px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:11,fontWeight:700,outline:"none",boxSizing:"border-box"
+                      }}/>
+                    </div>
+                    <div>
+                      <div style={{color:MUTED,fontSize:9,marginBottom:4}}>윙스팬 (cm)</div>
+                      <input type="number" value={wingspan} onChange={e => setWingspan(e.target.value)} placeholder="선택" style={{
+                        width:"100%",padding:"8px 8px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:11,fontWeight:700,outline:"none",boxSizing:"border-box"
+                      }}/>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 결제 수단 선택 */}
+                <div style={{display:"flex",gap:8,marginBottom:15}}>
+                  <button onClick={() => setPaymentMethod("toss")} style={{
+                    flex:1,padding:"10px",borderRadius:10,fontSize:12,fontWeight:700,cursor:"pointer",
+                    background:paymentMethod==="toss" ? "rgba(201,168,76,0.15)" : "rgba(255,255,255,0.02)",
+                    color:paymentMethod==="toss" ? GOLD2 : MUTED,
+                    border:paymentMethod==="toss" ? `1px solid ${GOLD}` : "1px solid rgba(255,255,255,0.08)"
+                  }}>🇰🇷 토스페이먼츠</button>
+                  <button onClick={() => setPaymentMethod("paypal")} style={{
+                    flex:1,padding:"10px",borderRadius:10,fontSize:12,fontWeight:700,cursor:"pointer",
+                    background:paymentMethod==="paypal" ? "rgba(201,168,76,0.15)" : "rgba(255,255,255,0.02)",
+                    color:paymentMethod==="paypal" ? GOLD2 : MUTED,
+                    border:paymentMethod==="paypal" ? `1px solid ${GOLD}` : "1px solid rgba(255,255,255,0.08)"
+                  }}>🌐 PayPal (해외)</button>
+                </div>
+
+                {/* 에러 발생 시 노출 */}
+                {paymentError && (
+                  <div style={{color:"#f76f8e",fontSize:11,marginBottom:10,textAlign:"center"}}>{paymentError}</div>
+                )}
+
+                {/* 결제 실행 버튼 */}
+                {!childName || !phone || !sports ? (
+                  <div style={{
+                    padding:"14px",borderRadius:12,background:"#334155",color:"#94a3b8",fontSize:13,fontWeight:700,textAlign:"center"
+                  }}>⚠️ 이름, 이메일, 종목을 모두 입력해 주세요.</div>
+                ) : paymentMethod === "toss" ? (
+                  <TossCheckoutButton
+                    product={TOSS_PRODUCTS[0]}
+                    customerEmail={phone}
+                    customerName={childName}
+                    method="카드"
+                    onPrepare={prepareTossPayment}
+                    onError={(err) => setPaymentError(err?.message || "토스 결제 실패")}
+                    className="cta-pay-btn"
+                  />
+                ) : (
+                  <PayPalCheckoutButton
+                    product={PAYPAL_PRODUCTS[0]}
+                    onSuccess={handlePayPalSuccess}
+                    onError={(err) => setPaymentError(err || "PayPal 결제 실패")}
+                    onCancel={() => console.log('PayPal cancel')}
+                  />
+                )}
+              </>
+            )}
           </div>
 
           <button onClick={reset} style={{width:"100%",padding:"14px",borderRadius:12,background:"rgba(201,168,76,0.06)",color:MUTED,fontSize:14,border:"1px solid rgba(201,168,76,0.2)",cursor:"pointer",marginBottom:4}}>🔄 처음부터 다시하기</button>
