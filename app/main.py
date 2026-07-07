@@ -410,43 +410,53 @@ def online_apply(request: AnalysisRequest):
             
         assigned_date = found_date
 
-        # 4. 중복 신청 제한 검증 (이름 + 생년월일 + 연락처 기준 30일 제한)
-        if check_duplicate_application(request.name, request.birth_date, request.phone):
-            raise HTTPException(
-                status_code=400, 
-                detail="학생 1인당 월 1회 신청으로 제한됩니다. 최근 30일 이내에 이미 예약 또는 검사 완료된 이력이 있습니다."
-            )
+        if request.is_free:
+            status = "Free"
+            scheduled_at = 0
+            assigned_date = datetime.now().strftime("%Y-%m-%d")
+        else:
+            # 4. 중복 신청 제한 검증 (이름 + 생년월일 + 연락처 기준 30일 제한)
+            if check_duplicate_application(request.name, request.birth_date, request.phone):
+                raise HTTPException(
+                    status_code=400, 
+                    detail="학생 1인당 월 1회 신청으로 제한됩니다. 최근 30일 이내에 이미 예약 또는 검사 완료된 이력이 있습니다."
+                )
+                
+            status = "Scheduled"
             
-        status = "Scheduled"
-        
-        # 5. 발송 예정 타임스탬프 (scheduled_at) 연산
-        if send_time_type == "next_day_10":
-            # 배정일 다음 날 오전 10:00
-            assigned_dt = datetime.strptime(assigned_date, "%Y-%m-%d")
-            next_day_dt = assigned_dt + timedelta(days=1)
-            dt = datetime.strptime(f"{next_day_dt.strftime('%Y-%m-%d')} 10:00:00", "%Y-%m-%d %H:%M:%S")
-            scheduled_at = dt.timestamp() * 1000
-        elif send_time_type == "custom_time":
-            # 배정일 지정 시간
-            dt = datetime.strptime(f"{assigned_date} {custom_send_time}:00", "%Y-%m-%d %H:%M:%S")
-            scheduled_at = dt.timestamp() * 1000
-        else: # "instant"
-            # 즉시 발송 대기열 전송 (1분 후 발송 처리)
-            scheduled_at = (time.time() * 1000) + 60 * 1000
+            # 5. 발송 예정 타임스탬프 (scheduled_at) 연산
+            if send_time_type == "next_day_10":
+                # 배정일 다음 날 오전 10:00
+                assigned_dt = datetime.strptime(assigned_date, "%Y-%m-%d")
+                next_day_dt = assigned_dt + timedelta(days=1)
+                dt = datetime.strptime(f"{next_day_dt.strftime('%Y-%m-%d')} 10:00:00", "%Y-%m-%d %H:%M:%S")
+                scheduled_at = dt.timestamp() * 1000
+            elif send_time_type == "custom_time":
+                # 배정일 지정 시간
+                dt = datetime.strptime(f"{assigned_date} {custom_send_time}:00", "%Y-%m-%d %H:%M:%S")
+                scheduled_at = dt.timestamp() * 1000
+            else: # "instant"
+                # 즉시 발송 대기열 전송 (1분 후 발송 처리)
+                scheduled_at = (time.time() * 1000) + 60 * 1000
 
         # Calculate BioCode only if completed, otherwise skip AI comment draft
         ai_comment = ""
+        biocode = ""
+        constitution = ""
         if is_completed:
             try:
                 result = calculate_biocode(request.dict())
-                ai_comment = generate_ai_comment(
-                    student_name=request.name,
-                    biocode=result["biocode"],
-                    constitution=result["constitution"],
-                    height_gap=result["height_gap"],
-                    lag_cause=result["lag_cause"],
-                    sports=request.sports
-                )
+                biocode = result.get("biocode", "")
+                constitution = result.get("constitution", "")
+                if not request.is_free:
+                    ai_comment = generate_ai_comment(
+                        student_name=request.name,
+                        biocode=biocode,
+                        constitution=constitution,
+                        height_gap=result["height_gap"],
+                        lag_cause=result["lag_cause"],
+                        sports=request.sports
+                    )
             except:
                 pass
 
@@ -457,6 +467,8 @@ def online_apply(request: AnalysisRequest):
             "is_completed": is_completed,
             "timestamp": time.time() * 1000,
             "ai_comment": ai_comment,
+            "biocode": biocode,
+            "constitution": constitution,
             **request.dict()
         }
         req_data["scheduled_at"] = scheduled_at
@@ -474,7 +486,7 @@ def online_apply(request: AnalysisRequest):
             "is_completed": is_completed,
             "assigned_date": assigned_date,
             "scheduled_at": scheduled_at,
-            "message": "예약이 가장 빠른 날짜로 자동으로 완료되었습니다."
+            "message": "신청이 완료되었습니다." if request.is_free else "예약이 가장 빠른 날짜로 자동으로 완료되었습니다."
         }
     except Exception as e:
         import traceback

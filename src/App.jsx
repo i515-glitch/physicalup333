@@ -599,6 +599,43 @@ export default function App() {
   const updateHeight=v=>{setHeightVal(v);try{localStorage.setItem("pu333_height",v);}catch{}};
   const updateWeight=v=>{setWeightVal(v);try{localStorage.setItem("pu333_weight",v);}catch{}};
 
+  async function saveFreeSurvey(ans) {
+    const surveyResponses = parentQuestions.map(q => {
+      const idx = ans[q.id] !== undefined ? ans[q.id] : 1;
+      const score = q.dir === -1 ? (3 - idx) : idx;
+      return Math.round(1 + (score * 4 / 3));
+    });
+
+    const payload = {
+      name: childName || "무료진단자",
+      gender: gender || "남",
+      birth_date: birth || "000101",
+      grade: grade || "초등 4~6학년",
+      sports: sports || "기타",
+      position: position || "",
+      phone: phone || "010-0000-0000",
+      father_height: parseFloat(fatherHeight) || 173.0,
+      mother_height: parseFloat(motherHeight) || 160.0,
+      current_height: parseFloat(heightVal) || 0.0,
+      current_weight: parseFloat(weightVal) || 0.0,
+      body_fat: bodyFat ? parseFloat(bodyFat) : null,
+      skeletal_muscle: skeletalMuscle ? parseFloat(skeletalMuscle) : null,
+      wingspan: wingspan ? parseFloat(wingspan) : null,
+      survey_responses: surveyResponses,
+      is_free: true
+    };
+
+    try {
+      await fetch("/api/online/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+    } catch (e) {
+      console.error("무료 진단 저장 실패:", e);
+    }
+  }
+
   const pQ=parentQuestions[pIdx];
   const kQ=kidQuestions[kIdx];
 
@@ -613,6 +650,7 @@ export default function App() {
         const res=analyze(n,{});
         setResult(res);setStep("result");
         callAI(n,{},res,setAiAdvice,setLoading);
+        saveFreeSurvey(n);
       }
     },250);
   }
@@ -621,12 +659,14 @@ export default function App() {
     const res=analyze(pAns,{});
     setResult(res);setStep("result");
     callAI(pAns,{},res,setAiAdvice,setLoading);
+    saveFreeSurvey(pAns);
   }
 
   function goResult(){
     const res=analyze({},{});
     setResult(res);setStep("result");
     setAiAdvice(res.main==='소비형'?'흡수력이 낮은 소비형 체질입니다. 유산균·소화효소로 장 환경을 먼저 복구하고 근력 운동 비율을 높이세요.':res.main==='저장형'?'에너지 축적이 빠른 저장형 체질입니다. 유산소 운동 주 5회 이상, 탄수화물 타이밍을 운동 후로 집중하세요.':'3축이 균형 잡힌 체질입니다. 중강도 저항 운동을 꾸준히 하며 잔근육 밀도를 높이세요.');
+    saveFreeSurvey({});
   }
 
   function reset(){
