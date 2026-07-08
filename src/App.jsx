@@ -1360,7 +1360,6 @@ function saveHtml(){
             333TEST 시작하기<br/><span style={{fontSize:11,fontWeight:600,opacity:0.7}}>24문항 · 약 3~5분 · 무료</span>
           </button>
         </div>
-        <p style={{color:MUTED,fontSize:11,opacity:0.5}}>24문항 · 약 3~5분 소요</p>
       </div>
       </div>
     </div>
