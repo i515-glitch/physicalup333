@@ -1426,32 +1426,36 @@ function saveHtml(){
             <div style={{color:MUTED,fontSize:13,marginTop:4}}>의 BIO CODE 분석 결과입니다 ⚾</div>
           </div>
 
-          {/* 코드 메인 카드 (잠금 처리) */}
-          <div style={{textAlign:"center",padding:"26px 20px",background:"linear-gradient(160deg,#0d1b3e,#0f2050)",border:`1px solid rgba(201,168,76,0.35)`,borderRadius:20,marginBottom:12,boxShadow:"0 8px 40px rgba(201,168,76,0.15)",position:"relative",overflow:"hidden"}}>
+          {/* 코드 메인 카드 (결과 해제 노출) */}
+          <div style={{textAlign:"center",padding:"24px 20px",background:"linear-gradient(160deg,#0d1b3e,#0f2050)",border:`1px solid rgba(201,168,76,0.35)`,borderRadius:20,marginBottom:12,boxShadow:"0 8px 40px rgba(201,168,76,0.15)",position:"relative",overflow:"hidden"}}>
             {/* 검사 날짜 */}
-            <div style={{color:MUTED,fontSize:11,marginBottom:12,letterSpacing:1}}>
+            <div style={{color:MUTED,fontSize:11,marginBottom:14,letterSpacing:1}}>
               📅 검사일 {new Date().toLocaleDateString("ko-KR")}
             </div>
-            {/* 코드 배지 - 자물쇠 표시 및 블러 처리 */}
-            <div style={{display:"inline-block",padding:"10px 32px",borderRadius:24,marginBottom:16,background:"rgba(255,255,255,0.02)",border:"1.5px solid rgba(201,168,76,0.2)",boxShadow:"0 4px 20px rgba(0,0,0,0.3)",position:"relative"}}>
-              <span style={{color:"#e8c76a",fontSize:26,fontWeight:900,letterSpacing:4,display:"block",filter:"blur(4px)",userSelect:"none"}}>X-X-X</span>
-              <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",color:GOLD2,fontSize:12,fontWeight:800}}>🔒 BioCode 잠김</div>
+            {/* 결과 한 줄 노출 */}
+            <div style={{
+              display:"inline-flex",
+              alignItems:"center",
+              justifyContent:"center",
+              padding:"12px 24px",
+              borderRadius:24,
+              background:"rgba(201,168,76,0.06)",
+              border:"1.5px solid rgba(201,168,76,0.35)",
+              boxShadow:"0 4px 20px rgba(0,0,0,0.25)",
+              color:GOLD2,
+              fontSize:15,
+              fontWeight:900,
+              gap:8
+            }}>
+              <span>BioCode {result.code}</span>
+              <span style={{color:"rgba(255,255,255,0.15)"}}>ㅣ</span>
+              <span>{result.main}</span>
+              <span style={{color:"rgba(255,255,255,0.15)"}}>ㅣ</span>
+              <span>{ment.nick}</span>
             </div>
-            {/* 대분류(공개) + 세분류닉네임(잠김) 나란히 */}
-            <div style={{marginBottom:10}}>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,flexWrap:"wrap"}}>
-                <div style={{display:"flex",alignItems:"center",gap:4,background:"rgba(201,168,76,0.08)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:20,padding:"4px 14px"}}>
-                  <span style={{fontSize:13}}>{mi.emoji}</span>
-                  <span style={{color:GOLD2,fontSize:13,fontWeight:800}}>중분류: {result.main}</span>
-                </div>
-                <div style={{width:1,height:20,background:"rgba(255,255,255,0.1)"}}/>
-                <div style={{display:"inline-block",padding:"4px 16px",borderRadius:20,background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)",position:"relative",overflow:"hidden"}}>
-                  <span style={{color:MUTED,fontSize:12,fontWeight:700,letterSpacing:1,filter:"blur(3.5px)",userSelect:"none"}}>🔒 소분류: 캐릭터명 잠금</span>
-                  <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",color:GOLD,fontSize:11,fontWeight:800}}>🔒 소분류 잠김</div>
-                </div>
-              </div>
-            </div>
-            <p style={{color:"rgba(255,255,255,0.2)",fontSize:12,lineHeight:1.7,margin:0,filter:"blur(2.5px)",userSelect:"none"}}>이 아이의 상세 체질 성향에 대한 2줄짜리 요약 설명글이 프리미엄 보고서에서 완벽하게 해제됩니다.</p>
+            <p style={{color:MUTED,fontSize:11,lineHeight:1.6,marginTop:12,marginBottom:0}}>
+              ※ 상세 맞춤 운동/식단 가이드라인은 프리미엄 보고서에서 제공됩니다.
+            </p>
           </div>
 
           {/* 성장 지표 */}
