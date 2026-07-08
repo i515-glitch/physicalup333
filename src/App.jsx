@@ -1562,8 +1562,8 @@ function saveHtml(){
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
                       <span style={{color:WHITE,fontSize:13,fontWeight:700}}>{ax.label}</span>
                       {reached
-                        ? <span style={{color:"#4fcfa0",fontSize:11,fontWeight:700}}>🏆 선수 기준 충족!</span>
-                        : <span style={{color:GOLD,fontSize:11,fontWeight:700}}>선수 상위 대비: -{Math.abs(ax.target-ax.mine).toFixed(1)}{ax.unit}</span>
+                        ? <span style={{color:"#4fcfa0",fontSize:11,fontWeight:700}}>🏆 상위선수 기준 충족!</span>
+                        : <span style={{color:GOLD,fontSize:11,fontWeight:700}}>상위선수 대비: -{Math.abs(ax.target-ax.mine).toFixed(1)}{ax.unit}</span>
                       }
                     </div>
 
@@ -1574,7 +1574,7 @@ function saveHtml(){
 
                       {/* 평균 선 */}
                       <div style={{position:"absolute",bottom:16,left:`${avgPos}%`,transform:"translateX(-50%)",display:"flex",flexDirection:"column",alignItems:"center",zIndex:7}}>
-                        <div style={{color:MUTED,fontSize:10,fontWeight:700,marginBottom:3,whiteSpace:"nowrap"}}>평균</div>
+                        <div style={{color:MUTED,fontSize:9,fontWeight:700,marginBottom:3,whiteSpace:"nowrap"}}>자기나이 평균</div>
                         <div style={{width:2,height:36,background:"rgba(255,255,255,0.3)",borderRadius:1}}/>
                         <div style={{width:6,height:6,borderRadius:"50%",background:"rgba(255,255,255,0.4)",marginTop:2}}/>
                         <div style={{color:MUTED,fontSize:10,fontWeight:600,marginTop:3,whiteSpace:"nowrap"}}>{ax.avg}{ax.unit}</div>
@@ -1590,7 +1590,7 @@ function saveHtml(){
 
                       {/* 목표 선 */}
                       <div style={{position:"absolute",bottom:16,left:`${targetPos}%`,transform:"translateX(-50%)",display:"flex",flexDirection:"column",alignItems:"center",zIndex:8}}>
-                        <div style={{color:GOLD,fontSize:10,fontWeight:700,marginBottom:3,whiteSpace:"nowrap"}}>선수상위(90%)</div>
+                        <div style={{color:GOLD,fontSize:9,fontWeight:700,marginBottom:3,whiteSpace:"nowrap"}}>상위 90% (상위선수)</div>
                         <div style={{width:2,height:36,background:GOLD,borderRadius:1,boxShadow:`0 0 6px ${GOLD}`}}/>
                         <div style={{width:7,height:7,background:GOLD,transform:"rotate(45deg)",marginTop:2,boxShadow:`0 0 6px ${GOLD}`}}/>
                         <div style={{color:GOLD,fontSize:10,fontWeight:700,marginTop:3,whiteSpace:"nowrap"}}>{ax.target}{ax.unit}</div>
