@@ -373,6 +373,28 @@ const getProjectedAdultHeight = (pct, gender) => {
   return gender === "여" ? 161.0 : 174.0;
 };
 
+const getOhengAnalysis = (fiveElements) => {
+  if (!fiveElements) return null;
+  const elements = [
+    { name: "목 (木)", key: "목", organ: "간·담도계 (근육 및 인대)", desc: "근육의 수축·이완 및 관절 유연성" },
+    { name: "화 (火)", key: "화", organ: "심장·순환계 (혈관 및 열대사)", desc: "심폐 지구력 및 체온 조절, 혈류 공급" },
+    { name: "토 (土)", key: "토", organ: "비장·위장계 (소화 및 영양합성)", desc: "음식물 소화 흡수 및 살과 근육 합성" },
+    { name: "금 (金)", key: "금", organ: "폐·대장계 (호흡기 및 뼈 골격)", desc: "산소 공급력, 장 건강 및 골격 강도" },
+    { name: "수 (水)", key: "수", organ: "신장·방광계 (골수 및 성장호르몬)", desc: "뼈 성장 잠재력, 호르몬 균형 및 관절 윤활" }
+  ];
+  const excess = [];
+  const deficient = [];
+  elements.forEach(el => {
+    const val = fiveElements[el.key] || 0;
+    if (val >= 3) {
+      excess.push(el);
+    } else if (val === 0) {
+      deficient.push(el);
+    }
+  });
+  return { excess, deficient, elements };
+};
+
 const getConstitutionProse = (constStr) => {
   if (!constStr) return "";
   const s = constStr.toLowerCase();
@@ -1796,7 +1818,140 @@ function saveHtml(){
             </div>
           </div>
 
-
+          {/* 사주 오행 건강 및 장기 대사 분석 카드 */}
+          {serverResult && serverResult.five_elements && (() => {
+            const oheng = getOhengAnalysis(serverResult.five_elements);
+            if (!oheng) return null;
+            
+            // Build descriptions
+            let stateTexts = [];
+            let solutionTexts = [];
+            
+            // Deficient element logic
+            if (oheng.deficient.length > 0) {
+              oheng.deficient.forEach(el => {
+                if (el.key === "목") {
+                  stateTexts.push("근육과 인대(木) 기운의 결핍으로 관절 및 힘줄의 긴장도가 높고 피로 물질(젖산) 분해 속도가 지연되기 쉽습니다.");
+                  solutionTexts.push("운동 시작 전 15분 이상 충분한 정적 스트레칭을 실시하여 건과 인대의 긴장을 풀고, 비타민 C와 아미노산 공급을 통해 근육 회복력을 올려주어야 합니다.");
+                }
+                if (el.key === "화") {
+                  stateTexts.push("심폐 및 혈류 순환(火) 기운이 약해 심폐 가동 능력이 일시적으로 지연되거나 전신 열 배출 대사가 완만할 수 있습니다.");
+                  solutionTexts.push("초기부터 숨이 차는 격렬한 운동보다 가벼운 페이스의 조깅부터 점진적으로 심폐 지구력을 늘려 혈류 순환 효율을 점진적으로 개선시켜야 합니다.");
+                }
+                if (el.key === "토") {
+                  stateTexts.push("소화 장기(土) 기운이 약하여 소화 효소 분비가 부진하고 음식물을 세포 조직(살·근육)으로 합성하는 힘이 더딥니다.");
+                  solutionTexts.push("단백질 파우더나 소화 효소 유산균제를 식사와 병행하고, 위장에 부담을 주지 않도록 고에너지 밀도의 음식을 조금씩 자주(하루 4~5회) 섭취하는 대책이 필요합니다.");
+                }
+                if (el.key === "금") {
+                  stateTexts.push("뼈 골격 및 호흡 대장계(金) 기운이 약하여 뼈의 무기질 축적 속도가 다소 더디거나 장 환경이 민감해지기 쉽습니다.");
+                  solutionTexts.push("성장판을 수직으로 자극하는 줄넘기, 가벼운 플라이오메트릭 점프 운동을 적극 권장하며 칼슘 및 비타민 D3를 아침 식후 필수 공급해야 합니다.");
+                }
+                if (el.key === "수") {
+                  stateTexts.push("신장 및 성장호르몬(水) 기운의 부족으로 관절 내 윤활막 작동이 부드럽지 못하거나 밤 시간대 성장호르몬 분비가 깊지 않을 수 있습니다.");
+                  solutionTexts.push("무엇보다 밤 10시 이전 깊은 수면(숙면)을 유도하는 수면 환경을 조성하고, 관절과 뼈의 기질을 이루는 콜라겐 단백질과 충분한 수분 전해질 공급이 필수적입니다.");
+                }
+              });
+            }
+            
+            // Excessive element logic
+            if (oheng.excess.length > 0) {
+              oheng.excess.forEach(el => {
+                if (el.key === "목") {
+                  stateTexts.push("근육계(木) 기운이 너무 왕성하여 근수축 속도는 빠르지만, 근육이 쉽게 뭉쳐 유연성이 저하되고 쥐가 자주 날 수 있습니다.");
+                  solutionTexts.push("근육 피로를 즉각 풀어줄 수 있도록 폼롤러 마사지와 온열 요법을 자주 실시하고, 근육 완화를 돕는 마그네슘을 필수 섭취해야 합니다.");
+                }
+                if (el.key === "화") {
+                  stateTexts.push("순환계 및 심폐 체열(火) 기운이 대단히 강하여 땀 분비량이 매우 많고 탈수 속도가 빨라 조기 피로를 겪기 쉽습니다.");
+                  solutionTexts.push("급격한 수분 및 필수 전해질 소실을 막기 위해 훈련 중 15분마다 150ml씩 미네랄 워터나 이온 음료를 규칙적으로 급수하는 것이 최고의 대책입니다.");
+                }
+                if (el.key === "토") {
+                  stateTexts.push("소화 및 체내 영양 합성력(土)이 과도하게 강하여 섭취된 탄수화물이 단시간에 체지방으로 갇히고 몸이 무거워지기 쉽습니다.");
+                  solutionTexts.push("정제 탄수화물(당류, 액상과당, 빵)을 차단하고 식이섬유 섭취 비중을 2배로 올려 혈당 스파이크와 내장지방 축적을 제어해야 합니다.");
+                }
+                if (el.key === "금") {
+                  stateTexts.push("골격 프레임(金)의 기운이 너무 묵직하고 단단하여 지면 반발력은 우수하지만, 관절와 상하체의 가동 범위가 다소 뻣뻣하게 굳어지기 쉽습니다.");
+                  solutionTexts.push("몸의 회전 회전력을 극대화할 수 있는 요가, 모빌리티(Mobility) 훈련, 그리고 흉추 가동성 스트레칭을 훈련 루틴에 반드시 포함시켜야 합니다.");
+                }
+                if (el.key === "수") {
+                  stateTexts.push("골수 및 수분 대사(水) 기운이 과다하여 체내 수분 정체가 일어나거나 몸이 다소 붓는 현상이 발생하기 쉽습니다.");
+                  solutionTexts.push("나트륨 섭취를 적절히 조절하고, 전신 땀 배출을 돕는 심폐 유산소 운동을 지속하여 체액의 역동적인 순환을 도와야 합니다.");
+                }
+              });
+            }
+            
+            // Balanced saju
+            if (stateTexts.length === 0) {
+              stateTexts.push("목, 화, 토, 금, 수 오행 기운이 치우침 없이 대단히 균형 잡혀 있어, 선천적인 장기 취약점이나 대사 교란 현상이 없는 대단히 조화롭고 건강한 내부 환경을 타고났습니다.");
+              solutionTexts.push("현재의 이상적인 대사 균형이 깨지지 않도록 불규칙한 생활과 정제 야식을 제한하고, 3대 필수 영양소와 기본 비타민D를 공급하는 표준 성장 케어를 유지하시면 충분합니다.");
+            }
+            
+            return (
+              <div style={cardStyle}>
+                <div style={{color:GOLD,fontSize:12,fontWeight:700,marginBottom:4,letterSpacing:1}}>🔮 선천 사주 오행(五行) 건강 & 장기 대사 분석</div>
+                <div style={{color:MUTED,fontSize:11,marginBottom:14,borderBottom:"1px solid rgba(201,168,76,0.1)",paddingBottom:8}}>
+                  타고난 5가지 자연 기운(오행)과 신체 오장육부(五臟六腑) 건강 대응 분석
+                </div>
+                
+                {/* 오행 그래프 */}
+                <div style={{
+                  display:"flex",justifyContent:"space-between",alignItems:"center",
+                  background:"rgba(255,255,255,0.02)",borderRadius:12,padding:"12px 10px",
+                  border:"1px solid rgba(255,255,255,0.04)",marginBottom:16
+                }}>
+                  {oheng.elements.map(el => {
+                    const count = serverResult.five_elements[el.key] || 0;
+                    return (
+                      <div key={el.key} style={{flex:1,textAlign:"center",display:"flex",flexDirection:"column",alignItems:"center"}}>
+                        <div style={{color:count >= 3 ? "#f76f8e" : count === 0 ? "#64748b" : WHITE,fontSize:11,fontWeight:800}}>
+                          {el.key}
+                        </div>
+                        <div style={{color:MUTED,fontSize:9,marginTop:2,marginBottom:4}}>{el.key === "목" ? "木" : el.key === "화" ? "火" : el.key === "토" ? "土" : el.key === "금" ? "金" : "水"}</div>
+                        <div style={{
+                          display:"flex",flexDirection:"column",gap:2,width:8,height:40,
+                          background:"rgba(255,255,255,0.05)",borderRadius:4,overflow:"hidden",
+                          justifyContent:"flex-end"
+                        }}>
+                          <div style={{
+                            height:`${(count / 5) * 100}%`,
+                            background: count >= 3 ? "linear-gradient(to top, #ef4444, #f76f8e)" : count === 0 ? "transparent" : "linear-gradient(to top, #3b82f6, #60a5fa)",
+                            borderRadius:2
+                          }}/>
+                        </div>
+                        <div style={{color:count >= 3 ? "#f76f8e" : count === 0 ? "#64748b" : GOLD2,fontSize:11,fontWeight:900,marginTop:4}}>
+                          {count}개
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                
+                {/* 분석 텍스트 */}
+                <div style={{textAlign:"left",display:"flex",flexDirection:"column",gap:12}}>
+                  <div>
+                    <div style={{color:GOLD2,fontSize:11,fontWeight:700,marginBottom:4}}>⚠️ 선천적 신체 장기 상태 (취약점)</div>
+                    <ul style={{margin:0,paddingLeft:16,color:WHITE,fontSize:13,lineHeight:1.6}}>
+                      {stateTexts.map((txt, idx) => (
+                        <li key={idx} style={{marginBottom:6}}>{txt}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <div style={{borderTop:"1px solid rgba(255,255,255,0.05)",paddingTop:10}}>
+                    <div style={{color:GOLD2,fontSize:11,fontWeight:700,marginBottom:4}}>🛠️ 대사 불균형 개선 대책 (조언)</div>
+                    <ul style={{margin:0,paddingLeft:16,color:"#a5b4fc",fontSize:13,lineHeight:1.6}}>
+                      {solutionTexts.map((txt, idx) => (
+                        <li key={idx} style={{marginBottom:6}}>{txt}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                
+                <div style={{color:MUTED,fontSize:10,marginTop:12,lineHeight:1.4,textAlign:"left",borderTop:"1px solid rgba(255,255,255,0.05)",paddingTop:8}}>
+                  ※ 동양 의학의 사상 체질론과 명리학의 오행상생상극(五行相生相剋) 이론을 응용하여 오장육부의 기운 분포를 도출한 자율 참고용 신체 경향성 분석입니다.
+                </div>
+              </div>
+            );
+          })()}
 
           {/* 솔루션 (완전 공개) */}
           <div style={cardStyle}>
