@@ -328,6 +328,21 @@ function calcAgeFromShort(str) {
   return {months,years:Math.floor(months/12),display:`만 ${Math.floor(months/12)}세 ${months%12}개월`};
 }
 
+function formatPhoneNumber(value) {
+  if (!value) return "";
+  const clean = value.replace(/\D/g, "");
+  if (clean.startsWith("02")) {
+    if (clean.length < 3) return clean;
+    if (clean.length < 6) return `${clean.slice(0, 2)}-${clean.slice(2)}`;
+    if (clean.length < 10) return `${clean.slice(0, 2)}-${clean.slice(2, 5)}-${clean.slice(5)}`;
+    return `${clean.slice(0, 2)}-${clean.slice(2, 6)}-${clean.slice(6, 10)}`;
+  }
+  if (clean.length < 4) return clean;
+  if (clean.length < 7) return `${clean.slice(0, 3)}-${clean.slice(3)}`;
+  if (clean.length < 11) return `${clean.slice(0, 3)}-${clean.slice(3, 6)}-${clean.slice(6)}`;
+  return `${clean.slice(0, 3)}-${clean.slice(3, 7)}-${clean.slice(7, 11)}`;
+}
+
 function calcPercentile(val,refs) {
   const pcts=[3,10,25,50,75,90,97];
   if(val<=refs[0]) return 3;
@@ -717,7 +732,11 @@ export default function App() {
   const updateWeight=v=>{setWeightVal(v);try{localStorage.setItem("pu333_weight",v);}catch{}};
   const updateGender=v=>{setGender(v);try{localStorage.setItem("pu333_gender",v);}catch{}};
   const updateBirthTime=v=>{setBirthTime(v);try{localStorage.setItem("pu333_birth_time",v);}catch{}};
-  const updatePhone=v=>{setPhone(v);try{localStorage.setItem("pu333_phone",v);}catch{}};
+  const updatePhone=v=>{
+    const formatted = formatPhoneNumber(v);
+    setPhone(formatted);
+    try{localStorage.setItem("pu333_phone",formatted);}catch{}
+  };
 
   async function saveFreeSurvey(ans) {
     const surveyResponses = parentQuestions.map(q => {
