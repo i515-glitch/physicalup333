@@ -1649,8 +1649,8 @@ function saveHtml(){
                   const targetW = Math.round((parseFloat(heightVal) - offset) * 10) / 10;
                   
                   return [
-                    {label:"키",value:parseFloat(heightVal),unit:"cm",avg:gd.stdH,mine:parseFloat(heightVal),target:gd.targetH,color:"#4fcfa0",isSlug:false,targetName:"상위선수"},
-                    {label:"몸무게",value:parseFloat(weightVal),unit:"kg",avg:gd.stdW,mine:parseFloat(weightVal),target:targetW,color:"#4f8ef7",isSlug:false,targetName:"권장체격"}
+                    {label:"키",value:parseFloat(heightVal),unit:"cm",avg:gd.stdH,mine:parseFloat(heightVal),target:gd.targetH,color:"#4fcfa0",isSlug:false,targetName:"상위선수",formulaText:"또래 상위 10% 기준"},
+                    {label:"몸무게",value:parseFloat(weightVal),unit:"kg",avg:gd.stdW,mine:parseFloat(weightVal),target:targetW,color:"#4f8ef7",isSlug:false,targetName:"권장체격",formulaText:`선수 기준: 키 - ${offset}`}
                   ];
                 })().map(ax=>{
                   const vals=[ax.avg,ax.mine,ax.target];
@@ -1668,7 +1668,8 @@ function saveHtml(){
                     <div key={ax.label} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",background:"rgba(255,255,255,0.015)",borderRadius:14,padding:"12px 6px",border:"1px solid rgba(255,255,255,0.04)"}}>
                       {/* 타이틀 및 비교 문구 */}
                       <div style={{width:"100%",textAlign:"center",marginBottom:14,borderBottom:"1px solid rgba(255,255,255,0.04)",paddingBottom:8}}>
-                        <div style={{color:WHITE,fontSize:13,fontWeight:900,marginBottom:3}}>{ax.label}</div>
+                        <div style={{color:WHITE,fontSize:13,fontWeight:900,marginBottom:2}}>{ax.label}</div>
+                        <div style={{color:MUTED,fontSize:9,fontWeight:600,marginBottom:5}}>{ax.formulaText}</div>
                         <div style={{fontSize:10,fontWeight:800}}>
                           {ax.label === "키" ? (
                             reached
