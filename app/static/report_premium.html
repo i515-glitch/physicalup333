@@ -1233,6 +1233,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     const constitution = data.constitution || "이화-발산형 (이화-발산형 (소양인))";
     const lagCause = data.lag_cause || "흡수력";
 
+    const fHeight = parseFloat(inputs.father_height) || 180.0;
+    const mHeight = parseFloat(inputs.mother_height) || 162.0;
+    const curHeight = parseFloat(inputs.current_height) || 165.0;
+    const curWeight = parseFloat(inputs.current_weight) || 48.0;
+    const skeletalMuscle = parseFloat(inputs.skeletal_muscle) || 21.6;
+    const bodyFat = parseFloat(inputs.body_fat) || 8.8;
+    const wingspan = parseFloat(inputs.wingspan) || curHeight;
+    const bmi = (curWeight / ((curHeight / 100) ** 2)).toFixed(1);
+    const expHeightNow = data.expected_height_now || 162.0;
+    const geneticAdult = (inputs.gender || "남") === "남" ? (fHeight + mHeight + 13) / 2 : (fHeight + mHeight - 13) / 2;
+    const muscleRatio = (skeletalMuscle / curWeight) * 100.0;
+
     window.reportBiocode = biocode;
     window.reportPersona = persona;
     window.reportTargetName = targetName;
@@ -1444,18 +1456,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const isFree = inputs.is_free || !inputs.body_fat || !inputs.skeletal_muscle;
-
-    const fHeight = parseFloat(inputs.father_height) || 180.0;
-    const mHeight = parseFloat(inputs.mother_height) || 162.0;
-    const curHeight = parseFloat(inputs.current_height) || 165.0;
-    const curWeight = parseFloat(inputs.current_weight) || 48.0;
-    const skeletalMuscle = parseFloat(inputs.skeletal_muscle) || 21.6;
-    const bodyFat = parseFloat(inputs.body_fat) || 8.8;
-    const wingspan = parseFloat(inputs.wingspan) || curHeight;
-    const bmi = (curWeight / ((curHeight / 100) ** 2)).toFixed(1);
-    const expHeightNow = data.expected_height_now || 162.0;
-    const geneticAdult = (inputs.gender || "남") === "남" ? (fHeight + mHeight + 13) / 2 : (fHeight + mHeight - 13) / 2;
-    const muscleRatio = (skeletalMuscle / curWeight) * 100.0;
 
     const tables = document.querySelectorAll("table");
     
