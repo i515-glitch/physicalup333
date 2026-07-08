@@ -1522,26 +1522,7 @@ function saveHtml(){
             <div style={{color:MUTED,fontSize:11,marginBottom:14,letterSpacing:1}}>
               📅 검사일 {new Date().toLocaleDateString("ko-KR")}
             </div>
-            {/* 결과 한 줄 노출 (잠금 처리) */}
-            <div style={{marginBottom:10}}>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,flexWrap:"wrap"}}>
-                {/* 메인유형 잠금 */}
-                <div style={{display:"flex",alignItems:"center",gap:4,background:"rgba(201,168,76,0.08)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:20,padding:"4px 14px",position:"relative"}}>
-                  <span style={{color:GOLD2,fontSize:14,fontWeight:800,filter:"blur(4px)",userSelect:"none"}}>{result.main}</span>
-                  <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",color:GOLD,fontSize:11,fontWeight:800}}>BioCode 🔒</div>
-                </div>
-                
-                <div style={{width:1,height:20,background:"rgba(255,255,255,0.1)"}}/>
-                
-                {/* 닉네임 잠금 */}
-                <div style={{display:"inline-block",padding:"4px 16px",borderRadius:20,background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)",position:"relative",overflow:"hidden"}}>
-                  <span style={{color:MUTED,fontSize:13,fontWeight:700,letterSpacing:1,filter:"blur(3.5px)",userSelect:"none"}}>{ment.nick}</span>
-                  <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",color:GOLD,fontSize:11,fontWeight:800}}>세부 체질 🔒</div>
-                </div>
-              </div>
-            </div>
-            
-            <div style={{marginTop:16,borderTop:"1px solid rgba(201,168,76,0.15)",paddingTop:14,textAlign:"left"}}>
+            <div style={{marginTop:8,textAlign:"left"}}>
               <div style={{color:GOLD2,fontSize:11,fontWeight:700,marginBottom:4}}>🧬 타고난 유전/체질 특성</div>
               <div style={{color:WHITE,fontSize:13,lineHeight:1.5,marginBottom:10}}>{ment.wit}</div>
               <div style={{color:GOLD2,fontSize:11,fontWeight:700,marginBottom:4}}>💡 현재 상태 특이사항</div>
@@ -1718,26 +1699,7 @@ function saveHtml(){
             )}
           </div>
 
-          {/* 3축 게이지 (완전 공개) */}
-          <div style={cardStyle}>
-            <div style={{color:GOLD,fontSize:11,marginBottom:14,fontWeight:700,letterSpacing:1,borderBottom:"1px solid rgba(201,168,76,0.15)",paddingBottom:10}}>⚾ 3축 BIO CODE 분석</div>
-            <div>
-              {axes.map(ax=>(
-                <div key={ax.label} style={{marginBottom:12}}>
-                  <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
-                    <span style={{color:WHITE,fontSize:12,fontWeight:600}}>{ax.label}</span>
-                    <span style={{color:ax.color,fontSize:12,fontWeight:700}}>{ax.val}단계 · {["낮음","보통","높음"][ax.val-1]}</span>
-                  </div>
-                  <div style={{display:"flex",gap:4}}>
-                    {[1,2,3].map(n=><div key={n} style={{flex:1,height:10,borderRadius:4,background:n<=ax.val?ax.color:"rgba(255,255,255,0.06)",boxShadow:n<=ax.val?`0 0 6px ${ax.color}60`:"none"}}/>)}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div style={{color:MUTED,fontSize:10,marginTop:12,lineHeight:1.4,textAlign:"left",borderTop:"1px solid rgba(255,255,255,0.05)",paddingTop:8}}>
-              ※ 현재 3축 레벨은 기초 입력(설문 및 사주)만을 근거로 추정한 <span style={{color:WHITE,fontWeight:700}}>임시 가분석 수치</span>입니다. 정확한 인바디 및 부모 유전 키가 반영되면 공식 BioCode로 보정 및 해제됩니다.
-            </div>
-          </div>
+
 
           {/* 솔루션 (완전 공개) */}
           <div style={cardStyle}>
@@ -1767,21 +1729,7 @@ function saveHtml(){
             </div>
           </div>
 
-          {/* 세분류 포인트 (완전 공개) */}
-          <div style={cardStyle}>
-            <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
-              <span style={{fontSize:16}}>{si.emoji}</span>
-              <span style={{color:si.color,fontSize:12,fontWeight:700}}>정밀 맞춤 포인트</span>
-            </div>
-            <div>
-              <div style={{color:WHITE,fontSize:14,fontWeight:700,marginBottom:6}}>{si.shortDesc}</div>
-              <p style={{color:MUTED,fontSize:13,lineHeight:1.7,margin:0}}>{si.desc}</p>
-              <div style={{marginTop:10,background:"rgba(255,255,255,0.03)",borderRadius:8,padding:"10px",border:`1px dashed ${si.color}40`}}>
-                <span style={{color:si.color,fontWeight:700,fontSize:12,display:"block",marginBottom:4}}>⭐ 케어 전략</span>
-                <span style={{color:WHITE,fontSize:13,lineHeight:1.6}}>{si.plus}</span>
-              </div>
-            </div>
-          </div>
+
 
           {/* 실전 행동 처방 (완전 공개) */}
           {ment.rx&&(
@@ -1830,13 +1778,7 @@ function saveHtml(){
             <span style={{color:"#8a7840",fontSize:13,lineHeight:1.7}}>{mi.caution}</span>
           </div>
 
-          {/* AI 상담 (완전 공개) */}
-          <div style={{...cardStyle,border:"1px solid rgba(201,168,76,0.25)",boxShadow:"0 4px 20px rgba(201,168,76,0.08)"}}>
-            <div style={{color:GOLD,fontSize:12,fontWeight:700,marginBottom:10,letterSpacing:1}}>🤖 AI 통합 맞춤 상담</div>
-            <div>
-              {loading?<div style={{display:"flex",alignItems:"center",gap:8}}><div style={{width:8,height:8,borderRadius:"50%",background:GOLD}}/><span style={{color:MUTED,fontSize:13}}>3축 데이터 분석 중...</span></div>:<p style={{color:"#8aa8c8",fontSize:13,lineHeight:1.9,margin:0}}>{aiAdvice}</p>}
-            </div>
-          </div>
+
 
           {/* 버튼 */}
           <div style={{marginBottom:16}}>
