@@ -1210,6 +1210,87 @@ document.addEventListener("DOMContentLoaded", async () => {
     const geneticAdult = (inputs.gender || "남") === "남" ? (fHeight + mHeight + 13) / 2 : (fHeight + mHeight - 13) / 2;
     const muscleRatio = (skeletalMuscle / curWeight) * 100.0;
 
+    function getPositionSpecificTargets(sport, position, gradeStr, ageYears) {
+        let baseOffset = 108; // Elementary
+        if (gradeStr.includes("고") || (gradeStr === "" && ageYears >= 15)) {
+            baseOffset = 100; // High
+        } else if (gradeStr.includes("중") || (gradeStr === "" && ageYears >= 12)) {
+            baseOffset = 105; // Middle
+        }
+        
+        let muscleRatio = 0.50; // 50%
+        let fatRatio = 0.13; // 13%
+        let labelFat = "12% ~ 15% 슬림탄탄";
+        
+        const s = (sport || "").trim();
+        const p = (position || "").trim();
+        
+        if (s === "야구") {
+            if (p.includes("투수") || p.includes("포수")) {
+                baseOffset = baseOffset - 3;
+                muscleRatio = 0.48;
+                fatRatio = 0.15;
+                labelFat = "14% ~ 16% 파워선수형";
+            } else if (p.includes("내야") || p.includes("외야") || p.includes("타자") || p.includes("주자") || p.includes("야수")) {
+                baseOffset = baseOffset + 1;
+                muscleRatio = 0.51;
+                fatRatio = 0.12;
+                labelFat = "11% ~ 13% 민첩야수형";
+            }
+        } else if (s === "축구") {
+            if (p.includes("골키퍼") || p.includes("GK")) {
+                baseOffset = baseOffset - 2;
+                muscleRatio = 0.49;
+                fatRatio = 0.14;
+                labelFat = "12% ~ 15% 골키퍼형";
+            } else {
+                baseOffset = baseOffset + 3;
+                muscleRatio = 0.52;
+                fatRatio = 0.11;
+                labelFat = "10% ~ 12% 고지구력형";
+            }
+        } else if (s === "농구") {
+            baseOffset = baseOffset + 1;
+            muscleRatio = 0.50;
+            fatRatio = 0.12;
+            labelFat = "11% ~ 13% 바스켓볼형";
+        } else if (s === "씨름" || s === "유도" || s === "레슬링") {
+            baseOffset = baseOffset - 10;
+            muscleRatio = 0.44;
+            fatRatio = 0.20;
+            labelFat = "18% ~ 22% 중량파워형";
+        } else if (s === "체조" || s === "피겨" || s === "다이빙") {
+            baseOffset = baseOffset + 10;
+            muscleRatio = 0.54;
+            fatRatio = 0.09;
+            labelFat = "8% ~ 10% 극초경량형";
+        }
+        
+        return {
+            offset: baseOffset,
+            muscleRatio,
+            fatRatio,
+            labelFat
+        };
+    }
+
+    const birthStr = inputs.birth_date || "";
+    let ageYears = 10;
+    if (birthStr) {
+        const birthDate = new Date(birthStr);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        if (today.getMonth() < birthDate.getMonth() || (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        ageYears = age;
+    }
+    const gradeStr = inputs.grade || "";
+    const pst = getPositionSpecificTargets(targetSports, targetPosition, gradeStr, ageYears);
+    const weightOffset = pst.offset;
+    const targetWeightVal = Math.round(curHeight - weightOffset);
+    const targetMuscleVal = Math.round(targetWeightVal * pst.muscleRatio * 10) / 10;
+
     window.reportBiocode = biocode;
     window.reportPersona = persona;
     window.reportTargetName = targetName;
@@ -1279,50 +1360,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                     cells[3].innerHTML = `<b style="color:${gap >= 0 ? 'var(--pos)' : 'var(--neg)'};">${gap >= 0 ? '+' : ''}${gap.toFixed(1)} cm</b>`;
                 } else if (item.includes("체중")) {
                     cells[1].innerText = `${curWeight} kg`;
-                    const birthStr = inputs.birth_date || "";
-                    let ageYears = 10;
-                    if (birthStr) {
-                        const birthDate = new Date(birthStr);
-                        const today = new Date();
-                        let age = today.getFullYear() - birthDate.getFullYear();
-                        if (today.getMonth() < birthDate.getMonth() || (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) {
-                            age--;
-                        }
-                        ageYears = age;
-                    }
-                    const gradeStr = inputs.grade || "";
-                    let weightOffset = 108;
-                    if (gradeStr.includes("고") || (gradeStr === "" && ageYears >= 15)) {
-                        weightOffset = 100;
-                    } else if (gradeStr.includes("중") || (gradeStr === "" && ageYears >= 12)) {
-                        weightOffset = 105;
-                    }
-                    const targetWeightVal = Math.round(curHeight - weightOffset);
                     cells[2].innerText = `${targetWeightVal} kg`;
                     const gap = curWeight - targetWeightVal;
                     cells[3].innerHTML = `<b style="color:${gap >= 0 ? 'var(--pos)' : 'var(--neg)'};">${gap >= 0 ? '+' : ''}${gap.toFixed(1)} kg</b>`;
                 } else if (item.includes("골격근량")) {
                     cells[1].innerText = `${skeletalMuscle} kg`;
-                    const birthStr = inputs.birth_date || "";
-                    let ageYears = 10;
-                    if (birthStr) {
-                        const birthDate = new Date(birthStr);
-                        const today = new Date();
-                        let age = today.getFullYear() - birthDate.getFullYear();
-                        if (today.getMonth() < birthDate.getMonth() || (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) {
-                            age--;
-                        }
-                        ageYears = age;
-                    }
-                    const gradeStr = inputs.grade || "";
-                    let weightOffset = 108;
-                    if (gradeStr.includes("고") || (gradeStr === "" && ageYears >= 15)) {
-                        weightOffset = 100;
-                    } else if (gradeStr.includes("중") || (gradeStr === "" && ageYears >= 12)) {
-                        weightOffset = 105;
-                    }
-                    const targetWeightVal = Math.round(curHeight - weightOffset);
-                    const targetMuscleVal = Math.round(targetWeightVal * 0.50 * 10) / 10;
                     cells[2].innerText = `${targetMuscleVal} kg`;
                     const gap = skeletalMuscle - targetMuscleVal;
                     cells[3].innerHTML = `<b style="color:${gap >= 0 ? 'var(--pos)' : 'var(--neg)'};">${gap >= 0 ? '+' : ''}${gap.toFixed(1)} kg</b>`;

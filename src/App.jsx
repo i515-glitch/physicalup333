@@ -328,6 +328,72 @@ function calcAgeFromShort(str) {
   return {months,years:Math.floor(months/12),display:`만 ${Math.floor(months/12)}세 ${months%12}개월`};
 }
 
+function getPositionSpecificTargets(sport, position, gradeStr, ageYears) {
+  let baseOffset = 108; // Elementary
+  if (gradeStr.includes("고") || (gradeStr === "" && ageYears >= 15)) {
+    baseOffset = 100; // High
+  } else if (gradeStr.includes("중") || (gradeStr === "" && ageYears >= 12)) {
+    baseOffset = 105; // Middle
+  }
+  
+  let muscleRatio = 0.50; // 50%
+  let fatRatio = 0.13; // 13%
+  let labelFat = "12% ~ 15% 슬림탄탄";
+  
+  const s = (sport || "").trim();
+  const p = (position || "").trim();
+  
+  if (s === "야구") {
+    if (p.includes("투수") || p.includes("포수")) {
+      baseOffset = baseOffset - 3; // e.g. 중학생 105 -> 102
+      muscleRatio = 0.48;
+      fatRatio = 0.15;
+      labelFat = "14% ~ 16% 파워선수형";
+    } else if (p.includes("내야") || p.includes("외야") || p.includes("타자") || p.includes("주자") || p.includes("야수")) {
+      baseOffset = baseOffset + 1; // e.g. 중학생 105 -> 106
+      muscleRatio = 0.51;
+      fatRatio = 0.12;
+      labelFat = "11% ~ 13% 민첩야수형";
+    }
+  } else if (s === "축구") {
+    if (p.includes("골키퍼") || p.includes("GK")) {
+      baseOffset = baseOffset - 2;
+      muscleRatio = 0.49;
+      fatRatio = 0.14;
+      labelFat = "12% ~ 15% 골키퍼형";
+    } else {
+      baseOffset = baseOffset + 3; // e.g. 중학생 105 -> 108
+      muscleRatio = 0.52;
+      fatRatio = 0.11;
+      labelFat = "10% ~ 12% 고지구력형";
+    }
+  } else if (s === "농구") {
+    baseOffset = baseOffset + 1;
+    muscleRatio = 0.50;
+    fatRatio = 0.12;
+    labelFat = "11% ~ 13% 바스켓볼형";
+  } else if (s === "씨름" || s === "유도" || s === "레슬링") {
+    // 중량감과 파워가 극대화된 체형 (체급 대비 묵직한 하체와 안착력)
+    baseOffset = baseOffset - 10; 
+    muscleRatio = 0.44;
+    fatRatio = 0.20;
+    labelFat = "18% ~ 22% 중량파워형";
+  } else if (s === "체조" || s === "피겨" || s === "다이빙") {
+    // 극도의 파워투웨이트 비율과 가벼운 회전 제어
+    baseOffset = baseOffset + 10;
+    muscleRatio = 0.54;
+    fatRatio = 0.09;
+    labelFat = "8% ~ 10% 극초경량형";
+  }
+  
+  return {
+    offset: baseOffset,
+    muscleRatio,
+    fatRatio,
+    labelFat
+  };
+}
+
 function formatPhoneNumber(value) {
   if (!value) return "";
   const clean = value.replace(/\D/g, "");
@@ -1583,15 +1649,14 @@ function saveHtml(){
     const ageMonths = ageInfo?.months || null;
     const gd=(ageMonths&&heightVal&&weightVal)?getGrowthData(ageMonths,parseFloat(heightVal),parseFloat(weightVal)):null;
     
-    // 목표 체중 계산
+    // 목표 체중 및 체성분 가이드 계산 (종목/포지션별 최적화)
     const ageYears = ageInfo?.years || 10;
     const gradeStr = result?.grade || grade || "";
-    let weightOffset = 108;
-    if (gradeStr.includes("고") || (gradeStr === "" && ageYears >= 15)) {
-      weightOffset = 100;
-    } else if (gradeStr.includes("중") || (gradeStr === "" && ageYears >= 12)) {
-      weightOffset = 105;
-    }
+    const targetSport = result?.sports || sports || "야구";
+    const targetPosition = result?.position || position || "내야수";
+    
+    const pst = getPositionSpecificTargets(targetSport, targetPosition, gradeStr, ageYears);
+    const weightOffset = pst.offset;
     const targetW = heightVal ? Math.round((parseFloat(heightVal) - weightOffset) * 10) / 10 : 0;
     const currentFat = parseFloat(result?.body_fat || bodyFat || 0);
     const currentMuscle = parseFloat(result?.skeletal_muscle || skeletalMuscle || 0);
@@ -1782,13 +1847,13 @@ function saveHtml(){
                   
                   {/* 골격근량 */}
                   {currentMuscle > 0 && (() => {
-                    const idealM = Math.round((targetW * 0.50) * 10) / 10;
+                    const idealM = Math.round((targetW * pst.muscleRatio) * 10) / 10;
                     const diffM = currentMuscle - idealM;
                     const percentOfWeight = Math.round((currentMuscle / parseFloat(weightVal)) * 100);
                     return (
                       <div style={{marginBottom:12}}>
                         <div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:WHITE,marginBottom:4}}>
-                          <span style={{color:MUTED}}>골격근량 (목표: 체중의 50%)</span>
+                          <span style={{color:MUTED}}>골격근량 (목표: 체중의 {Math.round(pst.muscleRatio * 100)}%)</span>
                           <span style={{fontWeight:800,color:diffM >= 0 ? "#4fcfa0" : GOLD}}>
                             {diffM >= 0 ? `충족 (초과 +${diffM.toFixed(1)}kg)` : `보강 필요: ${diffM.toFixed(1)}kg`}
                           </span>
@@ -1806,12 +1871,12 @@ function saveHtml(){
 
                   {/* 체지방률 */}
                   {currentFat > 0 && (() => {
-                    const idealFatPct = 13; // 13%
+                    const idealFatPct = Math.round(pst.fatRatio * 100);
                     const diffF = currentFat - idealFatPct;
                     return (
                       <div style={{marginTop:12}}>
                         <div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:WHITE,marginBottom:4}}>
-                          <span style={{color:MUTED}}>체지방률 (목표: 12% ~ 15% 슬림탄탄)</span>
+                          <span style={{color:MUTED}}>체지방률 (목표: {pst.labelFat})</span>
                           <span style={{fontWeight:800,color:Math.abs(diffF) <= 2 ? "#4fcfa0" : (diffF > 2 ? "#f76f8e" : "#4f8ef7")}}>
                             {Math.abs(diffF) <= 2 ? "✓ 적정 비율" : (diffF > 2 ? `관리 필요 (+${diffF.toFixed(1)}%)` : `매우 슬림 (-${Math.abs(diffF).toFixed(1)}%)`)}
                           </span>
