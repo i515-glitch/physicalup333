@@ -2202,11 +2202,28 @@ function saveHtml(){
                 </div>
               ))}
               {/* 운동 비율 */}
-              <div>
+              <div style={{marginBottom:14}}>
                 <div style={{color:GOLD2,fontSize:12,fontWeight:700,marginBottom:4}}>🏃 추천 운동 비율</div>
                 <div style={{color:MUTED,fontSize:11,marginBottom:10}}>{mi.exercise.title}</div>
-                <div style={{display:"flex",height:26,borderRadius:8,overflow:"hidden",marginBottom:12,gap:1}}>
-                  {mi.exercise.ratio.map(r=><div key={r.name} style={{width:`${r.pct}%`,background:r.color,display:"flex",alignItems:"center",justifyContent:"center",minWidth:r.pct>0?2:0,color:NAVY,fontSize:9,fontWeight:900}}>{r.name} ({r.pct}%)</div>)}
+                <div style={{display:"flex",height:20,borderRadius:6,overflow:"hidden",marginBottom:12,gap:1}}>
+                  {mi.exercise.ratio.map(r=><div key={r.name} style={{width:`${r.pct}%`,background:r.color,display:"flex",alignItems:"center",justifyContent:"center",minWidth:r.pct>0?2:0,color:NAVY,fontSize:10,fontWeight:900}}>{r.pct >= 10 ? `${r.pct}%` : ""}</div>)}
+                </div>
+                
+                {/* 그래프 외부 텍스트 설명 배배치 */}
+                <div style={{display:"flex",flexDirection:"column",gap:8,background:"rgba(255,255,255,0.015)",padding:"10px 12px",borderRadius:8,border:"1px solid rgba(255,255,255,0.03)"}}>
+                  {mi.exercise.ratio.map(r => (
+                    <div key={r.name} style={{display:"flex",alignItems:"flex-start",gap:8}}>
+                      <div style={{
+                        marginTop:4,width:8,height:8,borderRadius:"50%",background:r.color,flexShrink:0
+                      }}/>
+                      <div style={{textAlign:"left"}}>
+                        <div style={{fontSize:11,fontWeight:800,color:WHITE}}>
+                          {r.name.replace("\n", " ")} <span style={{color:r.color,marginLeft:4}}>{r.pct}%</span>
+                        </div>
+                        <div style={{fontSize:10,color:MUTED,lineHeight:1.45,marginTop:2}}>{r.desc}</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
