@@ -4,6 +4,7 @@ import requests
 import time
 import hmac
 import hashlib
+from datetime import datetime, timezone
 
 CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "config.json")
 
@@ -73,9 +74,9 @@ def send_kakao_alimtalk(to_phone, student_name, biocode, report_url):
     api_secret = config["solapi_api_secret"]
     
     # Generate Solapi Authentication Headers
-    timestamp = str(int(time.time() * 1000))
+    date_str = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
     salt = os.urandom(16).hex()
-    signature_data = timestamp + salt
+    signature_data = date_str + salt
     signature = hmac.new(
         api_secret.encode('utf-8'),
         signature_data.encode('utf-8'),
@@ -83,7 +84,7 @@ def send_kakao_alimtalk(to_phone, student_name, biocode, report_url):
     ).hexdigest()
     
     headers = {
-        "Authorization": f"HMAC-SHA256 apiKey={api_key}, date={timestamp}, salt={salt}, signature={signature}",
+        "Authorization": f"HMAC-SHA256 apiKey={api_key}, date={date_str}, salt={salt}, signature={signature}",
         "Content-Type": "application/json"
     }
     
