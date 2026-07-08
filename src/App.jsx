@@ -1969,6 +1969,62 @@ function saveHtml(){
                 </div>
               )}
 
+              {/* 스포츠 종목 및 세부 포지션별 피지컬 설계 기준 */}
+              <div style={{
+                marginTop:16,padding:"14px",background:"rgba(201,168,76,0.02)",
+                borderRadius:14,border:"1px solid rgba(201,168,76,0.18)",textAlign:"left"
+              }}>
+                <div style={{color:GOLD2,fontSize:12,fontWeight:900,marginBottom:6,display:"flex",alignItems:"center",gap:5}}>
+                  <span>📋</span>
+                  <span>스포츠 종목별 피지컬 설계 가이드라인</span>
+                </div>
+                <div style={{color:MUTED,fontSize:10.5,lineHeight:1.45,marginBottom:12}}>
+                  종목별 특성에 맞는 근육량, 골격근 밀도, 체지방 최적 설계 범위를 나타낸 피지컬업 독자 설계 기준입니다. (현재 내 종목/포지션 매칭 행 강조)
+                </div>
+                
+                <div style={{overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
+                  <table style={{width:"100%",borderCollapse:"collapse",fontSize:9.5,color:WHITE,textAlign:"center",minWidth:330}}>
+                    <thead>
+                      <tr style={{background:"rgba(255,255,255,0.06)",borderBottom:"1px solid rgba(255,255,255,0.1)"}}>
+                        <th style={{padding:"6px 4px",fontWeight:800}}>종목 (포지션)</th>
+                        <th style={{padding:"6px 4px",fontWeight:800}}>체급 공식</th>
+                        <th style={{padding:"6px 4px",fontWeight:800}}>골격근</th>
+                        <th style={{padding:"6px 4px",fontWeight:800}}>체지방</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        {s:"야구 (투수/포수)", f:"키 - 102", m:"48%", fa:"14~16%"},
+                        {s:"야구 (내·외야수)", f:"키 - 106", m:"51%", fa:"11~13%"},
+                        {s:"축구 (골키퍼)", f:"키 - 103", m:"49%", fa:"12~15%"},
+                        {s:"축구 (필드)", f:"키 - 108", m:"52%", fa:"10~12%"},
+                        {s:"농구 (공통)", f:"키 - 106", m:"50%", fa:"11~13%"},
+                        {s:"격투 (씨름/유도)", f:"키 - 95", m:"44%", fa:"18~22%"},
+                        {s:"회전 (체조/피겨)", f:"키 - 115", m:"54%", fa:"8~10%"},
+                      ].map((row, idx) => {
+                        const isCurrent = (targetSport === "야구" && row.s.includes("야구") && ((targetPosition.includes("투수") || targetPosition.includes("포수")) === row.s.includes("투수"))) ||
+                                          (targetSport === "축구" && row.s.includes("축구") && ((targetPosition.includes("골키퍼") || targetPosition.includes("GK")) === row.s.includes("골키퍼"))) ||
+                                          (targetSport === "농구" && row.s.includes("농구")) ||
+                                          ((targetSport === "씨름" || targetSport === "유도" || targetSport === "레슬링") && row.s.includes("격투")) ||
+                                          ((targetSport === "체조" || targetSport === "피겨" || targetSport === "다이빙") && row.s.includes("회전"));
+
+                        return (
+                          <tr key={idx} style={{
+                            borderBottom:"1px solid rgba(255,255,255,0.03)",
+                            background: isCurrent ? "rgba(201,168,76,0.12)" : "transparent"
+                          }}>
+                            <td style={{padding:"8px 4px",fontWeight:isCurrent?900:500,color:isCurrent?GOLD2:WHITE}}>{row.s}</td>
+                            <td style={{padding:"8px 4px",color:isCurrent?GOLD2:WHITE}}>{row.f}</td>
+                            <td style={{padding:"8px 4px",fontWeight:700,color:isCurrent?GOLD2:WHITE}}>{row.m}</td>
+                            <td style={{padding:"8px 4px",color:isCurrent?GOLD2:WHITE}}>{row.fa}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
               {/* 종합 성장 지표 진단 소견 */}
               <div style={{
                 marginTop:16,padding:"12px 14px",background:"rgba(255,255,255,0.02)",
