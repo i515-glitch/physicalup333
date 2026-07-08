@@ -1656,8 +1656,16 @@ function saveHtml(){
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
                       <span style={{color:WHITE,fontSize:13,fontWeight:700}}>{ax.label}</span>
                       {reached
-                        ? <span style={{color:"#4fcfa0",fontSize:11,fontWeight:700}}>🏆 상위선수 기준 충족!</span>
-                        : <span style={{color:GOLD,fontSize:11,fontWeight:700}}>상위선수 대비: -{Math.abs(ax.target-ax.mine).toFixed(1)}{ax.unit}</span>
+                        ? <span style={{color:"#4fcfa0",fontSize:11,fontWeight:700}}>
+                            {ax.label === "몸무게" && result.main === "저장형" ? "✓ 체중조절 범위 충족" : "🏆 상위선수 기준 충족!"}
+                          </span>
+                        : <span style={{color:GOLD,fontSize:11,fontWeight:700}}>
+                            {ax.label === "키" 
+                              ? `상위선수 대비: -${Math.abs(ax.target-ax.mine).toFixed(1)}${ax.unit}` 
+                              : (result.main === "저장형" 
+                                  ? `체중 감량 필요: +${Math.abs(ax.target-ax.mine).toFixed(1)}${ax.unit}` 
+                                  : `상위선수 대비: -${Math.abs(ax.target-ax.mine).toFixed(1)}${ax.unit}`)}
+                          </span>
                       }
                     </div>
 
@@ -1684,7 +1692,15 @@ function saveHtml(){
 
                       {/* 목표 선 */}
                       <div style={{position:"absolute",bottom:16,left:`${targetPos}%`,transform:"translateX(-50%)",display:"flex",flexDirection:"column",alignItems:"center",zIndex:8}}>
-                        <div style={{color:GOLD,fontSize:9,fontWeight:700,marginBottom:3,whiteSpace:"nowrap"}}>상위 90% (상위선수)</div>
+                        <div style={{color:GOLD,fontSize:9,fontWeight:700,marginBottom:3,whiteSpace:"nowrap"}}>
+                          {ax.label === "키" 
+                            ? "상위 10% (상위선수)" 
+                            : (result.main === "저장형" 
+                                ? "권장 목표 (하위 15%)" 
+                                : (result.main === "소비형" 
+                                    ? "권장 목표 (상위 15%)" 
+                                    : "상위 10% (상위선수)"))}
+                        </div>
                         <div style={{width:2,height:36,background:GOLD,borderRadius:1,boxShadow:`0 0 6px ${GOLD}`}}/>
                         <div style={{width:7,height:7,background:GOLD,transform:"rotate(45deg)",marginTop:2,boxShadow:`0 0 6px ${GOLD}`}}/>
                         <div style={{color:GOLD,fontSize:10,fontWeight:700,marginTop:3,whiteSpace:"nowrap"}}>{ax.target}{ax.unit}</div>
