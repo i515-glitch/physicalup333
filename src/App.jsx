@@ -352,6 +352,26 @@ function calcPercentile(val,refs) {
   }
   return 50;
 }
+const getProjectedAdultHeight = (pct, gender) => {
+  // Standard Korean Adult height tables (male vs female)
+  const table = gender === "여" ? 
+    [153.5, 156.5, 158.5, 161.0, 163.5, 166.0, 168.5] : // female percentiles: 3, 10, 25, 50, 75, 90, 97
+    [166.0, 169.5, 172.0, 174.0, 177.0, 180.0, 183.5];  // male percentiles: 3, 10, 25, 50, 75, 90, 97
+  
+  const pcts = [3, 10, 25, 50, 75, 90, 97];
+  if (pct <= 3) return table[0];
+  if (pct >= 97) {
+    // Extrapolate for >97th percentile
+    return Math.round((table[6] + (pct - 97) * 0.3) * 10) / 10;
+  }
+  for (let i = 0; i < 6; i++) {
+    if (pct >= pcts[i] && pct <= pcts[i+1]) {
+      const ratio = (pct - pcts[i]) / (pcts[i+1] - pcts[i]);
+      return Math.round((table[i] + ratio * (table[i+1] - table[i])) * 10) / 10;
+    }
+  }
+  return gender === "여" ? 161.0 : 174.0;
+};
 
 function getGrowthData(months,height,weight) {
   if(!months||!height||!weight) return null;
@@ -361,6 +381,17 @@ function getGrowthData(months,height,weight) {
   const bmi=(weight/((height/100)**2)).toFixed(1);
   const hPct=calcPercentile(height,ref.h);
   const wPct=calcPercentile(weight,ref.w);
+  
+  // 야구 레벨별 나이대비 신장 표준 환산
+  const collegeH = Math.round((ref.h[4] + ref.h[5]) / 2 * 10) / 10; // ~83rd percentile
+  const proH = Math.round((ref.h[5] + (ref.h[6] - ref.h[5]) * 0.3) * 10) / 10; // ~92nd percentile
+  const majorH = Math.round((ref.h[6] + 4) * 10) / 10; // ~99th percentile
+  
+  // 야구 레벨별 나이대비 체중 표준 환산
+  const collegeW = Math.round((ref.w[4] + ref.w[5]) / 2 * 10) / 10;
+  const proW = Math.round((ref.w[5] + (ref.w[6] - ref.w[5]) * 0.3) * 10) / 10;
+  const majorW = Math.round((ref.w[6] + 5) * 10) / 10;
+
   return {
     bmi,hPct,wPct,
     stdH:ref.h[3],stdW:ref.w[3],
@@ -370,6 +401,8 @@ function getGrowthData(months,height,weight) {
     targetW90:ref.w[5],
     targetW85:Math.round((ref.w[4]+ref.w[5])/2*10)/10,
     targetW15:Math.round((ref.w[0]+ref.w[1])/2*10)/10,
+    collegeH, proH, majorH,
+    collegeW, proW, majorW
   };
 }
 
@@ -1563,9 +1596,91 @@ function saveHtml(){
                         <div style={{color:GOLD,fontSize:10,fontWeight:700,marginTop:3,whiteSpace:"nowrap"}}>{ax.target}{ax.unit}</div>
                       </div>
                     </div>
+
+                    {/* 야구선수 나이별 피지컬 표준 (현재 나이 환산치) */}
+                    {ax.label === "키" && (
+                      <div style={{marginTop:8,background:"rgba(255,255,255,0.02)",borderRadius:10,padding:"10px",border:"1px solid rgba(255,255,255,0.05)"}}>
+                        <div style={{color:GOLD2,fontSize:10,fontWeight:700,marginBottom:6,textAlign:"left"}}>⚾ 야구선수 나이별 신장 표준 (현재 나이 환산치)</div>
+                        <div style={{display:"flex",justifyContent:"space-between",gap:6}}>
+                          <div style={{flex:1,textAlign:"center"}}>
+                            <div style={{color:MUTED,fontSize:9}}>대학 야구</div>
+                            <div style={{color:WHITE,fontSize:11,fontWeight:800}}>{gd.collegeH}cm</div>
+                          </div>
+                          <div style={{flex:1,textAlign:"center",borderLeft:"1px solid rgba(255,255,255,0.08)",borderRight:"1px solid rgba(255,255,255,0.08)"}}>
+                            <div style={{color:WHITE,fontSize:9,fontWeight:800}}>KBO 프로</div>
+                            <div style={{color:GOLD2,fontSize:11,fontWeight:800}}>{gd.proH}cm</div>
+                          </div>
+                          <div style={{flex:1,textAlign:"center"}}>
+                            <div style={{color:GOLD,fontSize:9,fontWeight:800}}>MLB 메이저</div>
+                            <div style={{color:GOLD,fontSize:11,fontWeight:800}}>{gd.majorH}cm</div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {ax.label === "몸무게" && (
+                      <div style={{marginTop:8,background:"rgba(255,255,255,0.02)",borderRadius:10,padding:"10px",border:"1px solid rgba(255,255,255,0.05)"}}>
+                        <div style={{color:GOLD2,fontSize:10,fontWeight:700,marginBottom:6,textAlign:"left"}}>⚾ 야구선수 나이별 체중 표준 (현재 나이 환산치)</div>
+                        <div style={{display:"flex",justifyContent:"space-between",gap:6}}>
+                          <div style={{flex:1,textAlign:"center"}}>
+                            <div style={{color:MUTED,fontSize:9}}>대학 야구</div>
+                            <div style={{color:WHITE,fontSize:11,fontWeight:800}}>{gd.collegeW}kg</div>
+                          </div>
+                          <div style={{flex:1,textAlign:"center",borderLeft:"1px solid rgba(255,255,255,0.08)",borderRight:"1px solid rgba(255,255,255,0.08)"}}>
+                            <div style={{color:WHITE,fontSize:9,fontWeight:800}}>KBO 프로</div>
+                            <div style={{color:GOLD2,fontSize:11,fontWeight:800}}>{gd.proW}kg</div>
+                          </div>
+                          <div style={{flex:1,textAlign:"center"}}>
+                            <div style={{color:GOLD,fontSize:9,fontWeight:800}}>MLB 메이저</div>
+                            <div style={{color:GOLD,fontSize:11,fontWeight:800}}>{gd.majorW}kg</div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })}
+
+              {/* 성인 예측 신장 사다리 */}
+              {(() => {
+                const projectedHeight = getProjectedAdultHeight(gd.hPct, gender);
+                return (
+                  <div style={{marginTop:16,borderTop:"1px solid rgba(201,168,76,0.15)",paddingTop:14}}>
+                    <div style={{color:GOLD,fontSize:11,fontWeight:700,letterSpacing:1,marginBottom:10,textAlign:"left"}}>
+                      ⚾ 야구 레벨별 성인 신장 사다리 비교
+                    </div>
+                    
+                    <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                      {[
+                        {label:"MLB 메이저 평균",h:190,color:"#4f8ef7"},
+                        {label:"KBO 프로 평균",h:183,color:"#fbbf24"},
+                        {label:"대학야구 평균",h:180,color:"#a78bfa"},
+                        {label:"고교야구 평균",h:176,color:"#94a3b8"},
+                        {label:`${childName || "내 아이"} 최종 예측 키`,h:projectedHeight,color:"#4fcfa0",isMine:true},
+                        {label:"일반 성인 남성 평균",h:173.5,color:"#64748b"}
+                      ].sort((a,b)=>b.h - a.h).map((item, idx)=>{
+                        return (
+                          <div key={idx} style={{
+                            display:"flex",alignItems:"center",justifyContent:"space-between",
+                            background:item.isMine ? "rgba(79,207,160,0.12)" : "rgba(255,255,255,0.02)",
+                            border:item.isMine ? "1.5px solid #4fcfa0" : "1px solid rgba(255,255,255,0.06)",
+                            borderRadius:8,padding:"8px 12px"
+                          }}>
+                            <div style={{display:"flex",alignItems:"center",gap:8}}>
+                              {item.isMine && <span style={{fontSize:12}}>🏃</span>}
+                              <span style={{color:item.isMine?WHITE:MUTED,fontSize:12,fontWeight:item.isMine?900:700}}>{item.label}</span>
+                            </div>
+                            <span style={{color:item.color,fontSize:13,fontWeight:900}}>{item.h}cm</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div style={{color:MUTED,fontSize:10,marginTop:10,lineHeight:1.4,textAlign:"left"}}>
+                      ※ 현재 신장 백분위(상위 {100 - gd.hPct}%)가 성인기까지 동일하게 유지된다고 가정했을 때의 예측 신장 비교입니다.
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           )}
 
