@@ -1369,7 +1369,7 @@ function saveHtml(){
         <div style={{display:"flex",alignItems:"center",gap:4}}>
           <a href="/landing.html#about" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>ABOUT</a>
           <a href="/shop.html" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>SHOP</a>
-          <a href="/app" style={{color:GOLD,fontSize:11,padding:"5px 10px",borderRadius:6,textDecoration:"none",border:`1px solid ${GOLD}`,fontWeight:700}}>333TEST</a>
+          <a href="/app" style={{color:GOLD,fontSize:11,padding:"5px 10px",borderRadius:6,textDecoration:"none",border:`1px solid ${GOLD}`,fontWeight:700}}>무료 성장 진단</a>
         </div>
       </div>
     </nav>
@@ -1383,13 +1383,13 @@ function saveHtml(){
       <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"28px",paddingTop:40}}>
       <div style={{maxWidth:400,width:"100%",textAlign:"center"}}>
         <div style={{marginBottom:20,textAlign:"center"}}>
-          <div style={{display:"inline-block",padding:"10px 52px",borderRadius:24,background:"rgba(201,168,76,0.08)",border:"1.5px solid rgba(201,168,76,0.5)",boxShadow:"0 4px 24px rgba(201,168,76,0.15)"}}>
+          <div style={{display:"inline-block",padding:"10px 42px",borderRadius:24,background:"rgba(201,168,76,0.08)",border:"1.5px solid rgba(201,168,76,0.5)",boxShadow:"0 4px 24px rgba(201,168,76,0.15)"}}>
             <div style={{color:GOLD,fontSize:13,fontWeight:700,letterSpacing:4,marginBottom:2}}>Physical UP 333</div>
-            <div style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:36,fontWeight:900,letterSpacing:4}}>333TEST</div>
+            <div style={{background:"linear-gradient(135deg,#c9a84c,#e8c76a)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",fontSize:30,fontWeight:900,letterSpacing:2}}>무료 성장 진단</div>
           </div>
         </div>
-        <h1 style={{color:WHITE,fontSize:21,fontWeight:800,lineHeight:1.5,marginBottom:8}}>우리 아이 BIO CODE 찾기</h1>
-        <p style={{color:MUTED,fontSize:13,lineHeight:2,marginBottom:20}}>선천(유전) · 대사(흡수) · 생활(환경)<br/>3축 점수로 BIO CODE를 측정합니다</p>
+        <h1 style={{color:WHITE,fontSize:21,fontWeight:800,lineHeight:1.5,marginBottom:8}}>우리 아이 무료 성장 진단</h1>
+        <p style={{color:MUTED,fontSize:13,lineHeight:2,marginBottom:20}}>선천(유전) · 대사(흡수) · 생활(환경)<br/>3축 점수로 성장 발달을 측정합니다</p>
 
         {/* 📏 아이 정보 입력 */}
         <div style={{background:"rgba(201,168,76,0.05)",borderRadius:14,padding:"16px",marginBottom:16,border:"1px solid rgba(201,168,76,0.18)"}}>
@@ -1479,7 +1479,7 @@ function saveHtml(){
 
         <div style={{marginBottom:10}}>
           <button onClick={handleStartTest} style={{width:"100%",padding:"16px",borderRadius:12,background:"linear-gradient(135deg,#c9a84c,#e8c76a)",color:NAVY,fontSize:14,fontWeight:800,border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(201,168,76,0.3)",lineHeight:1.5}}>
-            333TEST 시작하기<br/><span style={{fontSize:11,fontWeight:600,opacity:0.7}}>24문항 · 약 3~5분 · 무료</span>
+            무료 성장 진단 시작하기<br/><span style={{fontSize:11,fontWeight:600,opacity:0.7}}>24문항 · 약 3~5분 · 무료</span>
           </button>
           {Object.keys(pAns).length > 0 && (
             <button onClick={handleQuickResult} style={{width:"100%",marginTop:10,padding:"14px",borderRadius:12,background:"rgba(201,168,76,0.1)",color:GOLD2,fontSize:13,fontWeight:800,border:"1.5px solid rgba(201,168,76,0.4)",cursor:"pointer",lineHeight:1.5}}>
@@ -1591,7 +1591,7 @@ function saveHtml(){
               <span style={{color:GOLD2}}>{nameDisplay}</span>
               {ageInfo&&<span style={{color:MUTED,fontSize:13,fontWeight:600}}> ({ageInfo.display})</span>}
             </div>
-            <div style={{color:MUTED,fontSize:13,marginTop:4}}>의 BIO CODE 분석 결과입니다 ⚾</div>
+            <div style={{color:MUTED,fontSize:13,marginTop:4}}>의 무료 성장 진단 결과입니다 ⚾</div>
           </div>
 
           {/* 코드 메인 카드 (잠금 노출) */}
