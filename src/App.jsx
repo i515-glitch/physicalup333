@@ -377,18 +377,18 @@ const getConstitutionProse = (constStr) => {
   if (!constStr) return "";
   const s = constStr.toLowerCase();
   if (s.includes("이화") || s.includes("ectomorph") || s.includes("소양인")) {
-    return "타고난 신체 에너지를 밖으로 활발하게 분출하고 소비하는 성향이 강합니다. 몸의 순발력과 역동적인 회전력이 뛰어난 운동 특성을 가지고 있어 활기찬 퍼포먼스를 내기에 유리한 선천적 신체 기질을 지니고 있습니다.";
+    return "선천적으로 체내 신체 에너지를 외부에 매우 역동적이고 빠르게 소모하는 '이화 작용(Catabolism)' 성향이 극대화된 체형입니다. 신체 회전 속도와 첫 보폭의 대단한 순발력이 강점이며, 몸이 가벼워 관절에 가해지는 로드가 적어 어질리티(Agility) 운동과 민첩성 훈련에 탁월한 소질을 지닙니다. 다만, 에너지를 체내에 축적하는 능력이 약해 운동 강도가 급격히 높아지면 피로를 금방 느낄 수 있고 근육 밀도가 얇아지기 쉽습니다. 따라서 중간중간 짧은 고강도 휴식을 병행하는 것이 좋으며, 평소 고열량 고단백 식품 및 소화 흡수를 돕는 효소 보충제를 지속 공급하여 피지컬 크기 자체를 키우는 근력 트레이닝을 주축으로 삼는 것이 바람직합니다.";
   }
   if (s.includes("동화") || s.includes("mesomorph") || s.includes("소음인")) {
-    return "영양 흡수와 결합력이 뛰어나 섭취한 에너지를 뼈와 근육의 세포로 섬세하게 합성해내는 특성이 우수합니다. 신체 발달의 기초 골격을 조밀하게 채워주는 섬세하고도 단단한 내실을 지닌 선천적 신체 기질입니다.";
+    return "섭취한 영양분을 뼈와 근육의 핵심 세포 조직으로 조밀하게 결합해내는 '동화 작용(Anabolism)'이 매우 우수하게 발달한 체형입니다. 신체의 좌우 균형과 밸런스 감각이 선천적으로 뛰어나 어떤 종목을 하더라도 기본 이상의 높은 습득력과 안정적인 퍼포먼스를 발휘합니다. 관절과 건의 신축성이 좋아 가동 범위가 넓고 부상 저항력이 높다는 큰 메리트가 있습니다. 영양분을 섬세하게 아미노산과 단백질로 전환하는 대사력이 원활하므로, 성장기 동안 적절한 미네랄과 칼슘을 충분히 보충하고 근육 밀도를 촘촘하게 채워주는 중강도의 저항성 운동 및 플라이오메트릭스 훈련을 균형 있게 배정하면 엘리트 스포츠형 피지컬로 성장할 잠재력이 대단히 큽니다.";
   }
   if (s.includes("수축") || s.includes("endomorph") || s.includes("태음인")) {
-    return "기본 골격 프레임과 체격이 묵직하고 튼튼하게 타고났으며, 에너지를 몸에 오래 머무르게 하여 뼈와 근육의 무게감을 든든하게 유지해 줍니다. 충격을 견디는 파워와 버티는 힘(지면 반발력)에 매우 유리한 선천적 신체 기질입니다.";
+    return "기본적인 뼈의 두께와 관절 프레임 자체가 묵직하고 단단하게 형성된 선천적 체격형 체형입니다. 체내에 에너지를 오랫동안 축적하고 근섬유의 무게를 유지하는 능력이 탁월하여 지면 반발력을 활용한 힘 대결, 투척력, 그리고 충격을 견디고 버텨내는 대단한 힘과 파워를 지니고 있습니다. 무거운 프레임 덕분에 코어의 안정성이 매우 강하지만, 체내 대사 회전 속도가 비교적 완만하여 에너지가 지방으로 쉽게 고착될 우려가 있습니다. 운동량이 조금만 부족해도 순발력이 일시적으로 둔화될 수 있으므로, 평소 당류와 고탄수화물의 과다 섭취를 적절히 제어해야 하며, 주 4~5회 이상의 고강도 인터벌 러닝 및 전신 협응 유산소 운동을 지속해 주어야 스피드와 파워를 동시에 겸비한 압도적인 피지컬을 유지할 수 있습니다.";
   }
   if (s.includes("강발산") || s.includes("hyper") || s.includes("태양인")) {
-    return "신체 대사 속도가 대단히 신속하며 지치지 않는 스피드와 지치지 않는 체력을 내뿜습니다. 지치지 않고 끊임없이 가속을 붙일 수 있는 폭발적인 주력과 반응 속도를 발휘하기에 적합한 선천적 신체 기질을 가졌습니다.";
+    return "세포의 대사 및 에너지 전환 회전율이 일반적인 범주를 훌륭하게 상회하는 초고속 발산형 체형입니다. 젖산 축적에 저항하는 지치지 않는 근지구력과 폭발적인 신경계 반응 속도를 지니고 있어 경기 후반부까지 지치지 않고 엄청난 주력과 가속을 계속해서 이어가는 강력한 에너자이저 타입입니다. 관절의 유연성과 회복 탄력성이 매우 뛰어나 장시간 훈련을 견디는 근지구력 훈련에 엄청난 두각을 보입니다. 다만 체내 열 발산율이 높아 땀을 유독 많이 흘리며 이로 인해 수분과 필수 무기질 전해질의 체외 배출 속도가 매우 빠릅니다. 따라서 훈련 전후로 미네랄이 함유된 수분을 수시로 보충해 주어야 체온 조절 실패로 인한 조기 탈수를 예방할 수 있으며, 근 손실을 예방하기 위해 규칙적이고 밀도 높은 영양 공급에 신경 써야 합니다.";
   }
-  return "신체 전반의 에너지 흡수와 소모 밸런스가 조화롭고 치우침이 없습니다. 영양분이 특정 부위에 편중되지 않고 뼈, 근육, 내장 기관 전반으로 골고루 배분되는 가장 이상적인 성장 기초 대사 균형을 유지하고 있습니다.";
+  return "선천적인 영양 흡수력과 운동 소비력의 균형이 치우침 없이 조화로운 가장 이상적인 중도 밸런스형 대사 기질을 가지고 있습니다. 섭취된 영양소와 단백질이 특정 기관이나 체지방으로 몰리지 않고 골격계, 근육계, 장기 조직 전반으로 매우 고르게 수송·배분되어 표준적인 성장 궤적을 아주 매끄럽게 유지해 나가는 강력한 기반을 갖추고 있습니다. 급격한 성조숙증이나 반대로 성장 지연 같은 대사성 교란의 위험이 상대적으로 낮으며, 어떤 운동이나 식습관 트레이닝도 몸에서 유연하게 다 수용합니다. 현재의 조화로운 3축 대사 밸런스가 무너지지 않도록 규칙적인 8시간 이상의 수면 패턴과 고른 3대 영양 균형 식단을 유지하고, 주 3회 이상의 전신 근력 및 관절 가동성 훈련을 병행하면 완성도 높은 명품 신체 피지컬을 완성해낼 수 있습니다.";
 };
 
 function getGrowthData(months,height,weight) {
@@ -1716,25 +1716,84 @@ function saveHtml(){
             </div>
           )}
 
-          {/* 타고난 체질 분석 카드 */}
+          {/* 타고난 체질 분석 카드 (신체, 장기, 성격 3축 종합) */}
           <div style={cardStyle}>
             <div style={{color:GOLD,fontSize:12,fontWeight:700,marginBottom:4,letterSpacing:1}}>🧬 타고난 신체 기질 분석</div>
-            <div style={{color:MUTED,fontSize:11,marginBottom:12,borderBottom:"1px solid rgba(201,168,76,0.1)",paddingBottom:8}}>
-              {birth ? `${birth.slice(0,2)}년 ${birth.slice(2,4)}월 ${birth.slice(4,6)}일` : ""} {birthTime} 출생
+            <div style={{color:MUTED,fontSize:11,marginBottom:14,borderBottom:"1px solid rgba(201,168,76,0.1)",paddingBottom:8}}>
+              {birth ? `${birth.slice(0,2)}년 ${birth.slice(2,4)}월 ${birth.slice(4,6)}일` : ""} {birthTime} 출생 사주 및 설문 3축 종합
             </div>
             
-            {serverResult ? (
-              <div style={{textAlign:"left",lineHeight:1.6,fontSize:13,color:WHITE}}>
-                {getConstitutionProse(serverResult.constitution)}
-                <div style={{color:MUTED,fontSize:11,marginTop:8,lineHeight:1.4,borderTop:"1px solid rgba(255,255,255,0.05)",paddingTop:8}}>
-                  ※ 태어난 생년월일시를 바탕으로 분석한 선천적인 신체 에너지 대사 성향입니다.
+            <div style={{display:"flex",flexDirection:"column",gap:16,textAlign:"left"}}>
+              {/* 1. 신체 기질 */}
+              <div>
+                <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6,flexWrap:"wrap"}}>
+                  <span style={{fontSize:14}}>🦴</span>
+                  <span style={{color:GOLD2,fontSize:12,fontWeight:700}}>신체 기질 (체격 및 근육)</span>
+                  <span style={{
+                    padding:"2px 8px",borderRadius:4,fontSize:9,fontWeight:900,
+                    background:"rgba(79,207,160,0.12)",color:"#4fcfa0",border:"1px solid rgba(79,207,160,0.3)"
+                  }}>
+                    {result.scores.store === 3 ? "단단한 체격형" : result.scores.store === 2 ? "표준 밸런스형" : "날렵한 슬림형"}
+                  </span>
+                </div>
+                <div style={{color:WHITE,fontSize:13,lineHeight:1.6.toString()}}>
+                  {result.scores.store === 3 ? 
+                    "선천적인 뼈의 두께와 관절 프레임 자체가 묵직하고 견고하게 타고났습니다. 지면 반발력을 활용한 힘 대결, 투척력, 그리고 상대 선수와의 충격을 견디고 버텨내는 대단한 힘과 파워를 지니고 있어 체격 조건에서 큰 강점을 지닙니다." : 
+                   result.scores.store === 2 ? 
+                    "골격과 체중의 밸런스가 매우 이상적인 표준형 신체 구조를 자랑합니다. 기초 근육량과 관절의 회전 가동력이 균형을 이루고 있어 어떤 운동 종목이나 기술 훈련도 무리 없이 자연스럽게 습득하고 조율해낼 수 있는 든든한 피지컬 토대를 지닙니다." : 
+                    "골격 프레임이 또래에 비해 가볍고 날렵하게 타고났습니다. 몸이 가벼워 순발력과 첫 보폭의 대단한 민첩성이 강점이며, 아질리티(Agility)나 방향 전환 운동 시 관절에 무리가 덜 가므로 역동적인 스피드 플레이에 아주 유리한 피지컬 구조입니다."
+                  }
                 </div>
               </div>
-            ) : (
-              <div style={{color:MUTED,fontSize:12,textAlign:"center",padding:"16px 0"}}>
-                기질 분석 데이터를 불러오는 중...
+
+              {/* 2. 장기 대사 */}
+              <div>
+                <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6,flexWrap:"wrap"}}>
+                  <span style={{fontSize:14}}>🥗</span>
+                  <span style={{color:GOLD2,fontSize:12,fontWeight:700}}>장기 대사 (영양 및 소화)</span>
+                  <span style={{
+                    padding:"2px 8px",borderRadius:4,fontSize:9,fontWeight:900,
+                    background:"rgba(247,149,79,0.12)",color:"#f7954f",border:"1px solid rgba(247,149,79,0.3)"
+                  }}>
+                    {result.scores.absorb === 3 ? "강력한 흡수형" : result.scores.absorb === 2 ? "안정적인 소화형" : "민감한 관리형"}
+                  </span>
+                </div>
+                <div style={{color:WHITE,fontSize:13,lineHeight:1.6.toString()}}>
+                  {result.scores.absorb === 3 ? 
+                    "체내로 들어온 모든 음식물의 단백질과 유기물을 세포로 매우 빠르게 흡수하고 합성해내는 능력이 뛰어납니다. 뼈와 근육의 부피를 단시간에 성장시키는 힘이 강하나, 운동량이 부족하면 지방으로 가기 쉬우므로 꾸준한 관리가 필요합니다." : 
+                   result.scores.absorb === 2 ? 
+                    "소화 효소 분비가 풍부하고 영양분을 뼈와 장기 세포로 분배하는 기초 대사 균형이 매우 안정적입니다. 일상적인 고른 식단 관리만으로도 운동 후 소모된 장기 내 수분과 에너지원을 신속하게 원복할 수 있는 건전한 내부 환경을 갖췄습니다." : 
+                    "위장관의 흡수 면적이 조심스럽고 다소 예민한 소화 환경을 타고났습니다. 한 번에 폭식하기보다는 고단백 고에너지 밀도 식단을 자주 나누어 공급하여 장에 부담을 줄이고 소화 흡수 효소의 낭비를 방지하는 세심한 케어가 필요합니다."
+                  }
+                </div>
               </div>
-            )}
+
+              {/* 3. 성격 및 활동성 */}
+              <div>
+                <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6,flexWrap:"wrap"}}>
+                  <span style={{fontSize:14}}>⚡</span>
+                  <span style={{color:GOLD2,fontSize:12,fontWeight:700}}>성격 및 활동성 (에너지 발산)</span>
+                  <span style={{
+                    padding:"2px 8px",borderRadius:4,fontSize:9,fontWeight:900,
+                    background:"rgba(247,111,142,0.12)",color:"#f76f8e",border:"1px solid rgba(247,111,142,0.3)"
+                  }}>
+                    {result.scores.burn === 3 ? "초고속 에너자이저" : result.scores.burn === 2 ? "활발한 역동형" : "침착한 지략가형"}
+                  </span>
+                </div>
+                <div style={{color:WHITE,fontSize:13,lineHeight:1.6.toString()}}>
+                  {result.scores.burn === 3 ? 
+                    "세포 대사 회전율이 대단히 빠르며 몸 안에 가만히 에너지를 가둬두지 않고 폭발적으로 소모하려는 강력한 활동성을 지닙니다. 지치지 않는 근지구력과 빠른 주력이 돋보이지만 수분과 전해질의 체외 배출량이 크므로 수시로 수분을 보충해주어야 피로 회복이 원활합니다." : 
+                   result.scores.burn === 2 ? 
+                    "신체 대사 회전이 경쾌하고 움직임에 대한 적극적인 기질을 타고났습니다. 에너지 발산 속도와 피로 물질(젖산) 분해 속도가 균형 있게 작동하여, 연속된 고강도 훈련 중에도 일정한 운동 효율을 탄탄하고 지속력 있게 뽑아낼 수 있습니다." : 
+                    "불필요한 에너지를 낭비하지 않는 차분하고 집중력 높은 침착한 기질을 보입니다. 섣불리 덤비지 않고 상황을 지략적으로 살피는 능력이 우수하나, 활발한 신체 발산을 위해 훈련 전 충분한 웜업(Warm-up)으로 체온을 올리는 습관이 필요합니다."
+                  }
+                </div>
+              </div>
+            </div>
+            
+            <div style={{color:MUTED,fontSize:10,marginTop:12,lineHeight:1.4,textAlign:"left",borderTop:"1px solid rgba(255,255,255,0.05)",paddingTop:8}}>
+              ※ 타고난 성별, 생년월일시 사주 오행 분포와 24가지 3축 라이프 설문 응답을 교차 분석하여 성의껏 도출한 무료 종합 기질 분석 결과입니다.
+            </div>
           </div>
 
 
