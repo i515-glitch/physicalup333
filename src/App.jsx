@@ -466,9 +466,29 @@ const IS_PROMO_ACTIVE = new Date() < new Date('2026-08-01T00:00:00');
 export default function App() {
   // ── 모든 state는 여기에 ──
   const [step,setStep]=useState("intro");
-  const [pIdx,setPIdx]=useState(0);
+  const [pAns,setPAns]=useState(() => {
+    try {
+      const saved = localStorage.getItem("pu333_pans");
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+  const [pIdx,setPIdx]=useState(() => {
+    try {
+      const savedAns = localStorage.getItem("pu333_pans");
+      const ansObj = savedAns ? JSON.parse(savedAns) : {};
+      for (let i = 0; i < parentQuestions.length; i++) {
+        if (ansObj[parentQuestions[i].id] === undefined) {
+          return i;
+        }
+      }
+      return 0;
+    } catch {
+      return 0;
+    }
+  });
   const [kIdx,setKIdx]=useState(0);
-  const [pAns,setPAns]=useState({});
   const [kAns,setKAns]=useState({});
   const [result,setResult]=useState(null);
   const [serverResult,setServerResult]=useState(null);
@@ -787,6 +807,9 @@ export default function App() {
     setTimeout(()=>{
       const n={...pAns,[pQ.id]:i};
       setPAns(n);setSelP(null);
+      try {
+        localStorage.setItem("pu333_pans", JSON.stringify(n));
+      } catch (e) {}
       if(pIdx<parentQuestions.length-1){
         setPIdx(pIdx+1);
       } else {
@@ -817,7 +840,8 @@ export default function App() {
 
   function reset(){
     setStep("intro");setPIdx(0);setKIdx(0);
-    setPAns({});setKAns({});setResult(null);setServerResult(null);setAiAdvice("");
+    // Keep pAns to preserve previous answers!
+    setKAns({});setResult(null);setServerResult(null);setAiAdvice("");
     setSaved(false);setCopied(false);setDownloading(false);setShowAll(false);
     // 이름·생년월일·키·몸무게는 유지 (다음에도 쓸 수 있게)
   }
