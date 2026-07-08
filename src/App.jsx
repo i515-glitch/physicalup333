@@ -1639,7 +1639,7 @@ function saveHtml(){
               <div style={{display:"flex",justifyContent:"space-between",gap:12,marginBottom:16}}>
                 {[
                   {label:"키",value:parseFloat(heightVal),unit:"cm",avg:gd.stdH,mine:parseFloat(heightVal),target:gd.targetH,color:"#4fcfa0",isSlug:false},
-                  {label:"몸무게",value:parseFloat(weightVal),unit:"kg",avg:gd.stdW,mine:parseFloat(weightVal),target:result.main==="저장형"?gd.targetW75:result.main==="소비형"?gd.targetW85:gd.targetW90,color:"#4f8ef7",isSlug:result.main==="저장형"}
+                  {label:"몸무게",value:parseFloat(weightVal),unit:"kg",avg:gd.stdW,mine:parseFloat(weightVal),target:gd.targetW90,color:"#4f8ef7",isSlug:false}
                 ].map(ax=>{
                   const vals=[ax.avg,ax.mine,ax.target];
                   const minV=Math.min(...vals)*0.95;
