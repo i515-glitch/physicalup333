@@ -1541,16 +1541,11 @@ function saveHtml(){
               </div>
             </div>
             
-            <div style={{position:"relative",marginTop:16,borderTop:"1px solid rgba(201,168,76,0.15)",paddingTop:14,textAlign:"left"}}>
-              <div style={{filter:"blur(4px)",opacity:0.4,userSelect:"none"}}>
-                <div style={{color:GOLD2,fontSize:11,fontWeight:700,marginBottom:4}}>🧬 타고난 유전/체질 특성</div>
-                <div style={{color:WHITE,fontSize:13,lineHeight:1.5,marginBottom:10}}>{ment.wit}</div>
-                <div style={{color:GOLD2,fontSize:11,fontWeight:700,marginBottom:4}}>💡 현재 상태 특이사항</div>
-                <div style={{color:WHITE,fontSize:13,lineHeight:1.5}}>{ment.tip}</div>
-              </div>
-              <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(13,27,62,0.3)"}}>
-                <span style={{color:GOLD2,fontSize:12,fontWeight:800}}>🔒 성장 기질 및 특이사항 잠김</span>
-              </div>
+            <div style={{marginTop:16,borderTop:"1px solid rgba(201,168,76,0.15)",paddingTop:14,textAlign:"left"}}>
+              <div style={{color:GOLD2,fontSize:11,fontWeight:700,marginBottom:4}}>🧬 타고난 유전/체질 특성</div>
+              <div style={{color:WHITE,fontSize:13,lineHeight:1.5,marginBottom:10}}>{ment.wit}</div>
+              <div style={{color:GOLD2,fontSize:11,fontWeight:700,marginBottom:4}}>💡 현재 상태 특이사항</div>
+              <div style={{color:WHITE,fontSize:13,lineHeight:1.5}}>{ment.tip}</div>
             </div>
           </div>
 
@@ -1723,15 +1718,15 @@ function saveHtml(){
             )}
           </div>
 
-          {/* 3축 게이지 (잠금 처리) */}
-          <div style={{...cardStyle,position:"relative",overflow:"hidden"}}>
+          {/* 3축 게이지 (완전 공개) */}
+          <div style={cardStyle}>
             <div style={{color:GOLD,fontSize:11,marginBottom:14,fontWeight:700,letterSpacing:1,borderBottom:"1px solid rgba(201,168,76,0.15)",paddingBottom:10}}>⚾ 3축 BIO CODE 분석</div>
-            <div style={{filter:"blur(4px)",opacity:0.6,userSelect:"none"}}>
+            <div>
               {axes.map(ax=>(
                 <div key={ax.label} style={{marginBottom:12}}>
                   <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
                     <span style={{color:WHITE,fontSize:12,fontWeight:600}}>{ax.label}</span>
-                    <span style={{color:ax.color,fontSize:12,fontWeight:700}}>{ax.val} · {["낮음","보통","높음"][ax.val-1]}</span>
+                    <span style={{color:ax.color,fontSize:12,fontWeight:700}}>{ax.val}단계 · {["낮음","보통","높음"][ax.val-1]}</span>
                   </div>
                   <div style={{display:"flex",gap:4}}>
                     {[1,2,3].map(n=><div key={n} style={{flex:1,height:10,borderRadius:4,background:n<=ax.val?ax.color:"rgba(255,255,255,0.06)",boxShadow:n<=ax.val?`0 0 6px ${ax.color}60`:"none"}}/>)}
@@ -1739,20 +1734,14 @@ function saveHtml(){
                 </div>
               ))}
             </div>
-            {/* 자물쇠 오버레이 */}
-            <div style={{position:"absolute",inset:0,top:40,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(13,27,62,0.4)"}}>
-              <span style={{fontSize:20,marginBottom:6}}>🔒</span>
-              <span style={{color:GOLD2,fontSize:12,fontWeight:800}}>선천 · 대사 · 생활 3축 상세 레벨 잠김</span>
-              <span style={{color:MUTED,fontSize:10,marginTop:2}}>프리미엄 보고서에서 분석 수치가 공개됩니다</span>
-            </div>
           </div>
 
-          {/* 솔루션 (잠금 처리) */}
-          <div style={{...cardStyle,position:"relative",overflow:"hidden"}}>
+          {/* 솔루션 (완전 공개) */}
+          <div style={cardStyle}>
             <div style={{color:GOLD,fontSize:12,fontWeight:700,marginBottom:4,letterSpacing:1}}>{mi.goal}</div>
             <div style={{color:MUTED,fontSize:12,marginBottom:14,borderBottom:"1px solid rgba(201,168,76,0.1)",paddingBottom:12}}>{mi.direction}</div>
             
-            <div style={{filter:"blur(5px)",opacity:0.35,userSelect:"none",pointerEvents:"none"}}>
+            <div>
               {[["🥗 음식 대책",mi.food],["💊 영양제 대책",mi.supplement],["✅ 생활 습관",mi.life]].map(([title,items])=>(
                 <div key={title} style={{marginBottom:14}}>
                   <div style={{color:GOLD2,fontSize:12,fontWeight:700,marginBottom:8}}>{title}</div>
@@ -1773,23 +1762,15 @@ function saveHtml(){
                 </div>
               </div>
             </div>
-            {/* 자물쇠 오버레이 */}
-            <div style={{position:"absolute",inset:0,top:50,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(13,27,62,0.5)",padding:"20px"}}>
-              <div style={{background:"rgba(13,27,62,0.9)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:16,padding:"20px 16px",textAlign:"center",maxWidth:300}}>
-                <span style={{fontSize:24,display:"block",marginBottom:8}}>🔒</span>
-                <div style={{color:GOLD2,fontSize:14,fontWeight:800,marginBottom:6}}>{result.main} 유형 정밀 가이드 잠김</div>
-                <p style={{color:MUTED,fontSize:11,lineHeight:1.6,margin:0,whiteSpace:"pre-line"}}>우리 아이의 유형에 딱 맞춘<br/>운동방법, 식단관리, 생활 수칙 및 1년 로드맵은<br/>프리미엄 정식 보고서에서 해제됩니다.</p>
-              </div>
-            </div>
           </div>
 
-          {/* 세분류 포인트 (잠금 처리) */}
-          <div style={{...cardStyle,position:"relative",overflow:"hidden"}}>
-            <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8,filter:"blur(3px)",opacity:0.5}}>
+          {/* 세분류 포인트 (완전 공개) */}
+          <div style={cardStyle}>
+            <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
               <span style={{fontSize:16}}>{si.emoji}</span>
-              <span style={{color:si.color,fontSize:12,fontWeight:700}}>정밀 맞춤 포인트 ({result.sub})</span>
+              <span style={{color:si.color,fontSize:12,fontWeight:700}}>정밀 맞춤 포인트</span>
             </div>
-            <div style={{filter:"blur(3px)",opacity:0.5,userSelect:"none"}}>
+            <div>
               <div style={{color:WHITE,fontSize:14,fontWeight:700,marginBottom:6}}>{si.shortDesc}</div>
               <p style={{color:MUTED,fontSize:13,lineHeight:1.7,margin:0}}>{si.desc}</p>
               <div style={{marginTop:10,background:"rgba(255,255,255,0.03)",borderRadius:8,padding:"10px",border:`1px dashed ${si.color}40`}}>
@@ -1797,12 +1778,9 @@ function saveHtml(){
                 <span style={{color:WHITE,fontSize:13,lineHeight:1.6}}>{si.plus}</span>
               </div>
             </div>
-            <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(13,27,62,0.4)"}}>
-              <span style={{color:GOLD2,fontSize:12,fontWeight:800}}>🔒 맞춤 관리 포인트 잠김</span>
-            </div>
           </div>
 
-          {/* 실전 행동 처방 (잠금 처리) */}
+          {/* 실전 행동 처방 (완전 공개) */}
           {ment.rx&&(
           <div style={{
             borderRadius:14,padding:"16px",marginBottom:12,
@@ -1811,19 +1789,16 @@ function saveHtml(){
             position:"relative",overflow:"hidden"
           }}>
             <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,transparent,${GOLD},transparent)`}}/>
-            <div style={{color:GOLD,fontSize:11,fontWeight:800,letterSpacing:1,marginBottom:8,filter:"blur(3px)",opacity:0.5}}>
+            <div style={{color:GOLD,fontSize:11,fontWeight:800,letterSpacing:1,marginBottom:8}}>
               ⚡ 지금 당장 실천할 것
             </div>
-            <div style={{filter:"blur(3.5px)",opacity:0.5,userSelect:"none"}}>
+            <div>
               <p style={{color:WHITE,fontSize:13,lineHeight:1.6,margin:0}}>{ment.rx}</p>
-            </div>
-            <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(13,27,62,0.4)"}}>
-              <span style={{color:GOLD2,fontSize:12,fontWeight:800}}>🔒 오늘 당장 실천할 미션 잠김</span>
             </div>
           </div>
           )}
 
-          {/* 축적력 3점 특별 코멘트 (잠금 처리) */}
+          {/* 축적력 3점 특별 코멘트 (완전 공개) */}
           {result.scores.store===3&&(
             <div style={{
               borderRadius:14,padding:"16px",marginBottom:12,
@@ -1833,8 +1808,8 @@ function saveHtml(){
             }}>
               <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:"linear-gradient(90deg,transparent,#f76f8e,transparent)"}}/>
               <div style={{display:"flex",gap:10,alignItems:"flex-start"}}>
-                <div style={{fontSize:24,flexShrink:0,filter:"blur(3px)",opacity:0.5}}>🏃</div>
-                <div style={{filter:"blur(3.5px)",opacity:0.5,userSelect:"none"}}>
+                <div style={{fontSize:24,flexShrink:0}}>🏃</div>
+                <div>
                   <div style={{color:"#f76f8e",fontSize:12,fontWeight:800,marginBottom:6,letterSpacing:0.5}}>
                     축적력 3점 · 체중 관리 포인트
                   </div>
@@ -1842,9 +1817,6 @@ function saveHtml(){
                     선천 축적력이 3점(높음)인 아이는 에너지를 근육과 지방으로 저장하는 힘이 강합니다. 운동량이 적어지면 순식간에 체지방이 불어 스피드와 순발력이 저하될 수 있으므로, 고강도 인터벌 운동과 함께 당류/탄수화물 과다 섭취를 상시 통제해야 합니다.
                   </div>
                 </div>
-              </div>
-              <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(13,27,62,0.4)"}}>
-                <span style={{color:GOLD2,fontSize:12,fontWeight:800}}>🔒 체중 관리 포인트 잠김</span>
               </div>
             </div>
           )}
@@ -1855,15 +1827,11 @@ function saveHtml(){
             <span style={{color:"#8a7840",fontSize:13,lineHeight:1.7}}>{mi.caution}</span>
           </div>
 
-          {/* AI 상담 */}
-          <div style={{...cardStyle,position:"relative",overflow:"hidden",border:"1px solid rgba(201,168,76,0.25)",boxShadow:"0 4px 20px rgba(201,168,76,0.08)"}}>
+          {/* AI 상담 (완전 공개) */}
+          <div style={{...cardStyle,border:"1px solid rgba(201,168,76,0.25)",boxShadow:"0 4px 20px rgba(201,168,76,0.08)"}}>
             <div style={{color:GOLD,fontSize:12,fontWeight:700,marginBottom:10,letterSpacing:1}}>🤖 AI 통합 맞춤 상담</div>
-            <div style={{filter:"blur(4px)",opacity:0.5,userSelect:"none"}}>
+            <div>
               {loading?<div style={{display:"flex",alignItems:"center",gap:8}}><div style={{width:8,height:8,borderRadius:"50%",background:GOLD}}/><span style={{color:MUTED,fontSize:13}}>3축 데이터 분석 중...</span></div>:<p style={{color:"#8aa8c8",fontSize:13,lineHeight:1.9,margin:0}}>{aiAdvice}</p>}
-            </div>
-            <div style={{position:"absolute",inset:0,top:40,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(13,27,62,0.4)"}}>
-              <span style={{color:GOLD2,fontSize:12,fontWeight:800}}>🔒 AI 심층 상담 및 처방 잠김</span>
-              <span style={{color:MUTED,fontSize:10,marginTop:2}}>프리미엄 보고서에서 AI 분석 대화가 공개됩니다</span>
             </div>
           </div>
 
@@ -1985,18 +1953,16 @@ function saveHtml(){
                   <span>🏆 1:1 프리미엄 분석 보고서 신청</span>
                 </div>
                 
-                {IS_PROMO_ACTIVE ? (
-                  <div style={{
-                    background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:10,padding:"10px 12px",marginBottom:14,textAlign:"center"
-                  }}>
-                    <div style={{color:GOLD2,fontSize:12,fontWeight:900,marginBottom:4}}>🎁 베타테스트 기념 100% 무료 프로모션 중</div>
-                    <div style={{color:WHITE,fontSize:10.5,lineHeight:1.5}}>7월 31일까지 1:1 프리미엄 분석 보고서(정가 29,800원) 신청을 무료로 지원해 드립니다. 아래 성장 스펙을 채워 신청을 완료해 주세요!</div>
-                  </div>
-                ) : (
-                  <div style={{color:MUTED,fontSize:11,lineHeight:1.6,marginBottom:18}}>
-                    인바디 분석, 양팔길이 측정치, 부모 유전 키를 적용하여 13페이지 분량의 정식 성장 솔루션 PDF 보고서를 카카오톡으로 자동 발송해 드립니다.
-                  </div>
-                )}
+                <div style={{color:MUTED,fontSize:11.5,lineHeight:1.6,marginBottom:18,textAlign:"left"}}>
+                  기본 분석만으로도 훌륭하지만, <span style={{color:WHITE,fontWeight:800}}>더 깊은 비밀이 궁금하시거나 앞으로의 정밀한 성장 로드맵 및 미래 성장 가능성</span>을 마스터하고 싶다면 신청하세요.
+                  <ul style={{margin:"6px 0 0 16px",padding:0,color:"#8aa8c8"}}>
+                    <li style={{marginBottom:3}}>나만의 3자리 <strong>정밀 BioCode 및 캐릭터 유형 해제</strong></li>
+                    <li style={{marginBottom:3}}>부모 키 유전 확률을 반영한 <strong>성인 예측 키 & 윙스팬 분석</strong></li>
+                    <li style={{marginBottom:3}}>체내 수분/단백질/골격근/체지방 <strong>인바디 정밀 비교군 분석</strong></li>
+                    <li style={{marginBottom:3}}>종목·포지션 매칭 적합도 진단 및 <strong>연간 성장 로드맵 제공</strong></li>
+                    <li style={{marginBottom:3}}>모바일/PC로 보관 가능한 <strong>13페이지 프리미엄 PDF 보고서 발송</strong></li>
+                  </ul>
+                </div>
               
                 {/* 입력 폼 필드들 */}
                 <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:18}}>
