@@ -1565,15 +1565,42 @@ function saveHtml(){
 
           {/* 운동 종목 / 세부 포지션 */}
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
-            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${sports?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
+            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${sports?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center",display:"flex",flexDirection:"column",justifyContent:"center"}}>
               <div style={{color:MUTED,fontSize:10,marginBottom:6}}>운동 종목 <span style={{fontSize:8}}>(필수)</span></div>
-              <input type="text" value={sports} onChange={e=>setSports(e.target.value)} placeholder="예: 야구, 축구"
-                style={{width:"100%",background:"transparent",border:"none",color:sports?GOLD2:WHITE,fontSize:13,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
+              <select value={sports} onChange={e => {
+                setSports(e.target.value);
+                if (e.target.value === "야구") setPosition("내·외야수/야수");
+                else if (e.target.value === "축구") setPosition("필드 플레이어");
+                else setPosition("공통 (포지션 전체)");
+              }} style={{
+                width:"100%",background:"transparent",border:"none",color:sports ? GOLD2 : WHITE,fontSize:13,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box",textAlignLast:"center",cursor:"pointer"
+              }}>
+                <option value="" disabled style={{background:"#0d1b3e",color:MUTED}}>선택</option>
+                {["야구", "축구", "농구", "씨름/유도/레슬링", "체조/피겨/다이빙"].map(op => (
+                  <option key={op} value={op} style={{background:"#0d1b3e",color:WHITE}}>{op}</option>
+                ))}
+              </select>
             </div>
-            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${position?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
+            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${position?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center",display:"flex",flexDirection:"column",justifyContent:"center"}}>
               <div style={{color:MUTED,fontSize:10,marginBottom:6}}>포지션 <span style={{fontSize:8}}>(선택)</span></div>
-              <input type="text" value={position} onChange={e=>setPosition(e.target.value)} placeholder="예: 내야수, 공격수"
-                style={{width:"100%",background:"transparent",border:"none",color:position?GOLD2:WHITE,fontSize:13,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
+              <select value={position} onChange={e => setPosition(e.target.value)} disabled={!sports} style={{
+                width:"100%",background:"transparent",border:"none",color:position ? GOLD2 : WHITE,fontSize:13,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box",textAlignLast:"center",cursor:!sports ? "not-allowed" : "pointer"
+              }}>
+                <option value="" disabled style={{background:"#0d1b3e",color:MUTED}}>선택</option>
+                {sports === "야구" ? (
+                  <>
+                    <option value="내·외야수/야수" style={{background:"#0d1b3e",color:WHITE}}>내·외야수/야수</option>
+                    <option value="투수/포수" style={{background:"#0d1b3e",color:WHITE}}>투수/포수</option>
+                  </>
+                ) : sports === "축구" ? (
+                  <>
+                    <option value="필드 플레이어" style={{background:"#0d1b3e",color:WHITE}}>필드 플레이어</option>
+                    <option value="골키퍼 (GK)" style={{background:"#0d1b3e",color:WHITE}}>골키퍼 (GK)</option>
+                  </>
+                ) : (
+                  <option value="공통 (포지션 전체)" style={{background:"#0d1b3e",color:WHITE}}>공통 (포지션 전체)</option>
+                )}
+              </select>
             </div>
           </div>
 
@@ -2415,15 +2442,40 @@ function saveHtml(){
                     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
                       <div>
                         <div style={{color:MUTED,fontSize:10,marginBottom:4}}>운동 종목 (필수)</div>
-                        <input type="text" value={sports} onChange={e => setSports(e.target.value)} placeholder="예: 축구, 수영" style={{
-                          width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
-                        }}/>
+                        <select value={sports} onChange={e => {
+                          setSports(e.target.value);
+                          if (e.target.value === "야구") setPosition("내·외야수/야수");
+                          else if (e.target.value === "축구") setPosition("필드 플레이어");
+                          else setPosition("공통 (포지션 전체)");
+                        }} style={{
+                          width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:sports ? GOLD2 : WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box",cursor:"pointer"
+                        }}>
+                          <option value="" disabled style={{background:"#040711",color:MUTED}}>선택</option>
+                          {["야구", "축구", "농구", "씨름/유도/레슬링", "체조/피겨/다이빙"].map(op => (
+                            <option key={op} value={op} style={{background:"#040711",color:WHITE}}>{op}</option>
+                          ))}
+                        </select>
                       </div>
                       <div>
                         <div style={{color:MUTED,fontSize:10,marginBottom:4}}>포지션 (선택)</div>
-                        <input type="text" value={position} onChange={e => setPosition(e.target.value)} placeholder="예: 공격수, 피처" style={{
-                          width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
-                        }}/>
+                        <select value={position} onChange={e => setPosition(e.target.value)} disabled={!sports} style={{
+                          width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:position ? GOLD2 : WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box",cursor:!sports ? "not-allowed" : "pointer"
+                        }}>
+                          <option value="" disabled style={{background:"#040711",color:MUTED}}>선택</option>
+                          {sports === "야구" ? (
+                            <>
+                              <option value="내·외야수/야수" style={{background:"#040711",color:WHITE}}>내·외야수/야수</option>
+                              <option value="투수/포수" style={{background:"#040711",color:WHITE}}>투수/포수</option>
+                            </>
+                          ) : sports === "축구" ? (
+                            <>
+                              <option value="필드 플레이어" style={{background:"#040711",color:WHITE}}>필드 플레이어</option>
+                              <option value="골키퍼 (GK)" style={{background:"#040711",color:WHITE}}>골키퍼 (GK)</option>
+                            </>
+                          ) : (
+                            <option value="공통 (포지션 전체)" style={{background:"#040711",color:WHITE}}>공통 (포지션 전체)</option>
+                          )}
+                        </select>
                       </div>
                     </div>
   
