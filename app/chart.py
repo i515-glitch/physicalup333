@@ -238,3 +238,58 @@ def generate_growth_history_chart(history_list):
     plt.tight_layout()
     
     return render_chart_to_base64()
+
+def generate_maturity_comparison_chart(current_height, age, biocode):
+    """
+    Generate growth curve comparison chart showing early (조숙), normal (정상), and late (만숙) maturer curves,
+    and plot a dot representing the child's current height at their current age.
+    """
+    # X range from age 10 to 20
+    x = np.linspace(10, 20, 100)
+    
+    # Define cumulative growth logistic curves that represent the maturity paths
+    # Early (조숙): peak growth at 11.8, fast growth, ends early
+    y_early = 138 + 40 / (1 + np.exp(-1.1 * (x - 11.8)))
+    
+    # Normal (정상): peak growth at 13.5, standard growth
+    y_normal = 134 + 44 / (1 + np.exp(-0.9 * (x - 13.5)))
+    
+    # Late (만숙): peak growth at 15.2, late growth, continues longer
+    y_late = 129 + 49 / (1 + np.exp(-0.72 * (x - 15.2)))
+    
+    fig, ax = plt.subplots(figsize=(6.2, 3.8))
+    
+    # Plot the curves with premium colors and styles
+    ax.plot(x, y_early, color='#ef4444', linewidth=2.0, linestyle='--', label='조숙형 (Early Maturer)')
+    ax.plot(x, y_normal, color='#94a3b8', linewidth=2.0, linestyle='-.', label='정상형 (Normal)')
+    ax.plot(x, y_late, color=GOLD, linewidth=2.5, linestyle='-', label='만숙형 (Late Maturer)')
+    
+    # Plot the child's current position
+    # Determine child's maturity type label
+    is_late_maturity = (biocode in ["2-1-2", "2-1-1"] or biocode.startswith("1-"))
+    child_maturity = "만숙성향" if is_late_maturity else "정상/조숙형"
+    
+    ax.scatter(age, current_height, color=NAVY_DARK, s=120, zorder=5, edgecolors='#ffffff', linewidths=2, 
+               label=f'내 아이 현재 위치 ({age}세, {current_height}cm)')
+    
+    # Add vertical line at current age
+    ax.axvline(x=age, color=NAVY_DARK, linestyle=':', alpha=0.4, linewidth=1.2)
+    
+    # Customize axis labels and titles
+    ax.set_xlabel('연령 (세)', color=GRAY_TEXT, fontweight='bold', fontsize=9.5)
+    ax.set_ylabel('신장 (cm)', color=GRAY_TEXT, fontweight='bold', fontsize=9.5)
+    ax.set_title('조숙형 vs 정상형 vs 만숙형 성장 곡선 비교', color=NAVY_DARK, size=12, fontweight='bold', pad=15)
+    
+    # Grid and spines
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['left'].set_color(GRID_COLOR)
+    ax.spines['bottom'].set_color(GRID_COLOR)
+    ax.yaxis.grid(True, linestyle='-', alpha=0.5, color=GRID_COLOR, zorder=0)
+    ax.xaxis.grid(True, linestyle='-', alpha=0.5, color=GRID_COLOR, zorder=0)
+    
+    # Legend
+    ax.legend(frameon=True, facecolor='#ffffff', edgecolor='#f1f5f9', framealpha=0.95, fontsize=8.5, loc='upper left')
+    
+    plt.tight_layout()
+    return render_chart_to_base64()

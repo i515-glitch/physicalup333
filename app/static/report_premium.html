@@ -680,9 +680,9 @@
     <div style="background: rgba(201,168,76,0.05); border: 1.5px solid rgba(201,168,76,0.25); border-radius: 8px; padding: 12px 15px; margin: 10px 0 12px; text-align:left;">
         <div style="font-size: 9.8pt; font-weight: 900; color: var(--gold-d); margin-bottom: 6px;">📋 핵심 요약 — 네 줄 정리</div>
         <div style="font-size: 8.8pt; color: var(--ink2); line-height: 1.5; display:flex; flex-direction:column; gap:4px;">
-            <div>• <b>안심하셔도 됩니다.</b> 신지오는 또래 중에선 잘 크고 있습니다 (현재 165cm).</div>
-            <div>• <b>다만 솔직히.</b> 야구 잘하는 선수들은 벌써 175cm를 넘습니다. 그들과 경쟁해야 합니다.</div>
-            <div>• <b>그래서 목표.</b> 1년 안에 175cm (선수 상위 10%). 타고난 잠재력(177.5cm)이면 닿는 자리입니다.</div>
+            <div id="summary-line-1">• <b>안심하셔도 됩니다.</b> 신지오는 또래 중에선 잘 크고 있습니다 (현재 165cm).</div>
+            <div id="summary-line-2">• <b>다만 솔직히.</b> 야구 잘하는 선수들은 벌써 175cm를 넘습니다. 그들과 경쟁해야 합니다.</div>
+            <div id="summary-line-3">• <b>그래서 목표.</b> 1년 안에 175cm (선수 상위 10%). 타고난 잠재력(177.5cm)이면 닿는 자리입니다.</div>
             <div>• <b>길은 우리가.</b> 무엇을 어떻게 바꿀지 피지컬업이 짭니다. 따라오기만 하세요.</div>
         </div>
     </div>
@@ -710,7 +710,7 @@
 </div>
 
 <div class="sheet">
-<!-- ============ PAGE 3 : Ⅰ 타고난 몸 (1) ============ -->
+<!-- ============ PAGE 3 : Ⅱ 타고난 몸 (1) ============ -->
 <div class="section">
   <div class="body">
     
@@ -725,17 +725,38 @@
       • <b>핵심 메시지:</b> 키(선천)는 이미 목표에 맞습니다. 채울 것은 유전이 아니라 후천적 요인인 흡수와 수면입니다.
     </div>
 
-    <h3>타고난 체질 — 만세력이 말해주는 것</h3>
-    <p>생년월일시(2012.08.28 09:35)를 분석하여 타고난 선천 대사 체질을 파악합니다.</p>
+    <h3>성숙 유형별 성장 곡선 비교 (조숙형 vs 정상형 vs 만숙형)</h3>
+    <div style="text-align: center; margin-top: 10px;">
+      <img id="maturity-chart-img" style="max-height: 240px; max-width: 100%; border-radius: 8px;" />
+    </div>
+    <div id="maturity-dynamic-desc" style="background: rgba(201,168,76,0.04); border: 1.5px solid rgba(201,168,76,0.2); border-radius: 8px; padding: 10px 12px; margin-top: 10px; font-size: 8.8pt; line-height: 1.55; color: var(--ink2); text-align: justify; word-break: keep-all;">
+      <!-- Dynamic 성숙 성향 분석 설명이 스크립트에 의해 자동 주입됩니다 -->
+    </div>
+  </div>
+  <div class="pf">
+    <span class="conf">Confidential</span>
+    <span class="pinfo-text">13세 · 중2 · 야구 내야수 신지오</span>
+  </div>
+</div>
+</div>
+
+<div class="sheet">
+<!-- ============ PAGE 3-2 : Ⅱ 타고난 몸 (2) ============ -->
+<div class="section">
+  <div class="body">
+    <div class="chapter"><span class="cn">2</span><span class="ck">타고난 체질 분석 (과거 · 선천) · Genetic Constitution</span></div>
+    <h2>타고난 체질 — 만세력이 말해주는 것</h2>
+    <p class="lead">생년월일시(2012.08.28 09:35)를 분석하여 타고난 선천 대사 체질을 파악합니다.</p>
+    
     <div style="background: var(--mist); padding: 12px 15px; border-radius: 8px; margin-bottom:15px; border:1px solid var(--line2); font-size:9.2pt; line-height:1.55; color:var(--ink2);">
       • <b>오행 구성:</b> 오행상 <b>水(저장 · 수분)가 강하고 金(뼈 · 응축)이 비어</b> 있습니다.<br>
       • <b>사상 체질:</b> 사상의학적으로 <b>소음인 경향</b>이 뚜렷합니다. 소음인은 위장 기능이 예민하고 소화 흡수력이 정체되기 쉬운 타입입니다.<br>
       • <b>체질 결론:</b> 타고난 기질 자체가 <b>"많이 먹어도 흡수가 더딘 몸"</b>을 가리키고 있습니다. 이는 요행이 아니라 선천적 에너지 흐름으로, 아래 실측 데이터(③)에서 객관적인 수치로 그대로 증명됩니다.
     </div>
 
-    <div class="note"><b>선천 분석 요약:</b> 잠재량 자체는 이미 야구 내야수 또래의 최상위 프레임을 충족합니다. 다만 위장 대사의 효율을 끌어올려 뼈와 근육으로 저장되게 만드는 마무리가 중요합니다.</div>
+    <div class="note" style="margin-bottom: 15px;"><b>선천 분석 요약:</b> 잠재량 자체는 이미 야구 내야수 또래의 최상위 프레임을 충족합니다. 다만 위장 대사의 효율을 끌어올려 뼈와 근육으로 저장되게 만드는 마무리가 중요합니다.</div>
     
-    <div style="margin-top: 15px; border: 1px dashed rgba(201,168,76,0.5); padding: 12px 15px; border-radius: 8px; background: rgba(201,168,76,0.02); text-align: left;">
+    <div style="margin-top: 15px; border: 1px dashed rgba(201,168,76,0.5); padding: 12px 15px; border-radius: 8px; background: rgba(201,168,76,0.02); text-align: left; margin-bottom: 15px;">
       <h4 style="color: var(--gold-d); margin: 0 0 6px 0; font-size: 9.5pt; font-weight: 800;"><i class="fa-solid fa-wand-magic-sparkles"></i> 선천 기질 극대화를 위한 피지컬 케어 가이드</h4>
       <div style="font-size: 8.5pt; line-height: 1.55; color: var(--ink2); text-align: justify; word-break: keep-all;">
         • <b>뼈 밀도 및 미네랄 관리 (金 보완):</b> 오행상 金(뼈·응축)이 보완되어야 하는 기질이므로, 성장기 칼슘·아연의 효율적 대사를 돕기 위해 비타민 D와 미네랄 섭취 균형이 필수적입니다.<br>
@@ -748,9 +769,9 @@
     <table style="font-size: 8.2pt; width: 100%; table-layout: fixed; border-collapse: collapse; margin-top: 5px; word-break: keep-all;">
       <thead>
         <tr style="background: rgba(201,168,76,0.1); color: var(--gold-d);">
-          <th style="padding: 6px; border: 1px solid var(--line2); text-align: center;">반영 요소</th>
-          <th style="padding: 6px; border: 1px solid var(--line2); text-align: center;">가중치 비중</th>
-          <th style="padding: 6px; border: 1px solid var(--line2); text-align: center;">피지컬 판정 근거</th>
+          <th style="padding: 6px; border: 1px solid var(--line2); text-align: center; width: 22%;">반영 요소</th>
+          <th style="padding: 6px; border: 1px solid var(--line2); text-align: center; width: 18%;">가중치 비중</th>
+          <th style="padding: 6px; border: 1px solid var(--line2); text-align: center; width: 60%;">피지컬 판정 근거</th>
         </tr>
       </thead>
       <tbody>
@@ -765,17 +786,21 @@
           <td style="padding: 6px; border: 1px solid var(--line2); text-align: left;">생년월일시 절기 에너지를 바탕으로 선천 장부 기질의 과불균형 판독</td>
         </tr>
         <tr>
-          <td style="padding: 6px; border: 1px solid var(--line2); font-weight: bold; text-align: center;">사상의학 체질</td>
+          <td style="padding: 6px; border: 1px solid var(--line2); font-weight: bold; text-align: center;">사상 및 기질</td>
           <td style="padding: 6px; border: 1px solid var(--line2); text-align: center; color: var(--gold-d); font-weight: bold;">25%</td>
-          <td style="padding: 6px; border: 1px solid var(--line2); text-align: left;">소양/소음/태음 등 장부 대사의 예민성 및 영양 누수 위험도 평가</td>
+          <td style="padding: 6px; border: 1px solid var(--line2); text-align: left;">동양 체질론(소음·소양 등)과 근골격 성향 기반 성장 대사 유형 정의</td>
         </tr>
         <tr>
-          <td style="padding: 6px; border: 1px solid var(--line2); font-weight: bold; text-align: center;">선천 심성정 (뇌신경)</td>
+          <td style="padding: 6px; border: 1px solid var(--line2); font-weight: bold; text-align: center;">성심리학 멘탈</td>
           <td style="padding: 6px; border: 1px solid var(--line2); text-align: center; color: var(--gold-d); font-weight: bold;">20%</td>
-          <td style="padding: 6px; border: 1px solid var(--line2); text-align: left;">목표 지향성 및 뇌신경 긴장도가 성장 피로도에 미치는 기여도 분석</td>
+          <td style="padding: 6px; border: 1px solid var(--line2); text-align: left;">자율신경계 긴장도 및 행동 집중력과 스트레스 호르몬(코티솔) 영향도 분석</td>
         </tr>
       </tbody>
     </table>
+  </div>
+  <div class="pf">
+    <span class="conf">Confidential</span>
+    <span class="pinfo-text">13세 · 중2 · 야구 내야수 신지오</span>
   </div>
 </div>
 </div>
@@ -1386,6 +1411,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     if (lagCause && lagCause !== "흡수력") {
         walkAndReplace(document.body, "흡수력", lagCause);
+    }
+
+    // Dynamic summary card lines update based on elite athlete comparison
+    const summaryLine1 = document.getElementById("summary-line-1");
+    if (summaryLine1) {
+        if (curHeight < targetHeightVal) {
+            summaryLine1.innerHTML = `• <b>피지컬 강화가 필요합니다.</b> ${targetName} 학생은 일반 학생 평균 기준은 충족하나, 동종목 에이스 선수 기준(${targetHeightVal}cm) 대비 <b>${(targetHeightVal - curHeight).toFixed(1)}cm 작습니다.</b> 더 큰 피지컬을 확보해야 경쟁력이 생깁니다.`;
+        } else {
+            summaryLine1.innerHTML = `• <b>우수한 피지컬을 가졌습니다.</b> ${targetName} 학생은 동종목 에이스 선수 기준(${targetHeightVal}cm) 대비 이미 앞서있습니다. 현재의 우위를 유지하기 위한 완성형 피지컬 훈련이 추천됩니다.`;
+        }
+    }
+    const summaryLine2 = document.getElementById("summary-line-2");
+    if (summaryLine2) {
+        if (curHeight < targetHeightVal) {
+            summaryLine2.innerHTML = `• <b>목표치 설정.</b> 일반 또래 평균과의 비교는 의미가 없습니다. 상위 10% 엘리트 선수들의 평균 신장(${targetHeightVal}cm)을 실질적인 1차 타깃으로 삼아야 합니다.`;
+        } else {
+            summaryLine2.innerHTML = `• <b>핵심 과제.</b> 이미 훌륭한 신장을 확보하고 있으므로, 단순히 키를 늘리는 것보다 골격근 밀도를 엘리트 선수 수준으로 채우는 것이 과제입니다.`;
+        }
+    }
+    const summaryLine3 = document.getElementById("summary-line-3");
+    if (summaryLine3) {
+        const nextTargetHeight = (parseFloat(curHeight) + (parseInt(biocode.split("-")[0]) === 1 ? 8.5 : (parseInt(biocode.split("-")[0]) === 3 ? 6.0 : 7.5)));
+        summaryLine3.innerHTML = `• <b>성장 궤적.</b> 1년 후 목표인 ${nextTargetHeight.toFixed(1)}cm 도달을 향해 가야 합니다. 타고난 유전 잠재력(${geneticAdult.toFixed(1)}cm)을 고려하면 충분히 도달 가능한 궤적입니다.`;
     }
 
     const highlightTitle = document.getElementById("highlight-title");
@@ -2523,6 +2571,26 @@ document.addEventListener("DOMContentLoaded", async () => {
                 </div>
             `;
             container.appendChild(externalShareArea);
+        }
+    }
+
+    // 성숙 유형별 성장 곡선 비교 차트 바인딩 및 텍스트 갱신
+    const maturityChartImg = document.getElementById("maturity-chart-img");
+    if (maturityChartImg && data.chart_maturity) {
+        maturityChartImg.src = data.chart_maturity;
+    }
+
+    const maturityDesc = document.getElementById("maturity-dynamic-desc");
+    if (maturityDesc) {
+        const isLate = (biocode === "2-1-2" || biocode === "2-1-1" || biocode.startsWith("1-"));
+        if (isLate) {
+            maturityDesc.innerHTML = `🧬 <b>성숙 성향 판정: 만숙(Late-Maturer)형 예측</b><br/>
+            ${targetName} 학생은 부모 키 기반 유전 예상 키(${geneticAdult.toFixed(1)}cm)와 현재 나이 기준 예상치(${expHeightNow.toFixed(1)}cm) 대비 현재 실측 키(${curHeight.toFixed(1)}cm) 및 신체 대사 패턴을 종합해 볼 때, <b>성숙 속도가 느린 만숙형 체질</b>로 분석됩니다.<br/>
+            초반에는 또래보다 느리게 크는 것처럼 보일 수 있으나 <b>늦게까지 성장이 오래 지속되므로 후반부 성장 잠재력이 큽니다.</b> 지금 시기에 소화 장벽을 개선하고 필수 미네랄을 보충해주면 유전 예상 키보다 <b>더 크게 자랄 가능성이 매우 높으므로</b> 기대를 갖고 집중 처방을 실천해주시기 바랍니다.`;
+        } else {
+            maturityDesc.innerHTML = `🧬 <b>성숙 성향 판정: 일반/조숙형 예측</b><br/>
+            ${targetName} 학생은 부모 키 기반 유전 예상 키(${geneticAdult.toFixed(1)}cm)와 현재 나이 기준 예상치(${expHeightNow.toFixed(1)}cm) 대비 현재 실측 키(${curHeight.toFixed(1)}cm) 및 신체 대사 패턴을 종합해 볼 때, <b>성숙 속도가 표준 내지 빠른 일반/조숙형 체질</b>로 분석됩니다.<br/>
+            성장 타이밍이 이른 시기에 집중되므로 <b>성장판이 닫히기 전 바로 지금이 성장 효율을 극대화해야 하는 골든타임</b>입니다. 후반부 성장 둔화가 오기 전에 흡수력 증강 및 충분한 수면 환경 조성을 통해 잠재력을 100% 발현해 주어야 합니다.`;
         }
     }
 

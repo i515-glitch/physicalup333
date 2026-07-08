@@ -25,8 +25,8 @@ from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel
 from typing import List, Optional
 
-from app.engine import calculate_biocode
-from app.chart import generate_five_elements_chart, generate_target_comparison_chart, generate_growth_history_chart
+from app.engine import calculate_biocode, calculate_age
+from app.chart import generate_five_elements_chart, generate_target_comparison_chart, generate_growth_history_chart, generate_maturity_comparison_chart
 from app.ocr import parse_inbody_image
 
 # Environment settings for Server Migration
@@ -640,10 +640,20 @@ def process_approval_and_send(req_id: str, email: str, comment: str, inspected_b
     # Generate growth history chart
     growth_history_chart = generate_growth_history_chart(history_list)
 
+    # Generate maturity comparison chart (early vs normal vs late)
+    age_val = calculate_age(req_data.get("birth_date", "2012-01-01"))
+    biocode = result.get("biocode", "2-1-2")
+    maturity_chart = generate_maturity_comparison_chart(
+        current_height=float(req_data.get("current_height", 160.0)),
+        age=float(age_val),
+        biocode=biocode
+    )
+
     # Assemble complete analysis packet to be injected into report.html
     result["chart_five_elements"] = five_elem_chart
     result["chart_comparison"] = comparison_chart
     result["chart_growth_history"] = growth_history_chart
+    result["chart_maturity"] = maturity_chart
     result["history_count"] = len(history_list)
     result["target_specs"] = target_specs
     result["ai_comment"] = comment
