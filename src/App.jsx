@@ -1728,7 +1728,7 @@ function saveHtml(){
                         {label:"KBO 프로 평균",h:183,color:"#fbbf24"},
                         {label:"대학야구 평균",h:180,color:"#a78bfa"},
                         {label:"고교야구 평균",h:176,color:"#94a3b8"},
-                        {label:`${childName || "내 아이"} 최종 예측 키`,h:projectedHeight,color:"#4fcfa0",isMine:true},
+                        {label:`${childName || "내 아이"} 성장 곡선 기준 예측 키`,h:projectedHeight,color:"#4fcfa0",isMine:true},
                         {label:"일반 성인 남성 평균",h:173.5,color:"#64748b"}
                       ].sort((a,b)=>b.h - a.h).map((item, idx)=>{
                         return (
@@ -1748,7 +1748,7 @@ function saveHtml(){
                       })}
                     </div>
                     <div style={{color:MUTED,fontSize:10,marginTop:10,lineHeight:1.4,textAlign:"left"}}>
-                      ※ 현재 신장 백분위(상위 {100 - gd.hPct}%)가 성인기까지 동일하게 유지된다고 가정했을 때의 예측 신장 비교입니다.
+                      ※ 현재 키 백분위(상위 {100 - gd.hPct}%)가 성인기까지 동일하게 유지된다고 가정한 성장곡선 추정치입니다. 부모 유전 키(MPH)까지 결합 분석한 100% 정밀 예측 키는 하단 프리미엄 보고서 신청 시 제공됩니다.
                     </div>
                   </div>
                 );
