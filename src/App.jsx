@@ -437,15 +437,15 @@ function analyze(pAns,kAns) {
   parentQuestions.forEach(q=>{
     const idx=pAns[q.id];
     if(idx!==undefined){
-      // 전혀(0)~항상(3) · dir:1 정방향, dir:-1 역방향(뒤집기)
-      const score=q.dir===-1?(3-idx):idx;
+      // 전혀(0)~항상(4) · dir:1 정방향, dir:-1 역방향(뒤집기)
+      const score=q.dir===-1?(4-idx):idx;
       if(q.id.startsWith('a')) a+=score;
       else if(q.id.startsWith('b')) b+=score;
       else if(q.id.startsWith('s')) c+=score;
     }
   });
-  // 각 축 6문항 × 최대3점 = 0~18점 → 1~3점
-  const toScore=v=>v>=12?3:v>=6?2:1;
+  // 각 축 6문항 × 최대4점 = 0~24점 → 1~3점 (8점 단위 구간배정: 0~7: 1점 / 8~15: 2점 / 16~24: 3점)
+  const toScore=v=>v>=16?3:v>=8?2:1;
   const aScore=toScore(a);
   const bScore=toScore(b);
   const cScore=toScore(c);
@@ -552,9 +552,9 @@ export default function App() {
   // 토스페이먼츠 결제 요청 전 백엔드 임시 저장
   async function prepareTossPayment(genOrderId) {
     const surveyResponses = parentQuestions.map(q => {
-      const idx = pAns[q.id] !== undefined ? pAns[q.id] : 1;
-      const score = q.dir === -1 ? (3 - idx) : idx;
-      return Math.round(1 + (score * 4 / 3));
+      const idx = pAns[q.id] !== undefined ? pAns[q.id] : 2;
+      const score = q.dir === -1 ? (4 - idx) : idx;
+      return score + 1;
     });
 
     const payload = {
@@ -602,9 +602,9 @@ export default function App() {
   async function handlePayPalSuccess(details) {
     setPaymentStatus("processing");
     const surveyResponses = parentQuestions.map(q => {
-      const idx = pAns[q.id] !== undefined ? pAns[q.id] : 1;
-      const score = q.dir === -1 ? (3 - idx) : idx;
-      return Math.round(1 + (score * 4 / 3));
+      const idx = pAns[q.id] !== undefined ? pAns[q.id] : 2;
+      const score = q.dir === -1 ? (4 - idx) : idx;
+      return score + 1;
     });
 
     const payload = {
@@ -651,9 +651,9 @@ export default function App() {
     setPaymentStatus("processing");
     setPaymentError("");
     const surveyResponses = parentQuestions.map(q => {
-      const idx = pAns[q.id] !== undefined ? pAns[q.id] : 1;
-      const score = q.dir === -1 ? (3 - idx) : idx;
-      return Math.round(1 + (score * 4 / 3));
+      const idx = pAns[q.id] !== undefined ? pAns[q.id] : 2;
+      const score = q.dir === -1 ? (4 - idx) : idx;
+      return score + 1;
     });
 
     const payload = {
@@ -740,9 +740,9 @@ export default function App() {
 
   async function saveFreeSurvey(ans) {
     const surveyResponses = parentQuestions.map(q => {
-      const idx = ans[q.id] !== undefined ? ans[q.id] : 1;
-      const score = q.dir === -1 ? (3 - idx) : idx;
-      return Math.round(1 + (score * 4 / 3));
+      const idx = ans[q.id] !== undefined ? ans[q.id] : 2;
+      const score = q.dir === -1 ? (4 - idx) : idx;
+      return score + 1;
     });
 
     const payload = {
@@ -778,9 +778,9 @@ export default function App() {
 
   async function fetchServerAnalysis(ans) {
     const surveyResponses = parentQuestions.map(q => {
-      const idx = ans[q.id] !== undefined ? ans[q.id] : 1;
-      const score = q.dir === -1 ? (3 - idx) : idx;
-      return Math.round(1 + (score * 4 / 3));
+      const idx = ans[q.id] !== undefined ? ans[q.id] : 2;
+      const score = q.dir === -1 ? (4 - idx) : idx;
+      return score + 1;
     });
 
     const payload = {
@@ -1402,9 +1402,9 @@ function saveHtml(){
           </div>
           <div style={{textAlign:"right",color:MUTED,fontSize:10,marginBottom:24}}>{prog}%</div>
           <h2 style={{color:WHITE,fontSize:19,fontWeight:700,lineHeight:1.6,marginBottom:28,textAlign:"center",minHeight:60,display:"flex",alignItems:"center",justifyContent:"center"}}>{pQ&&pQ.text}</h2>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:6}}>
-            {["전혀","가끔","자주","항상"].map((label,i)=>(
-              <button key={i} onClick={()=>handleParent(i)} style={{padding:"18px 4px",borderRadius:10,textAlign:"center",background:selP===i?"rgba(201,168,76,0.25)":pAns[pQ.id]===i?"rgba(201,168,76,0.12)":"rgba(255,255,255,0.03)",border:selP===i?"1.5px solid rgba(201,168,76,0.9)":pAns[pQ.id]===i?"1.5px solid rgba(201,168,76,0.4)":"1.5px solid rgba(255,255,255,0.07)",color:pAns[pQ.id]===i?GOLD3:"#9ab8cc",fontSize:14,fontWeight:700,cursor:"pointer",transition:"all 0.2s",transform:selP===i?"scale(0.95)":"scale(1)"}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(5, 1fr)",gap:5}}>
+            {["전혀","가끔","보통","자주","항상"].map((label,i)=>(
+              <button key={i} onClick={()=>handleParent(i)} style={{padding:"16px 2px",borderRadius:10,textAlign:"center",background:selP===i?"rgba(201,168,76,0.25)":pAns[pQ.id]===i?"rgba(201,168,76,0.12)":"rgba(255,255,255,0.03)",border:selP===i?"1.5px solid rgba(201,168,76,0.9)":pAns[pQ.id]===i?"1.5px solid rgba(201,168,76,0.4)":"1.5px solid rgba(255,255,255,0.07)",color:pAns[pQ.id]===i?GOLD3:"#9ab8cc",fontSize:13,fontWeight:700,cursor:"pointer",transition:"all 0.2s",transform:selP===i?"scale(0.95)":"scale(1)"}}>
                 {label}
               </button>
             ))}
