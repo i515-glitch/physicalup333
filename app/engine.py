@@ -1,4 +1,4 @@
-# PHYSICAL UP 333 - Scoring Engine v12.0 (Strict Concern Mode)
+# PHYSICAL UP 333 - Scoring Engine v15.0 (Strict Concern Mode)
 from datetime import datetime
 from app.db import get_manse_info, get_biocode_pattern
 
