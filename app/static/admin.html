@@ -829,9 +829,6 @@
                         <div class="tab-item" id="tab-approved" onclick="switchTab('Approved')">
                             ✅ 처리완료
                         </div>
-                        <div class="tab-item" id="tab-free" onclick="switchTab('Free')">
-                            🆓 무료진단
-                        </div>
                         <div class="tab-item" id="tab-briefing" onclick="openBriefingBoard()" style="background: rgba(26, 115, 232, 0.05); color: #1a73e8; font-weight: bold; border: 1px solid rgba(26, 115, 232, 0.15);">
                             📢 브리핑보드
                         </div>
@@ -1352,7 +1349,7 @@
         }
 
         function updateKPICards() {
-            const totalCount = allRequests.filter(req => req.status !== 'Free').length;
+            const totalCount = allRequests.length;
             const pendingCount = allRequests.filter(req => req.status === 'Pending').length;
             const scheduledCount = allRequests.filter(req => req.status === 'Scheduled').length;
             const approvedCount = allRequests.filter(req => req.status === 'Approved').length;
@@ -1666,9 +1663,6 @@
             document.getElementById("tab-dashboard").classList.toggle("active", status === 'Dashboard');
             document.getElementById("tab-in-progress").classList.toggle("active", status === 'InProgress');
             document.getElementById("tab-approved").classList.toggle("active", status === 'Approved');
-            if (document.getElementById("tab-free")) {
-                document.getElementById("tab-free").classList.toggle("active", status === 'Free');
-            }
             
             const filterWrapper = document.getElementById("filter-unconverted-wrapper");
             if (filterWrapper) {
@@ -2148,12 +2142,6 @@
                 btn.innerHTML = `<i class="fa-solid fa-circle-check"></i> 이미 발송 완료된 보고서입니다`;
                 btnInstant.disabled = true;
                 btnInstant.innerHTML = `<i class="fa-solid fa-check-double"></i> 발송 완료`;
-                reservePanel.style.display = "none";
-            } else if (req.status === "Free") {
-                btn.disabled = true;
-                btn.innerHTML = `<i class="fa-solid fa-face-smile"></i> 무료 자가진단 내역입니다 (메일 발송 불가)`;
-                btnInstant.disabled = true;
-                btnInstant.innerHTML = `<i class="fa-solid fa-lock"></i> 발송 불가`;
                 reservePanel.style.display = "none";
             } else if (req.status === "Scheduled") {
                 // 발송 예약 대기 상태일 때도 소견 수정 후 "검토완료"로 덮어쓸 수 있도록 검토완료 버튼 활성화 상태 유지!

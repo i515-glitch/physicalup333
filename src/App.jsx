@@ -460,6 +460,8 @@ async function callAI(pAns,kAns,res,setAiAdvice,setLoading) {
   }, 500);
 }
 
+const IS_PROMO_ACTIVE = new Date() < new Date('2026-08-01T00:00:00');
+
 // ─── 메인 컴포넌트 ────────────────────────────────────────────────────────────
 export default function App() {
   // ── 모든 state는 여기에 ──
@@ -469,6 +471,7 @@ export default function App() {
   const [pAns,setPAns]=useState({});
   const [kAns,setKAns]=useState({});
   const [result,setResult]=useState(null);
+  const [serverResult,setServerResult]=useState(null);
   const [aiAdvice,setAiAdvice]=useState("");
   const [loading,setLoading]=useState(false);
   const [selP,setSelP]=useState(null);
@@ -483,16 +486,28 @@ export default function App() {
   const [shopTab,setShopTab]=useState(null);
 
   // ── 결제 및 유료 신청 관련 State ──
-  const [gender, setGender] = useState("남");
+  const [gender, setGender] = useState(() => {
+    try { return localStorage.getItem("pu333_gender") || "남"; }
+    catch { return "남"; }
+  });
+  const [birthTime, setBirthTime] = useState(() => {
+    try { return localStorage.getItem("pu333_birth_time") || ""; }
+    catch { return ""; }
+  });
   const [grade, setGrade] = useState("초등 4~6학년");
   const [sports, setSports] = useState("");
   const [position, setPosition] = useState("");
-  const [phone, setPhone] = useState(""); // 이메일 수신 주소
+  const [phone, setPhone] = useState(() => {
+    try { return localStorage.getItem("pu333_phone") || ""; }
+    catch { return ""; }
+  });
   const [fatherHeight, setFatherHeight] = useState(173);
   const [motherHeight, setMotherHeight] = useState(160);
   const [bodyFat, setBodyFat] = useState("");
   const [skeletalMuscle, setSkeletalMuscle] = useState("");
   const [wingspan, setWingspan] = useState("");
+  const [inbodyFileUrl, setInbodyFileUrl] = useState("");
+  const [ocrLoading, setOcrLoading] = useState(false);
   
   const [paymentMethod, setPaymentMethod] = useState("toss"); // toss or paypal
   const [paymentStatus, setPaymentStatus] = useState(null); // null, 'processing', 'success', 'error'
@@ -513,6 +528,7 @@ export default function App() {
         name: childName,
         gender: gender,
         birth_date: birth,
+        birth_time: birthTime || "시간 모름",
         grade: grade,
         sports: sports,
         position: position || "",
@@ -524,6 +540,7 @@ export default function App() {
         body_fat: bodyFat ? parseFloat(bodyFat) : null,
         skeletal_muscle: skeletalMuscle ? parseFloat(skeletalMuscle) : null,
         wingspan: wingspan ? parseFloat(wingspan) : null,
+        inbody_file: inbodyFileUrl || "",
         survey_responses: surveyResponses,
         is_free: false
       }
@@ -559,6 +576,7 @@ export default function App() {
       name: childName,
       gender: gender,
       birth_date: birth,
+      birth_time: birthTime || "시간 모름",
       grade: grade,
       sports: sports,
       position: position || "",
@@ -570,6 +588,7 @@ export default function App() {
       body_fat: bodyFat ? parseFloat(bodyFat) : null,
       skeletal_muscle: skeletalMuscle ? parseFloat(skeletalMuscle) : null,
       wingspan: wingspan ? parseFloat(wingspan) : null,
+      inbody_file: inbodyFileUrl || "",
       survey_responses: surveyResponses,
       is_free: false
     };
@@ -593,11 +612,92 @@ export default function App() {
     }
   }
 
+  async function handlePromoApply() {
+    setPaymentStatus("processing");
+    setPaymentError("");
+    const surveyResponses = parentQuestions.map(q => {
+      const idx = pAns[q.id] !== undefined ? pAns[q.id] : 1;
+      const score = q.dir === -1 ? (3 - idx) : idx;
+      return Math.round(1 + (score * 4 / 3));
+    });
+
+    const payload = {
+      name: childName,
+      gender: gender,
+      birth_date: birth,
+      birth_time: birthTime || "시간 모름",
+      grade: grade,
+      sports: sports,
+      position: position || "",
+      phone: phone,
+      father_height: parseFloat(fatherHeight) || 173.0,
+      mother_height: parseFloat(motherHeight) || 160.0,
+      current_height: parseFloat(heightVal) || 160.0,
+      current_weight: parseFloat(weightVal) || 50.0,
+      body_fat: bodyFat ? parseFloat(bodyFat) : null,
+      skeletal_muscle: skeletalMuscle ? parseFloat(skeletalMuscle) : null,
+      wingspan: wingspan ? parseFloat(wingspan) : null,
+      inbody_file: inbodyFileUrl || "",
+      survey_responses: surveyResponses,
+      is_free: false
+    };
+
+    try {
+      const res = await fetch("/api/online/apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (res.status === 200) {
+        setPaymentStatus("success");
+      } else {
+        throw new Error(data.detail || "신청서 등록 실패");
+      }
+    } catch (e) {
+      console.error(e);
+      setPaymentStatus("error");
+      setPaymentError(e.message);
+    }
+  }
+
+  const handleInbodyUpload = async (file) => {
+    if (!file) return;
+    setOcrLoading(true);
+    setPaymentError("");
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      const res = await fetch("/api/ocr", {
+        method: "POST",
+        body: formData
+      });
+      if (res.status === 200) {
+        const data = await res.json();
+        setInbodyFileUrl(data.file_url || "");
+        if (data.muscle) setSkeletalMuscle(data.muscle.toString());
+        if (data.fat) setBodyFat(data.fat.toString());
+        alert("🎉 인바디 이미지 분석 완료! 골격근량과 체지방률이 자동 입력되었습니다.");
+      } else {
+        const errData = await res.json();
+        throw new Error(errData.detail || "인바디 이미지 분석 실패");
+      }
+    } catch (e) {
+      console.error("OCR failed:", e);
+      alert("이미지 분석 실패: " + e.message + "\n직접 입력해 주시면 감사하겠습니다.");
+    } finally {
+      setOcrLoading(false);
+    }
+  };
+
   // 입력값 변경시 자동 저장
   const updateName=v=>{setChildName(v);try{localStorage.setItem("pu333_name",v);}catch{}};
   const updateBirth=v=>{setBirth(v);try{localStorage.setItem("pu333_birth",v);}catch{}};
   const updateHeight=v=>{setHeightVal(v);try{localStorage.setItem("pu333_height",v);}catch{}};
   const updateWeight=v=>{setWeightVal(v);try{localStorage.setItem("pu333_weight",v);}catch{}};
+  const updateGender=v=>{setGender(v);try{localStorage.setItem("pu333_gender",v);}catch{}};
+  const updateBirthTime=v=>{setBirthTime(v);try{localStorage.setItem("pu333_birth_time",v);}catch{}};
+  const updatePhone=v=>{setPhone(v);try{localStorage.setItem("pu333_phone",v);}catch{}};
 
   async function saveFreeSurvey(ans) {
     const surveyResponses = parentQuestions.map(q => {
@@ -610,6 +710,7 @@ export default function App() {
       name: childName || "무료진단자",
       gender: gender || "남",
       birth_date: birth || "000101",
+      birth_time: birthTime || "시간 모름",
       grade: grade || "초등 4~6학년",
       sports: sports || "기타",
       position: position || "",
@@ -636,6 +737,48 @@ export default function App() {
     }
   }
 
+  async function fetchServerAnalysis(ans) {
+    const surveyResponses = parentQuestions.map(q => {
+      const idx = ans[q.id] !== undefined ? ans[q.id] : 1;
+      const score = q.dir === -1 ? (3 - idx) : idx;
+      return Math.round(1 + (score * 4 / 3));
+    });
+
+    const payload = {
+      name: childName || "무료진단자",
+      gender: gender || "남",
+      birth_date: birth || "2012-01-01",
+      birth_time: birthTime || "시간 모름",
+      grade: grade || "초등 4~6학년",
+      sports: sports || "기타",
+      position: position || "",
+      phone: phone || "010-0000-0000",
+      father_height: parseFloat(fatherHeight) || 173.0,
+      mother_height: parseFloat(motherHeight) || 160.0,
+      current_height: parseFloat(heightVal) || 0.0,
+      current_weight: parseFloat(weightVal) || 0.0,
+      body_fat: bodyFat ? parseFloat(bodyFat) : null,
+      skeletal_muscle: skeletalMuscle ? parseFloat(skeletalMuscle) : null,
+      wingspan: wingspan ? parseFloat(wingspan) : null,
+      survey_responses: surveyResponses,
+      is_free: true
+    };
+
+    try {
+      const res = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (res.status === 200) {
+        setServerResult(data);
+      }
+    } catch (e) {
+      console.error("Server analysis fetch failed:", e);
+    }
+  }
+
   const pQ=parentQuestions[pIdx];
   const kQ=kidQuestions[kIdx];
 
@@ -651,6 +794,7 @@ export default function App() {
         setResult(res);setStep("result");
         callAI(n,{},res,setAiAdvice,setLoading);
         saveFreeSurvey(n);
+        fetchServerAnalysis(n);
       }
     },250);
   }
@@ -660,6 +804,7 @@ export default function App() {
     setResult(res);setStep("result");
     callAI(pAns,{},res,setAiAdvice,setLoading);
     saveFreeSurvey(pAns);
+    fetchServerAnalysis(pAns);
   }
 
   function goResult(){
@@ -667,14 +812,71 @@ export default function App() {
     setResult(res);setStep("result");
     setAiAdvice(res.main==='소비형'?'흡수력이 낮은 소비형 체질입니다. 유산균·소화효소로 장 환경을 먼저 복구하고 근력 운동 비율을 높이세요.':res.main==='저장형'?'에너지 축적이 빠른 저장형 체질입니다. 유산소 운동 주 5회 이상, 탄수화물 타이밍을 운동 후로 집중하세요.':'3축이 균형 잡힌 체질입니다. 중강도 저항 운동을 꾸준히 하며 잔근육 밀도를 높이세요.');
     saveFreeSurvey({});
+    fetchServerAnalysis({});
   }
 
   function reset(){
     setStep("intro");setPIdx(0);setKIdx(0);
-    setPAns({});setKAns({});setResult(null);setAiAdvice("");
+    setPAns({});setKAns({});setResult(null);setServerResult(null);setAiAdvice("");
     setSaved(false);setCopied(false);setDownloading(false);setShowAll(false);
     // 이름·생년월일·키·몸무게는 유지 (다음에도 쓸 수 있게)
   }
+
+  const handleStartTest = () => {
+    if (!childName.trim()) {
+      alert("아이 이름을 입력해 주세요.");
+      return;
+    }
+    if (!phone.trim()) {
+      alert("연락처(전화번호)를 입력해 주세요.");
+      return;
+    }
+    if (birth.length !== 6 || !calcAgeFromShort(birth)) {
+      alert("올바른 생년월일 6자리를 입력해 주세요.");
+      return;
+    }
+    if (!birthTime) {
+      alert("태어난 시를 선택하거나 [태어난 시 모름]을 체크해 주세요.");
+      return;
+    }
+    if (!heightVal.trim() || parseFloat(heightVal) <= 0) {
+      alert("아이 키를 입력해 주세요.");
+      return;
+    }
+    if (!weightVal.trim() || parseFloat(weightVal) <= 0) {
+      alert("아이 몸무게를 입력해 주세요.");
+      return;
+    }
+    setStep("partA");
+  };
+
+  const handleGoResult = () => {
+    if (!childName.trim()) {
+      alert("아이 이름을 입력해 주세요.");
+      return;
+    }
+    if (!phone.trim()) {
+      alert("연락처(전화번호)를 입력해 주세요.");
+      return;
+    }
+    if (birth.length !== 6 || !calcAgeFromShort(birth)) {
+      alert("올바른 생년월일 6자리를 입력해 주세요.");
+      return;
+    }
+    if (!birthTime) {
+      alert("태어난 시를 선택하거나 [태어난 시 모름]을 체크해 주세요.");
+      return;
+    }
+    if (!heightVal.trim() || parseFloat(heightVal) <= 0) {
+      alert("아이 키를 입력해 주세요.");
+      return;
+    }
+    if (!weightVal.trim() || parseFloat(weightVal) <= 0) {
+      alert("아이 몸무게를 입력해 주세요.");
+      return;
+    }
+    goResult();
+  };
 
   function handleSave(){
     try{
@@ -1018,8 +1220,8 @@ function saveHtml(){
           </div>
         </a>
         <div style={{display:"flex",alignItems:"center",gap:4}}>
-          <a href="/landing.html" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>ABOUT</a>
-          <a href="/worry.html" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>LAB</a>
+          <a href="/landing.html#about" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>ABOUT</a>
+          <a href="/landing.html#science" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>LAB</a>
           <a href="/shop.html" style={{color:MUTED,fontSize:11,padding:"5px 8px",borderRadius:6,textDecoration:"none"}}>SHOP</a>
           <a href="/app" style={{color:GOLD,fontSize:11,padding:"5px 10px",borderRadius:6,textDecoration:"none",border:`1px solid ${GOLD}`,fontWeight:700}}>333TEST</a>
         </div>
@@ -1047,12 +1249,22 @@ function saveHtml(){
         <div style={{background:"rgba(201,168,76,0.05)",borderRadius:14,padding:"14px",marginBottom:16,border:"1px solid rgba(201,168,76,0.15)"}}>
           <div style={{color:GOLD,fontSize:11,fontWeight:700,marginBottom:4,letterSpacing:1}}>📏 아이 정보 입력 (선택 · 자동저장)</div>
           <div style={{color:MUTED,fontSize:10,marginBottom:12,opacity:0.8}}>※ 만 18세 이하 유소년 선수 대상 서비스입니다</div>
+          {/* Row 1: 이름, 연락처 */}
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
             <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${childName?"rgba(201,168,76,0.6)":"rgba(201,168,76,0.3)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
               <div style={{color:MUTED,fontSize:10,marginBottom:6}}>이름</div>
               <input type="text" value={childName} onChange={e=>updateName(e.target.value)} placeholder="홍길동"
                 style={{width:"100%",background:"transparent",border:"none",color:childName?GOLD2:MUTED,fontSize:14,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
             </div>
+            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${phone?"rgba(201,168,76,0.6)":"rgba(201,168,76,0.3)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
+              <div style={{color:MUTED,fontSize:10,marginBottom:6}}>연락처 (전화번호)</div>
+              <input type="tel" value={phone} onChange={e=>updatePhone(e.target.value.replace(/[^0-9-]/g,""))} placeholder="010-1234-5678"
+                style={{width:"100%",background:"transparent",border:"none",color:phone?GOLD2:MUTED,fontSize:13,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
+            </div>
+          </div>
+
+          {/* Row 2: 생년월일, 태어난 시 */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
             <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${birth.length===6?"rgba(201,168,76,0.6)":"rgba(201,168,76,0.3)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
               <div style={{color:MUTED,fontSize:10,marginBottom:6}}>생년월일 <span style={{fontSize:9}}>(YYMMDD)</span></div>
               <input type="text" value={birth} onChange={e=>updateBirth(e.target.value.replace(/\D/g,"").slice(0,6))} placeholder="190523" maxLength={6}
@@ -1062,8 +1274,34 @@ function saveHtml(){
                 return age?<div style={{color:GOLD,fontSize:9,marginTop:3}}>✓ {age.display}</div>:<div style={{color:"#f76f8e",fontSize:9,marginTop:3}}>날짜 확인</div>;
               })()}
             </div>
+            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${birthTime && birthTime !== "시간 모름"?"rgba(201,168,76,0.6)":"rgba(201,168,76,0.3)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center",display:"flex",flexDirection:"column",justifyContent:"center"}}>
+              <div style={{color:MUTED,fontSize:10,marginBottom:4}}>태어난 시</div>
+              <select value={birthTime === "시간 모름" ? "" : birthTime} onChange={e=>updateBirthTime(e.target.value)} disabled={birthTime === "시간 모름"} style={{
+                width:"100%",background:"transparent",border:"none",color:birthTime && birthTime !== "시간 모름" ? GOLD2 : MUTED,fontSize:12,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box",textAlignLast:"center",cursor:birthTime === "시간 모름" ? "not-allowed" : "pointer"
+              }}>
+                <option value="" disabled style={{background:"#0d1b3e",color:MUTED}}>태어난 시 선택</option>
+                {["자시 (23:30~01:30)","축시 (01:30~03:30)","인시 (03:30~05:30)","묘시 (05:30~07:30)","진시 (07:30~09:30)","사시 (09:30~11:30)","오시 (11:30~13:30)","미시 (13:30~15:30)","신시 (15:30~17:30)","유시 (17:30~19:30)","술시 (19:30~21:30)","해시 (21:30~23:30)"].map(op=>(
+                  <option key={op} value={op} style={{background:"#0d1b3e",color:WHITE}}>{op}</option>
+                ))}
+              </select>
+              
+              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:4,marginTop:6}}>
+                <input type="checkbox" id="birthTimeUnknown" checked={birthTime === "시간 모름"}
+                  onChange={e => {
+                    if(e.target.checked) {
+                      updateBirthTime("시간 모름");
+                    } else {
+                      updateBirthTime("");
+                    }
+                  }}
+                  style={{cursor:"pointer",accentColor:GOLD}}/>
+                <label htmlFor="birthTimeUnknown" style={{color:MUTED,fontSize:10,cursor:"pointer",userSelect:"none"}}>태어난 시 모름</label>
+              </div>
+            </div>
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+
+          {/* Row 3: 키, 몸무게 */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
             <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${heightVal?"rgba(201,168,76,0.6)":"rgba(201,168,76,0.3)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
               <div style={{color:MUTED,fontSize:10,marginBottom:6}}>키 (cm)</div>
               <input type="number" value={heightVal} onChange={e=>updateHeight(e.target.value)} placeholder="115"
@@ -1075,14 +1313,30 @@ function saveHtml(){
                 style={{width:"100%",background:"transparent",border:"none",color:weightVal?GOLD2:MUTED,fontSize:16,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
             </div>
           </div>
+
+          {/* Row 4: 성별 */}
+          <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${gender?"rgba(201,168,76,0.6)":"rgba(201,168,76,0.3)"}`,borderRadius:10,padding:"9px 8px",textAlign:"center"}}>
+            <div style={{color:MUTED,fontSize:10,marginBottom:6}}>성별</div>
+            <div style={{display:"flex",justifyContent:"center",gap:20}}>
+              {["남", "여"].map(g => (
+                <button key={g} onClick={() => updateGender(g)} style={{
+                  padding:"4px 24px",borderRadius:6,fontSize:12,fontWeight:700,cursor:"pointer",
+                  background:gender===g ? GOLD : "rgba(255,255,255,0.03)",
+                  color:gender===g ? NAVY : WHITE,
+                  border:gender===g ? `1px solid ${GOLD}` : "1px solid rgba(255,255,255,0.15)",
+                  outline:"none",transition:"all 0.2s"
+                }}>{g}</button>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div style={{marginBottom:10}}>
-          <button onClick={()=>setStep("partA")} style={{width:"100%",padding:"16px",borderRadius:12,background:"linear-gradient(135deg,#c9a84c,#e8c76a)",color:NAVY,fontSize:14,fontWeight:800,border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(201,168,76,0.3)",lineHeight:1.5}}>
+          <button onClick={handleStartTest} style={{width:"100%",padding:"16px",borderRadius:12,background:"linear-gradient(135deg,#c9a84c,#e8c76a)",color:NAVY,fontSize:14,fontWeight:800,border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(201,168,76,0.3)",lineHeight:1.5}}>
             333TEST 시작하기<br/><span style={{fontSize:11,fontWeight:600,opacity:0.7}}>18문항 · 약 3~5분 · 무료</span>
           </button>
         </div>
-        <button onClick={goResult} style={{width:"100%",padding:"12px",borderRadius:12,background:"rgba(255,255,255,0.03)",color:MUTED,fontSize:13,border:"1px solid rgba(255,255,255,0.07)",cursor:"pointer",marginBottom:4}}>
+        <button onClick={handleGoResult} style={{width:"100%",padding:"12px",borderRadius:12,background:"rgba(255,255,255,0.03)",color:MUTED,fontSize:13,border:"1px solid rgba(255,255,255,0.07)",cursor:"pointer",marginBottom:4}}>
           ⚡ 신체 정보만으로 성장 지표 확인
         </button>
         <p style={{color:MUTED,fontSize:11,opacity:0.5}}>18문항 · 약 3~5분 소요</p>
@@ -1172,30 +1426,32 @@ function saveHtml(){
             <div style={{color:MUTED,fontSize:13,marginTop:4}}>의 BIO CODE 분석 결과입니다 ⚾</div>
           </div>
 
-          {/* 코드 메인 카드 */}
-          <div style={{textAlign:"center",padding:"26px 20px",background:"linear-gradient(160deg,#0d1b3e,#0f2050)",border:`1px solid rgba(201,168,76,0.35)`,borderRadius:20,marginBottom:12,boxShadow:"0 8px 40px rgba(201,168,76,0.15)"}}>
+          {/* 코드 메인 카드 (잠금 처리) */}
+          <div style={{textAlign:"center",padding:"26px 20px",background:"linear-gradient(160deg,#0d1b3e,#0f2050)",border:`1px solid rgba(201,168,76,0.35)`,borderRadius:20,marginBottom:12,boxShadow:"0 8px 40px rgba(201,168,76,0.15)",position:"relative",overflow:"hidden"}}>
             {/* 검사 날짜 */}
             <div style={{color:MUTED,fontSize:11,marginBottom:12,letterSpacing:1}}>
               📅 검사일 {new Date().toLocaleDateString("ko-KR")}
             </div>
-            {/* 코드 배지 - 투명 + 골드 테두리 */}
-            <div style={{display:"inline-block",padding:"10px 32px",borderRadius:24,marginBottom:16,background:"rgba(201,168,76,0.08)",border:"1.5px solid rgba(201,168,76,0.5)",boxShadow:"0 4px 20px rgba(201,168,76,0.15)",textDecoration:"none"}}>
-              <span style={{color:"#e8c76a",fontSize:32,fontWeight:900,letterSpacing:8,display:"block"}}>{result.code}</span>
+            {/* 코드 배지 - 자물쇠 표시 및 블러 처리 */}
+            <div style={{display:"inline-block",padding:"10px 32px",borderRadius:24,marginBottom:16,background:"rgba(255,255,255,0.02)",border:"1.5px solid rgba(201,168,76,0.2)",boxShadow:"0 4px 20px rgba(0,0,0,0.3)",position:"relative"}}>
+              <span style={{color:"#e8c76a",fontSize:26,fontWeight:900,letterSpacing:4,display:"block",filter:"blur(4px)",userSelect:"none"}}>X-X-X</span>
+              <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",color:GOLD2,fontSize:12,fontWeight:800}}>🔒 BioCode 잠김</div>
             </div>
-            {/* 이모지+4글자 + 대분류 나란히 */}
+            {/* 대분류(공개) + 세분류닉네임(잠김) 나란히 */}
             <div style={{marginBottom:10}}>
               <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,flexWrap:"wrap"}}>
-                <div style={{display:"flex",alignItems:"center",gap:4}}>
-                  <span style={{fontSize:18}}>{mi.emoji}</span>
-                  <span style={{color:GOLD2,fontSize:18,fontWeight:800}}>{result.main}</span>
+                <div style={{display:"flex",alignItems:"center",gap:4,background:"rgba(201,168,76,0.08)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:20,padding:"4px 14px"}}>
+                  <span style={{fontSize:15}}>{mi.emoji}</span>
+                  <span style={{color:GOLD2,fontSize:15,fontWeight:800}}>{result.main}</span>
                 </div>
-                <div style={{width:1,height:20,background:"rgba(201,168,76,0.3)"}}/>
-                <div style={{display:"inline-block",padding:"4px 16px",borderRadius:20,background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.3)"}}>
-                  <span style={{color:GOLD,fontSize:15,fontWeight:800,letterSpacing:1}}>{ment.emoji} {ment.nick}</span>
+                <div style={{width:1,height:20,background:"rgba(255,255,255,0.1)"}}/>
+                <div style={{display:"inline-block",padding:"4px 16px",borderRadius:20,background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)",position:"relative",overflow:"hidden"}}>
+                  <span style={{color:MUTED,fontSize:13,fontWeight:700,letterSpacing:1,filter:"blur(3.5px)",userSelect:"none"}}>🔒 캐릭터명 잠금</span>
+                  <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",color:GOLD,fontSize:11,fontWeight:800}}>🔒 세부 체질 잠김</div>
                 </div>
               </div>
             </div>
-            <p style={{color:MUTED,fontSize:13,lineHeight:1.7,margin:0}}>{si.shortDesc}</p>
+            <p style={{color:"rgba(255,255,255,0.2)",fontSize:12,lineHeight:1.7,margin:0,filter:"blur(2.5px)",userSelect:"none"}}>이 아이의 상세 체질 성향에 대한 2줄짜리 요약 설명글이 프리미엄 보고서에서 완벽하게 해제됩니다.</p>
           </div>
 
           {/* 성장 지표 */}
@@ -1264,117 +1520,157 @@ function saveHtml(){
             </div>
           )}
 
-          {/* 3축 게이지 */}
+          {/* 타고난 체질 분석 카드 */}
           <div style={cardStyle}>
-            <div style={{color:GOLD,fontSize:11,marginBottom:14,fontWeight:700,letterSpacing:1,borderBottom:"1px solid rgba(201,168,76,0.15)",paddingBottom:10}}>⚾ 3축 BIO CODE 분석</div>
-            {axes.map(ax=>(
-              <div key={ax.label} style={{marginBottom:12}}>
-                <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
-                  <span style={{color:WHITE,fontSize:12,fontWeight:600}}>{ax.label}</span>
-                  <span style={{color:ax.color,fontSize:12,fontWeight:700}}>{ax.val} · {["낮음","보통","높음"][ax.val-1]}</span>
+            <div style={{color:GOLD,fontSize:12,fontWeight:700,marginBottom:4,letterSpacing:1}}>🧬 타고난 신체 기질 분석 (만세력 기준)</div>
+            <div style={{color:MUTED,fontSize:11,marginBottom:14,borderBottom:"1px solid rgba(201,168,76,0.1)",paddingBottom:10}}>
+              {birth ? `${birth.slice(0,2)}년 ${birth.slice(2,4)}월 ${birth.slice(4,6)}일` : ""} {birthTime} 출생
+            </div>
+            
+            {serverResult ? (
+              <div>
+                <div style={{marginBottom:14}}>
+                  <span style={{color:MUTED,fontSize:11,display:"block",marginBottom:4}}>체질 경향성</span>
+                  <div style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:8,padding:"10px 12px"}}>
+                    <span style={{color:WHITE,fontSize:13,fontWeight:800}}>{serverResult.constitution}</span>
+                  </div>
                 </div>
-                <div style={{display:"flex",gap:4}}>
-                  {[1,2,3].map(n=><div key={n} style={{flex:1,height:10,borderRadius:4,background:n<=ax.val?ax.color:"rgba(255,255,255,0.06)",boxShadow:n<=ax.val?`0 0 6px ${ax.color}60`:"none",transition:"all 0.5s"}}/>)}
+                <div>
+                  <span style={{color:MUTED,fontSize:11,display:"block",marginBottom:6}}>타고난 오행(五行) 분포</span>
+                  <div style={{display:"flex",justifyContent:"space-between",gap:6}}>
+                    {Object.entries(serverResult.five_elements).map(([name, count]) => {
+                      const colors = { "목": "#4fcfa0", "화": "#f76f8e", "토": "#f7d24f", "금": "#e5e5e5", "수": "#4f8ef7" };
+                      return (
+                        <div key={name} style={{flex:1,background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.04)",borderRadius:8,padding:"8px 4px",textAlign:"center"}}>
+                          <div style={{color:colors[name],fontSize:12,fontWeight:800,marginBottom:4}}>{name}</div>
+                          <div style={{color:WHITE,fontSize:14,fontWeight:900}}>{count}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
-            ))}
+            ) : (
+              <div style={{color:MUTED,fontSize:12,textAlign:"center",padding:"16px 0"}}>
+                기질 분석 데이터를 불러오는 중...
+              </div>
+            )}
           </div>
 
-          {/* 솔루션 */}
-          <div style={cardStyle}>
-            <div style={{color:GOLD,fontSize:12,fontWeight:700,marginBottom:4,letterSpacing:1}}>{mi.goal}</div>
-            <div style={{color:MUTED,fontSize:12,marginBottom:14,borderBottom:"1px solid rgba(201,168,76,0.1)",paddingBottom:12}}>{mi.direction}</div>
-            {[["🥗 음식 대책",mi.food],["💊 영양제 대책",mi.supplement],["✅ 생활 습관",mi.life]].map(([title,items])=>(
-              <div key={title} style={{marginBottom:14}}>
-                <div style={{color:GOLD2,fontSize:12,fontWeight:700,marginBottom:8}}>{title}</div>
-                {items.map((item,i)=>(
-                  <div key={i} style={{display:"flex",gap:8,marginBottom:6,alignItems:"flex-start"}}>
-                    <span style={{color:GOLD,fontSize:10,marginTop:4,flexShrink:0}}>▸</span>
-                    <span style={{color:"#7a9ab8",fontSize:13,lineHeight:1.7}}>{item}</span>
+          {/* 3축 게이지 (잠금 처리) */}
+          <div style={{...cardStyle,position:"relative",overflow:"hidden"}}>
+            <div style={{color:GOLD,fontSize:11,marginBottom:14,fontWeight:700,letterSpacing:1,borderBottom:"1px solid rgba(201,168,76,0.15)",paddingBottom:10}}>⚾ 3축 BIO CODE 분석</div>
+            <div style={{filter:"blur(4px)",opacity:0.6,userSelect:"none"}}>
+              {axes.map(ax=>(
+                <div key={ax.label} style={{marginBottom:12}}>
+                  <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
+                    <span style={{color:WHITE,fontSize:12,fontWeight:600}}>{ax.label}</span>
+                    <span style={{color:ax.color,fontSize:12,fontWeight:700}}>{ax.val} · {["낮음","보통","높음"][ax.val-1]}</span>
                   </div>
-                ))}
-              </div>
-            ))}
-            {/* 운동 비율 */}
-            <div>
-              <div style={{color:GOLD2,fontSize:12,fontWeight:700,marginBottom:4}}>🏃 추천 운동 비율</div>
-              <div style={{color:MUTED,fontSize:11,marginBottom:10}}>{mi.exercise.title}</div>
-              <div style={{display:"flex",height:26,borderRadius:8,overflow:"hidden",marginBottom:12,gap:1}}>
-                {mi.exercise.ratio.map(r=><div key={r.name} style={{width:`${r.pct}%`,background:r.color,display:"flex",alignItems:"center",justifyContent:"center",minWidth:r.pct>0?2:0}}>
-                  {r.pct>=12&&<span style={{color:NAVY,fontSize:9,fontWeight:800}}>{r.pct}%</span>}
-                </div>)}
-              </div>
-              {mi.exercise.ratio.map(r=>(
-                <div key={r.name} style={{display:"flex",gap:10,marginBottom:9,alignItems:"flex-start"}}>
-                  <div style={{flexShrink:0,textAlign:"center",width:52}}>
-                    <div style={{background:`${r.color}20`,border:`1px solid ${r.color}50`,borderRadius:6,padding:"3px 4px",marginBottom:2}}>
-                      <div style={{color:r.color,fontSize:11,fontWeight:800,lineHeight:1.2,whiteSpace:"pre-line"}}>{r.name}</div>
-                    </div>
-                    <div style={{color:r.color,fontSize:13,fontWeight:900}}>{r.pct}%</div>
-                  </div>
-                  <div style={{flex:1}}>
-                    <div style={{height:4,background:"rgba(255,255,255,0.06)",borderRadius:2,marginBottom:4}}>
-                      <div style={{height:"100%",borderRadius:2,background:r.color,width:`${r.pct}%`,boxShadow:`0 0 4px ${r.color}60`}}/>
-                    </div>
-                    <span style={{color:"#6a8aaa",fontSize:12,lineHeight:1.6}}>{r.desc}</span>
+                  <div style={{display:"flex",gap:4}}>
+                    {[1,2,3].map(n=><div key={n} style={{flex:1,height:10,borderRadius:4,background:n<=ax.val?ax.color:"rgba(255,255,255,0.06)",boxShadow:n<=ax.val?`0 0 6px ${ax.color}60`:"none"}}/>)}
                   </div>
                 </div>
               ))}
-              <div style={{padding:"8px 12px",borderRadius:8,background:"rgba(201,168,76,0.06)",border:"1px solid rgba(201,168,76,0.15)"}}>
-                <span style={{color:GOLD,fontSize:10}}>⚠️ </span>
-                <span style={{color:"#8a7840",fontSize:11,lineHeight:1.6}}>{mi.exercise.caution}</span>
+            </div>
+            {/* 자물쇠 오버레이 */}
+            <div style={{position:"absolute",inset:0,top:40,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(13,27,62,0.4)"}}>
+              <span style={{fontSize:20,marginBottom:6}}>🔒</span>
+              <span style={{color:GOLD2,fontSize:12,fontWeight:800}}>선천 · 대사 · 생활 3축 상세 레벨 잠김</span>
+              <span style={{color:MUTED,fontSize:10,marginTop:2}}>프리미엄 보고서에서 분석 수치가 공개됩니다</span>
+            </div>
+          </div>
+
+          {/* 솔루션 (잠금 처리) */}
+          <div style={{...cardStyle,position:"relative",overflow:"hidden"}}>
+            <div style={{color:GOLD,fontSize:12,fontWeight:700,marginBottom:4,letterSpacing:1}}>{mi.goal}</div>
+            <div style={{color:MUTED,fontSize:12,marginBottom:14,borderBottom:"1px solid rgba(201,168,76,0.1)",paddingBottom:12}}>{mi.direction}</div>
+            
+            <div style={{filter:"blur(5px)",opacity:0.35,userSelect:"none",pointerEvents:"none"}}>
+              {[["🥗 음식 대책",mi.food],["💊 영양제 대책",mi.supplement],["✅ 생활 습관",mi.life]].map(([title,items])=>(
+                <div key={title} style={{marginBottom:14}}>
+                  <div style={{color:GOLD2,fontSize:12,fontWeight:700,marginBottom:8}}>{title}</div>
+                  {items.map((item,i)=>(
+                    <div key={i} style={{display:"flex",gap:8,marginBottom:6,alignItems:"flex-start"}}>
+                      <span style={{color:GOLD,fontSize:10,marginTop:4,flexShrink:0}}>▸</span>
+                      <span style={{color:"#7a9ab8",fontSize:13,lineHeight:1.7}}>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+              {/* 운동 비율 */}
+              <div>
+                <div style={{color:GOLD2,fontSize:12,fontWeight:700,marginBottom:4}}>🏃 추천 운동 비율</div>
+                <div style={{color:MUTED,fontSize:11,marginBottom:10}}>{mi.exercise.title}</div>
+                <div style={{display:"flex",height:26,borderRadius:8,overflow:"hidden",marginBottom:12,gap:1}}>
+                  {mi.exercise.ratio.map(r=><div key={r.name} style={{width:`${r.pct}%`,background:r.color,display:"flex",alignItems:"center",justifyContent:"center",minWidth:r.pct>0?2:0}}/>)}
+                </div>
+              </div>
+            </div>
+            
+            {/* 자물쇠 오버레이 */}
+            <div style={{position:"absolute",inset:0,top:50,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(13,27,62,0.5)",padding:"20px"}}>
+              <div style={{background:"rgba(13,27,62,0.9)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:16,padding:"20px 16px",textAlign:"center",maxWidth:300}}>
+                <span style={{fontSize:24,display:"block",marginBottom:8}}>🔒</span>
+                <div style={{color:GOLD2,fontSize:14,fontWeight:800,marginBottom:6}}>{result.main} 유형 정밀 가이드 잠김</div>
+                <p style={{color:MUTED,fontSize:11,lineHeight:1.6,margin:0,whiteSpace:"pre-line"}}>우리 아이의 유형에 딱 맞춘<br/>운동방법, 식단관리, 생활 수칙 및 1년 로드맵은<br/>프리미엄 정식 보고서에서 해제됩니다.</p>
               </div>
             </div>
           </div>
 
-          {/* 세분류 포인트 */}
-          <div style={{...cardStyle,border:`1px solid ${si.color}25`}}>
-            <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8}}>
+          {/* 세분류 포인트 (잠금 처리) */}
+          <div style={{...cardStyle,position:"relative",overflow:"hidden"}}>
+            <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8,filter:"blur(3px)",opacity:0.5}}>
               <span style={{fontSize:16}}>{si.emoji}</span>
-              <span style={{color:si.color,fontSize:12,fontWeight:700}}>{ment.emoji} {ment.nick} 맞춤 포인트</span>
+              <span style={{color:si.color,fontSize:12,fontWeight:700}}>정밀 맞춤 포인트</span>
             </div>
-            <p style={{color:MUTED,fontSize:13,lineHeight:1.7,margin:0}}>{si.plus}</p>
+            <p style={{color:MUTED,fontSize:13,lineHeight:1.7,margin:0,filter:"blur(3px)",userSelect:"none"}}>아이의 선천적 기질과 유전적 체형을 교차 분석하여 도출되는 1:1 핵심 맞춤 관리법 영역입니다.</p>
+            <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(13,27,62,0.4)"}}>
+              <span style={{color:GOLD2,fontSize:12,fontWeight:800}}>🔒 맞춤 관리 포인트 잠김</span>
+            </div>
           </div>
 
-          {/* 실전 행동 처방 */}
+          {/* 실전 행동 처방 (잠금 처리) */}
           {ment.rx&&(
           <div style={{
             borderRadius:14,padding:"16px",marginBottom:12,
-            background:"linear-gradient(135deg,rgba(201,168,76,0.08),rgba(13,27,62,0.6))",
-            border:"1.5px solid rgba(201,168,76,0.3)",
+            background:"linear-gradient(135deg,rgba(201,168,76,0.04),rgba(13,27,62,0.4))",
+            border:"1.5px solid rgba(255,255,255,0.06)",
             position:"relative",overflow:"hidden"
           }}>
             <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,transparent,${GOLD},transparent)`}}/>
-            <div style={{color:GOLD,fontSize:11,fontWeight:800,letterSpacing:1,marginBottom:8}}>
+            <div style={{color:GOLD,fontSize:11,fontWeight:800,letterSpacing:1,marginBottom:8,filter:"blur(3px)",opacity:0.5}}>
               ⚡ 지금 당장 실천할 것
             </div>
-            <p style={{color:"#e8d8a0",fontSize:13,lineHeight:1.9,margin:0}}>{ment.rx}</p>
+            <p style={{color:MUTED,fontSize:13,lineHeight:1.6,margin:0,filter:"blur(3.5px)",userSelect:"none"}}>보고서 발급 즉시 오늘부터 행동으로 옮겨야 할 첫 번째 훈련 및 영양 미션이 잠겨 있습니다.</p>
+            <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(13,27,62,0.4)"}}>
+              <span style={{color:GOLD2,fontSize:12,fontWeight:800}}>🔒 오늘 당장 실천할 미션 잠김</span>
+            </div>
           </div>
           )}
 
-          {/* 축적력 3점 특별 코멘트 */}
+          {/* 축적력 3점 특별 코멘트 (잠금 처리) */}
           {result.scores.store===3&&(
             <div style={{
               borderRadius:14,padding:"16px",marginBottom:12,
-              background:"linear-gradient(135deg,rgba(247,111,142,0.08),rgba(13,27,62,0.6))",
-              border:"1.5px solid rgba(247,111,142,0.35)",
+              background:"linear-gradient(135deg,rgba(247,111,142,0.04),rgba(13,27,62,0.4))",
+              border:"1.5px solid rgba(255,255,255,0.06)",
               position:"relative",overflow:"hidden"
             }}>
               <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:"linear-gradient(90deg,transparent,#f76f8e,transparent)"}}/>
               <div style={{display:"flex",gap:10,alignItems:"flex-start"}}>
-                <div style={{fontSize:24,flexShrink:0}}>🏃</div>
+                <div style={{fontSize:24,flexShrink:0,filter:"blur(3px)",opacity:0.5}}>🏃</div>
                 <div>
-                  <div style={{color:"#f76f8e",fontSize:12,fontWeight:800,marginBottom:6,letterSpacing:0.5}}>
+                  <div style={{color:"#f76f8e",fontSize:12,fontWeight:800,marginBottom:6,letterSpacing:0.5,filter:"blur(3px)",opacity:0.5}}>
                     축적력 3점 · 체중 관리 포인트
                   </div>
-                  <div style={{color:"#c8a0a8",fontSize:13,lineHeight:1.8}}>
-                    에너지 저장력이 강한 체질이에요.<br/>
-                    달리기 선수에게 체중은 곧 기록입니다.<br/>
-                    <span style={{color:"#f9c8d0",fontWeight:700}}>몸이 무거워지면 속도가 느려져요.</span><br/>
-                    유산소 운동을 꾸준히 해서<br/>
-                    <span style={{color:"#f76f8e",fontWeight:700}}>지금의 스피드를 지켜봅시다! ⚡</span>
+                  <div style={{color:MUTED,fontSize:13,lineHeight:1.6,filter:"blur(3.5px)",userSelect:"none"}}>
+                    에너지 저장량이 많은 체질을 위한 체중 및 속도 관리 처방 가이드라인입니다.
                   </div>
                 </div>
+              </div>
+              <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(13,27,62,0.4)"}}>
+                <span style={{color:GOLD2,fontSize:12,fontWeight:800}}>🔒 체중 관리 포인트 잠김</span>
               </div>
             </div>
           )}
@@ -1494,13 +1790,13 @@ function saveHtml(){
                 <div style={{fontSize:40,marginBottom:12}}>🏆</div>
                 <div style={{color:GOLD2,fontSize:18,fontWeight:900,marginBottom:10}}>분석 신청 완료!</div>
                 <div style={{color:WHITE,fontSize:13,lineHeight:1.7}}>
-                  결제가 정상 완료되었습니다.<br/>
-                  24시간 이내에 입력하신 이메일과 카카오 알림톡으로 정밀 분석 보고서가 전송됩니다.
+                  신청이 정상 완료되었습니다.<br/>
+                  24시간 이내에 기입하신 연락처(카카오 알림톡)로 정밀 분석 보고서가 전송됩니다.
                 </div>
               </div>
             ) : paymentStatus === "processing" ? (
               <div style={{textAlign:"center",padding:"40px 10px"}}>
-                <div style={{color:GOLD2,fontSize:15,fontWeight:800,marginBottom:10}}>결제 승인 및 처리 중...</div>
+                <div style={{color:GOLD2,fontSize:15,fontWeight:800,marginBottom:10}}>{IS_PROMO_ACTIVE ? "신청서 접수 및 처리 중..." : "결제 승인 및 처리 중..."}</div>
                 <div style={{color:MUTED,fontSize:12}}>잠시만 기다려 주세요.</div>
               </div>
             ) : (
@@ -1508,43 +1804,26 @@ function saveHtml(){
                 <div style={{color:GOLD2,fontSize:15,fontWeight:900,marginBottom:6,display:"flex",alignItems:"center",gap:6}}>
                   <span>🏆 1:1 프리미엄 분석 보고서 신청</span>
                 </div>
-                <div style={{color:MUTED,fontSize:11,lineHeight:1.6,marginBottom:18}}>
-                  인바디 분석, 윙스팬 측정치, 부모 유전 키를 적용하여 8페이지 분량의 정식 성장 솔루션 PDF 보고서를 카카오톡과 이메일로 자동 발송해 드립니다.
-                </div>
-
+                
+                {IS_PROMO_ACTIVE ? (
+                  <div style={{
+                    background:"rgba(201,168,76,0.1)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:10,padding:"10px 12px",marginBottom:14,textAlign:"center"
+                  }}>
+                    <div style={{color:GOLD2,fontSize:12,fontWeight:900,marginBottom:4}}>🎁 베타테스트 기념 100% 무료 프로모션 중</div>
+                    <div style={{color:WHITE,fontSize:10.5,lineHeight:1.5}}>7월 31일까지 1:1 프리미엄 분석 보고서(정가 29,800원) 신청을 무료로 지원해 드립니다. 아래 성장 스펙을 채워 신청을 완료해 주세요!</div>
+                  </div>
+                ) : (
+                  <div style={{color:MUTED,fontSize:11,lineHeight:1.6,marginBottom:18}}>
+                    인바디 분석, 양팔길이 측정치, 부모 유전 키를 적용하여 13페이지 분량의 정식 성장 솔루션 PDF 보고서를 카카오톡으로 자동 발송해 드립니다.
+                  </div>
+                )}
+              
                 {/* 입력 폼 필드들 */}
                 <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:18}}>
-                  {/* 성별 선택 */}
-                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                    <span style={{color:WHITE,fontSize:12,fontWeight:700}}>성별</span>
-                    <div style={{display:"flex",gap:4}}>
-                      {["남", "여"].map(g => (
-                        <button key={g} onClick={() => setGender(g)} style={{
-                          padding:"6px 16px",borderRadius:8,fontSize:12,fontWeight:700,cursor:"pointer",
-                          background:gender===g ? GOLD : "rgba(255,255,255,0.03)",
-                          color:gender===g ? NAVY : WHITE,
-                          border:gender===g ? `1px solid ${GOLD}` : "1px solid rgba(255,255,255,0.1)"
-                        }}>{g}</button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* 학년 선택 */}
-                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                    <span style={{color:WHITE,fontSize:12,fontWeight:700}}>학년</span>
-                    <select value={grade} onChange={e => setGrade(e.target.value)} style={{
-                      padding:"6px 10px",borderRadius:8,background:"#040711",color:GOLD2,border:"1px solid rgba(255,255,255,0.15)",outline:"none",fontSize:12,fontWeight:700
-                    }}>
-                      {["미취학", "초등 1~3학년", "초등 4~6학년", "중학교 1~3학년", "고등학교 1~3학년"].map(op => (
-                        <option key={op} value={op}>{op}</option>
-                      ))}
-                    </select>
-                  </div>
-
                   {/* 운동 종목 및 포지션 */}
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
                     <div>
-                      <div style={{color:MUTED,fontSize:10,marginBottom:4}}>운동 종목</div>
+                      <div style={{color:MUTED,fontSize:10,marginBottom:4}}>운동 종목 (필수)</div>
                       <input type="text" value={sports} onChange={e => setSports(e.target.value)} placeholder="예: 축구, 수영" style={{
                         width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
                       }}/>
@@ -1557,68 +1836,83 @@ function saveHtml(){
                     </div>
                   </div>
 
-                  {/* 이메일 주소 (필수) */}
-                  <div>
-                    <div style={{color:MUTED,fontSize:10,marginBottom:4}}>보고서 수신 이메일 주소 (필수)</div>
-                    <input type="email" value={phone} onChange={e => setPhone(e.target.value)} placeholder="example@gmail.com" style={{
-                      width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
-                    }}/>
-                  </div>
-
                   {/* 부모 키 */}
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
                     <div>
-                      <div style={{color:MUTED,fontSize:10,marginBottom:4}}>아버지 키 (cm)</div>
+                      <div style={{color:MUTED,fontSize:10,marginBottom:4}}>아버지 키 (cm) (필수)</div>
                       <input type="number" value={fatherHeight} onChange={e => setFatherHeight(e.target.value)} style={{
                         width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
                       }}/>
                     </div>
                     <div>
-                      <div style={{color:MUTED,fontSize:10,marginBottom:4}}>어머니 키 (cm)</div>
+                      <div style={{color:MUTED,fontSize:10,marginBottom:4}}>어머니 키 (cm) (필수)</div>
                       <input type="number" value={motherHeight} onChange={e => setMotherHeight(e.target.value)} style={{
                         width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
                       }}/>
                     </div>
                   </div>
 
-                  {/* 인바디 선택 입력 */}
+                  {/* 인바디 실측치 입력 */}
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6}}>
                     <div>
-                      <div style={{color:MUTED,fontSize:9,marginBottom:4}}>골격근량 (kg)</div>
-                      <input type="number" value={skeletalMuscle} onChange={e => setSkeletalMuscle(e.target.value)} placeholder="선택" style={{
+                      <div style={{color:MUTED,fontSize:9,marginBottom:4}}>골격근량 (kg) (필수)</div>
+                      <input type="number" value={skeletalMuscle} onChange={e => setSkeletalMuscle(e.target.value)} placeholder="실측치" style={{
                         width:"100%",padding:"8px 8px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:11,fontWeight:700,outline:"none",boxSizing:"border-box"
                       }}/>
                     </div>
                     <div>
-                      <div style={{color:MUTED,fontSize:9,marginBottom:4}}>체지방률 (%)</div>
-                      <input type="number" value={bodyFat} onChange={e => setBodyFat(e.target.value)} placeholder="선택" style={{
+                      <div style={{color:MUTED,fontSize:9,marginBottom:4}}>체지방률 (%) (필수)</div>
+                      <input type="number" value={bodyFat} onChange={e => setBodyFat(e.target.value)} placeholder="실측치" style={{
                         width:"100%",padding:"8px 8px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:11,fontWeight:700,outline:"none",boxSizing:"border-box"
                       }}/>
                     </div>
                     <div>
-                      <div style={{color:MUTED,fontSize:9,marginBottom:4}}>윙스팬 (cm)</div>
-                      <input type="number" value={wingspan} onChange={e => setWingspan(e.target.value)} placeholder="선택" style={{
+                      <div style={{color:MUTED,fontSize:9,marginBottom:4}}>양팔길이 (cm) (필수)</div>
+                      <input type="number" value={wingspan} onChange={e => setWingspan(e.target.value)} placeholder="실측치" style={{
                         width:"100%",padding:"8px 8px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:11,fontWeight:700,outline:"none",boxSizing:"border-box"
                       }}/>
+                    </div>
+                  </div>
+
+                  {/* 인바디 이미지 업로드 / 카메라 촬영 */}
+                  <div style={{background:"rgba(255,255,255,0.02)",border:"1px dashed rgba(201,168,76,0.3)",borderRadius:8,padding:"10px",textAlign:"center"}}>
+                    <div style={{color:GOLD,fontSize:10,fontWeight:700,marginBottom:6}}>📸 인바디 용지 사진 촬영 또는 스캔 파일 첨부 (선택)</div>
+                    <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+                      <label style={{
+                        display:"inline-block",padding:"6px 14px",borderRadius:6,background:"rgba(201,168,76,0.12)",border:`1px solid ${GOLD}`,
+                        color:GOLD2,fontSize:11,fontWeight:700,cursor:ocrLoading?"not-allowed":"pointer"
+                      }}>
+                        {ocrLoading ? "분석 중..." : "파일 선택 / 촬영"}
+                        <input type="file" accept="image/*,application/pdf" capture="environment" onChange={e => handleInbodyUpload(e.target.files[0])} disabled={ocrLoading} style={{display:"none"}}/>
+                      </label>
+                      {inbodyFileUrl && (
+                        <span style={{color:"#4fcfa0",fontSize:10,fontWeight:700}}>✓ 첨부 완료</span>
+                      )}
+                    </div>
+                    <div style={{color:MUTED,fontSize:9,marginTop:6,lineHeight:1.4}}>
+                      ※ 사진을 등록하시면 골격근량과 지방률이 자동 판독되어 채워집니다.<br/>
+                      판독에 실패할 경우 직접 텍스트로 수치를 보정해 주실 수 있습니다.
                     </div>
                   </div>
                 </div>
 
                 {/* 결제 수단 선택 */}
-                <div style={{display:"flex",gap:8,marginBottom:15}}>
-                  <button onClick={() => setPaymentMethod("toss")} style={{
-                    flex:1,padding:"10px",borderRadius:10,fontSize:12,fontWeight:700,cursor:"pointer",
-                    background:paymentMethod==="toss" ? "rgba(201,168,76,0.15)" : "rgba(255,255,255,0.02)",
-                    color:paymentMethod==="toss" ? GOLD2 : MUTED,
-                    border:paymentMethod==="toss" ? `1px solid ${GOLD}` : "1px solid rgba(255,255,255,0.08)"
-                  }}>🇰🇷 토스페이먼츠</button>
-                  <button onClick={() => setPaymentMethod("paypal")} style={{
-                    flex:1,padding:"10px",borderRadius:10,fontSize:12,fontWeight:700,cursor:"pointer",
-                    background:paymentMethod==="paypal" ? "rgba(201,168,76,0.15)" : "rgba(255,255,255,0.02)",
-                    color:paymentMethod==="paypal" ? GOLD2 : MUTED,
-                    border:paymentMethod==="paypal" ? `1px solid ${GOLD}` : "1px solid rgba(255,255,255,0.08)"
-                  }}>🌐 PayPal (해외)</button>
-                </div>
+                {!IS_PROMO_ACTIVE && (
+                  <div style={{display:"flex",gap:8,marginBottom:15}}>
+                    <button onClick={() => setPaymentMethod("toss")} style={{
+                      flex:1,padding:"10px",borderRadius:10,fontSize:12,fontWeight:700,cursor:"pointer",
+                      background:paymentMethod==="toss" ? "rgba(201,168,76,0.15)" : "rgba(255,255,255,0.02)",
+                      color:paymentMethod==="toss" ? GOLD2 : MUTED,
+                      border:paymentMethod==="toss" ? `1px solid ${GOLD}` : "1px solid rgba(255,255,255,0.08)"
+                    }}>🇰🇷 토스페이먼츠</button>
+                    <button onClick={() => setPaymentMethod("paypal")} style={{
+                      flex:1,padding:"10px",borderRadius:10,fontSize:12,fontWeight:700,cursor:"pointer",
+                      background:paymentMethod==="paypal" ? "rgba(201,168,76,0.15)" : "rgba(255,255,255,0.02)",
+                      color:paymentMethod==="paypal" ? GOLD2 : MUTED,
+                      border:paymentMethod==="paypal" ? `1px solid ${GOLD}` : "1px solid rgba(255,255,255,0.08)"
+                    }}>🌐 PayPal (해외)</button>
+                  </div>
+                )}
 
                 {/* 에러 발생 시 노출 */}
                 {paymentError && (
@@ -1626,14 +1920,18 @@ function saveHtml(){
                 )}
 
                 {/* 결제 실행 버튼 */}
-                {!childName || !phone || !sports ? (
+                {!sports || !wingspan || !fatherHeight || !motherHeight || ((!skeletalMuscle || !bodyFat) && !inbodyFileUrl) ? (
                   <div style={{
                     padding:"14px",borderRadius:12,background:"#334155",color:"#94a3b8",fontSize:13,fontWeight:700,textAlign:"center"
-                  }}>⚠️ 이름, 이메일, 종목을 모두 입력해 주세요.</div>
+                  }}>⚠️ 모든 성장 정보(종목, 부모 키, 양팔길이 및 인바디 실측치 또는 사진 파일)를 입력해 주세요.</div>
+                ) : IS_PROMO_ACTIVE ? (
+                  <button onClick={handlePromoApply} style={{
+                    width:"100%",padding:"15px",borderRadius:12,background:`linear-gradient(135deg, ${GOLD}, ${GOLD2})`,color:WHITE,fontSize:14,fontWeight:900,border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(201,168,76,0.3)",textAlign:"center"
+                  }}>✨ 1:1 프리미엄 분석 보고서 무료 신청하기</button>
                 ) : paymentMethod === "toss" ? (
                   <TossCheckoutButton
                     product={TOSS_PRODUCTS[0]}
-                    customerEmail={phone}
+                    customerEmail={undefined}
                     customerName={childName}
                     method="카드"
                     onPrepare={prepareTossPayment}

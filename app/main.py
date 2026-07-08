@@ -19,7 +19,7 @@ if os.path.exists(env_path):
 
 import webbrowser
 from threading import Timer
-from fastapi import FastAPI, UploadFile, File, HTTPException, Header
+from fastapi import FastAPI, UploadFile, File, HTTPException, Header, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel
@@ -42,6 +42,7 @@ class AnalysisRequest(BaseModel):
     name: str
     gender: str
     birth_date: str
+    birth_time: Optional[str] = ""
     grade: str
     sports: str
     position: Optional[str] = ""
@@ -53,6 +54,7 @@ class AnalysisRequest(BaseModel):
     body_fat: Optional[float] = None
     skeletal_muscle: Optional[float] = None
     wingspan: Optional[float] = None
+    inbody_file: Optional[str] = ""
     survey_responses: List[int]
     is_free: Optional[bool] = False
     reservation_date: Optional[str] = None
@@ -115,8 +117,25 @@ def analyze_specs(request: AnalysisRequest):
 @app.post("/api/ocr")
 async def ocr_inbody(file: UploadFile = File(...)):
     try:
+        import uuid
+        uploads_dir = os.path.join(STATIC_DIR, "uploads")
+        if not os.path.exists(uploads_dir):
+            os.makedirs(uploads_dir)
+            
+        ext = os.path.splitext(file.filename)[1]
+        if not ext:
+            ext = ".png"
+        filename = f"{uuid.uuid4()}{ext}"
+        filepath = os.path.join(uploads_dir, filename)
+        
         content = await file.read()
+        with open(filepath, "wb") as f:
+            f.write(content)
+            
+        file_url = f"/static/uploads/{filename}"
+        
         ocr_result = parse_inbody_image(content)
+        ocr_result["file_url"] = file_url
         return ocr_result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -216,18 +235,12 @@ CONFIG_FILE = os.path.join(DATA_DIR, "reservation_config.json")
 
 def check_duplicate_application(name: str, birth_date: str, phone: str):
     """
-    Check if the same student has an active Scheduled/Approved request within the last 30 days.
+    Check if the same student has submitted more than 10 requests.
     """
-    # [임시 비활성화] 베타 서비스 테스트를 위해 중복 신청 제한을 해제합니다.
-    return False
-    
-    import time
-    current_time_ms = time.time() * 1000
-    thirty_days_ms = 30 * 24 * 60 * 60 * 1000 # 30 days in ms
-    
     if not os.path.exists(REQUESTS_DIR):
         return False
         
+    match_count = 0
     for filename in os.listdir(REQUESTS_DIR):
         if filename.endswith(".json"):
             file_path = os.path.join(REQUESTS_DIR, filename)
@@ -235,20 +248,14 @@ def check_duplicate_application(name: str, birth_date: str, phone: str):
                 with open(file_path, "r", encoding="utf-8") as f:
                     data = json.load(f)
                 
-                # Check status
-                status = data.get("status")
-                if status not in ["Scheduled", "Approved"]:
-                    continue
-                    
                 # Match student unique identity
                 if (data.get("name") == name and 
                     data.get("birth_date") == birth_date and 
                     data.get("phone") == phone):
+                    match_count += 1
                     
-                    # Check if within 30 days
-                    req_timestamp = data.get("timestamp", 0)
-                    if current_time_ms - req_timestamp < thirty_days_ms:
-                        return True
+                if match_count >= 10:
+                    return True
             except:
                 pass
     return False
@@ -415,11 +422,11 @@ def online_apply(request: AnalysisRequest):
             scheduled_at = 0
             assigned_date = datetime.now().strftime("%Y-%m-%d")
         else:
-            # 4. 중복 신청 제한 검증 (이름 + 생년월일 + 연락처 기준 30일 제한)
+            # 4. 중복 신청 제한 검증 (이름 + 생년월일 + 연락처 기준 최대 10회 제한)
             if check_duplicate_application(request.name, request.birth_date, request.phone):
                 raise HTTPException(
                     status_code=400, 
-                    detail="학생 1인당 월 1회 신청으로 제한됩니다. 최근 30일 이내에 이미 예약 또는 검사 완료된 이력이 있습니다."
+                    detail="해당 학생(또는 연락처)으로 신청할 수 있는 최대 횟수(10회)를 초과하였습니다."
                 )
                 
             status = "Scheduled"
@@ -1143,6 +1150,7 @@ def toss_success(paymentKey: str, orderId: str, amount: int):
             "name": req_data.get("name"),
             "gender": req_data.get("gender"),
             "birth_date": req_data.get("birth_date"),
+            "birth_time": req_data.get("birth_time", ""),
             "grade": req_data.get("grade"),
             "sports": req_data.get("sports"),
             "position": req_data.get("position", ""),
@@ -1154,6 +1162,7 @@ def toss_success(paymentKey: str, orderId: str, amount: int):
             "body_fat": req_data.get("body_fat"),
             "skeletal_muscle": req_data.get("skeletal_muscle"),
             "wingspan": req_data.get("wingspan"),
+            "inbody_file": req_data.get("inbody_file", ""),
             "survey_responses": req_data.get("survey_responses"),
             "is_free": False,
             "is_completed": True,
@@ -1288,6 +1297,39 @@ def read_html(filename: str):
     if os.path.exists(file_path):
         return FileResponse(file_path)
     raise HTTPException(status_code=404, detail="File not found")
+
+
+@app.get("/logo.png")
+def get_logo():
+    file_path = os.path.join(STATIC_DIR, "logo.png")
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    raise HTTPException(status_code=404, detail="logo.png not found")
+
+
+@app.get("/og.png")
+def get_og():
+    file_path = os.path.join(STATIC_DIR, "og.png")
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    raise HTTPException(status_code=404, detail="og.png not found")
+
+
+@app.get("/slogan_logo.png")
+def get_slogan_logo():
+    file_path = os.path.join(STATIC_DIR, "slogan_logo.png")
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    raise HTTPException(status_code=404, detail="slogan_logo.png not found")
+
+
+@app.get("/favicon.ico")
+def get_favicon():
+    file_path = os.path.join(STATIC_DIR, "favicon.ico")
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    return Response(status_code=204)
+
 
 
 # Mount static files (must be mounted after root get, otherwise it overrides root)

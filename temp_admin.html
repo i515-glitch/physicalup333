@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHYSICAL UP 333 - Elite Sports Lab 컨설턴트 보드</title>
+    <!-- FontAwesome Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+        :root {
+            --bg-gradient: #ffffff;
+            --card-bg: #ffffff;
+            --card-border: 1px solid #dadce0;
+            --gold: #1a73e8;
+            --gold-hover: #1557b0;
+            --gold-glow: rgba(26, 115, 232, 0.15);
+            --text-main: #202124;
+            --text-muted: #5f6368;
+            --text-dark: #3c4043;
+            --navy-dark: #ffffff;
+            --navy-light: #f8f9fa;
+            --pos: #137333;
+            --neg: #c5221f;
+            --font-outfit: 'Outfit', sans-serif;
+            --font-kr: 'Noto Sans KR', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-outfit), var(--font-kr), sans-serif;
+            background: #f8f9fa;
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow: hidden;
+            line-height: 1.6;
+        }
+
+
+        /* ===== App Container Layout ===== */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: var(--card-border);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            flex-shrink: 0;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 42px;
+            background: var(--gold);
+            clip-path: polygon(50% 0, 100% 22%, 100% 65%, 50% 100%, 0 65%, 0 22%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--navy-dark);
+            font-weight: 900;
+            font-size: 18px;
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        .logo-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-main);
+        }
+
+
+        .logo-text p {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* ===== Premium Buttons ===== */
+        .btn-premium {
+            background: rgba(255, 255, 255, 0.03);
+            border: var(--card-border);
+            border-radius: 10px;
+            padding: 8px 16px;
+            color: var(--text-main);
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-premium:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--gold);
+            box-shadow: 0 0 10px rgba(176, 138, 62, 0.15);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-d) 100%);
+            color: var(--navy-dark);
+            border: none;
+            box-shadow: 0 4px 15px var(--gold-glow);
+        }
+
+        .btn-gold:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        /* ===== Workspace Main Layout ===== */
+        .workspace {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* ===== VIEW 1: FULL LIST VIEW (Default State) ===== */
+        .list-view-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .workspace.split-active .list-view-container {
+            width: 0%;
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Tabs and Filter Header */
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .tab-menu {
+            display: flex;
+            background: #f1f3f4;
+            border: 1px solid #dadce0;
+            padding: 4px;
+            border-radius: 12px;
+            gap: 4px;
+        }
+
+        .tab-item {
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #5f6368;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-item:hover {
+            background: #e8eaed;
+            color: #202124;
+        }
+
+        .tab-item.active {
+            background: #ffffff;
+            color: #1a73e8;
+            border: 1px solid #dadce0;
+            box-shadow: 0 1px 2px rgba(60, 64, 67, 0.15);
+        }
+
+
+        /* ===== Google Sheets Style Table ===== */
+        .sheets-table-container {
+            flex-grow: 1;
+            overflow: auto;
+            background: #ffffff;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(60,64,67,0.1);
+            margin-top: 10px;
+        }
+
+        .sheets-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .sheets-table th {
+            background: #f8f9fa;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 12px 16px;
+            border-bottom: 2px solid #dadce0;
+            border-right: 1px solid #dadce0;
+            cursor: pointer;
+            user-select: none;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            transition: background 0.2s;
+        }
+
+        .sheets-table th:hover {
+            background: #f1f3f4;
+        }
+
+        .sheets-table th:last-child {
+            border-right: none;
+        }
+
+        .sheets-table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #dadce0;
+            border-right: 1px solid #dadce0;
+            color: var(--text-main);
+            white-space: nowrap;
+        }
+
+        .sheets-table td:last-child {
+            border-right: none;
+        }
+
+        .sheets-table tbody tr {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .sheets-table tbody tr:hover {
+            background: #f1f3f4;
+        }
+
+        .sheets-table tbody tr.active-row {
+            background: #e8f0fe;
+        }
+
+        .sort-icon {
+            font-size: 10px;
+            margin-left: 6px;
+            color: #1a73e8;
+        }
+
+
+        .badge-status {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 11px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .badge-pending {
+            background: #ffebee;
+            color: #d32f2f;
+            border: 1px solid rgba(211,47,47,0.3);
+        }
+
+        .badge-review {
+            background: #fff8e1;
+            color: #f57f17;
+            border: 1px solid rgba(245,127,23,0.3);
+        }
+
+        .badge-scheduled {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid rgba(46,125,50,0.3);
+        }
+
+        .badge-approved {
+            background: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid rgba(21,101,192,0.3);
+        }
+
+        .traffic-light-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            background: #e0e0e0;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+            margin: 0 auto;
+        }
+        
+        .traffic-light-dot.green { background: #10b981; box-shadow: 0 0 6px #10b981; }
+        .traffic-light-dot.yellow { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; }
+        .traffic-light-dot.red { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
+        .traffic-light-dot.blue { background: #3b82f6; box-shadow: 0 0 6px #3b82f6; }
+
+
+
+        /* ===== VIEW 2: DUAL VIEW CONSULTATION LAYOUT ===== */
+        .consult-view-container {
+            width: 100%;
+            height: 100%;
+            display: none;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 20px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: scale(0.98);
+        }
+
+        .workspace.split-active .consult-view-container {
+            display: grid;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* --- Left Preview: A4 Report Presentation (60%) --- */
+        .report-preview-panel {
+            background: rgba(10, 17, 34, 0.8);
+            border: var(--card-border);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .panel-header-bar {
+            background: rgba(21, 35, 59, 0.8);
+            border-bottom: var(--card-border);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-iframe {
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #6b7280;
+        }
+
+        /* --- Right Helper Desk: Consultant Control Desk (40%) --- */
+        .consultant-desk-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: 100%;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .desk-card {
+            background: var(--card-bg);
+            border: var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Sports Profile Data Chips */
+        .profile-header-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .profile-name-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .chip-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .info-chip {
+            font-size: 11.5px;
+            background: #f1f3f4;
+            border: 1px solid #dadce0;
+            padding: 4px 10px;
+            border-radius: 8px;
+            color: var(--text-main);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+
+        .info-chip label {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .info-chip b {
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        /* Rich Editor */
+        .rich-editor-label {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .editor-textarea {
+            width: 100%;
+            height: 380px;
+            background: #ffffff;
+            border: var(--card-border);
+            border-radius: 12px;
+            padding: 15px;
+            color: var(--text-main);
+            font-family: var(--font-kr);
+            font-size: 13.5px;
+            line-height: 1.7;
+            resize: none;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .editor-textarea:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 8px var(--gold-glow);
+        }
+
+        /* Accordion Formula Box */
+        .accordion-box {
+            border: var(--card-border);
+            border-radius: 12px;
+            background: #f8f9fa;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .accordion-header {
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background: #f1f3f4;
+            transition: background 0.3s;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .accordion-header:hover {
+            background: #e8eaed;
+        }
+
+        .accordion-content {
+            padding: 15px 18px;
+            border-top: var(--card-border);
+            display: none;
+            font-size: 12.5px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .accordion-content.active {
+            display: block;
+        }
+
+        .formula-line {
+            background: #f1f3f4;
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--gold);
+            font-weight: 600;
+            padding: 6px 10px;
+            border: 1px solid #dadce0;
+            border-radius: 6px;
+            margin: 5px 0 10px;
+            font-size: 11.5px;
+        }
+
+        .helper-advice-box {
+            background: rgba(26, 115, 232, 0.04);
+            border-left: 3.5px solid var(--gold);
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        /* Status & Action Area */
+        .status-message {
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .status-message.success {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--pos);
+            border: 1px solid var(--pos);
+            display: block;
+        }
+        
+        .status-message.loading {
+            background: rgba(176, 138, 62, 0.1);
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            display: block;
+        }
+        
+        .status-message.error {
+            background: rgba(244, 63, 94, 0.12);
+            color: var(--neg);
+            border: 1px solid var(--neg);
+            display: block;
+        }
+
+        .action-button-group {
+            margin-top: 10px;
+            display: flex;
+            gap: 12px;
+        }
+
+        /* ===== Modal Style ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: #0d1726;
+            border: var(--card-border);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 750px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 11.5px;
+            color: #b3e6ff;
+            white-space: pre-wrap;
+            margin: 10px 0;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        /* Profile edit inputs */
+        .info-chip input {
+            background: transparent;
+            border: none;
+            color: var(--gold);
+            font-weight: 700;
+            width: 75px;
+            outline: none;
+            pointer-events: none;
+            font-family: inherit;
+            font-size: 11.5px;
+            text-align: center;
+        }
+        .info-chip.editable {
+            border-color: var(--gold);
+            background: rgba(176, 138, 62, 0.1);
+        }
+        .info-chip.editable input {
+            pointer-events: auto;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .tl-step.active { color:#1a1a1a !important; font-weight: 700 !important; }
+        .tl-step.active#tl-1 .circle { background: #facc15 !important; box-shadow: 0 0 10px #facc15; }
+        .tl-step.active#tl-2 .circle { background: #4ade80 !important; box-shadow: 0 0 10px #4ade80; }
+        .tl-step.active#tl-3 .circle { background: #3b82f6 !important; box-shadow: 0 0 10px #3b82f6; }
+        .tl-step.active#tl-4 .circle { background: #ef4444 !important; box-shadow: 0 0 10px #ef4444; }
+        .tl-step.active#tl-5 .circle { background: #111827 !important; box-shadow: 0 0 10px #111827; }
+
+        .traffic-light-wrap {
+            position: relative;
+        }
+        .traffic-light-wrap::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 40px;
+            right: 40px;
+            height: 2px;
+            background: #f1f3f4;
+            z-index: 0;
+            transform: translateY(-50%);
+        }
+        .tl-step {
+            z-index: 1;
+            background: #fff;
+            padding: 0 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Header Bar -->
+        <header>
+            <div class="logo-area">
+                <div class="logo-icon">P</div>
+                <div class="logo-text">
+                    <h1>PHYSICAL UP 333 — Elite Sports Lab</h1>
+                    <p>유소년 스포츠 피지컬 성장 정밀 분석 & 대면 상담 전용 콘솔</p>
+                </div>
+            </div>
+            <div class="header-buttons">
+                <!-- Return Button visible only during consultation split active -->
+                <button class="btn-premium" id="btn-back-to-list" style="display: none;" onclick="deactivateConsultation()">
+                    <i class="fa-solid fa-chevron-left"></i> 목록으로 돌아가기
+                </button>
+                <button class="btn-premium" onclick="openGuide()">
+                    <i class="fa-solid fa-circle-nodes"></i> 모바일 QR 접수 연동 규격
+                </button>
+                <button class="btn-premium" onclick="refreshRequests()">
+                    <i class="fa-solid fa-arrows-rotate"></i> 신청 새로고침
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Workspace Area -->
+        <div class="workspace" id="main-workspace">
+            
+            <!-- VIEW 1: FULL LIST VIEW -->
+            <div class="list-view-container" id="list-container">
+                <div class="filter-header">
+                    <div class="tab-menu">
+                        <div class="tab-item active" id="tab-dashboard" onclick="switchTab('Dashboard')">
+                            📊 데이터 통계 대시보드
+                        </div>
+                        <div class="tab-item" id="tab-in-progress" onclick="switchTab('InProgress')">
+                            📋 진행 관리 (예약~발송)
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 📊 Executive Dashboard Area (경영자 모드) -->
+                <div id="dashboard-container" style="display:block; flex-grow:1; overflow-y:auto; padding:20px; background:#ffffff; border:1px solid #dadce0; border-radius:12px; box-shadow:0 1px 3px rgba(60,64,67,0.1); margin-top:10px;">
+                    <!-- Top KPI Summary Cards -->
+                    <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:16px; margin-bottom:24px;">
+                        <div style="background:#f8f9fa; border:1px solid #dadce0; border-radius:8px; padding:16px; text-align:center;">
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:6px;"><i class="fa-solid fa-file-invoice"></i> 총 접수/진행 건수</div>
+                            <div style="font-size:24px; font-weight:700; color:#1a73e8;" id="kpi-total-count">0건</div>
+                        </div>
+                        <div style="background:#f8f9fa; border:1px solid #dadce0; border-radius:8px; padding:16px; text-align:center;">
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:6px;"><i class="fa-solid fa-circle-exclamation"></i> 진행/검수 대기</div>
+                            <div style="font-size:24px; font-weight:700; color:#b08a3e;" id="kpi-pending-count">0건</div>
+                        </div>
+                        <div style="background:#f8f9fa; border:1px solid #dadce0; border-radius:8px; padding:16px; text-align:center;">
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:6px;"><i class="fa-solid fa-clock"></i> 발송 예약 (대기)</div>
+                            <div style="font-size:24px; font-weight:700; color:#fb923c;" id="kpi-scheduled-count">0건</div>
+                        </div>
+                        <div style="background:#f8f9fa; border:1px solid #dadce0; border-radius:8px; padding:16px; text-align:center;">
+                            <div style="font-size:12px; color:var(--text-muted); margin-bottom:6px;"><i class="fa-solid fa-circle-check"></i> 발송 완료 건</div>
+                            <div style="font-size:24px; font-weight:700; color:#137333;" id="kpi-approved-count">0건</div>
+                        </div>
+                    </div>
+
+                    <!-- Pivot Tables Grid (2 Columns) -->
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px;">
+                        <!-- Sports Distribution Sheet -->
+                        <div style="border:1px solid #dadce0; border-radius:8px; overflow:hidden;">
+                            <div style="background:#f8f9fa; border-bottom:1px solid #dadce0; padding:10px 16px; font-weight:700; font-size:13px; color:var(--text-dark);"><i class="fa-solid fa-baseball-bat-ball"></i> 종목별 접수 분포</div>
+                            <table class="sheets-table" style="box-shadow:none; border:none; border-radius:0;">
+                                <thead>
+                                    <tr>
+                                        <th>희망 종목</th>
+                                        <th style="text-align:right;">접수 건수</th>
+                                        <th style="text-align:right;">점유율</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashboard-sports-tbody">
+                                    <!-- Dynamic -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Grade Distribution Sheet -->
+                        <div style="border:1px solid #dadce0; border-radius:8px; overflow:hidden;">
+                            <div style="background:#f8f9fa; border-bottom:1px solid #dadce0; padding:10px 16px; font-weight:700; font-size:13px; color:var(--text-dark);"><i class="fa-solid fa-graduation-cap"></i> 학년별 접수 분포</div>
+                            <table class="sheets-table" style="box-shadow:none; border:none; border-radius:0;">
+                                <thead>
+                                    <tr>
+                                        <th>학년군</th>
+                                        <th style="text-align:right;">접수 건수</th>
+                                        <th style="text-align:right;">점유율</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashboard-grade-tbody">
+                                    <!-- Dynamic -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 🧬 R&D Engine DB Statistics Section (통합 성장 분석) -->
+                    <div style="border-top: 2px dashed #dadce0; margin-top:30px; padding-top:24px;">
+                        <h3 style="font-size:14px; font-weight:700; color:var(--gold); margin-bottom:16px; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-flask"></i> 성장 분석 엔진 R&D 데이터베이스</h3>
+                        
+                        <!-- R&D Pivot Tables (2 Columns) -->
+                        <div style="display:grid; grid-template-columns: 1.2fr 0.8fr; gap:24px;">
+                            <!-- BioCode distribution comparison -->
+                            <div style="border:1px solid #dadce0; border-radius:8px; overflow:hidden;">
+                                <div style="background:#f8f9fa; border-bottom:1px solid #dadce0; padding:10px 16px; font-weight:700; font-size:13px; color:var(--text-dark);"><i class="fa-solid fa-dna"></i> BioCode 27패턴 분포 분석 시트</div>
+                                <div style="max-height: 400px; overflow-y: auto;">
+                                    <table class="sheets-table" style="box-shadow:none; border:none; border-radius:0;">
+                                        <thead style="position: sticky; top: 0; z-index: 10;">
+                                            <tr>
+                                                <th style="background:#f8f9fa;">BioCode</th>
+                                                <th style="background:#f8f9fa; text-align:right;">전체 건수</th>
+                                                <th style="background:#f8f9fa; text-align:right;">전체 점유율</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="dashboard-biocode-tbody">
+                                            <!-- Dynamic -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Survey scores comparison -->
+                            <div style="border:1px solid #dadce0; border-radius:8px; overflow:hidden; height: fit-content;">
+                                <div style="background:#f8f9fa; border-bottom:1px solid #dadce0; padding:10px 16px; font-weight:700; font-size:13px; color:var(--text-dark);"><i class="fa-solid fa-square-poll-vertical"></i> 3대 설문 영역 평균 점수 시트</div>
+                                <table class="sheets-table" style="box-shadow:none; border:none; border-radius:0;">
+                                    <thead>
+                                        <tr>
+                                            <th>설문 영역</th>
+                                            <th style="text-align:right;">전체 평균</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dashboard-survey-tbody">
+                                        <!-- Dynamic -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Google Sheets Style Table -->
+                <div class="sheets-table-container" id="sheets-table-container" style="display:none;">
+                    <table class="sheets-table">
+                        <thead>
+                            <tr>
+                                <th onclick="sortBy('name')">이름 <span id="sort-name" class="sort-icon"></span></th>
+                                <th onclick="sortBy('gender')">성별 <span id="sort-gender" class="sort-icon"></span></th>
+                                <th onclick="sortBy('birth_date')">생년월일 <span id="sort-birth_date" class="sort-icon"></span></th>
+                                <th onclick="sortBy('grade')">학년 <span id="sort-grade" class="sort-icon"></span></th>
+                                <th onclick="sortBy('sports')">희망종목 <span id="sort-sports" class="sort-icon"></span></th>
+                                <th onclick="sortBy('phone')">보호자 이메일 <span id="sort-phone" class="sort-icon"></span></th>
+                                <th style="text-align:center;">접수완료</th>
+                                <th style="text-align:center;">기초분석</th>
+                                <th style="text-align:center;">2차검수</th>
+                                <th style="text-align:center;">발송예약</th>
+                                <th style="text-align:center;">발송완료</th>
+                                <th style="text-align:center;">BioCode</th>
+                                <th onclick="sortBy('current_height')">신장 (cm) <span id="sort-current_height" class="sort-icon"></span></th>
+                                <th onclick="sortBy('current_weight')">체중 (kg) <span id="sort-current_weight" class="sort-icon"></span></th>
+                                <th onclick="sortBy('skeletal_muscle')">골격근 (kg) <span id="sort-skeletal_muscle" class="sort-icon"></span></th>
+                                <th onclick="sortBy('body_fat')">지방률 (%) <span id="sort-body_fat" class="sort-icon"></span></th>
+                                <th onclick="sortBy('timestamp')">접수시간 <span id="sort-timestamp" class="sort-icon"></span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="requests-tbody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <!-- VIEW 2: DUAL VIEW CONSULTATION LAYOUT -->
+            <div class="consult-view-container" id="consult-container">
+                
+                <!-- Left Preview A4 (60%) -->
+                <div class="report-preview-panel">
+                    <div class="panel-header-bar">
+                        <span class="panel-title"><i class="fa-solid fa-display"></i> 학부모 브리핑 전용 화면 (실시간 미리보기)</span>
+                        <span id="preview-student-label" style="font-size:12px; color:var(--text-muted);"></span>
+                    </div>
+                    <iframe class="preview-iframe" id="report-iframe" src="about:blank"></iframe>
+                </div>
+
+                <!-- Right Helper & Editor Desk (40%) -->
+                <div class="consultant-desk-panel">
+                    
+                    <!-- Traffic Light UI -->
+                    <div class="traffic-light-wrap" style="background:#fff; border:1px solid #dadce0; border-radius:12px; padding:16px 20px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 4px rgba(0,0,0,0.02);">
+                        <div class="tl-step" id="tl-1" style="display:flex; align-items:center; font-size:12px; color:var(--text-muted); font-weight:600;"><div class="circle" style="width:14px; height:14px; border-radius:50%; background:#e0e0e0; margin-right:6px; transition:0.3s;"></div>예약</div>
+                        <div class="tl-step" id="tl-2" style="display:flex; align-items:center; font-size:12px; color:var(--text-muted); font-weight:600;"><div class="circle" style="width:14px; height:14px; border-radius:50%; background:#e0e0e0; margin-right:6px; transition:0.3s;"></div>1차보고서</div>
+                        <div class="tl-step" id="tl-3" style="display:flex; align-items:center; font-size:12px; color:var(--text-muted); font-weight:600;"><div class="circle" style="width:14px; height:14px; border-radius:50%; background:#e0e0e0; margin-right:6px; transition:0.3s;"></div>검수</div>
+                        <div class="tl-step" id="tl-4" style="display:flex; align-items:center; font-size:12px; color:var(--text-muted); font-weight:600;"><div class="circle" style="width:14px; height:14px; border-radius:50%; background:#e0e0e0; margin-right:6px; transition:0.3s;"></div>발송대기</div>
+                        <div class="tl-step" id="tl-5" style="display:flex; align-items:center; font-size:12px; color:var(--text-muted); font-weight:600;"><div class="circle" style="width:14px; height:14px; border-radius:50%; background:#e0e0e0; margin-right:6px; transition:0.3s;"></div>발송완료</div>
+                    </div>
+
+                    <!-- Student Profile Editable Card -->
+                    <div class="desk-card" id="student-profile-card">
+                        <div class="profile-header-area">
+                            <h2 class="profile-name-title" id="lbl-name">홍길동</h2>
+                            <button class="btn-premium" id="btn-toggle-edit" style="padding: 4px 8px; font-size: 11px;" onclick="toggleProfileEdit()">
+                                <i class="fa-solid fa-pen-to-square"></i> 스펙 수정
+                            </button>
+                        </div>
+                        <div class="chip-container">
+                            <div class="info-chip"><label>성별</label><input type="text" id="edit-gender" value="남" style="width:25px;"></div>
+                            <div class="info-chip"><label>생일</label><input type="text" id="edit-birth" value="2012-05-15" style="width:80px;"></div>
+                            <div class="info-chip"><label>학년</label><input type="text" id="edit-grade" value="중2" style="width:35px;"></div>
+                            <div class="info-chip" style="width:100%; margin-top:4px;"><label>이메일</label><input type="text" id="edit-email" value="parent@email.com" style="width:190px; text-align:left;"></div>
+                        </div>
+                        <div class="chip-container" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:10px; margin-top:5px;">
+                            <div class="info-chip"><label>키</label><input type="text" id="edit-height" value="165.0" style="width:45px;"><b>cm</b></div>
+                            <div class="info-chip"><label>체중</label><input type="text" id="edit-weight" value="52.0" style="width:45px;"><b>kg</b></div>
+                            <div class="info-chip"><label>골격근</label><input type="text" id="edit-muscle" value="25.0" style="width:45px;"><b>kg</b></div>
+                            <div class="info-chip"><label>지방률</label><input type="text" id="edit-fat" value="15.0" style="width:35px;"><b>%</b></div>
+                        </div>
+                        <div id="marketing-area" style="border-top:1px dashed rgba(0,0,0,0.1); padding-top:12px; margin-top:10px; display:none; justify-content:space-between; align-items:center;">
+                            <span id="marketing-badge" class="badge-status" style="font-size:11.5px; font-weight:700;"></span>
+                            <button class="btn-premium btn-gold" id="btn-copy-sms" style="padding:6px 12px; font-size:11.5px; border-radius:8px;" onclick="copyMarketingSMS()">
+                                <i class="fa-solid fa-copy"></i> 안내 문자 복사
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- AI Comment Editor -->
+                    <div class="desk-card" style="flex-grow: 1; display: flex; flex-direction: column;">
+                        <label class="rich-editor-label">
+                            <i class="fa-solid fa-signature"></i> 제미나이 2.5 플래시 맞춤 소견서 교열
+                        </label>
+                        <textarea class="editor-textarea" id="txt-comment" oninput="syncCommentToPreview(this.value)" placeholder="소견서를 불러오는 중입니다..."></textarea>
+                        
+                        <div id="status-msg" class="status-message"></div>
+                        
+                        <div id="status-msg" class="status-message"></div>
+                        
+                        <div class="action-button-group" style="margin-top: 10px; display: flex; gap: 8px;">
+                            <button class="btn-premium btn-gold" id="btn-approve" style="flex-grow:1; padding: 14px 20px; font-size: 14px;" onclick="approveAndSend()">
+                                <i class="fa-solid fa-paper-plane"></i> 즉시 발송
+                            </button>
+                            <button class="btn-premium" id="btn-schedule" style="flex-grow:1; padding: 14px 20px; font-size: 14px; background:#1e293b; color:#fff; border:1px solid #1e293b;" onclick="scheduleSend()">
+                                <i class="fa-solid fa-clock"></i> 지정일 발송
+                            </button>
+                            <button class="btn-premium" id="btn-cancel-reserve" style="display:none; padding: 14px 20px; font-size: 14px; background:#ef4444; color:#fff; border:1px solid #ef4444;" onclick="cancelReservation()">
+                                <i class="fa-solid fa-circle-xmark"></i> 예약 취소
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 백서(엔진내용) 요약 -->
+                    <div class="accordion-box">
+                        <div class="accordion-header" onclick="toggleAccordion('acc-whitepaper')">
+                            <span><i class="fa-solid fa-microchip"></i> 엔진 백서 요약 (제미나이 입력값)</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content active" id="acc-whitepaper">
+                            <p><b>[엔진 연산 결과]</b> 해당 고객의 바이오코드와 성장 데이터를 바탕으로 AI가 참고할 핵심 지표입니다.</p>
+                            <div class="formula-line" id="whitepaper-biocode">-</div>
+                            <div class="helper-advice-box" id="whitepaper-summary">
+                                고객의 데이터를 불러오는 중입니다...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Formula & Guide Accordion 1 (MPH) -->
+                    <div class="accordion-box">
+                        <div class="accordion-header" onclick="toggleAccordion('acc-mph')">
+                            <span><i class="fa-solid fa-calculator"></i> 1. 유전 예상 신장 (MPH) 산출 공식 및 근기</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content" id="acc-mph">
+                            <p><b>[백서 이론 기준]</b> 부모의 키를 바탕으로 통계학적 잠재 성장 신장을 도출하는 공식입니다.</p>
+                            <div class="formula-line" id="formula-mph">MPH = (아빠키 + 엄마키 + 13) / 2</div>
+                            <p>계산 과정: <span id="calc-mph-process"></span></p>
+                            <div class="helper-advice-box">
+                                💡 <b>대면 상담 코칭 팁:</b><br>
+                                "유전적 예상 신장은 현재 격차 <span id="calc-mph-gap" style="color:var(--neg); font-weight:700;"></span>cm의 기준선이 됩니다. 뼈의 성장이 지연된 원인(수면 리듬)을 보완하면 이 유전 한계치를 완전히 극복할 수 있음을 강조하십시오."
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Formula & Guide Accordion 2 (Muscle) -->
+                    <div class="accordion-box">
+                        <div class="accordion-header" onclick="toggleAccordion('acc-muscle')">
+                            <span><i class="fa-solid fa-dumbbell"></i> 2. 골격근 및 하체 지표 분석 근기</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content" id="acc-muscle">
+                            <p><b>[골격근율 산출식]</b> 체중 대비 순수 근육량의 비중을 백분율로 도출하여 또래의 운동선수 평균군과 비교합니다.</p>
+                            <div class="formula-line">근육비율(%) = 골격근량(kg) / 체중(kg) * 100</div>
+                            <p>현재 상태: <span id="calc-muscle-pct"></span>% (체격 대조군 대비 <b id="calc-muscle-grade" style="color:var(--pos);"></b> 등급)</p>
+                            <div class="helper-advice-box">
+                                💡 <b>체질 및 종목별 맞춤 설명서:</b><br>
+                                체질이 <b id="calc-constitution" style="color:var(--gold);">태음인</b>인 아이는 노폐물이 축적되기 쉬우므로 단백질 위주 식단 및 땀을 흠뻑 내는 <b><span id="calc-sports">축구</span> 특화 순발력 운동</b>을 제안하여 체력적 우위를 다지도록 가이드하십시오.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Script Block -->
+    <script>
+        let allRequests = [];
+        let currentTab = 'Dashboard'; // 'Dashboard', 'Pending', 'Scheduled', or 'Approved'
+        let currentSortKey = 'timestamp';
+        let currentSortDir = 'desc';
+        let selectedRequest = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            refreshRequests();
+        });
+
+        async function refreshRequests() {
+            try {
+                const res = await fetch("/api/admin/requests");
+                allRequests = await res.json();
+                if (currentTab === 'Dashboard') {
+                    renderDashboard();
+                } else {
+                    renderList();
+                }
+            } catch (err) {
+                alert("신청 정보를 가져오는 중 에러 발생: " + err.message);
+            }
+        }
+
+        function renderList() {
+            const tbody = document.getElementById("requests-tbody");
+            tbody.innerHTML = "";
+
+            // Filter requests based on selected status tab
+            let filtered = [];
+            if (currentTab === 'InProgress') {
+                filtered = allRequests.filter(req => req.status === 'Pending' || req.status === 'Scheduled');
+            } else {
+                filtered = allRequests.filter(req => req.status === currentTab);
+            }
+
+            const showUnconvertedOnly = document.getElementById("chk-unconverted-only") && document.getElementById("chk-unconverted-only").checked;
+            if (showUnconvertedOnly) {
+                const premiumPhones = new Set(
+                    allRequests.filter(req => !req.is_free && req.phone).map(req => req.phone.trim())
+                );
+                filtered = filtered.filter(req => req.is_free && req.phone && !premiumPhones.has(req.phone.trim()));
+            }
+
+            // Sort requests based on selected Sort Option
+            filtered.sort((a, b) => {
+                let valA = a[currentSortKey];
+                let valB = b[currentSortKey];
+                
+                // Fallback for null or undefined
+                if (valA === undefined || valA === null) valA = '';
+                if (valB === undefined || valB === null) valB = '';
+                
+                // Compare logic
+                if (typeof valA === 'string') {
+                    return currentSortDir === 'asc' 
+                        ? valA.localeCompare(valB, 'ko') 
+                        : valB.localeCompare(valA, 'ko');
+                } else {
+                    return currentSortDir === 'asc' 
+                        ? valA - valB 
+                        : valB - valA;
+                }
+            });
+
+            // Update Sort Icons in headers
+            const columns = ['name', 'gender', 'birth_date', 'grade', 'sports', 'phone', 'current_height', 'current_weight', 'skeletal_muscle', 'body_fat', 'timestamp', 'status'];
+            columns.forEach(col => {
+                const iconSpan = document.getElementById(`sort-${col}`);
+                if (iconSpan) {
+                    if (currentSortKey === col) {
+                        iconSpan.innerHTML = currentSortDir === 'asc' ? ' ▲' : ' ▼';
+                    } else {
+                        iconSpan.innerHTML = '';
+                    }
+                }
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="13" style="text-align: center; padding: 60px 0; color: var(--text-muted);">
+                            <i class="fa-solid fa-folder-open" style="font-size: 40px; color: rgba(0,0,0,0.05); margin-bottom: 15px; display:block;"></i>
+                            해당 상태의 접수 건이 없습니다.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            filtered.forEach(req => {
+                const tr = document.createElement("tr");
+                if (selectedRequest && selectedRequest.id === req.id) {
+                    tr.className = "active-row";
+                }
+                tr.onclick = () => {
+                    // Remove active class from all rows
+                    document.querySelectorAll("#requests-tbody tr").forEach(r => r.classList.remove("active-row"));
+                    tr.classList.add("active-row");
+                    activateConsultation(req);
+                };
+
+                const date = new Date(req.timestamp);
+                const dateStr = `${date.getMonth()+1}/${date.getDate()} ${date.getHours().toString().padStart(2,'0')}:${date.getMinutes().toString().padStart(2,'0')}`;
+                
+                let statusBadge = "";
+                if (req.status === "Approved") {
+                    statusBadge = `<span class="badge-status badge-approved">🔵 처리완료</span>`;
+                } else if (req.status === "ReviewNeeded") {
+                    statusBadge = `<span class="badge-status badge-review">🟡 2차검수</span>`;
+                } else if (req.status === "Scheduled") {
+                    const reserveDate = req.scheduled_at ? new Date(req.scheduled_at) : null;
+                    const reserveStr = reserveDate 
+                        ? `${reserveDate.getMonth()+1}/${reserveDate.getDate()} ${reserveDate.getHours().toString().padStart(2,'0')}:${reserveDate.getMinutes().toString().padStart(2,'0')}`
+                        : "예정";
+                    statusBadge = `<span class="badge-status badge-scheduled" title="${reserveStr} 발송예정">🟢 예약대기 (${reserveStr})</span>`;
+                } else {
+                    statusBadge = `<span class="badge-status badge-pending">🔴 대기중</span>`;
+                }
+
+                // 1. 접수완료 (항상 Green)
+                let s1 = `<span class="traffic-light-dot green"></span>`;
+                // 2. 기초분석 (설문이 완료되었으면 Green, 아니면 Red)
+                let s2 = req.is_completed ? `<span class="traffic-light-dot green"></span>` : `<span class="traffic-light-dot red"></span>`;
+                // 3. 2차검수 (ReviewNeeded 이상이면 Yellow 또는 Green)
+                let s3 = `<span class="traffic-light-dot red"></span>`;
+                if (req.status === "ReviewNeeded") s3 = `<span class="traffic-light-dot yellow" title="검수 대기중"></span>`;
+                else if (req.status === "Scheduled" || req.status === "Approved") s3 = `<span class="traffic-light-dot green"></span>`;
+                
+                // 4. 발송예약 (Scheduled 이면 Blue, Approved 이면 Green)
+                let s4 = `<span class="traffic-light-dot red"></span>`;
+                if (req.status === "Scheduled") s4 = `<span class="traffic-light-dot blue" title="예약됨"></span>`;
+                else if (req.status === "Approved") s4 = `<span class="traffic-light-dot green"></span>`;
+                
+                // 5. 발송완료
+                let s5 = req.status === "Approved" ? `<span class="traffic-light-dot green"></span>` : `<span class="traffic-light-dot red"></span>`;
+
+                // BioCode 추출 로직 (ai_comment 내 존재 여부 확인)
+                let bioCodeStr = "-";
+                if (req.ai_comment) {
+                    const match = req.ai_comment.match(/BioCode\(?([1-3]-[1-3]-[1-3])\)?/);
+                    if (match) {
+                        bioCodeStr = `<span style="font-weight:800; color:#1a73e8; font-size:13px; letter-spacing:1px;">${match[1]}</span>`;
+                    }
+                }
+
+                tr.innerHTML = `
+                    <td style="font-weight: 600; color: #1a73e8;">${req.name}</td>
+                    <td>${req.gender}</td>
+                    <td>${req.birth_date}</td>
+                    <td>${req.grade}</td>
+                    <td>${req.sports}</td>
+                    <td style="color: var(--text-muted); font-size:12px;">${req.phone || ''}</td>
+                    <td style="text-align:center;">${s1}</td>
+                    <td style="text-align:center;">${s2}</td>
+                    <td style="text-align:center;">${s3}</td>
+                    <td style="text-align:center;">${s4}</td>
+                    <td style="text-align:center;">${s5}</td>
+                    <td style="text-align:center;">${bioCodeStr}</td>
+                    <td style="font-weight: 600; text-align:right;">${req.current_height}</td>
+                    <td style="text-align:right;">${req.current_weight}</td>
+                    <td style="font-weight: 600; text-align:right;">${req.skeletal_muscle}</td>
+                    <td style="text-align:right;">${req.body_fat}</td>
+                    <td style="font-size:12px; color:var(--text-muted);">${dateStr}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function switchTab(status) {
+            currentTab = status;
+            document.getElementById("tab-dashboard").classList.toggle("active", status === 'Dashboard');
+            document.getElementById("tab-in-progress").classList.toggle("active", status === 'InProgress');
+            
+            if (status === 'Dashboard') {
+                document.getElementById("dashboard-container").style.display = "block";
+                document.getElementById("sheets-table-container").style.display = "none";
+                renderDashboard();
+            } else {
+                document.getElementById("dashboard-container").style.display = "none";
+                document.getElementById("sheets-table-container").style.display = "block";
+                renderList();
+            }
+        }
+
+        function renderDashboard() {
+            const totalCount = allRequests.length;
+            const pendingCount = allRequests.filter(req => req.status === 'Pending').length;
+            const scheduledCount = allRequests.filter(req => req.status === 'Scheduled').length;
+            const approvedCount = allRequests.filter(req => req.status === 'Approved').length;
+
+            document.getElementById("kpi-total-count").innerText = `${totalCount}건`;
+            document.getElementById("kpi-pending-count").innerText = `${pendingCount}건`;
+            document.getElementById("kpi-scheduled-count").innerText = `${scheduledCount}건`;
+            document.getElementById("kpi-approved-count").innerText = `${approvedCount}건`;
+
+            // 1. Sports Distribution
+            const sportsMap = {};
+            allRequests.forEach(req => {
+                const s = req.sports || "미지정";
+                sportsMap[s] = (sportsMap[s] || 0) + 1;
+            });
+            const sportsList = Object.keys(sportsMap).map(s => {
+                const cnt = sportsMap[s];
+                return {
+                    name: s,
+                    count: cnt,
+                    ratio: totalCount > 0 ? (cnt / totalCount * 100).toFixed(1) : "0.0"
+                };
+            }).sort((a, b) => b.count - a.count);
+
+            const sportsTbody = document.getElementById("dashboard-sports-tbody");
+            sportsTbody.innerHTML = "";
+            sportsList.forEach(item => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td style="font-weight:600; border-right: 1px solid #dadce0; border-bottom: 1px solid #dadce0; padding: 10px 16px;">${item.name}</td>
+                    <td style="text-align:right; border-right: 1px solid #dadce0; border-bottom: 1px solid #dadce0; padding: 10px 16px;">${item.count}건</td>
+                    <td style="text-align:right; color:var(--text-muted); border-bottom: 1px solid #dadce0; padding: 10px 16px;">${item.ratio}%</td>
+                `;
+                sportsTbody.appendChild(tr);
+            });
+            if (totalCount > 0) {
+                const trTotal = document.createElement("tr");
+                trTotal.style.background = "#f8f9fa";
+                trTotal.style.fontWeight = "bold";
+                trTotal.style.borderTop = "2px solid #dadce0";
+                trTotal.innerHTML = `
+                    <td style="border-right: 1px solid #dadce0; padding: 10px 16px;">합계 (Total)</td>
+                    <td style="text-align:right; border-right: 1px solid #dadce0; padding: 10px 16px;">${totalCount}건</td>
+                    <td style="text-align:right; padding: 10px 16px;">100.0%</td>
+                `;
+                sportsTbody.appendChild(trTotal);
+            } else {
+                sportsTbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:30px; color:var(--text-muted);">데이터가 없습니다.</td></tr>`;
+            }
+
+            // 2. Grade Distribution
+            const gradeMap = {};
+            allRequests.forEach(req => {
+                const g = req.grade || "미지정";
+                gradeMap[g] = (gradeMap[g] || 0) + 1;
+            });
+            const gradeList = Object.keys(gradeMap).map(g => {
+                const cnt = gradeMap[g];
+                return {
+                    name: g,
+                    count: cnt,
+                    ratio: totalCount > 0 ? (cnt / totalCount * 100).toFixed(1) : "0.0"
+                };
+            }).sort((a, b) => b.count - a.count);
+
+            const gradeTbody = document.getElementById("dashboard-grade-tbody");
+            gradeTbody.innerHTML = "";
+            gradeList.forEach(item => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td style="font-weight:600; border-right: 1px solid #dadce0; border-bottom: 1px solid #dadce0; padding: 10px 16px;">${item.name}</td>
+                    <td style="text-align:right; border-right: 1px solid #dadce0; border-bottom: 1px solid #dadce0; padding: 10px 16px;">${item.count}건</td>
+                    <td style="text-align:right; color:var(--text-muted); border-bottom: 1px solid #dadce0; padding: 10px 16px;">${item.ratio}%</td>
+                `;
+                gradeTbody.appendChild(tr);
+            });
+            if (totalCount > 0) {
+                const trTotal = document.createElement("tr");
+                trTotal.style.background = "#f8f9fa";
+                trTotal.style.fontWeight = "bold";
+                trTotal.style.borderTop = "2px solid #dadce0";
+                trTotal.innerHTML = `
+                    <td style="border-right: 1px solid #dadce0; padding: 10px 16px;">합계 (Total)</td>
+                    <td style="text-align:right; border-right: 1px solid #dadce0; padding: 10px 16px;">${totalCount}건</td>
+                    <td style="text-align:right; padding: 10px 16px;">100.0%</td>
+                `;
+                gradeTbody.appendChild(trTotal);
+            } else {
+                gradeTbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:30px; color:var(--text-muted);">데이터가 없습니다.</td></tr>`;
+            }
+
+            // 4. BioCode 27패턴 분포 분석 (통합)
+            const biocodes27 = [];
+            for(let a=1; a<=3; a++) {
+                for(let b=1; b<=3; b++) {
+                    for(let c=1; c<=3; c++) {
+                        biocodes27.push(`${a}-${b}-${c}`);
+                    }
+                }
+            }
+
+            const biocodeMapTotal = {};
+            biocodes27.forEach(code => biocodeMapTotal[code] = 0);
+
+            allRequests.forEach(req => {
+                let code = "";
+                if (req.survey_responses && req.survey_responses.length > 0) {
+                    const biocodeResult = calculateLocalBiocode(req);
+                    code = biocodeResult.biocode;
+                } else if (req.ai_comment) {
+                    const match = req.ai_comment.match(/BioCode\(?([1-3]-[1-3]-[1-3])\)?/);
+                    if (match) code = match[1];
+                }
+                
+                if (code && biocodes27.includes(code)) {
+                    biocodeMapTotal[code]++;
+                }
+            });
+
+            const biocodeTbody = document.getElementById("dashboard-biocode-tbody");
+            biocodeTbody.innerHTML = "";
+            biocodes27.forEach(code => {
+                const total = biocodeMapTotal[code];
+                const ratio = totalCount > 0 ? (total / totalCount * 100).toFixed(1) : "0.0";
+
+                if (total > 0) {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td style="font-weight:600; border-right: 1px solid #dadce0; border-bottom: 1px solid #dadce0; padding: 10px 16px;">${code}</td>
+                        <td style="text-align:right; border-right: 1px solid #dadce0; border-bottom: 1px solid #dadce0; padding: 10px 16px;">${total}건</td>
+                        <td style="text-align:right; color:var(--text-muted); border-bottom: 1px solid #dadce0; padding: 10px 16px;">${ratio}%</td>
+                    `;
+                    biocodeTbody.appendChild(tr);
+                }
+            });
+            if (biocodeTbody.innerHTML === "") {
+                biocodeTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">데이터가 없습니다.</td></tr>`;
+            }
+
+            // 5. 3대 설문 영역 평균 점수 비교
+            let absorbTotal = {sum:0, count:0};
+            let metabTotal = {sum:0, count:0};
+            let behaviorTotal = {sum:0, count:0};
+
+            allRequests.forEach(req => {
+                const responses = req.survey_responses || [];
+                if (responses.length === 0) return;
+                
+                let absorbScore = 0, metabScore = 0, behaviorScore = 0;
+                let qCountPerArea = 0;
+                
+                if (responses.length === 18) {
+                    qCountPerArea = 6;
+                    absorbScore = responses.slice(0, 6).reduce((a,b)=>a+b, 0);
+                    metabScore = responses.slice(6, 12).reduce((a,b)=>a+b, 0);
+                    behaviorScore = responses.slice(12, 18).reduce((a,b)=>a+b, 0);
+                } else if (responses.length >= 24) {
+                    qCountPerArea = 8;
+                    absorbScore = responses.slice(0, 8).reduce((a,b)=>a+b, 0);
+                    metabScore = responses.slice(8, 16).reduce((a,b)=>a+b, 0);
+                    behaviorScore = responses.slice(16, 24).reduce((a,b)=>a+b, 0);
+                } else {
+                    return;
+                }
+
+                const absAvg = absorbScore / qCountPerArea;
+                const metAvg = metabScore / qCountPerArea;
+                const behAvg = behaviorScore / qCountPerArea;
+
+                absorbTotal.sum += absAvg; absorbTotal.count++;
+                metabTotal.sum += metAvg; metabTotal.count++;
+                behaviorTotal.sum += behAvg; behaviorTotal.count++;
+            });
+
+            const renderAvg = (data) => data.count > 0 ? (data.sum / data.count).toFixed(2) : "0.00";
+
+            const surveyTbody = document.getElementById("dashboard-survey-tbody");
+            surveyTbody.innerHTML = `
+                <tr>
+                    <td style="font-weight:600; border-right: 1px solid #dadce0; border-bottom: 1px solid #dadce0; padding: 10px 16px;">🍽️ 영양 흡수력 영역</td>
+                    <td style="text-align:right; font-weight:700; border-right: 1px solid #dadce0; border-bottom: 1px solid #dadce0; padding: 10px 16px;">${renderAvg(absorbTotal)}점</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:600; border-right: 1px solid #dadce0; border-bottom: 1px solid #dadce0; padding: 10px 16px;">⚡ 수면 / 생활 루틴</td>
+                    <td style="text-align:right; font-weight:700; border-right: 1px solid #dadce0; border-bottom: 1px solid #dadce0; padding: 10px 16px;">${renderAvg(metabTotal)}점</td>
+                </tr>
+                <tr>
+                    <td style="font-weight:600; border-right: 1px solid #dadce0; border-bottom: 1px solid #dadce0; padding: 10px 16px;">💪 운동 자극 영역</td>
+                    <td style="text-align:right; font-weight:700; border-right: 1px solid #dadce0; border-bottom: 1px solid #dadce0; padding: 10px 16px;">${renderAvg(behaviorTotal)}점</td>
+                </tr>
+            `;
+        }
+
+        function sortBy(key) {
+            if (currentSortKey === key) {
+                // Toggle direction
+                currentSortDir = currentSortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSortKey = key;
+                currentSortDir = 'desc'; // Default to desc for numeric columns
+                if (key === 'name' || key === 'sports' || key === 'grade') {
+                    currentSortDir = 'asc'; // Alphabetical default to asc
+                }
+            }
+            renderList();
+        }
+
+        // --- Consultation Mode Switching ---
+        function activateConsultation(req) {
+            selectedRequest = req;
+            
+            // Switch Workspace Layout to Split Active
+            const ws = document.getElementById("main-workspace");
+            ws.classList.add("split-active");
+            
+            // Toggle header back button visibility
+            document.getElementById("btn-back-to-list").style.display = "inline-flex";
+
+            // Update Traffic Light UI
+            for(let i=1; i<=5; i++) {
+                document.getElementById('tl-'+i).classList.remove('active');
+            }
+            if (req.status === 'Approved') {
+                document.getElementById('tl-5').classList.add('active'); // 발송완료
+            } else if (req.status === 'Scheduled') {
+                document.getElementById('tl-4').classList.add('active'); // 발송대기
+            } else if (req.status === 'Pending' && req.ai_comment) {
+                document.getElementById('tl-3').classList.add('active'); // 검수
+            } else if (req.status === 'Pending' && req.survey_responses) {
+                document.getElementById('tl-2').classList.add('active'); // 1차보고서
+            } else {
+                document.getElementById('tl-1').classList.add('active'); // 예약
+            }
+
+            // Bind Student Profile Info Inputs
+            document.getElementById("lbl-name").innerText = req.name;
+            document.getElementById("edit-gender").value = req.gender;
+            document.getElementById("edit-birth").value = req.birth_date;
+            document.getElementById("edit-grade").value = req.grade;
+            document.getElementById("edit-email").value = req.phone || "";
+            document.getElementById("edit-height").value = req.current_height;
+            document.getElementById("edit-weight").value = req.current_weight;
+            document.getElementById("edit-muscle").value = req.skeletal_muscle;
+            document.getElementById("edit-fat").value = req.body_fat;
+
+            // Populate Editor
+            document.getElementById("txt-comment").value = req.ai_comment || "";
+
+            // Bind Formulas & Guide Values
+            bindFormulaHelper(req);
+
+            // Set Preview Frame Data
+            const iframe = document.getElementById("report-iframe");
+            iframe.src = "about:blank"; // Reset
+            
+            // 2. Pre-inject data into iframe context via localStorage after mock load
+            const biocodeResult = calculateLocalBiocode(req);
+            
+            const reportPayload = {
+                biocode: biocodeResult.biocode,
+                pattern_name: biocodeResult.pattern_name,
+                constitution: biocodeResult.constitution,
+                lag_cause: biocodeResult.lag_cause,
+                metab_score: biocodeResult.metab_score,
+                behavior_score: biocodeResult.behavior_score,
+                body_score: biocodeResult.body_score,
+                height_gap: biocodeResult.height_gap,
+                ai_comment: document.getElementById("txt-comment").value || req.ai_comment,
+                inputs: req
+            };
+            
+            window.localStorage.setItem("physicalup_analysis", JSON.stringify(reportPayload));
+            iframe.src = `/static/report.html?t=${Date.now()}`;
+
+            // Set Preview Top label
+            document.getElementById("preview-student-label").innerText = `대상 아동: ${req.name} (${req.birth_date})`;
+
+            // Update Whitepaper Accordion Content
+            document.getElementById("whitepaper-biocode").innerText = `BioCode: ${biocodeResult.biocode} (${biocodeResult.pattern_name})`;
+            document.getElementById("whitepaper-summary").innerHTML = `
+                <div style="margin-bottom:4px;"><b>체질 분석 요약:</b> ${biocodeResult.constitution}</div>
+                <div style="margin-bottom:4px;"><b>유전 격차 주요 요인:</b> ${biocodeResult.lag_cause}</div>
+                <div style="margin-bottom:4px;"><b>현재 신장 및 성장격차:</b> ${req.current_height}cm (격차: ${biocodeResult.height_gap}cm)</div>
+                <div><b>엔진 333점수 (대사/자극/체격):</b> ${biocodeResult.metab_score}점 / ${biocodeResult.behavior_score}점 / ${biocodeResult.body_score}점</div>
+            `;
+
+            // Configure button disable if already Approved or Scheduled
+            const btnApprove = document.getElementById("btn-approve");
+            const btnSchedule = document.getElementById("btn-schedule");
+            const btnCancel = document.getElementById("btn-cancel-reserve");
+
+            // Reset buttons
+            btnCancel.style.display = "none";
+            btnSchedule.style.display = "block";
+            btnApprove.style.display = "block";
+
+            if (req.status === "Approved") {
+                btnApprove.disabled = true;
+                btnSchedule.disabled = true;
+                btnApprove.innerHTML = `<i class="fa-solid fa-circle-check"></i> 이미 발송 완료됨`;
+                btnSchedule.style.display = "none";
+            } else if (req.status === "Scheduled") {
+                btnApprove.disabled = true;
+                btnSchedule.disabled = true;
+                const reserveDate = req.scheduled_at ? new Date(req.scheduled_at) : null;
+                const reserveStr = reserveDate 
+                    ? `${reserveDate.getMonth()+1}/${reserveDate.getDate()} ${reserveDate.getHours().toString().padStart(2,'0')}:${reserveDate.getMinutes().toString().padStart(2,'0')}`
+                    : "예정";
+                btnSchedule.innerHTML = `<i class="fa-solid fa-clock"></i> ${reserveStr} 발송 대기 중`;
+                
+                // Show cancel button
+                btnCancel.style.display = "block";
+                btnApprove.style.display = "none";
+            } else {
+                btnApprove.disabled = false;
+                btnSchedule.disabled = false;
+                btnApprove.innerHTML = `<i class="fa-solid fa-paper-plane"></i> 즉시 발송`;
+                btnSchedule.innerHTML = `<i class="fa-solid fa-clock"></i> 지정일 발송`;
+            }
+            
+            // Check conversion status for marketing
+            const premiumPhones = new Set(
+                allRequests.filter(r => !r.is_free && r.phone).map(r => r.phone.trim())
+            );
+            const marketingArea = document.getElementById("marketing-area");
+            const marketingBadge = document.getElementById("marketing-badge");
+            const copyBtn = document.getElementById("btn-copy-sms");
+            
+            if (req.is_free) {
+                marketingArea.style.display = "flex";
+                if (req.phone && premiumPhones.has(req.phone.trim())) {
+                    marketingBadge.innerText = "🎉 유료 전환 완료";
+                    marketingBadge.style.background = "rgba(19, 115, 51, 0.08)";
+                    marketingBadge.style.color = "var(--pos)";
+                    marketingBadge.style.border = "1.5px solid rgba(19, 115, 51, 0.15)";
+                    copyBtn.style.display = "none";
+                } else {
+                    marketingBadge.innerText = "📢 미전환 대상";
+                    marketingBadge.style.background = "rgba(245, 158, 11, 0.08)";
+                    marketingBadge.style.color = "#fb923c";
+                    marketingBadge.style.border = "1.5px solid rgba(245, 158, 11, 0.15)";
+                    copyBtn.style.display = "block";
+                }
+            } else {
+                marketingArea.style.display = "none";
+            }
+
+            // Reset edit mode state if active
+            const editBtn = document.getElementById("btn-toggle-edit");
+            if (editBtn) {
+                editBtn.innerHTML = `<i class="fa-solid fa-pen-to-square"></i> 스펙 수정`;
+            }
+            document.querySelectorAll("#student-profile-card .info-chip").forEach(chip => {
+                chip.classList.remove("editable");
+            });
+
+            document.getElementById("status-msg").style.display = "none";
+        }
+
+        // Toggle Profile Edit mode
+        function toggleProfileEdit() {
+            if (!selectedRequest) return;
+
+            const editBtn = document.getElementById("btn-toggle-edit");
+            const chips = document.querySelectorAll("#student-profile-card .info-chip");
+            const isEditing = chips[0].classList.contains("editable");
+
+            if (!isEditing) {
+                // Enter Edit Mode
+                chips.forEach(chip => chip.classList.add("editable"));
+                editBtn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> 스펙 저장`;
+            } else {
+                // Save Edit Mode
+                chips.forEach(chip => chip.classList.remove("editable"));
+                editBtn.innerHTML = `<i class="fa-solid fa-pen-to-square"></i> 스펙 수정`;
+
+                // Update selectedRequest values from inputs
+                selectedRequest.gender = document.getElementById("edit-gender").value;
+                selectedRequest.birth_date = document.getElementById("edit-birth").value;
+                selectedRequest.grade = document.getElementById("edit-grade").value;
+                selectedRequest.phone = document.getElementById("edit-email").value; // Using phone field for email
+                selectedRequest.current_height = parseFloat(document.getElementById("edit-height").value) || 160.0;
+                selectedRequest.current_weight = parseFloat(document.getElementById("edit-weight").value) || 50.0;
+                selectedRequest.skeletal_muscle = parseFloat(document.getElementById("edit-muscle").value) || 20.0;
+                selectedRequest.body_fat = parseFloat(document.getElementById("edit-fat").value) || 15.0;
+
+                // Recalculate helper panel values
+                bindFormulaHelper(selectedRequest);
+
+                // Update Preview Frame live
+                const iframe = document.getElementById("report-iframe");
+                const biocodeResult = calculateLocalBiocode(selectedRequest);
+                const reportPayload = {
+                    biocode: biocodeResult.biocode,
+                    pattern_name: biocodeResult.pattern_name,
+                    constitution: biocodeResult.constitution,
+                    lag_cause: biocodeResult.lag_cause,
+                    metab_score: biocodeResult.metab_score,
+                    behavior_score: biocodeResult.behavior_score,
+                    body_score: biocodeResult.body_score,
+                    height_gap: biocodeResult.height_gap,
+                    ai_comment: document.getElementById("txt-comment").value,
+                    inputs: selectedRequest
+                };
+                iframe.contentWindow.localStorage.setItem("physicalup_analysis", JSON.stringify(reportPayload));
+                iframe.contentWindow.location.reload();
+            }
+        }
+
+        function deactivateConsultation() {
+            const ws = document.getElementById("main-workspace");
+            ws.classList.remove("split-active");
+            document.getElementById("btn-back-to-list").style.display = "none";
+            selectedRequest = null;
+            refreshRequests(); // Refresh list to get updated statuses
+        }
+
+        let syncCommentTimeout;
+        function syncCommentToPreview(val) {
+            clearTimeout(syncCommentTimeout);
+            syncCommentTimeout = setTimeout(() => {
+                const iframe = document.getElementById("report-iframe");
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage({
+                        type: "updateComment",
+                        comment: val
+                    }, "*");
+                }
+            }, 400); // 400ms debounce to prevent flickering
+        }
+
+        function toggleAccordion(id) {
+            const el = document.getElementById(id);
+            const isVisible = el.style.display === "block" || el.classList.contains("active");
+            
+            // Close all
+            document.querySelectorAll(".accordion-content").forEach(c => {
+                c.style.display = "none";
+                c.classList.remove("active");
+            });
+
+            // Toggle selected
+            if (!isVisible) {
+                el.style.display = "block";
+                el.classList.add("active");
+            }
+        }
+
+        // --- Core Math Bindings for Advisor Helper Panel ---
+        function bindFormulaHelper(req) {
+            // 1. MPH (Genetic Target Height)
+            const fH = req.father_height;
+            const mH = req.mother_height;
+            const gender = req.gender;
+            const currentHeight = req.current_height;
+
+            let mphVal = 170.0;
+            let processStr = "";
+            if (gender === "남") {
+                mphVal = (fH + mH + 13) / 2;
+                processStr = `(${fH} + ${mH} + 13) / 2 = <b>${mphVal.toFixed(1)}cm</b>`;
+            } else {
+                mphVal = (fH + mH - 13) / 2;
+                processStr = `(${fH} + ${mH} - 13) / 2 = <b>${mphVal.toFixed(1)}cm</b>`;
+            }
+            
+            document.getElementById("formula-mph").innerText = gender === "남" 
+                ? "MPH = (아빠키 + 엄마키 + 13) / 2" 
+                : "MPH = (아빠키 + 엄마키 - 13) / 2";
+                
+            document.getElementById("calc-mph-process").innerHTML = processStr;
+            
+            // Expected current age height prediction
+            const predictedAgeHeight = currentHeight + 4.5; // Demo baseline prediction
+            const gap = predictedAgeHeight - mphVal; 
+            document.getElementById("calc-mph-gap").innerText = Math.abs(gap).toFixed(1);
+
+            // 2. Muscle percent
+            const sMuscle = req.skeletal_muscle;
+            const weight = req.current_weight;
+            const musclePct = (sMuscle / weight) * 100;
+            document.getElementById("calc-muscle-pct").innerText = musclePct.toFixed(1);
+            
+            let gradeText = "보통";
+            if (musclePct >= 42.0) gradeText = "우수";
+            else if (musclePct < 37.0) gradeText = "보강요망";
+            document.getElementById("calc-muscle-grade").innerText = gradeText;
+
+            // 3. Constitution and Sports mapping
+            let constitution = "태음인 (흡수수렴)";
+            if (req.survey_responses && req.survey_responses[0] % 3 === 0) constitution = "소양인 (열감발산)";
+            else if (req.survey_responses && req.survey_responses[0] % 3 === 1) constitution = "소음인 (소화기관 민감)";
+            
+            document.getElementById("calc-constitution").innerText = constitution;
+            document.getElementById("calc-sports").innerText = req.sports;
+        }
+
+        // Local Calculator matching python's app/engine.py
+        function calculateLocalBiocode(req) {
+            const h = req.current_height;
+            const w = req.current_weight;
+            const smm = req.skeletal_muscle;
+            const responses = req.survey_responses || [];
+
+            // Mock calculations for preview bindings
+            const metab_score = Math.min(35, Math.max(5, responses.slice(0, 8).reduce((a,b)=>a+b, 0)));
+            const behavior_score = Math.min(25, Math.max(5, responses.slice(8, 16).reduce((a,b)=>a+b, 0)));
+            const body_score = Math.min(40, Math.max(5, responses.slice(16, 24).reduce((a,b)=>a+b, 0)));
+
+            const body_g = body_score >= 26 ? 3 : body_score >= 15 ? 2 : 1;
+            const metab_g = metab_score >= 23 ? 3 : metab_score >= 13 ? 2 : 1;
+            const behavior_g = behavior_score >= 17 ? 3 : behavior_score >= 10 ? 2 : 1;
+            
+            const biocode = `${body_g}-${metab_g}-${behavior_g}`;
+            
+            let pattern_name = "균형잡힌 표준 피지컬";
+            if (body_g === 3 && metab_g === 3) pattern_name = "타고난 강골 완성형";
+            else if (body_g === 1) pattern_name = "세심한 골격 채움형";
+            
+            let constitution = "발산-순환형 (소양인)";
+            if (responses[0] % 3 === 0) constitution = "수렴-저장형 (태음인)";
+            else if (responses[0] % 3 === 1) constitution = "민감-조율형 (소음인)";
+
+            return {
+                biocode,
+                pattern_name,
+                constitution,
+                lag_cause: metab_g === 1 ? "장내 영양 흡수 정체" : (behavior_g === 1 ? "성장호르몬 분비 부족" : "골격 자극 결핍"),
+                metab_score,
+                behavior_score,
+                body_score,
+                height_gap: (h - 165.0) // Mock difference gap
+            };
+        }
+
+        // --- Reservation Helper Functions ---
+        async function cancelReservation() {
+            if (!selectedRequest) return;
+            if (!confirm(`${selectedRequest.name} 학생의 발송 예약을 취소하고 대기 상태로 변경하시겠습니까?`)) {
+                return;
+            }
+
+            const msgDiv = document.getElementById("status-msg");
+            msgDiv.className = "status-message loading";
+            msgDiv.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> 예약을 취소하는 중...`;
+            msgDiv.style.display = "block";
+
+            try {
+                const res = await fetch("/api/admin/cancel-schedule", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id: selectedRequest.id })
+                });
+
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    msgDiv.className = "status-message success";
+                    msgDiv.innerHTML = `<i class="fa-solid fa-circle-check"></i> 예약이 취소되었습니다.`;
+                    
+                    // Refresh and reload consultation view
+                    await refreshRequests();
+                    const updatedReq = allRequests.find(r => r.id === selectedRequest.id);
+                    if (updatedReq) {
+                        activateConsultation(updatedReq);
+                    }
+                } else {
+                    throw new Error(data.detail || "예약 취소 실패");
+                }
+            } catch (err) {
+                msgDiv.className = "status-message error";
+                msgDiv.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> 실패: ${err.message}`;
+            }
+        }
+
+        async function scheduleSend() {
+            if (!selectedRequest) return;
+            
+            const comment = document.getElementById("txt-comment").value;
+            if (!comment) {
+                alert("보호자에게 전송할 최종 소견 코멘트를 작성해 주세요.");
+                return;
+            }
+
+            // Client requests scheduled send. If scheduled_at doesn't exist, we fallback to +3 days from now
+            let scheduled_at = selectedRequest.scheduled_at;
+            if (!scheduled_at) {
+                const now = new Date();
+                now.setDate(now.getDate() + 3);
+                now.setHours(10, 0, 0, 0); // Default to 10 AM 3 days later if empty
+                scheduled_at = now.getTime();
+            }
+
+            const reserveDate = new Date(scheduled_at);
+            const reserveStr = `${reserveDate.getMonth()+1}월 ${reserveDate.getDate()}일 ${reserveDate.getHours()}시 ${reserveDate.getMinutes().toString().padStart(2,'0')}분`;
+
+            if (!confirm(`[지정일 발송]\n${reserveStr}에 예약 발송하시겠습니까?`)) {
+                return;
+            }
+
+            const msgDiv = document.getElementById("status-msg");
+            msgDiv.className = "status-message loading";
+            msgDiv.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> [${reserveStr}] 예약 발송 설정 중...`;
+            msgDiv.style.display = "block";
+            
+            const btnApprove = document.getElementById("btn-approve");
+            const btnSchedule = document.getElementById("btn-schedule");
+            btnApprove.disabled = true;
+            btnSchedule.disabled = true;
+
+            try {
+                const res = await fetch("/api/admin/approve", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        id: selectedRequest.id,
+                        email: selectedRequest.phone || "user@example.com",
+                        comment: comment,
+                        scheduled_at: scheduled_at
+                    })
+                });
+
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    msgDiv.className = "status-message success";
+                    msgDiv.innerHTML = `<i class="fa-solid fa-circle-check"></i> 성공! 예약 발송 대기열에 추가되었습니다.`;
+                    await refreshRequests();
+                } else {
+                    throw new Error(data.detail || "알 수 없는 전송 실패");
+                }
+            } catch (err) {
+                msgDiv.className = "status-message error";
+                msgDiv.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> 실패: ${err.message}`;
+                btnApprove.disabled = false;
+                btnSchedule.disabled = false;
+            }
+        }
+
+        async function approveAndSend() {
+            if (!selectedRequest) return;
+
+            const comment = document.getElementById("txt-comment").value;
+            if (!comment) {
+                alert("보호자에게 전송할 최종 소견 코멘트를 작성해 주세요.");
+                return;
+            }
+            
+            if (!confirm(`[즉시 발송]\n보고서를 즉시 이메일로 발송하시겠습니까?`)) {
+                return;
+            }
+
+            const msgDiv = document.getElementById("status-msg");
+            msgDiv.className = "status-message loading";
+            msgDiv.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> 백그라운드에서 프리미엄 PDF 생성 및 이메일 전송 중... (약 10초 소요)`;
+            msgDiv.style.display = "block";
+            
+            const btnApprove = document.getElementById("btn-approve");
+            const btnSchedule = document.getElementById("btn-schedule");
+            btnApprove.disabled = true;
+            btnSchedule.disabled = true;
+
+            try {
+                const res = await fetch("/api/admin/approve", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        id: selectedRequest.id,
+                        email: selectedRequest.phone || "user@example.com",
+                        comment: comment,
+                        scheduled_at: null // Immediate
+                    })
+                });
+
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    msgDiv.className = "status-message success";
+                    msgDiv.innerHTML = `<i class="fa-solid fa-circle-check"></i> 성공! PDF가 성공적으로 생성 및 발송 완료되었습니다.`;
+                    btnApprove.innerHTML = `<i class="fa-solid fa-circle-check"></i> 발송 완료됨`;
+                    await refreshRequests();
+                } else {
+                    throw new Error(data.detail || "알 수 없는 전송 실패");
+                }
+            } catch (err) {
+                msgDiv.className = "status-message error";
+                msgDiv.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> 실패: ${err.message}`;
+                btnApprove.disabled = false;
+                btnSchedule.disabled = false;
+            }
+        }
+
+        function openGuide() {
+            document.getElementById("guide-modal").classList.add("active");
+        }
+
+        function closeGuide() {
+            document.getElementById("guide-modal").classList.remove("active");
+        }
+
+        function copyMarketingSMS() {
+            if (!selectedRequest) return;
+            
+            const name = selectedRequest.name;
+            const biocodeResult = calculateLocalBiocode(selectedRequest);
+            const biocode = biocodeResult.biocode;
+            
+            const smsText = `안녕하세요 ${name} 보호자님, PHYSICAL UP 333입니다. 우리 아이의 무료 성장 분석 결과(${biocode} 체질)를 바탕으로 한 18페이지 분량의 정밀 성장 솔루션 리포트가 준비되어 있습니다. 지금 유료 정밀 분석으로 전환하시어 상세 백서를 받아보세요!\n▶ 신청하기: www.physicalup333.com`;
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(smsText).then(() => {
+                    alert("안내 문구가 클립보드에 복사되었습니다! 문자나 알림톡 발송창에 붙여넣기(Ctrl+V) 하세요. 📲");
+                }).catch(() => {
+                    fallbackCopySMS(smsText);
+                });
+            } else {
+                fallbackCopySMS(smsText);
+            }
+        }
+        
+        function fallbackCopySMS(txt) {
+            const el = document.createElement('textarea');
+            el.value = txt;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert("안내 문구가 클립보드에 복사되었습니다! 문자나 알림톡 발송창에 붙여넣기(Ctrl+V) 하세요. 📲");
+        }
+    </script>
+
+    <!-- QR Integration Guide Modal -->
+    <div id="guide-modal" class="modal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: var(--card-border); padding-bottom: 12px; margin-bottom: 20px;">
+                <h2 style="color: var(--gold); font-size: 16px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-circle-info"></i> 모바일 QR 접수 연동 API 규격
+                </h2>
+                <span style="color: var(--text-muted); cursor: pointer; font-size: 24px; font-weight: bold;" onclick="closeGuide()">&times;</span>
+            </div>
+            
+            <div style="font-size: 13px; line-height: 1.6; color: var(--text-main); text-align: left;">
+                <p style="margin-bottom: 12px;">현장의 QR 안내장 또는 결제 시스템(네이버페이, PG사 등)과 연계하여 고객의 폰에서 직접 입력된 설문 데이터를 본 관리 시스템의 대기열로 즉시 적재시키는 API 규격입니다.</p>
+                
+                <h3 style="color: var(--gold); font-size: 13.5px; margin: 15px 0 5px;"><i class="fa-solid fa-link"></i> Webhook API 엔드포인트</h3>
+                <div class="code-block">POST http://127.0.0.1:8000/api/online/webhook</div>
+                
+                <h3 style="color: var(--gold); font-size: 13.5px; margin: 15px 0 5px;"><i class="fa-solid fa-key"></i> 필수 인증 헤더</h3>
+                <div class="code-block">X-API-Key: physicalup333secret</div>
+                
+                <h3 style="color: var(--gold); font-size: 13.5px; margin: 15px 0 5px;"><i class="fa-solid fa-cube"></i> 전송 JSON 데이터 (Body)</h3>
+                <div class="code-block">{
+  "name": "홍길동",                // 아동 이름 (String)
+  "gender": "남",                 // 성별: "남" / "여" (String)
+  "birth_date": "2012-05-15",     // 생년월일: YYYY-MM-DD (String)
+  "grade": "초5",                 // 학년 (String)
+  "sports": "야구",                // 운동종목 (String)
+  "position": "투수",              // 포지션: 선택사항 (String)
+  "phone": "parent@email.com",    // 메일 발송용 보호자 이메일 (String)
+  "father_height": 178.5,         // 아빠 키 (Float)
+  "mother_height": 163.0,         // 엄마 키 (Float)
+  "current_height": 145.2,        // 현재 키 (Float)
+  "current_weight": 38.5,         // 현재 몸무게 (Float)
+  "body_fat": 15.4,               // 체지방률 % (Float)
+  "skeletal_muscle": 18.2,        // 골격근량 kg (Float)
+  "survey_responses": [           // 24개 문항 점수 (1~5 정수 배열)
+    3, 4, 3, 2, 3, 4, 3, 5, 2, 4, 3, 3, 4, 3, 2, 3, 4, 4, 3, 5, 2, 3, 4, 3
+  ]
+}</div>
+            </div>
+            
+            <div style="margin-top: 20px; text-align: right;">
+                <button class="btn-premium" style="padding: 8px 20px;" onclick="closeGuide()">확인 및 닫기</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
