@@ -373,6 +373,24 @@ const getProjectedAdultHeight = (pct, gender) => {
   return gender === "여" ? 161.0 : 174.0;
 };
 
+const getConstitutionProse = (constStr) => {
+  if (!constStr) return "";
+  const s = constStr.toLowerCase();
+  if (s.includes("이화") || s.includes("ectomorph") || s.includes("소양인")) {
+    return "타고난 신체 에너지를 밖으로 활발하게 분출하고 소비하는 성향이 강합니다. 몸의 순발력과 역동적인 회전력이 뛰어난 운동 특성을 가지고 있어 활기찬 퍼포먼스를 내기에 유리한 선천적 신체 기질을 지니고 있습니다.";
+  }
+  if (s.includes("동화") || s.includes("mesomorph") || s.includes("소음인")) {
+    return "영양 흡수와 결합력이 뛰어나 섭취한 에너지를 뼈와 근육의 세포로 섬세하게 합성해내는 특성이 우수합니다. 신체 발달의 기초 골격을 조밀하게 채워주는 섬세하고도 단단한 내실을 지닌 선천적 신체 기질입니다.";
+  }
+  if (s.includes("수축") || s.includes("endomorph") || s.includes("태음인")) {
+    return "기본 골격 프레임과 체격이 묵직하고 튼튼하게 타고났으며, 에너지를 몸에 오래 머무르게 하여 뼈와 근육의 무게감을 든든하게 유지해 줍니다. 충격을 견디는 파워와 버티는 힘(지면 반발력)에 매우 유리한 선천적 신체 기질입니다.";
+  }
+  if (s.includes("강발산") || s.includes("hyper") || s.includes("태양인")) {
+    return "신체 대사 속도가 대단히 신속하며 지치지 않는 스피드와 지치지 않는 체력을 내뿜습니다. 지치지 않고 끊임없이 가속을 붙일 수 있는 폭발적인 주력과 반응 속도를 발휘하기에 적합한 선천적 신체 기질을 가졌습니다.";
+  }
+  return "신체 전반의 에너지 흡수와 소모 밸런스가 조화롭고 치우침이 없습니다. 영양분이 특정 부위에 편중되지 않고 뼈, 근육, 내장 기관 전반으로 골고루 배분되는 가장 이상적인 성장 기초 대사 균형을 유지하고 있습니다.";
+};
+
 function getGrowthData(months,height,weight) {
   if(!months||!height||!weight) return null;
   const keys=Object.keys(growthRef).map(Number).sort((a,b)=>a-b);
@@ -1692,10 +1710,9 @@ function saveHtml(){
             </div>
             
             {serverResult ? (
-              <div style={{textAlign:"left",lineHeight:1.6,fontSize:13}}>
-                <span style={{color:GOLD2,fontWeight:800}}>선천 체질 특징: </span>
-                <span style={{color:WHITE}}>{serverResult.constitution}입니다.</span>
-                <div style={{color:MUTED,fontSize:11,marginTop:8,lineHeight:1.4}}>
+              <div style={{textAlign:"left",lineHeight:1.6,fontSize:13,color:WHITE}}>
+                {getConstitutionProse(serverResult.constitution)}
+                <div style={{color:MUTED,fontSize:11,marginTop:8,lineHeight:1.4,borderTop:"1px solid rgba(255,255,255,0.05)",paddingTop:8}}>
                   ※ 태어난 생년월일시를 바탕으로 분석한 선천적인 신체 에너지 대사 성향입니다.
                 </div>
               </div>
