@@ -1336,9 +1336,6 @@ function saveHtml(){
             333TEST 시작하기<br/><span style={{fontSize:11,fontWeight:600,opacity:0.7}}>24문항 · 약 3~5분 · 무료</span>
           </button>
         </div>
-        <button onClick={handleGoResult} style={{width:"100%",padding:"12px",borderRadius:12,background:"rgba(255,255,255,0.03)",color:MUTED,fontSize:13,border:"1px solid rgba(255,255,255,0.07)",cursor:"pointer",marginBottom:4}}>
-          ⚡ 신체 정보만으로 성장 지표 확인
-        </button>
         <p style={{color:MUTED,fontSize:11,opacity:0.5}}>24문항 · 약 3~5분 소요</p>
       </div>
       </div>
