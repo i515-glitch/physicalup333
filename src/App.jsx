@@ -1636,120 +1636,109 @@ function saveHtml(){
               <div style={{color:GOLD,fontSize:12,fontWeight:700,marginBottom:4,letterSpacing:1}}>📏 성장 지표 분석</div>
               <div style={{color:MUTED,fontSize:11,marginBottom:14,borderBottom:"1px solid rgba(201,168,76,0.1)",paddingBottom:10}}>{ageDisplay} · BMI {gd.bmi}</div>
 
-              {[
-                {label:"키",value:parseFloat(heightVal),unit:"cm",avg:gd.stdH,mine:parseFloat(heightVal),target:gd.targetH,color:"#4fcfa0",isSlug:false},
-                {label:"몸무게",value:parseFloat(weightVal),unit:"kg",avg:gd.stdW,mine:parseFloat(weightVal),target:result.main==="저장형"?gd.targetW15:result.main==="소비형"?gd.targetW85:gd.targetW90,color:"#4f8ef7",isSlug:result.main==="저장형"}
-              ].map(ax=>{
-                // 3개 값을 정렬해서 위치 계산
-                const vals=[ax.avg,ax.mine,ax.target];
-                const minV=Math.min(...vals)*0.97;
-                const maxV=Math.max(...vals)*1.03;
-                const toPos=v=>Math.round(((v-minV)/(maxV-minV))*100);
-                const avgPos=toPos(ax.avg);
-                const minePos=toPos(ax.mine);
-                const targetPos=toPos(ax.target);
-                const reached=ax.isSlug?ax.mine<=ax.target:ax.mine>=ax.target;
+              <div style={{display:"flex",justifyContent:"space-between",gap:12,marginBottom:16}}>
+                {[
+                  {label:"키",value:parseFloat(heightVal),unit:"cm",avg:gd.stdH,mine:parseFloat(heightVal),target:gd.targetH,color:"#4fcfa0",isSlug:false},
+                  {label:"몸무게",value:parseFloat(weightVal),unit:"kg",avg:gd.stdW,mine:parseFloat(weightVal),target:result.main==="저장형"?gd.targetW15:result.main==="소비형"?gd.targetW85:gd.targetW90,color:"#4f8ef7",isSlug:result.main==="저장형"}
+                ].map(ax=>{
+                  const vals=[ax.avg,ax.mine,ax.target];
+                  const minV=Math.min(...vals)*0.95;
+                  const maxV=Math.max(...vals)*1.05;
+                  const range = maxV - minV || 1;
+                  const toPos=v=>Math.round(15 + ((v-minV)/range)*70);
+                  const avgPos=toPos(ax.avg);
+                  const minePos=toPos(ax.mine);
+                  const targetPos=toPos(ax.target);
+                  const reached=ax.isSlug?ax.mine<=ax.target:ax.mine>=ax.target;
 
-                return (
-                  <div key={ax.label} style={{marginBottom:20}}>
-                    {/* 타이틀 */}
-                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
-                      <span style={{color:WHITE,fontSize:13,fontWeight:700}}>{ax.label}</span>
-                      {reached
-                        ? <span style={{color:"#4fcfa0",fontSize:11,fontWeight:700}}>
-                            {ax.label === "몸무게" && result.main === "저장형" ? "✓ 체중조절 범위 충족" : "🏆 상위선수 기준 충족!"}
-                          </span>
-                        : <span style={{color:GOLD,fontSize:11,fontWeight:700}}>
+                  return (
+                    <div key={ax.label} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",background:"rgba(255,255,255,0.015)",borderRadius:14,padding:"12px 6px",border:"1px solid rgba(255,255,255,0.04)"}}>
+                      {/* 타이틀 및 비교 문구 */}
+                      <div style={{width:"100%",textAlign:"center",marginBottom:14,borderBottom:"1px solid rgba(255,255,255,0.04)",paddingBottom:8}}>
+                        <div style={{color:WHITE,fontSize:13,fontWeight:900,marginBottom:3}}>{ax.label}</div>
+                        <div style={{fontSize:10,fontWeight:800}}>
+                          {reached
+                            ? <span style={{color:"#4fcfa0"}}>
+                                {ax.label === "몸무게" && result.main === "저장형" ? "✓ 적정 체중" : "🏆 목표 충족!"}
+                              </span>
+                            : <span style={{color:GOLD}}>
+                                {ax.label === "키" 
+                                  ? `대비 -${Math.abs(ax.target-ax.mine).toFixed(1)}${ax.unit}` 
+                                  : (result.main === "저장형" 
+                                      ? `초과 +${Math.abs(ax.target-ax.mine).toFixed(1)}${ax.unit}` 
+                                      : `대비 -${Math.abs(ax.target-ax.mine).toFixed(1)}${ax.unit}`)}
+                              </span>
+                          }
+                        </div>
+                      </div>
+
+                      {/* 세로 그래프 트랙 */}
+                      <div style={{position:"relative",width:"100%",height:200,marginBottom:4}}>
+                        {/* 세로 중심선 */}
+                        <div style={{position:"absolute",left:"50%",top:0,bottom:0,width:4,background:"rgba(255,255,255,0.08)",transform:"translateX(-50%)",borderRadius:2}}/>
+
+                        {/* 1. 자기나이 평균 (좌측 배치) */}
+                        <div style={{
+                          position:"absolute",bottom:`${avgPos}%`,right:"calc(50% + 8px)",
+                          transform:"translateY(50%)",textAlign:"right",whiteSpace:"nowrap"
+                        }}>
+                          <div style={{color:MUTED,fontSize:8,fontWeight:700,lineHeight:1}}>평균</div>
+                          <div style={{color:MUTED,fontSize:10,fontWeight:600,marginTop:2}}>{ax.avg}{ax.unit}</div>
+                        </div>
+                        {/* 평균 눈금 */}
+                        <div style={{
+                          position:"absolute",bottom:`${avgPos}%`,left:"50%",
+                          transform:"translate(-50%, 50%)",width:8,height:2,
+                          background:"rgba(255,255,255,0.4)",zIndex:6
+                        }}/>
+
+                        {/* 2. 권장 목표 (좌측 배치) */}
+                        <div style={{
+                          position:"absolute",bottom:`${targetPos}%`,right:"calc(50% + 8px)",
+                          transform:"translateY(50%)",textAlign:"right",whiteSpace:"nowrap"
+                        }}>
+                          <div style={{
+                            color:GOLD,fontSize:8,fontWeight:900,lineHeight:1
+                          }}>
                             {ax.label === "키" 
-                              ? `상위선수 대비: -${Math.abs(ax.target-ax.mine).toFixed(1)}${ax.unit}` 
+                              ? "목표" 
                               : (result.main === "저장형" 
-                                  ? `체중 감량 필요: +${Math.abs(ax.target-ax.mine).toFixed(1)}${ax.unit}` 
-                                  : `상위선수 대비: -${Math.abs(ax.target-ax.mine).toFixed(1)}${ax.unit}`)}
-                          </span>
-                      }
-                    </div>
-
-                    {/* 그래프 영역 */}
-                    <div style={{position:"relative",height:80,marginBottom:8}}>
-                      {/* 베이스 라인 */}
-                      <div style={{position:"absolute",bottom:28,left:0,right:0,height:2,background:"rgba(255,255,255,0.08)",borderRadius:1}}/>
-
-                      {/* 평균 선 */}
-                      <div style={{position:"absolute",bottom:16,left:`${avgPos}%`,transform:"translateX(-50%)",display:"flex",flexDirection:"column",alignItems:"center",zIndex:7}}>
-                        <div style={{color:MUTED,fontSize:9,fontWeight:700,marginBottom:3,whiteSpace:"nowrap"}}>자기나이 평균</div>
-                        <div style={{width:2,height:36,background:"rgba(255,255,255,0.3)",borderRadius:1}}/>
-                        <div style={{width:6,height:6,borderRadius:"50%",background:"rgba(255,255,255,0.4)",marginTop:2}}/>
-                        <div style={{color:MUTED,fontSize:10,fontWeight:600,marginTop:3,whiteSpace:"nowrap"}}>{ax.avg}{ax.unit}</div>
-                      </div>
-
-                      {/* 내 아이 선 */}
-                      <div style={{position:"absolute",bottom:16,left:`${minePos}%`,transform:"translateX(-50%)",display:"flex",flexDirection:"column",alignItems:"center",zIndex:9}}>
-                        <div style={{color:ax.color,fontSize:11,fontWeight:900,marginBottom:3,whiteSpace:"nowrap"}}>내 아이</div>
-                        <div style={{width:3,height:36,background:ax.color,borderRadius:1,boxShadow:`0 0 8px ${ax.color}`}}/>
-                        <div style={{width:8,height:8,borderRadius:"50%",background:ax.color,marginTop:2,boxShadow:`0 0 8px ${ax.color}`}}/>
-                        <div style={{color:ax.color,fontSize:11,fontWeight:900,marginTop:3,whiteSpace:"nowrap"}}>{ax.mine}{ax.unit}</div>
-                      </div>
-
-                      {/* 목표 선 */}
-                      <div style={{position:"absolute",bottom:16,left:`${targetPos}%`,transform:"translateX(-50%)",display:"flex",flexDirection:"column",alignItems:"center",zIndex:8}}>
-                        <div style={{color:GOLD,fontSize:9,fontWeight:700,marginBottom:3,whiteSpace:"nowrap"}}>
-                          {ax.label === "키" 
-                            ? "상위 10% (상위선수)" 
-                            : (result.main === "저장형" 
-                                ? "권장 목표 (하위 15%)" 
-                                : (result.main === "소비형" 
-                                    ? "권장 목표 (상위 15%)" 
-                                    : "상위 10% (상위선수)"))}
+                                  ? "권장" 
+                                  : (result.main === "소비형" 
+                                      ? "목표" 
+                                      : "목표"))}
+                          </div>
+                          <div style={{color:GOLD,fontSize:10,fontWeight:700,marginTop:2}}>{ax.target}{ax.unit}</div>
                         </div>
-                        <div style={{width:2,height:36,background:GOLD,borderRadius:1,boxShadow:`0 0 6px ${GOLD}`}}/>
-                        <div style={{width:7,height:7,background:GOLD,transform:"rotate(45deg)",marginTop:2,boxShadow:`0 0 6px ${GOLD}`}}/>
-                        <div style={{color:GOLD,fontSize:10,fontWeight:700,marginTop:3,whiteSpace:"nowrap"}}>{ax.target}{ax.unit}</div>
+                        {/* 목표 눈금 */}
+                        <div style={{
+                          position:"absolute",bottom:`${targetPos}%`,left:"50%",
+                          transform:"translate(-50%, 50%)",width:10,height:2,
+                          background:GOLD,zIndex:6
+                        }}/>
+
+                        {/* 3. 내 아이 (우측 배치 및 강조 배지) */}
+                        <div style={{
+                          position:"absolute",bottom:`${minePos}%`,left:"calc(50% + 8px)",
+                          transform:"translateY(50%)",textAlign:"left",whiteSpace:"nowrap",
+                          background:"rgba(255,255,255,0.06)",border:`1px solid ${ax.color}`,
+                          borderRadius:6,padding:"2px 6px",boxShadow:`0 0 8px rgba(255,255,255,0.05)`
+                        }}>
+                          <div style={{color:ax.color,fontSize:8,fontWeight:900,lineHeight:1}}>내 아이</div>
+                          <div style={{color:WHITE,fontSize:11,fontWeight:800,marginTop:2}}>{ax.mine}{ax.unit}</div>
+                        </div>
+                        {/* 내 아이 큰 점 */}
+                        <div style={{
+                          position:"absolute",bottom:`${minePos}%`,left:"50%",
+                          transform:"translate(-50%, 50%)",width:10,height:10,
+                          borderRadius:"50%",background:ax.color,border:"2px solid #0d1b3e",
+                          boxShadow:`0 0 8px ${ax.color}`,zIndex:9
+                        }}/>
                       </div>
                     </div>
-
-                    {/* 야구선수 성인 피지컬 평균 (최종 도달 목표) */}
-                    {ax.label === "키" && (
-                      <div style={{marginTop:8,background:"rgba(255,255,255,0.02)",borderRadius:10,padding:"10px",border:"1px solid rgba(255,255,255,0.05)"}}>
-                        <div style={{color:GOLD2,fontSize:10,fontWeight:700,marginBottom:6,textAlign:"left"}}>⚾ 야구선수 성인 신장 평균 (최종 도달 목표)</div>
-                        <div style={{display:"flex",justifyContent:"space-between",gap:6}}>
-                          <div style={{flex:1,textAlign:"center"}}>
-                            <div style={{color:MUTED,fontSize:9}}>대학 야구</div>
-                            <div style={{color:WHITE,fontSize:11,fontWeight:800}}>180cm</div>
-                          </div>
-                          <div style={{flex:1,textAlign:"center",borderLeft:"1px solid rgba(255,255,255,0.08)",borderRight:"1px solid rgba(255,255,255,0.08)"}}>
-                            <div style={{color:WHITE,fontSize:9,fontWeight:800}}>KBO 프로</div>
-                            <div style={{color:GOLD2,fontSize:11,fontWeight:800}}>183cm</div>
-                          </div>
-                          <div style={{flex:1,textAlign:"center"}}>
-                            <div style={{color:GOLD,fontSize:9,fontWeight:800}}>MLB 메이저</div>
-                            <div style={{color:GOLD,fontSize:11,fontWeight:800}}>190cm</div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {ax.label === "몸무게" && (
-                      <div style={{marginTop:8,background:"rgba(255,255,255,0.02)",borderRadius:10,padding:"10px",border:"1px solid rgba(255,255,255,0.05)"}}>
-                        <div style={{color:GOLD2,fontSize:10,fontWeight:700,marginBottom:6,textAlign:"left"}}>⚾ 야구선수 성인 체중 평균 (최종 도달 목표)</div>
-                        <div style={{display:"flex",justifyContent:"space-between",gap:6}}>
-                          <div style={{flex:1,textAlign:"center"}}>
-                            <div style={{color:MUTED,fontSize:9}}>대학 야구</div>
-                            <div style={{color:WHITE,fontSize:11,fontWeight:800}}>82kg</div>
-                          </div>
-                          <div style={{flex:1,textAlign:"center",borderLeft:"1px solid rgba(255,255,255,0.08)",borderRight:"1px solid rgba(255,255,255,0.08)"}}>
-                            <div style={{color:WHITE,fontSize:9,fontWeight:800}}>KBO 프로</div>
-                            <div style={{color:GOLD2,fontSize:11,fontWeight:800}}>87kg</div>
-                          </div>
-                          <div style={{flex:1,textAlign:"center"}}>
-                            <div style={{color:GOLD,fontSize:9,fontWeight:800}}>MLB 메이저</div>
-                            <div style={{color:GOLD,fontSize:11,fontWeight:800}}>95kg</div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
 
               {/* 종합 성장 지표 진단 소견 */}
               <div style={{
