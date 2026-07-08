@@ -1735,6 +1735,26 @@ function saveHtml(){
                           boxShadow:`0 0 8px ${ax.color}`,zIndex:9
                         }}/>
                       </div>
+
+                      {/* 성인 피지컬 목표 수치 */}
+                      <div style={{
+                        width:"100%",marginTop:12,paddingTop:10,borderTop:"1px solid rgba(255,255,255,0.06)",
+                        display:"flex",flexDirection:"column",gap:4,textAlign:"left"
+                      }}>
+                        <div style={{color:GOLD2,fontSize:10,fontWeight:800,marginBottom:3,textAlign:"center"}}>⚾ 성인 피지컬 목표</div>
+                        <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:WHITE}}>
+                          <span style={{color:MUTED}}>대학 선수:</span>
+                          <span style={{fontWeight:700}}>{ax.label === "키" ? "180cm" : "82kg"}</span>
+                        </div>
+                        <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:WHITE}}>
+                          <span style={{color:WHITE}}>KBO 프로:</span>
+                          <span style={{color:GOLD2,fontWeight:700}}>{ax.label === "키" ? "183cm" : "87kg"}</span>
+                        </div>
+                        <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:WHITE}}>
+                          <span style={{color:GOLD}}>MLB 메이저:</span>
+                          <span style={{color:GOLD,fontWeight:700}}>{ax.label === "키" ? "190cm" : "95kg"}</span>
+                        </div>
+                      </div>
                     </div>
                   );
                 })}
