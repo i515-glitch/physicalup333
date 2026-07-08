@@ -1713,46 +1713,6 @@ function saveHtml(){
                 );
               })}
 
-              {/* 성인 예측 신장 사다리 */}
-              {(() => {
-                const projectedHeight = getProjectedAdultHeight(gd.hPct, gender);
-                return (
-                  <div style={{marginTop:16,borderTop:"1px solid rgba(201,168,76,0.15)",paddingTop:14}}>
-                    <div style={{color:GOLD,fontSize:11,fontWeight:700,letterSpacing:1,marginBottom:10,textAlign:"left"}}>
-                      ⚾ 야구 레벨별 성인 신장 사다리 비교
-                    </div>
-                    
-                    <div style={{display:"flex",flexDirection:"column",gap:8}}>
-                      {[
-                        {label:"MLB 메이저 평균",h:190,color:"#4f8ef7"},
-                        {label:"KBO 프로 평균",h:183,color:"#fbbf24"},
-                        {label:"대학야구 평균",h:180,color:"#a78bfa"},
-                        {label:"고교야구 평균",h:176,color:"#94a3b8"},
-                        {label:`${childName || "내 아이"} 성장 곡선 기준 예측 키`,h:projectedHeight,color:"#4fcfa0",isMine:true},
-                        {label:"일반 성인 남성 평균",h:173.5,color:"#64748b"}
-                      ].sort((a,b)=>b.h - a.h).map((item, idx)=>{
-                        return (
-                          <div key={idx} style={{
-                            display:"flex",alignItems:"center",justifyContent:"space-between",
-                            background:item.isMine ? "rgba(79,207,160,0.12)" : "rgba(255,255,255,0.02)",
-                            border:item.isMine ? "1.5px solid #4fcfa0" : "1px solid rgba(255,255,255,0.06)",
-                            borderRadius:8,padding:"8px 12px"
-                          }}>
-                            <div style={{display:"flex",alignItems:"center",gap:8}}>
-                              {item.isMine && <span style={{fontSize:12}}>🏃</span>}
-                              <span style={{color:item.isMine?WHITE:MUTED,fontSize:12,fontWeight:item.isMine?900:700}}>{item.label}</span>
-                            </div>
-                            <span style={{color:item.color,fontSize:13,fontWeight:900}}>{item.h}cm</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                    <div style={{color:MUTED,fontSize:10,marginTop:10,lineHeight:1.4,textAlign:"left"}}>
-                      ※ 현재 키 백분위(상위 {100 - gd.hPct}%)가 성인기까지 동일하게 유지된다고 가정한 성장곡선 추정치입니다. 부모 유전 키(MPH)까지 결합 분석한 100% 정밀 예측 키는 하단 프리미엄 보고서 신청 시 제공됩니다.
-                    </div>
-                  </div>
-                );
-              })()}
             </div>
           )}
 
