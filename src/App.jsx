@@ -1333,19 +1333,19 @@ function saveHtml(){
 
         <div style={{marginBottom:10}}>
           <button onClick={handleStartTest} style={{width:"100%",padding:"16px",borderRadius:12,background:"linear-gradient(135deg,#c9a84c,#e8c76a)",color:NAVY,fontSize:14,fontWeight:800,border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(201,168,76,0.3)",lineHeight:1.5}}>
-            333TEST 시작하기<br/><span style={{fontSize:11,fontWeight:600,opacity:0.7}}>18문항 · 약 3~5분 · 무료</span>
+            333TEST 시작하기<br/><span style={{fontSize:11,fontWeight:600,opacity:0.7}}>24문항 · 약 3~5분 · 무료</span>
           </button>
         </div>
         <button onClick={handleGoResult} style={{width:"100%",padding:"12px",borderRadius:12,background:"rgba(255,255,255,0.03)",color:MUTED,fontSize:13,border:"1px solid rgba(255,255,255,0.07)",cursor:"pointer",marginBottom:4}}>
           ⚡ 신체 정보만으로 성장 지표 확인
         </button>
-        <p style={{color:MUTED,fontSize:11,opacity:0.5}}>18문항 · 약 3~5분 소요</p>
+        <p style={{color:MUTED,fontSize:11,opacity:0.5}}>24문항 · 약 3~5분 소요</p>
       </div>
       </div>
     </div>
   );
 
-  // ── PART A (18문항) ─────────────────────────────────────────────────────────
+  // ── PART A (24문항) ─────────────────────────────────────────────────────────
   if(step==="partA"){
     const prog=Math.round((Object.keys(pAns).length/parentQuestions.length)*100);
     const themeLabel=pQ&&pQ.id.startsWith('a')?"🍽️ 먹고 소화하기":pQ&&pQ.id.startsWith('b')?"⚡ 에너지 쓰기":"💪 저장하고 성장하기";
