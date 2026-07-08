@@ -187,26 +187,27 @@ def calculate_biocode(input_data):
     # --- 4. BioCode 3자리 결정 및 27패턴 매칭 ---
     
     # Adjusted Cutoff thresholds for sports kids with higher physical targets
-    # Body (40 max): 0-18.0=1 (skinny/low), 18.0-29.0=2, 29.0-40=3
-    if body_total <= 18.0:
+    # Shifting the normal distribution so average scores are classified as grade 1 (소비형)
+    # Body (40 max): 0-26.0=1 (skinny/under target), 26.0-32.0=2, 32.0-40=3
+    if body_total <= 26.0:
         body_grade = 1
-    elif body_total <= 29.0:
+    elif body_total <= 32.0:
         body_grade = 2
     else:
         body_grade = 3
         
-    # Metabolism (35 max): 0-15.0=1 (low absorption/needs boost), 15.0-25.0=2, 25.0-35=3
-    if metab_total <= 15.0:
+    # Metabolism (35 max): 0-24.0=1 (absorption needs improvement), 24.0-29.0=2, 29.0-35=3
+    if metab_total <= 24.0:
         metab_grade = 1
-    elif metab_total <= 25.0:
+    elif metab_total <= 29.0:
         metab_grade = 2
     else:
         metab_grade = 3
         
-    # Behavior (25 max): 0-8.0=1, 8.0-17.0=2, 17.0-25=3
-    if behavior_total <= 8.0:
+    # Behavior (25 max): 0-12.0=1, 12.0-18.0=2, 18.0-25=3
+    if behavior_total <= 12.0:
         behavior_grade = 1
-    elif behavior_total <= 17.0:
+    elif behavior_total <= 18.0:
         behavior_grade = 2
     else:
         behavior_grade = 3
