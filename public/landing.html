@@ -768,12 +768,12 @@ function showCubeInfo(code) {
   if (!d) return;
   const c = tc[d.type];
   document.getElementById('cubeInfo').innerHTML = `
-    <div style="font-family:var(--mono);font-size:32px;font-weight:700;letter-spacing:5px;color:${c.t};margin-bottom:4px;">${code}</div>
-    <div style="font-size:15px;font-weight:900;color:var(--white);margin-bottom:6px;">${d.nick}</div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:12px;display:flex;gap:6px;font-weight:500;">
-      <span style="color:${c.t};">[중분류] ${d.main}</span>
-      <span style="color:var(--muted2)">|</span>
-      <span>[소분류] ${d.sub}</span>
+    <div style="display:inline-flex;align-items:center;padding:8px 16px;border-radius:24px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.3);color:var(--gold2);font-size:14px;font-weight:900;gap:6px;margin-bottom:12px;white-space:nowrap;">
+      <span>BioCode ${code}</span>
+      <span style="color:rgba(255,255,255,0.15)">ㅣ</span>
+      <span>${d.main}</span>
+      <span style="color:rgba(255,255,255,0.15)">ㅣ</span>
+      <span>${d.nick}</span>
     </div>
     <div style="display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap;">
       ${[['선천(유전)',0],['대사(흡수)',1],['생활(루틴)',2]].map(([n,i])=>`<span style="font-family:'Noto Sans KR';padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;background:${c.f};color:${c.t};border:0.5px solid ${c.s};">${n} 레벨 ${code[i]}</span>`).join('')}
