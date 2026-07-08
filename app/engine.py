@@ -242,7 +242,7 @@ def calculate_biocode(input_data):
         "태양인": "강발산-활동형 (Hyper-Ectomorph)"
     }
     
-    display_constitution = "표준 신체 대사형 (Normal Metabolic Type)"
+    display_constitution = "균형 대사형 (Balanced Metabolic Type)"
     for k, v in const_mapping.items():
         if k in constitution_str:
             display_constitution = v
