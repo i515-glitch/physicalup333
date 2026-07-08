@@ -1228,7 +1228,7 @@ function saveHtml(){
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a");
   a.href=url;
-  a.download="피지컬업333_${result.sub}_${result.code}.html";
+  a.download="피지컬업333_${result.sub}_${result.main}.html";
   document.body.appendChild(a);a.click();
   document.body.removeChild(a);URL.revokeObjectURL(url);
 }
@@ -1240,7 +1240,7 @@ function saveHtml(){
     setDownloading(false);
     const a=document.createElement('a');
     a.href=url;
-    a.download=`피지컬업333_${result.code}_${ment.nick}.html`;
+    a.download=`피지컬업333_${result.main}_${ment.nick}.html`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -1288,19 +1288,18 @@ function saveHtml(){
         <h1 style={{color:WHITE,fontSize:21,fontWeight:800,lineHeight:1.5,marginBottom:8}}>우리 아이 BIO CODE 찾기</h1>
         <p style={{color:MUTED,fontSize:13,lineHeight:2,marginBottom:20}}>선천(유전) · 대사(흡수) · 생활(환경)<br/>3축 점수로 BIO CODE를 측정합니다</p>
 
-        {/* 무료 성장 및 기질 분석 항목 */}
-        <div style={{background:"rgba(255,255,255,0.02)",borderRadius:14,padding:"14px",marginBottom:12,border:"1px solid rgba(255,255,255,0.08)"}}>
-          <div style={{color:WHITE,fontSize:12,fontWeight:800,marginBottom:4,textAlign:"left"}}>1. 무료 성장 및 기질 분석 (필수)</div>
-          <div style={{color:MUTED,fontSize:10,marginBottom:12,textAlign:"left"}}>평균 및 성장판 10% 기준선 대비 성장 지표와 사주 기질을 분석합니다.</div>
+        {/* 📏 아이 정보 입력 */}
+        <div style={{background:"rgba(201,168,76,0.05)",borderRadius:14,padding:"16px",marginBottom:16,border:"1px solid rgba(201,168,76,0.18)"}}>
+          <div style={{color:GOLD,fontSize:12,fontWeight:900,marginBottom:4,letterSpacing:1,textAlign:"left"}}>📏 우리 아이 신체 & 기질 분석 입력</div>
+          <div style={{color:MUTED,fontSize:10.5,marginBottom:14,textAlign:"left",lineHeight:1.4}}>무료 성장 지표 분석 및 타고난 기질 분석을 위해 아래 정보를 입력해 주세요. (자동저장 지원)</div>
           
+          {/* 이름 / 성별 */}
           <div style={{display:"grid",gridTemplateColumns:"1.2fr 1fr",gap:8,marginBottom:8}}>
-            {/* 이름 */}
             <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${childName?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
               <div style={{color:MUTED,fontSize:10,marginBottom:6}}>이름</div>
               <input type="text" value={childName} onChange={e=>updateName(e.target.value)} placeholder="홍길동"
                 style={{width:"100%",background:"transparent",border:"none",color:childName?GOLD2:WHITE,fontSize:14,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
             </div>
-            {/* 성별 */}
             <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${gender?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"9px 8px",textAlign:"center",display:"flex",flexDirection:"column",justifyContent:"center"}}>
               <div style={{color:MUTED,fontSize:10,marginBottom:6}}>성별</div>
               <div style={{display:"flex",justifyContent:"center",gap:8}}>
@@ -1316,9 +1315,9 @@ function saveHtml(){
               </div>
             </div>
           </div>
-          
+
+          {/* 생년월일 / 태어난 시 */}
           <div style={{display:"grid",gridTemplateColumns:"1.2fr 1fr",gap:8,marginBottom:8}}>
-            {/* 생년월일 */}
             <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${birth.length===6?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
               <div style={{color:MUTED,fontSize:10,marginBottom:6}}>생년월일 <span style={{fontSize:8}}>(YYMMDD)</span></div>
               <input type="text" value={birth} onChange={e=>updateBirth(e.target.value.replace(/\D/g,"").slice(0,6))} placeholder="190523" maxLength={6}
@@ -1328,7 +1327,6 @@ function saveHtml(){
                 return age?<div style={{color:GOLD,fontSize:8,marginTop:3}}>✓ {age.display}</div>:<div style={{color:"#f76f8e",fontSize:8,marginTop:3}}>날짜 오류</div>;
               })()}
             </div>
-            {/* 태어난 시 */}
             <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${birthTime && birthTime !== "시간 모름"?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center",display:"flex",flexDirection:"column",justifyContent:"center"}}>
               <div style={{color:MUTED,fontSize:10,marginBottom:4}}>태어난 시</div>
               <select value={birthTime === "시간 모름" ? "" : birthTime} onChange={e=>updateBirthTime(e.target.value)} disabled={birthTime === "시간 모름"} style={{
@@ -1339,7 +1337,6 @@ function saveHtml(){
                   <option key={op} value={op} style={{background:"#0d1b3e",color:WHITE}}>{op}</option>
                 ))}
               </select>
-              
               <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:4,marginTop:6}}>
                 <input type="checkbox" id="birthTimeUnknown" checked={birthTime === "시간 모름"}
                   onChange={e => {
@@ -1355,8 +1352,8 @@ function saveHtml(){
             </div>
           </div>
 
-          {/* Row 3: 키, 몸무게 */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+          {/* 키 / 몸무게 */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
             <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${heightVal?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
               <div style={{color:MUTED,fontSize:10,marginBottom:6}}>키 (cm)</div>
               <input type="number" value={heightVal} onChange={e=>updateHeight(e.target.value)} placeholder="145"
@@ -1368,14 +1365,9 @@ function saveHtml(){
                 style={{width:"100%",background:"transparent",border:"none",color:weightVal?GOLD2:WHITE,fontSize:14,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
             </div>
           </div>
-        </div>
 
-        {/* 333TEST 결과 전송 항목 */}
-        <div style={{background:"rgba(201,168,76,0.04)",borderRadius:14,padding:"14px",marginBottom:16,border:"1px solid rgba(201,168,76,0.2)"}}>
-          <div style={{color:GOLD,fontSize:12,fontWeight:900,marginBottom:4,textAlign:"left"}}>2. 333TEST 결과 전송 (필수)</div>
-          <div style={{color:GOLD2,fontSize:10,marginBottom:12,textAlign:"left",opacity:0.8}}>정밀 분석이 완료되면 결과 알림을 발송할 번호입니다.</div>
-          
-          <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${phone?"rgba(201,168,76,0.6)":"rgba(201,168,76,0.25)"}`,borderRadius:10,padding:"10px 12px",textAlign:"center"}}>
+          {/* 연락처 */}
+          <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${phone?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 12px",textAlign:"center"}}>
             <div style={{color:MUTED,fontSize:10,marginBottom:6}}>연락처 (전화번호)</div>
             <input type="tel" value={phone} onChange={e=>updatePhone(e.target.value)} placeholder="010-1234-5678"
               style={{width:"100%",background:"transparent",border:"none",color:phone?GOLD2:WHITE,fontSize:14,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
@@ -1473,36 +1465,42 @@ function saveHtml(){
             <div style={{color:MUTED,fontSize:13,marginTop:4}}>의 BIO CODE 분석 결과입니다 ⚾</div>
           </div>
 
-          {/* 코드 메인 카드 (결과 해제 노출) */}
+          {/* 코드 메인 카드 (잠금 노출) */}
           <div style={{textAlign:"center",padding:"24px 20px",background:"linear-gradient(160deg,#0d1b3e,#0f2050)",border:`1px solid rgba(201,168,76,0.35)`,borderRadius:20,marginBottom:12,boxShadow:"0 8px 40px rgba(201,168,76,0.15)",position:"relative",overflow:"hidden"}}>
             {/* 검사 날짜 */}
             <div style={{color:MUTED,fontSize:11,marginBottom:14,letterSpacing:1}}>
               📅 검사일 {new Date().toLocaleDateString("ko-KR")}
             </div>
-            {/* 결과 한 줄 노출 */}
-            <div style={{
-              display:"inline-flex",
-              alignItems:"center",
-              justifyContent:"center",
-              padding:"12px 24px",
-              borderRadius:24,
-              background:"rgba(201,168,76,0.06)",
-              border:"1.5px solid rgba(201,168,76,0.35)",
-              boxShadow:"0 4px 20px rgba(0,0,0,0.25)",
-              color:GOLD2,
-              fontSize:15,
-              fontWeight:900,
-              gap:8
-            }}>
-              <span>BioCode {result.code}</span>
-              <span style={{color:"rgba(255,255,255,0.15)"}}>ㅣ</span>
-              <span>{result.main}</span>
-              <span style={{color:"rgba(255,255,255,0.15)"}}>ㅣ</span>
-              <span>{ment.nick}</span>
+            {/* 결과 한 줄 노출 (잠금 처리) */}
+            <div style={{marginBottom:10}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,flexWrap:"wrap"}}>
+                {/* 메인유형 잠금 */}
+                <div style={{display:"flex",alignItems:"center",gap:4,background:"rgba(201,168,76,0.08)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:20,padding:"4px 14px",position:"relative"}}>
+                  <span style={{color:GOLD2,fontSize:14,fontWeight:800,filter:"blur(4px)",userSelect:"none"}}>{result.main}</span>
+                  <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",color:GOLD,fontSize:11,fontWeight:800}}>BioCode 🔒</div>
+                </div>
+                
+                <div style={{width:1,height:20,background:"rgba(255,255,255,0.1)"}}/>
+                
+                {/* 닉네임 잠금 */}
+                <div style={{display:"inline-block",padding:"4px 16px",borderRadius:20,background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)",position:"relative",overflow:"hidden"}}>
+                  <span style={{color:MUTED,fontSize:13,fontWeight:700,letterSpacing:1,filter:"blur(3.5px)",userSelect:"none"}}>{ment.nick}</span>
+                  <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",color:GOLD,fontSize:11,fontWeight:800}}>세부 체질 🔒</div>
+                </div>
+              </div>
             </div>
-            <p style={{color:MUTED,fontSize:11,lineHeight:1.6,marginTop:12,marginBottom:0}}>
-              ※ 상세 맞춤 운동/식단 가이드라인은 프리미엄 보고서에서 제공됩니다.
-            </p>
+            
+            <div style={{position:"relative",marginTop:16,borderTop:"1px solid rgba(201,168,76,0.15)",paddingTop:14,textAlign:"left"}}>
+              <div style={{filter:"blur(4px)",opacity:0.4,userSelect:"none"}}>
+                <div style={{color:GOLD2,fontSize:11,fontWeight:700,marginBottom:4}}>🧬 타고난 유전/체질 특성</div>
+                <div style={{color:WHITE,fontSize:13,lineHeight:1.5,marginBottom:10}}>{ment.wit}</div>
+                <div style={{color:GOLD2,fontSize:11,fontWeight:700,marginBottom:4}}>💡 현재 상태 특이사항</div>
+                <div style={{color:WHITE,fontSize:13,lineHeight:1.5}}>{ment.tip}</div>
+              </div>
+              <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(13,27,62,0.3)"}}>
+                <span style={{color:GOLD2,fontSize:12,fontWeight:800}}>🔒 성장 기질 및 특이사항 잠김</span>
+              </div>
+            </div>
           </div>
 
           {/* 성장 지표 */}
@@ -1531,8 +1529,8 @@ function saveHtml(){
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
                       <span style={{color:WHITE,fontSize:13,fontWeight:700}}>{ax.label}</span>
                       {reached
-                        ? <span style={{color:"#4fcfa0",fontSize:11,fontWeight:700}}>🏆 목표 달성!</span>
-                        : <span style={{color:GOLD,fontSize:11,fontWeight:700}}>🎯 {Math.abs(ax.target-ax.mine).toFixed(1)}{ax.unit} {ax.isSlug?"감량 필요":"더 필요"}</span>
+                        ? <span style={{color:"#4fcfa0",fontSize:11,fontWeight:700}}>🏆 선수 기준 충족!</span>
+                        : <span style={{color:GOLD,fontSize:11,fontWeight:700}}>선수 상위 대비: -{Math.abs(ax.target-ax.mine).toFixed(1)}{ax.unit}</span>
                       }
                     </div>
 
@@ -1559,7 +1557,7 @@ function saveHtml(){
 
                       {/* 목표 선 */}
                       <div style={{position:"absolute",bottom:16,left:`${targetPos}%`,transform:"translateX(-50%)",display:"flex",flexDirection:"column",alignItems:"center",zIndex:8}}>
-                        <div style={{color:GOLD,fontSize:10,fontWeight:700,marginBottom:3,whiteSpace:"nowrap"}}>🎯목표</div>
+                        <div style={{color:GOLD,fontSize:10,fontWeight:700,marginBottom:3,whiteSpace:"nowrap"}}>선수상위(90%)</div>
                         <div style={{width:2,height:36,background:GOLD,borderRadius:1,boxShadow:`0 0 6px ${GOLD}`}}/>
                         <div style={{width:7,height:7,background:GOLD,transform:"rotate(45deg)",marginTop:2,boxShadow:`0 0 6px ${GOLD}`}}/>
                         <div style={{color:GOLD,fontSize:10,fontWeight:700,marginTop:3,whiteSpace:"nowrap"}}>{ax.target}{ax.unit}</div>
@@ -1587,7 +1585,7 @@ function saveHtml(){
                   </div>
                 </div>
                 <div>
-                  <span style={{color:MUTED,fontSize:11,display:"block",marginBottom:6}}>타고난 오행(五行) 분포</span>
+                  <span style={{color:MUTED,fontSize:11,display:"block",marginBottom:6}}>타고난 오행(五행) 분포</span>
                   <div style={{display:"flex",justifyContent:"space-between",gap:6}}>
                     {Object.entries(serverResult.five_elements).map(([name, count]) => {
                       const colors = { "목": "#4fcfa0", "화": "#f76f8e", "토": "#f7d24f", "금": "#e5e5e5", "수": "#4f8ef7" };
@@ -1654,11 +1652,10 @@ function saveHtml(){
                 <div style={{color:GOLD2,fontSize:12,fontWeight:700,marginBottom:4}}>🏃 추천 운동 비율</div>
                 <div style={{color:MUTED,fontSize:11,marginBottom:10}}>{mi.exercise.title}</div>
                 <div style={{display:"flex",height:26,borderRadius:8,overflow:"hidden",marginBottom:12,gap:1}}>
-                  {mi.exercise.ratio.map(r=><div key={r.name} style={{width:`${r.pct}%`,background:r.color,display:"flex",alignItems:"center",justifyContent:"center",minWidth:r.pct>0?2:0}}/>)}
+                  {mi.exercise.ratio.map(r=><div key={r.name} style={{width:`${r.pct}%`,background:r.color,display:"flex",alignItems:"center",justifyContent:"center",minWidth:r.pct>0?2:0,color:NAVY,fontSize:9,fontWeight:900}}>{r.name} ({r.pct}%)</div>)}
                 </div>
               </div>
             </div>
-            
             {/* 자물쇠 오버레이 */}
             <div style={{position:"absolute",inset:0,top:50,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(13,27,62,0.5)",padding:"20px"}}>
               <div style={{background:"rgba(13,27,62,0.9)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:16,padding:"20px 16px",textAlign:"center",maxWidth:300}}>
@@ -1673,9 +1670,16 @@ function saveHtml(){
           <div style={{...cardStyle,position:"relative",overflow:"hidden"}}>
             <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:8,filter:"blur(3px)",opacity:0.5}}>
               <span style={{fontSize:16}}>{si.emoji}</span>
-              <span style={{color:si.color,fontSize:12,fontWeight:700}}>정밀 맞춤 포인트</span>
+              <span style={{color:si.color,fontSize:12,fontWeight:700}}>정밀 맞춤 포인트 ({result.sub})</span>
             </div>
-            <p style={{color:MUTED,fontSize:13,lineHeight:1.7,margin:0,filter:"blur(3px)",userSelect:"none"}}>아이의 선천적 기질과 유전적 체형을 교차 분석하여 도출되는 1:1 핵심 맞춤 관리법 영역입니다.</p>
+            <div style={{filter:"blur(3px)",opacity:0.5,userSelect:"none"}}>
+              <div style={{color:WHITE,fontSize:14,fontWeight:700,marginBottom:6}}>{si.shortDesc}</div>
+              <p style={{color:MUTED,fontSize:13,lineHeight:1.7,margin:0}}>{si.desc}</p>
+              <div style={{marginTop:10,background:"rgba(255,255,255,0.03)",borderRadius:8,padding:"10px",border:`1px dashed ${si.color}40`}}>
+                <span style={{color:si.color,fontWeight:700,fontSize:12,display:"block",marginBottom:4}}>⭐ 케어 전략</span>
+                <span style={{color:WHITE,fontSize:13,lineHeight:1.6}}>{si.plus}</span>
+              </div>
+            </div>
             <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(13,27,62,0.4)"}}>
               <span style={{color:GOLD2,fontSize:12,fontWeight:800}}>🔒 맞춤 관리 포인트 잠김</span>
             </div>
@@ -1693,7 +1697,9 @@ function saveHtml(){
             <div style={{color:GOLD,fontSize:11,fontWeight:800,letterSpacing:1,marginBottom:8,filter:"blur(3px)",opacity:0.5}}>
               ⚡ 지금 당장 실천할 것
             </div>
-            <p style={{color:MUTED,fontSize:13,lineHeight:1.6,margin:0,filter:"blur(3.5px)",userSelect:"none"}}>보고서 발급 즉시 오늘부터 행동으로 옮겨야 할 첫 번째 훈련 및 영양 미션이 잠겨 있습니다.</p>
+            <div style={{filter:"blur(3.5px)",opacity:0.5,userSelect:"none"}}>
+              <p style={{color:WHITE,fontSize:13,lineHeight:1.6,margin:0}}>{ment.rx}</p>
+            </div>
             <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(13,27,62,0.4)"}}>
               <span style={{color:GOLD2,fontSize:12,fontWeight:800}}>🔒 오늘 당장 실천할 미션 잠김</span>
             </div>
@@ -1711,12 +1717,12 @@ function saveHtml(){
               <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:"linear-gradient(90deg,transparent,#f76f8e,transparent)"}}/>
               <div style={{display:"flex",gap:10,alignItems:"flex-start"}}>
                 <div style={{fontSize:24,flexShrink:0,filter:"blur(3px)",opacity:0.5}}>🏃</div>
-                <div>
-                  <div style={{color:"#f76f8e",fontSize:12,fontWeight:800,marginBottom:6,letterSpacing:0.5,filter:"blur(3px)",opacity:0.5}}>
+                <div style={{filter:"blur(3.5px)",opacity:0.5,userSelect:"none"}}>
+                  <div style={{color:"#f76f8e",fontSize:12,fontWeight:800,marginBottom:6,letterSpacing:0.5}}>
                     축적력 3점 · 체중 관리 포인트
                   </div>
-                  <div style={{color:MUTED,fontSize:13,lineHeight:1.6,filter:"blur(3.5px)",userSelect:"none"}}>
-                    에너지 저장량이 많은 체질을 위한 체중 및 속도 관리 처방 가이드라인입니다.
+                  <div style={{color:WHITE,fontSize:13,lineHeight:1.6}}>
+                    선천 축적력이 3점(높음)인 아이는 에너지를 근육과 지방으로 저장하는 힘이 강합니다. 운동량이 적어지면 순식간에 체지방이 불어 스피드와 순발력이 저하될 수 있으므로, 고강도 인터벌 운동과 함께 당류/탄수화물 과다 섭취를 상시 통제해야 합니다.
                   </div>
                 </div>
               </div>
@@ -1733,9 +1739,15 @@ function saveHtml(){
           </div>
 
           {/* AI 상담 */}
-          <div style={{...cardStyle,border:"1px solid rgba(201,168,76,0.25)",boxShadow:"0 4px 20px rgba(201,168,76,0.08)"}}>
+          <div style={{...cardStyle,position:"relative",overflow:"hidden",border:"1px solid rgba(201,168,76,0.25)",boxShadow:"0 4px 20px rgba(201,168,76,0.08)"}}>
             <div style={{color:GOLD,fontSize:12,fontWeight:700,marginBottom:10,letterSpacing:1}}>🤖 AI 통합 맞춤 상담</div>
-            {loading?<div style={{display:"flex",alignItems:"center",gap:8}}><div style={{width:8,height:8,borderRadius:"50%",background:GOLD}}/><span style={{color:MUTED,fontSize:13}}>3축 데이터 분석 중...</span></div>:<p style={{color:"#8aa8c8",fontSize:13,lineHeight:1.9,margin:0}}>{aiAdvice}</p>}
+            <div style={{filter:"blur(4px)",opacity:0.5,userSelect:"none"}}>
+              {loading?<div style={{display:"flex",alignItems:"center",gap:8}}><div style={{width:8,height:8,borderRadius:"50%",background:GOLD}}/><span style={{color:MUTED,fontSize:13}}>3축 데이터 분석 중...</span></div>:<p style={{color:"#8aa8c8",fontSize:13,lineHeight:1.9,margin:0}}>{aiAdvice}</p>}
+            </div>
+            <div style={{position:"absolute",inset:0,top:40,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(13,27,62,0.4)"}}>
+              <span style={{color:GOLD2,fontSize:12,fontWeight:800}}>🔒 AI 심층 상담 및 처방 잠김</span>
+              <span style={{color:MUTED,fontSize:10,marginTop:2}}>프리미엄 보고서에서 AI 분석 대화가 공개됩니다</span>
+            </div>
           </div>
 
           {/* 버튼 */}
@@ -1745,10 +1757,10 @@ function saveHtml(){
               <button onClick={async()=>{
                 const shortWit=ment.wit.length>20?ment.wit.slice(0,20)+'..':ment.wit;
                 const shortTip=ment.tip.length>20?ment.tip.slice(0,20)+'..':ment.tip;
-                const txt=`🧬 Physical UP 333 · 333TEST\n\nBIO CODE: ${result.code} ${ment.emoji} ${ment.nick}\n유형: ${result.main}\n\n"${shortWit}"\n💡${shortTip}\n\n▶ 무료 BIO CODE 검사\npu333.kr`;
+                const txt=`🧬 Physical UP 333 · 333TEST\n\n유형: ${result.main} ${ment.emoji} ${ment.nick}\n\n"${shortWit}"\n💡${shortTip}\n\n▶ 무료 성장 & 기질 분석\npu333.kr`;
                 try{
                   if(navigator.share){
-                    await navigator.share({title:'333TEST BIO CODE 결과',text:txt,url:'https://pu333.kr'});
+                    await navigator.share({title:'333TEST 분석 결과',text:txt,url:'https://pu333.kr'});
                   } else {
                     try{await navigator.clipboard.writeText(txt);}catch(e){
                       const el=document.createElement('textarea');el.value=txt;
