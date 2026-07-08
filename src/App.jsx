@@ -682,6 +682,7 @@ export default function App() {
   const [wingspan, setWingspan] = useState("");
   const [inbodyFileUrl, setInbodyFileUrl] = useState("");
   const [ocrLoading, setOcrLoading] = useState(false);
+  const [showUpgradeForm, setShowUpgradeForm] = useState(false);
   
   const [paymentMethod, setPaymentMethod] = useState("toss"); // toss or paypal
   const [paymentStatus, setPaymentStatus] = useState(null); // null, 'processing', 'success', 'error'
@@ -1001,6 +1002,7 @@ export default function App() {
     // Keep pAns to preserve previous answers!
     setKAns({});setResult(null);setServerResult(null);setAiAdvice("");
     setSaved(false);setCopied(false);setDownloading(false);setShowAll(false);
+    setShowUpgradeForm(false);
     // 이름·생년월일·키·몸무게는 유지 (다음에도 쓸 수 있게)
   }
 
@@ -2273,9 +2275,9 @@ function saveHtml(){
               </button>
             </div>
 
-          {/* 맞춤 제품 추천 바로가기 */}
-          {(()=>{
-            const shopMap={
+          {/* 맞춤 영양 성분 추천 가이드 */}
+          {(() => {
+            const shopMap = {
               "111":["소화효소","유산균"],"112":["단백질","유산균"],
               "121":["소화효소","종합비타민"],"211":["유산균","소화효소"],
               "331":["단백질","칼슘·마그네슘"],"231":["단백질","오메가3"],
@@ -2291,207 +2293,247 @@ function saveHtml(){
               "233":["식이섬유","오메가3"],"223":["식이섬유","칼슘·마그네슘"],
               "123":["종합비타민","식이섬유"],
             };
-            const items=shopMap[result.code]||["종합비타민","유산균"];
+            const items = shopMap[result.code] || ["종합비타민","유산균"];
+            
+            const descMap = {
+              "소화효소": "위장관 흡수력이 떨어지는 체질 특성상, 음식물의 미세 영양소가 뼈와 근육으로 온전히 흡수되도록 돕는 소화 효소 보충이 매우 효과적입니다.",
+              "유산균": "장 건강을 개선하고 장벽의 영양소 흡수 채널을 활성화하여 체질적인 흡수력 한계를 보완해 줍니다.",
+              "단백질": "선수 평균 체격 및 신체 성장을 지지하기 위해 근육 성장과 뼈 기질 형성에 필요한 필수 아미노산을 지속적으로 공급해 줍니다.",
+              "종합비타민": "신체 대사 활성을 극대화하고 면역력을 관리하여 뼈와 연골 성장 세포의 안정적인 분열을 지원합니다.",
+              "칼슘·마그네슘": "뼈의 밀도와 인장 강도를 높이고, 성장기 뼈 성장에 핵심 무기질을 적재적소에 제공합니다.",
+              "오메가3": "관절염 예방 및 전신 염증 반응을 억제하여 격렬한 훈련을 받는 선수의 관절 보호에 탁월한 역할을 수행합니다.",
+              "비타민D": "장내 칼슘 흡수율을 드라마틱하게 높이고, 성장호르몬 분비 경로를 촉진하여 골격 발달을 직접적으로 지탱합니다.",
+              "식이섬유": "체내 독소를 흡착하여 배출하고 유익균의 먹이가 되어 대장 내부 환경을 쾌적하고 튼튼하게 세팅합니다.",
+              "키성장": "성장판 세포 자극과 뼈 길이 성장의 속도를 촉진하여 유전키를 넘어선 잠재 성장을 가능케 유도합니다."
+            };
+            
             return (
-              <div style={{marginBottom:10}}>
-                <div style={{color:GOLD,fontSize:11,fontWeight:700,letterSpacing:1,marginBottom:8}}>🛒 {ment.nick} 맞춤 제품 추천</div>
-                <div style={{display:"flex",gap:6,marginBottom:8,flexWrap:"wrap"}}>
-                  {items.map((name,i)=>(
-                    <span key={i} style={{
-                      padding:"6px 14px",borderRadius:20,
-                      background:`rgba(201,168,76,0.12)`,
-                      border:`1px solid rgba(201,168,76,0.35)`,
-                      color:GOLD2,fontSize:12,fontWeight:700,
-                    }}>💊 {name}</span>
+              <div style={{
+                marginBottom:18,padding:"14px",background:"rgba(255,255,255,0.015)",
+                borderRadius:14,border:"1px solid rgba(255,255,255,0.04)",textAlign:"left"
+              }}>
+                <div style={{color:GOLD2,fontSize:12,fontWeight:900,marginBottom:10,display:"flex",alignItems:"center",gap:5}}>
+                  <span>💊</span>
+                  <span>{nameDisplay} 전용 추천 영양 성분 가이드</span>
+                </div>
+                <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                  {items.map((name, i) => (
+                    <div key={i} style={{padding:"8px 10px",background:"rgba(255,255,255,0.02)",borderRadius:8}}>
+                      <div style={{color:GOLD,fontSize:11,fontWeight:800,marginBottom:3}}>• {name}</div>
+                      <div style={{color:MUTED,fontSize:10,lineHeight:1.4}}>{descMap[name] || "성장 세포 활성화와 골격 대사를 촉진하여 튼튼한 체력의 기초를 다져줍니다."}</div>
+                    </div>
                   ))}
                 </div>
-                <a href="/shop.html" style={{
-                  display:"block",width:"100%",padding:"13px",
-                  borderRadius:12,textAlign:"center",
-                  background:"linear-gradient(135deg,#c9a84c,#e8c76a)",
-                  color:NAVY,fontSize:14,fontWeight:900,
-                  textDecoration:"none",boxSizing:"border-box",
-                  boxShadow:"0 4px 16px rgba(201,168,76,0.35)"
-                }}>
-                  🛍️ 맞춤 제품 추천 바로가기
-                </a>
-                <div style={{color:MUTED,fontSize:9,marginTop:8,lineHeight:1.6,opacity:0.7,textAlign:"center"}}>쿠팡 파트너스·네이버 쇼핑 파트너스 활동의 일환으로 일정액의 수수료를 제공받습니다.</div>
               </div>
             );
           })()}
 
           {/* 1:1 프리미엄 성장 분석 보고서 신청 폼 */}
-          <div style={{
-            padding:"20px 16px",borderRadius:16,marginBottom:15,
-            background:"linear-gradient(135deg,rgba(13,27,62,0.85),rgba(4,7,17,0.95))",
-            border:"1px solid rgba(201,168,76,0.35)",
-            position:"relative",overflow:"hidden",
-            boxShadow:"0 10px 30px rgba(0,0,0,0.3)"
-          }}>
-            <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:`linear-gradient(90deg,${GOLD},${GOLD2},${GOLD})`}}/>
-            
-            {paymentStatus === "success" ? (
-              <div style={{textAlign:"center",padding:"20px 10px"}}>
-                <div style={{fontSize:40,marginBottom:12}}>🏆</div>
-                <div style={{color:GOLD2,fontSize:18,fontWeight:900,marginBottom:10}}>분석 신청 완료!</div>
-                <div style={{color:WHITE,fontSize:13,lineHeight:1.7}}>
-                  신청이 정상 완료되었습니다.<br/>
-                  24시간 이내에 기입하신 연락처(카카오 알림톡)로 정밀 분석 보고서가 전송됩니다.
-                </div>
+          {!showUpgradeForm ? (
+            <div style={{
+              padding:"20px 16px",borderRadius:16,marginBottom:15,
+              background:"linear-gradient(135deg,rgba(201,168,76,0.08),rgba(13,27,62,0.85))",
+              border:"1.5px solid rgba(201,168,76,0.45)",textAlign:"center",
+              boxShadow:"0 8px 24px rgba(201,168,76,0.15)",cursor:"pointer"
+            }} onClick={() => setShowUpgradeForm(true)}>
+              <div style={{color:GOLD2,fontSize:14,fontWeight:900,marginBottom:6}}>📈 1:1 프리미엄 피지컬 리포트 신청하기</div>
+              <div style={{color:WHITE,fontSize:11,lineHeight:1.5,opacity:0.9,marginBottom:12}}>
+                정밀 인바디 분석, 뼈 나이 예측, 연간 피지컬 로드맵이 포함된<br/>
+                <strong>13페이지 분량의 공식 PDF 리포트</strong>를 신청해 보세요.
               </div>
-            ) : paymentStatus === "processing" ? (
-              <div style={{textAlign:"center",padding:"40px 10px"}}>
-                <div style={{color:GOLD2,fontSize:15,fontWeight:800,marginBottom:10}}>{IS_PROMO_ACTIVE ? "신청서 접수 및 처리 중..." : "결제 승인 및 처리 중..."}</div>
-                <div style={{color:MUTED,fontSize:12}}>잠시만 기다려 주세요.</div>
+              <div style={{
+                display:"inline-block",padding:"6px 16px",background:"linear-gradient(135deg,#c9a84c,#e8c76a)",
+                color:NAVY,fontSize:11,fontWeight:800,borderRadius:8
+              }}>
+                신청서 작성하기 ➔
               </div>
-            ) : (
-              <>
-                <div style={{color:GOLD2,fontSize:15,fontWeight:900,marginBottom:6,display:"flex",alignItems:"center",gap:6}}>
-                  <span>🏆 1:1 프리미엄 분석 보고서 신청</span>
-                </div>
-                
-                <div style={{color:MUTED,fontSize:11.5,lineHeight:1.6,marginBottom:18,textAlign:"left"}}>
-                  기본 분석만으로도 훌륭하지만, <span style={{color:WHITE,fontWeight:800}}>더 깊은 비밀이 궁금하시거나 앞으로의 정밀한 성장 로드맵 및 미래 성장 가능성</span>을 마스터하고 싶다면 신청하세요.
-                  <ul style={{margin:"6px 0 0 16px",padding:0,color:"#8aa8c8"}}>
-                    <li style={{marginBottom:3}}>나만의 3자리 <strong>정밀 BioCode 및 캐릭터 유형 해제</strong></li>
-                    <li style={{marginBottom:3}}>부모 키 유전 확률을 반영한 <strong>성인 예측 키 & 윙스팬 분석</strong></li>
-                    <li style={{marginBottom:3}}>체내 수분/단백질/골격근/체지방 <strong>인바디 정밀 비교군 분석</strong></li>
-                    <li style={{marginBottom:3}}>종목·포지션 매칭 적합도 진단 및 <strong>연간 성장 로드맵 제공</strong></li>
-                    <li style={{marginBottom:3}}>모바일/PC로 보관 가능한 <strong>13페이지 프리미엄 PDF 보고서 발송</strong></li>
-                  </ul>
-                </div>
+            </div>
+          ) : (
+            <div style={{
+              padding:"20px 16px",borderRadius:16,marginBottom:15,
+              background:"linear-gradient(135deg,rgba(13,27,62,0.85),rgba(4,7,17,0.95))",
+              border:"1px solid rgba(201,168,76,0.35)",
+              position:"relative",overflow:"hidden",
+              boxShadow:"0 10px 30px rgba(0,0,0,0.3)"
+            }}>
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowUpgradeForm(false);
+                }} 
+                style={{
+                  position:"absolute",top:12,right:12,background:"rgba(255,255,255,0.06)",
+                  border:"none",color:MUTED,fontSize:10,fontWeight:800,padding:"4px 8px",
+                  borderRadius:6,cursor:"pointer",zIndex:10
+                }}
+              >
+                닫기 ✖
+              </button>
+              <div style={{position:"absolute",top:0,left:0,right:0,height:3,background:`linear-gradient(90deg,${GOLD},${GOLD2},${GOLD})`}}/>
               
-                {/* 입력 폼 필드들 */}
-                <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:18}}>
-                  {/* 운동 종목 및 포지션 */}
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-                    <div>
-                      <div style={{color:MUTED,fontSize:10,marginBottom:4}}>운동 종목 (필수)</div>
-                      <input type="text" value={sports} onChange={e => setSports(e.target.value)} placeholder="예: 축구, 수영" style={{
-                        width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
-                      }}/>
-                    </div>
-                    <div>
-                      <div style={{color:MUTED,fontSize:10,marginBottom:4}}>포지션 (선택)</div>
-                      <input type="text" value={position} onChange={e => setPosition(e.target.value)} placeholder="예: 공격수, 피처" style={{
-                        width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
-                      }}/>
-                    </div>
-                  </div>
-
-                  {/* 부모 키 */}
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-                    <div>
-                      <div style={{color:MUTED,fontSize:10,marginBottom:4}}>아버지 키 (cm) (필수)</div>
-                      <input type="number" value={fatherHeight} onChange={e => setFatherHeight(e.target.value)} style={{
-                        width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
-                      }}/>
-                    </div>
-                    <div>
-                      <div style={{color:MUTED,fontSize:10,marginBottom:4}}>어머니 키 (cm) (필수)</div>
-                      <input type="number" value={motherHeight} onChange={e => setMotherHeight(e.target.value)} style={{
-                        width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
-                      }}/>
-                    </div>
-                  </div>
-
-                  {/* 인바디 실측치 입력 */}
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6}}>
-                    <div>
-                      <div style={{color:MUTED,fontSize:9,marginBottom:4}}>골격근량 (kg) (필수)</div>
-                      <input type="number" value={skeletalMuscle} onChange={e => setSkeletalMuscle(e.target.value)} placeholder="실측치" style={{
-                        width:"100%",padding:"8px 8px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:11,fontWeight:700,outline:"none",boxSizing:"border-box"
-                      }}/>
-                    </div>
-                    <div>
-                      <div style={{color:MUTED,fontSize:9,marginBottom:4}}>체지방률 (%) (필수)</div>
-                      <input type="number" value={bodyFat} onChange={e => setBodyFat(e.target.value)} placeholder="실측치" style={{
-                        width:"100%",padding:"8px 8px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:11,fontWeight:700,outline:"none",boxSizing:"border-box"
-                      }}/>
-                    </div>
-                    <div>
-                      <div style={{color:MUTED,fontSize:9,marginBottom:4}}>양팔길이 (cm) (필수)</div>
-                      <input type="number" value={wingspan} onChange={e => setWingspan(e.target.value)} placeholder="실측치" style={{
-                        width:"100%",padding:"8px 8px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:11,fontWeight:700,outline:"none",boxSizing:"border-box"
-                      }}/>
-                    </div>
-                  </div>
-
-                  {/* 인바디 이미지 업로드 / 카메라 촬영 */}
-                  <div style={{background:"rgba(255,255,255,0.02)",border:"1px dashed rgba(201,168,76,0.3)",borderRadius:8,padding:"10px",textAlign:"center"}}>
-                    <div style={{color:GOLD,fontSize:10,fontWeight:700,marginBottom:6}}>📸 인바디 용지 사진 촬영 또는 스캔 파일 첨부 (선택)</div>
-                    <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
-                      <label style={{
-                        display:"inline-block",padding:"6px 14px",borderRadius:6,background:"rgba(201,168,76,0.12)",border:`1px solid ${GOLD}`,
-                        color:GOLD2,fontSize:11,fontWeight:700,cursor:ocrLoading?"not-allowed":"pointer"
-                      }}>
-                        {ocrLoading ? "분석 중..." : "파일 선택 / 촬영"}
-                        <input type="file" accept="image/*,application/pdf" capture="environment" onChange={e => handleInbodyUpload(e.target.files[0])} disabled={ocrLoading} style={{display:"none"}}/>
-                      </label>
-                      {inbodyFileUrl && (
-                        <span style={{color:"#4fcfa0",fontSize:10,fontWeight:700}}>✓ 첨부 완료</span>
-                      )}
-                    </div>
-                    <div style={{color:MUTED,fontSize:9,marginTop:6,lineHeight:1.4}}>
-                      ※ 사진을 등록하시면 골격근량과 지방률이 자동 판독되어 채워집니다.<br/>
-                      판독에 실패할 경우 직접 텍스트로 수치를 보정해 주실 수 있습니다.
-                    </div>
+              {paymentStatus === "success" ? (
+                <div style={{textAlign:"center",padding:"20px 10px"}}>
+                  <div style={{fontSize:40,marginBottom:12}}>🏆</div>
+                  <div style={{color:GOLD2,fontSize:18,fontWeight:900,marginBottom:10}}>분석 신청 완료!</div>
+                  <div style={{color:WHITE,fontSize:13,lineHeight:1.7}}>
+                    신청이 정상 완료되었습니다.<br/>
+                    24시간 이내에 기입하신 연락처(카카오 알림톡)로 정밀 분석 보고서가 전송됩니다.
                   </div>
                 </div>
-
-                {/* 결제 수단 선택 */}
-                {!IS_PROMO_ACTIVE && (
-                  <div style={{display:"flex",gap:8,marginBottom:15}}>
-                    <button onClick={() => setPaymentMethod("toss")} style={{
-                      flex:1,padding:"10px",borderRadius:10,fontSize:12,fontWeight:700,cursor:"pointer",
-                      background:paymentMethod==="toss" ? "rgba(201,168,76,0.15)" : "rgba(255,255,255,0.02)",
-                      color:paymentMethod==="toss" ? GOLD2 : MUTED,
-                      border:paymentMethod==="toss" ? `1px solid ${GOLD}` : "1px solid rgba(255,255,255,0.08)"
-                    }}>🇰🇷 토스페이먼츠</button>
-                    <button onClick={() => setPaymentMethod("paypal")} style={{
-                      flex:1,padding:"10px",borderRadius:10,fontSize:12,fontWeight:700,cursor:"pointer",
-                      background:paymentMethod==="paypal" ? "rgba(201,168,76,0.15)" : "rgba(255,255,255,0.02)",
-                      color:paymentMethod==="paypal" ? GOLD2 : MUTED,
-                      border:paymentMethod==="paypal" ? `1px solid ${GOLD}` : "1px solid rgba(255,255,255,0.08)"
-                    }}>🌐 PayPal (해외)</button>
+              ) : paymentStatus === "processing" ? (
+                <div style={{textAlign:"center",padding:"40px 10px"}}>
+                  <div style={{color:GOLD2,fontSize:15,fontWeight:800,marginBottom:10}}>{IS_PROMO_ACTIVE ? "신청서 접수 및 처리 중..." : "결제 승인 및 처리 중..."}</div>
+                  <div style={{color:MUTED,fontSize:12}}>잠시만 기다려 주세요.</div>
+                </div>
+              ) : (
+                <>
+                  <div style={{color:GOLD2,fontSize:15,fontWeight:900,marginBottom:6,display:"flex",alignItems:"center",gap:6}}>
+                    <span>🏆 1:1 프리미엄 분석 보고서 신청</span>
                   </div>
-                )}
-
-                {/* 에러 발생 시 노출 */}
-                {paymentError && (
-                  <div style={{color:"#f76f8e",fontSize:11,marginBottom:10,textAlign:"center"}}>{paymentError}</div>
-                )}
-
-                {/* 결제 실행 버튼 */}
-                {!sports || !wingspan || !fatherHeight || !motherHeight || ((!skeletalMuscle || !bodyFat) && !inbodyFileUrl) ? (
-                  <div style={{
-                    padding:"14px",borderRadius:12,background:"#334155",color:"#94a3b8",fontSize:13,fontWeight:700,textAlign:"center"
-                  }}>⚠️ 모든 성장 정보(종목, 부모 키, 양팔길이 및 인바디 실측치 또는 사진 파일)를 입력해 주세요.</div>
-                ) : IS_PROMO_ACTIVE ? (
-                  <button onClick={handlePromoApply} style={{
-                    width:"100%",padding:"15px",borderRadius:12,background:`linear-gradient(135deg, ${GOLD}, ${GOLD2})`,color:WHITE,fontSize:14,fontWeight:900,border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(201,168,76,0.3)",textAlign:"center"
-                  }}>✨ 1:1 프리미엄 분석 보고서 무료 신청하기</button>
-                ) : paymentMethod === "toss" ? (
-                  <TossCheckoutButton
-                    product={TOSS_PRODUCTS[0]}
-                    customerEmail={undefined}
-                    customerName={childName}
-                    method="카드"
-                    onPrepare={prepareTossPayment}
-                    onError={(err) => setPaymentError(err?.message || "토스 결제 실패")}
-                    className="cta-pay-btn"
-                  />
-                ) : (
-                  <PayPalCheckoutButton
-                    product={PAYPAL_PRODUCTS[0]}
-                    onSuccess={handlePayPalSuccess}
-                    onError={(err) => setPaymentError(err || "PayPal 결제 실패")}
-                    onCancel={() => console.log('PayPal cancel')}
-                  />
-                )}
-              </>
-            )}
-          </div>
+                  
+                  <div style={{color:MUTED,fontSize:11.5,lineHeight:1.6,marginBottom:18,textAlign:"left"}}>
+                    기본 분석만으로도 훌륭하지만, <span style={{color:WHITE,fontWeight:800}}>더 깊은 비밀이 궁금하시거나 앞으로의 정밀한 성장 로드맵 및 미래 성장 가능성</span>을 마스터하고 싶다면 신청하세요.
+                    <ul style={{margin:"6px 0 0 16px",padding:0,color:"#8aa8c8"}}>
+                      <li style={{marginBottom:3}}>나만의 3자리 <strong>정밀 BioCode 및 캐릭터 유형 해제</strong></li>
+                      <li style={{marginBottom:3}}>부모 키 유전 확률을 반영한 <strong>성인 예측 키 & 윙스팬 분석</strong></li>
+                      <li style={{marginBottom:3}}>체내 수분/단백질/골격근/체지방 <strong>인바디 정밀 비교군 분석</strong></li>
+                      <li style={{marginBottom:3}}>종목·포지션 매칭 적합도 진단 및 <strong>연간 성장 로드맵 제공</strong></li>
+                      <li style={{marginBottom:3}}>모바일/PC로 보관 가능한 <strong>13페이지 프리미엄 PDF 보고서 발송</strong></li>
+                    </ul>
+                  </div>
+                
+                  {/* 입력 폼 필드들 */}
+                  <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:18}}>
+                    {/* 운동 종목 및 포지션 */}
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                      <div>
+                        <div style={{color:MUTED,fontSize:10,marginBottom:4}}>운동 종목 (필수)</div>
+                        <input type="text" value={sports} onChange={e => setSports(e.target.value)} placeholder="예: 축구, 수영" style={{
+                          width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
+                        }}/>
+                      </div>
+                      <div>
+                        <div style={{color:MUTED,fontSize:10,marginBottom:4}}>포지션 (선택)</div>
+                        <input type="text" value={position} onChange={e => setPosition(e.target.value)} placeholder="예: 공격수, 피처" style={{
+                          width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
+                        }}/>
+                      </div>
+                    </div>
+  
+                    {/* 부모 키 */}
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                      <div>
+                        <div style={{color:MUTED,fontSize:10,marginBottom:4}}>아버지 키 (cm) (필수)</div>
+                        <input type="number" value={fatherHeight} onChange={e => setFatherHeight(e.target.value)} style={{
+                          width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
+                        }}/>
+                      </div>
+                      <div>
+                        <div style={{color:MUTED,fontSize:10,marginBottom:4}}>어머니 키 (cm) (필수)</div>
+                        <input type="number" value={motherHeight} onChange={e => setMotherHeight(e.target.value)} style={{
+                          width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box"
+                        }}/>
+                      </div>
+                    </div>
+  
+                    {/* 인바디 실측치 입력 */}
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6}}>
+                      <div>
+                        <div style={{color:MUTED,fontSize:9,marginBottom:4}}>골격근량 (kg) (필수)</div>
+                        <input type="number" value={skeletalMuscle} onChange={e => setSkeletalMuscle(e.target.value)} placeholder="실측치" style={{
+                          width:"100%",padding:"8px 8px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:11,fontWeight:700,outline:"none",boxSizing:"border-box"
+                        }}/>
+                      </div>
+                      <div>
+                        <div style={{color:MUTED,fontSize:9,marginBottom:4}}>체지방률 (%) (필수)</div>
+                        <input type="number" value={bodyFat} onChange={e => setBodyFat(e.target.value)} placeholder="실측치" style={{
+                          width:"100%",padding:"8px 8px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:11,fontWeight:700,outline:"none",boxSizing:"border-box"
+                        }}/>
+                      </div>
+                      <div>
+                        <div style={{color:MUTED,fontSize:9,marginBottom:4}}>양팔길이 (cm) (필수)</div>
+                        <input type="number" value={wingspan} onChange={e => setWingspan(e.target.value)} placeholder="실측치" style={{
+                          width:"100%",padding:"8px 8px",borderRadius:8,background:"#040711",color:WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:11,fontWeight:700,outline:"none",boxSizing:"border-box"
+                        }}/>
+                      </div>
+                    </div>
+  
+                    {/* 인바디 이미지 업로드 / 카메라 촬영 */}
+                    <div style={{background:"rgba(255,255,255,0.02)",border:"1px dashed rgba(201,168,76,0.3)",borderRadius:8,padding:"10px",textAlign:"center"}}>
+                      <div style={{color:GOLD,fontSize:10,fontWeight:700,marginBottom:6}}>📸 인바디 용지 사진 촬영 또는 스캔 파일 첨부 (선택)</div>
+                      <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+                        <label style={{
+                          display:"inline-block",padding:"6px 14px",borderRadius:6,background:"rgba(201,168,76,0.12)",border:`1px solid ${GOLD}`,
+                          color:GOLD2,fontSize:11,fontWeight:700,cursor:ocrLoading?"not-allowed":"pointer"
+                        }}>
+                          {ocrLoading ? "분석 중..." : "파일 선택 / 촬영"}
+                          <input type="file" accept="image/*,application/pdf" capture="environment" onChange={e => handleInbodyUpload(e.target.files[0])} disabled={ocrLoading} style={{display:"none"}}/>
+                        </label>
+                        {inbodyFileUrl && (
+                          <span style={{color:"#4fcfa0",fontSize:10,fontWeight:700}}>✓ 첨부 완료</span>
+                        )}
+                      </div>
+                      <div style={{color:MUTED,fontSize:9,marginTop:6,lineHeight:1.4}}>
+                        ※ 사진을 등록하시면 골격근량과 지방률이 자동 판독되어 채워집니다.<br/>
+                        판독에 실패할 경우 직접 텍스트로 수치를 보정해 주실 수 있습니다.
+                      </div>
+                    </div>
+                  </div>
+  
+                  {/* 결제 수단 선택 */}
+                  {!IS_PROMO_ACTIVE && (
+                    <div style={{display:"flex",gap:8,marginBottom:15}}>
+                      <button onClick={() => setPaymentMethod("toss")} style={{
+                        flex:1,padding:"10px",borderRadius:10,fontSize:12,fontWeight:700,cursor:"pointer",
+                        background:paymentMethod==="toss" ? "rgba(201,168,76,0.15)" : "rgba(255,255,255,0.02)",
+                        color:paymentMethod==="toss" ? GOLD2 : MUTED,
+                        border:paymentMethod==="toss" ? `1px solid ${GOLD}` : "1px solid rgba(255,255,255,0.08)"
+                      }}>🇰🇷 토스페이먼츠</button>
+                      <button onClick={() => setPaymentMethod("paypal")} style={{
+                        flex:1,padding:"10px",borderRadius:10,fontSize:12,fontWeight:700,cursor:"pointer",
+                        background:paymentMethod==="paypal" ? "rgba(201,168,76,0.15)" : "rgba(255,255,255,0.02)",
+                        color:paymentMethod==="paypal" ? GOLD2 : MUTED,
+                        border:paymentMethod==="paypal" ? `1px solid ${GOLD}` : "1px solid rgba(255,255,255,0.08)"
+                      }}>🌐 PayPal (해외)</button>
+                    </div>
+                  )}
+  
+                  {/* 에러 발생 시 노출 */}
+                  {paymentError && (
+                    <div style={{color:"#f76f8e",fontSize:11,marginBottom:10,textAlign:"center"}}>{paymentError}</div>
+                  )}
+  
+                  {/* 결제 실행 버튼 */}
+                  {!sports || !wingspan || !fatherHeight || !motherHeight || ((!skeletalMuscle || !bodyFat) && !inbodyFileUrl) ? (
+                    <div style={{
+                      padding:"14px",borderRadius:12,background:"#334155",color:"#94a3b8",fontSize:13,fontWeight:700,textAlign:"center"
+                    }}>⚠️ 모든 성장 정보(종목, 부모 키, 양팔길이 및 인바디 실측치 또는 사진 파일)를 입력해 주세요.</div>
+                  ) : IS_PROMO_ACTIVE ? (
+                    <button onClick={handlePromoApply} style={{
+                      width:"100%",padding:"15px",borderRadius:12,background:`linear-gradient(135deg, ${GOLD}, ${GOLD2})`,color:WHITE,fontSize:14,fontWeight:900,border:"none",cursor:"pointer",boxShadow:"0 4px 15px rgba(201,168,76,0.3)",textAlign:"center"
+                    }}>✨ 1:1 프리미엄 분석 보고서 무료 신청하기</button>
+                  ) : paymentMethod === "toss" ? (
+                    <TossCheckoutButton
+                      product={TOSS_PRODUCTS[0]}
+                      customerEmail={undefined}
+                      customerName={childName}
+                      method="카드"
+                      onPrepare={prepareTossPayment}
+                      onError={(err) => setPaymentError(err?.message || "토스 결제 실패")}
+                      className="cta-pay-btn"
+                    />
+                  ) : (
+                    <PayPalCheckoutButton
+                      product={PAYPAL_PRODUCTS[0]}
+                      onSuccess={handlePayPalSuccess}
+                      onError={(err) => setPaymentError(err || "PayPal 결제 실패")}
+                      onCancel={() => console.log('PayPal cancel')}
+                    />
+                  )}
+                </>
+              )}
+            </div>
+          )}
 
           <button onClick={reset} style={{width:"100%",padding:"14px",borderRadius:12,background:"rgba(201,168,76,0.06)",color:MUTED,fontSize:14,border:"1px solid rgba(201,168,76,0.2)",cursor:"pointer",marginBottom:4}}>🔄 처음부터 다시하기</button>
           <p style={{color:"#1a2a3a",fontSize:11,textAlign:"center",marginTop:14,lineHeight:1.7}}>문항에 따라 결과는 다를 수 있으며 재미있는 참고용입니다.<br/>보다 완벽한 BIO CODE 결과는 유료 서비스로 제공해 드릴 예정입니다.</p>
