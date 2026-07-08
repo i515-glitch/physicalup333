@@ -186,19 +186,19 @@ def calculate_biocode(input_data):
 
     # --- 4. BioCode 3자리 결정 및 27패턴 매칭 ---
     
-    # v13.1 Cutoff thresholds (Strict Match with Excel)
-    # Body (40 max): 0-14.0=1, 14.0-28.0=2, 28.0-40=3
-    if body_total <= 14.0:
+    # Adjusted Cutoff thresholds for sports kids with higher physical targets
+    # Body (40 max): 0-18.0=1 (skinny/low), 18.0-29.0=2, 29.0-40=3
+    if body_total <= 18.0:
         body_grade = 1
-    elif body_total <= 28.0:
+    elif body_total <= 29.0:
         body_grade = 2
     else:
         body_grade = 3
         
-    # Metabolism (35 max): 0-11.0=1, 11.0-24.0=2, 24.0-35=3
-    if metab_total <= 11.0:
+    # Metabolism (35 max): 0-15.0=1 (low absorption/needs boost), 15.0-25.0=2, 25.0-35=3
+    if metab_total <= 15.0:
         metab_grade = 1
-    elif metab_total <= 24.0:
+    elif metab_total <= 25.0:
         metab_grade = 2
     else:
         metab_grade = 3
