@@ -2749,7 +2749,7 @@ window.shareToKakao = function() {
     const persona = window.reportPersona || "내일을 향한 숨고르기";
     const reportUrl = window.location.href;
 
-    const shareMessage = `[피지컬업 333] ${targetName} 선수의 BioCode 결과는 [${biocode}]\n체질 유형: ${persona}\n"타고난 잠재력을 깨우는 1년 성장 솔루션!"\n\n무료이니, 꼭 해보시길 권합니다.`;
+    const shareMessage = `[피지컬업 333] ${targetName} 선수의 맞춤 성장 분석 보고서가 발행되었습니다. 아래 링크에서 확인하실 수 있습니다.\n\n보고서 링크: ${reportUrl}`;
 
     if (window.Kakao) {
         try {
@@ -2759,8 +2759,8 @@ window.shareToKakao = function() {
             window.Kakao.Share.sendDefault({
                 objectType: 'feed',
                 content: {
-                    title: `[피지컬업 333] ${targetName} 선수의 BioCode 결과 [${biocode}]`,
-                    description: `체질 유형: ${persona}\n"타고난 잠재력을 깨우는 1년 성장 솔루션!"`,
+                    title: `[피지컬업 333] ${targetName} 선수의 맞춤 성장 분석 보고서`,
+                    description: `우리 아이의 타고난 성장 잠재력을 깨우는 1년 피지컬 솔루션`,
                     imageUrl: 'https://physicalup333.vercel.app/static/human_diesel_engine_hero_1782604389084.png',
                     link: {
                         mobileWebUrl: reportUrl,

@@ -486,8 +486,8 @@ export default function App() {
         window.Kakao.Share.sendDefault({
           objectType:"feed",
           content:{
-            title:`${ment.emoji} ${result.code} ${mi.emoji}${result.main} · ${ment.nick} | Physical UP 333 333TEST`,
-            description:`"${shortWit}" 💡${shortTip}`,
+            title:`[피지컬업 333] ${childName || '우리 아이'} 선수의 맞춤 성장 체질 분석`,
+            description:`우리 아이의 타고난 성장 잠재력을 깨우는 1년 피지컬 솔루션`,
             imageUrl:"https://pu333.kr/og.png",
             imageWidth:1200,
             imageHeight:630,
@@ -497,7 +497,7 @@ export default function App() {
             }
           },
           buttons:[{
-            title:"우리 아이 체질 코드 찾기 →",
+            title:"우리 아이 체질 분석 결과 보기 →",
             link:{
               mobileWebUrl:"https://www.physicalup333.com",
               webUrl:"https://www.physicalup333.com"
@@ -516,9 +516,7 @@ export default function App() {
     }
 
     // 폴백: 텍스트 복사
-    const ageInfo=birth.length===6?calcAgeFromShort(birth):null;
-    const growthTxt=(ageInfo&&heightVal&&weightVal)?`\n키 ${heightVal}cm · 몸무게 ${weightVal}kg · ${ageInfo.display}`:"";
-    const txt=`Physical UP 333 333TEST\n\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\n"${shortWit}"\n💡${shortTip}${growthTxt}\n\nwww.physicalup333.com`;
+    const txt=`[피지컬업 333] ${childName || '우리 아이'} 선수의 맞춤 성장 체질 분석 결과가 나왔습니다.\n\n결과 확인하기: www.physicalup333.com`;
     try{ await navigator.clipboard.writeText(txt); }
     catch(e){
       const el=document.createElement("textarea");
@@ -747,7 +745,7 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
 <script>
 function shareKakao(){
-  const txt="Physical UP 333 333TEST\\n\\n${ment.emoji}${result.code} ${mi.emoji}${result.main} ${ment.nick}\\n\\"${ment.wit.slice(0,16)}${ment.wit.length>16?'..':''}\\"\\n💡${ment.tip.slice(0,16)}${ment.tip.length>16?'..':''}\\n\\nwww.physicalup333.com";
+  const txt="[피지컬업 333] 우리 아이 선수의 맞춤 성장 체질 분석 결과가 나왔습니다.\\n\\n결과 확인하기: www.physicalup333.com";
   if(navigator.clipboard){
     navigator.clipboard.writeText(txt).then(()=>{
       document.getElementById('kakao-msg').style.display='block';
