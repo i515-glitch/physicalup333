@@ -524,6 +524,21 @@ function getPctLabel(pct) {
   return {label:"상위 3%",color:"#a78bfa",comment:"또래 최상위권"};
 }
 
+const getAdjustedMi = (baseMain, height, weight) => {
+  let finalMain = baseMain;
+  if (height && weight) {
+    const h = parseFloat(height);
+    const w = parseFloat(weight);
+    if (h > 0 && w > 0) {
+      const bmi = w / ((h / 100) ** 2);
+      if (bmi < 18.5 && finalMain === "저장형") {
+        finalMain = "소비형";
+      }
+    }
+  }
+  return mainType[finalMain] || mainType["균형형"];
+};
+
 // ─── 설문 문항 (v13.1 엔진 공식 24문항 선별 풀) ───────────────────────────────
 const questionPool = {
   absorb: [
@@ -669,8 +684,14 @@ export default function App() {
     catch { return ""; }
   });
   const [grade, setGrade] = useState("초등 4~6학년");
-  const [sports, setSports] = useState("");
-  const [position, setPosition] = useState("");
+  const [sports, setSports] = useState(() => {
+    try { return localStorage.getItem("pu333_sports") || ""; }
+    catch { return ""; }
+  });
+  const [position, setPosition] = useState(() => {
+    try { return localStorage.getItem("pu333_position") || ""; }
+    catch { return ""; }
+  });
   const [phone, setPhone] = useState(() => {
     try { return localStorage.getItem("pu333_phone") || ""; }
     catch { return ""; }
@@ -1036,12 +1057,10 @@ export default function App() {
       return;
     }
     
-    // 만약 이미 24개 문항이 모두 다 차 있다면 바로 결과로 이동
-    if (Object.keys(pAns).length === parentQuestions.length) {
-      handleQuickResult();
-    } else {
-      setStep("partA");
-    }
+    // 이전에 완료한 기록이 있더라도 결과지 화면으로 바로 직행하지 않고,
+    // 언제나 설문의 첫 번째 문항(1/24) 페이지로 진입하여 설문을 검토하거나 다시 참여할 수 있게 합니다.
+    setPIdx(0);
+    setStep("partA");
   };
 
   const handleQuickResult = () => {
@@ -1133,7 +1152,7 @@ export default function App() {
   async function handleShare(){
     if(!result) return;
     const si=subType[result.sub]||subType["항온형"];
-    const mi=mainType[result.main]||mainType["균형형"];
+    const mi=getAdjustedMi(result.main, heightVal, weightVal);
     const ment=codeMents[result.code]||{emoji:"⚖️",nick:"완벽균형",wit:"나만의 특별한 체질",tip:"피지컬업333 Test로 맞춤 관리 시작!"};
     const shortWit=ment.wit.length>20?ment.wit.slice(0,20)+'..':ment.wit;
     const shortTip=ment.tip.length>20?ment.tip.slice(0,20)+'..':ment.tip;
@@ -1191,7 +1210,7 @@ export default function App() {
   async function handleDownload(){
     if(!result) return;
     setDownloading(true);
-    const mi=mainType[result.main]||mainType["균형형"];
+    const mi=getAdjustedMi(result.main, heightVal, weightVal);
     const si=subType[result.sub]||subType["항온형"];
     const ment=codeMents[result.code]||{emoji:"⚖️",nick:"균형형",wit:"나만의 특별한 체질 코드",tip:"피지컬업333 Test로 맞춤 관리 시작!",rx:"체질 코드에 맞는 맞춤 관리를 시작하세요."};
     const bar=n=>"●".repeat(n)+"○".repeat(3-n);
@@ -1208,7 +1227,7 @@ export default function App() {
     const html=`<!DOCTYPE html>
 <html lang="ko"><head><meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>피지컬업333 Test · ${result.sub} ${result.code}</title>
+<title>피지컬업333 성장 발달 검사지</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -1294,17 +1313,13 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
     <div class="seal">⚾</div>
   </div>
   <div class="divider"></div>
-  <div class="code-wrap">
-    <div class="code-badge">${result.code}</div>
+  <div class="code-wrap" style="margin-top:20px;">
     <div class="type-row">
-      <div class="main-tag">${result.main}</div>
-      <span style="font-size:26px;">${si.emoji}</span>
-      <div class="sub-name">${ment.nick}</div>
+      <div class="main-tag" style="font-size:14px;padding:6px 18px;border-radius:24px;">${result.main}</div>
     </div>
   </div>
-  <div class="wit-box">
-    <div class="wit">"${ment.wit}"</div>
-    <div class="tip">💡 ${ment.tip}</div>
+  <div class="wit-box" style="text-align:center;border-left:none;background:rgba(255,255,255,0.03);padding:16px;">
+    <div class="tip" style="font-size:14px;color:#e8c76a;">💡 ${childName ? childName + ' 선수를 위한 ' : ''}맞춤 성장 솔루션</div>
   </div>
   <div class="axes">
     <div class="ax" style="background:rgba(79,207,160,0.12)">
@@ -1346,8 +1361,7 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
 </div>
 <div class="detail-card">
   <div class="detail-header">
-    <div class="detail-title">BIO CODE 상세 결과 확인서</div>
-    <div class="detail-badge">${result.code}</div>
+    <div class="detail-title">피지컬 성장 발달 상세 결과서</div>
   </div>
 
   ${growthSection}
@@ -1374,7 +1388,7 @@ body{background:#f5f3ef;font-family:'Noto Sans KR',sans-serif;padding:30px 20px;
   </div>
 
   <div class="section">
-    <div class="section-title">✨ ${ment.emoji} {ment.nick} 맞춤 포인트</div>
+    <div class="section-title">✨ 맞춤 관리 포인트</div>
     <div class="point-box"><div class="point-txt">${si.plus}</div></div>
   </div>
 
@@ -1424,7 +1438,7 @@ function saveHtml(){
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a");
   a.href=url;
-  a.download="피지컬업333_${result.sub}_${result.main}.html";
+  a.download="피지컬업333_성장발달검사결과.html";
   document.body.appendChild(a);a.click();
   document.body.removeChild(a);URL.revokeObjectURL(url);
 }
@@ -1436,7 +1450,7 @@ function saveHtml(){
     setDownloading(false);
     const a=document.createElement('a');
     a.href=url;
-    a.download=`피지컬업333_${result.main}_${ment.nick}.html`;
+    a.download="피지컬업333_성장발달검사결과.html";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -1566,10 +1580,15 @@ function saveHtml(){
             <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${sports?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center",display:"flex",flexDirection:"column",justifyContent:"center"}}>
               <div style={{color:MUTED,fontSize:10,marginBottom:6}}>운동 종목 <span style={{fontSize:8}}>(필수)</span></div>
               <select value={sports} onChange={e => {
-                setSports(e.target.value);
-                if (e.target.value === "야구") setPosition("내·외야수/야수");
-                else if (e.target.value === "축구") setPosition("필드 플레이어");
-                else setPosition("공통 (포지션 전체)");
+                const val = e.target.value;
+                setSports(val);
+                try { localStorage.setItem("pu333_sports", val); } catch(ex){}
+                let posVal = "";
+                if (val === "야구") posVal = "내·외야수/야수";
+                else if (val === "축구") posVal = "필드 플레이어";
+                else posVal = "공통 (포지션 전체)";
+                setPosition(posVal);
+                try { localStorage.setItem("pu333_position", posVal); } catch(ex){}
               }} style={{
                 width:"100%",background:"transparent",border:"none",color:sports ? GOLD2 : WHITE,fontSize:13,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box",textAlignLast:"center",cursor:"pointer"
               }}>
@@ -1581,7 +1600,11 @@ function saveHtml(){
             </div>
             <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${position?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center",display:"flex",flexDirection:"column",justifyContent:"center"}}>
               <div style={{color:MUTED,fontSize:10,marginBottom:6}}>포지션 <span style={{fontSize:8}}>(선택)</span></div>
-              <select value={position} onChange={e => setPosition(e.target.value)} disabled={!sports} style={{
+              <select value={position} onChange={e => {
+                const val = e.target.value;
+                setPosition(val);
+                try { localStorage.setItem("pu333_position", val); } catch(ex){}
+              }} disabled={!sports} style={{
                 width:"100%",background:"transparent",border:"none",color:position ? GOLD2 : WHITE,fontSize:13,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box",textAlignLast:"center",cursor:!sports ? "not-allowed" : "pointer"
               }}>
                 <option value="" disabled style={{background:"#0d1b3e",color:MUTED}}>선택</option>
@@ -1681,7 +1704,7 @@ function saveHtml(){
 
   // ── RESULT ─────────────────────────────────────────────────────────────────
   if(step==="result"&&result){
-    const mi=mainType[result.main]||mainType["균형형"];
+    const mi=getAdjustedMi(result.main, heightVal, weightVal);
     const si=subType[result.sub]||subType["항온형"];
     const ment=codeMents[result.code]||{emoji:"⚖️",nick:"균형형",wit:"나만의 특별한 체질 코드",tip:"피지컬업333 Test로 맞춤 관리 시작!",rx:"체질 코드에 맞는 맞춤 관리를 시작하세요."};
     const bar=n=>"●".repeat(n)+"○".repeat(3-n);
@@ -2497,10 +2520,15 @@ function saveHtml(){
                       <div>
                         <div style={{color:MUTED,fontSize:10,marginBottom:4}}>운동 종목 (필수)</div>
                         <select value={sports} onChange={e => {
-                          setSports(e.target.value);
-                          if (e.target.value === "야구") setPosition("내·외야수/야수");
-                          else if (e.target.value === "축구") setPosition("필드 플레이어");
-                          else setPosition("공통 (포지션 전체)");
+                          const val = e.target.value;
+                          setSports(val);
+                          try { localStorage.setItem("pu333_sports", val); } catch(ex){}
+                          let posVal = "";
+                          if (val === "야구") posVal = "내·외야수/야수";
+                          else if (val === "축구") posVal = "필드 플레이어";
+                          else posVal = "공통 (포지션 전체)";
+                          setPosition(posVal);
+                          try { localStorage.setItem("pu333_position", posVal); } catch(ex){}
                         }} style={{
                           width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:sports ? GOLD2 : WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box",cursor:"pointer"
                         }}>
@@ -2512,7 +2540,11 @@ function saveHtml(){
                       </div>
                       <div>
                         <div style={{color:MUTED,fontSize:10,marginBottom:4}}>포지션 (선택)</div>
-                        <select value={position} onChange={e => setPosition(e.target.value)} disabled={!sports} style={{
+                        <select value={position} onChange={e => {
+                          const val = e.target.value;
+                          setPosition(val);
+                          try { localStorage.setItem("pu333_position", val); } catch(ex){}
+                        }} disabled={!sports} style={{
                           width:"100%",padding:"8px 10px",borderRadius:8,background:"#040711",color:position ? GOLD2 : WHITE,border:"1px solid rgba(255,255,255,0.12)",fontSize:12,fontWeight:700,outline:"none",boxSizing:"border-box",cursor:!sports ? "not-allowed" : "pointer"
                         }}>
                           <option value="" disabled style={{background:"#040711",color:MUTED}}>선택</option>

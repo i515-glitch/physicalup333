@@ -6,11 +6,11 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
-CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
+CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "config.json")
 
 def load_smtp_config():
     """
-    Loads SMTP details from app/config.json if it exists.
+    Loads SMTP details from app/data/config.json if it exists.
     Otherwise returns default mock / standard configurations.
     """
     default_config = {
@@ -18,20 +18,26 @@ def load_smtp_config():
         "smtp_port": 587,
         "smtp_user": "your_email@gmail.com",
         "smtp_password": "your_app_password",
-        "sender_name": "PHYSICAL UP 엘리트 스포츠 랩"
+        "sender_name": "PHYSICAL UP 엘리트 스포츠 랩",
+        "solapi_api_key": "YOUR_SOLAPI_API_KEY",
+        "solapi_api_secret": "YOUR_SOLAPI_API_SECRET",
+        "kakao_pf_id": "YOUR_PF_ID",
+        "kakao_template_id": "YOUR_TEMPLATE_ID",
+        "sender_phone": "YOUR_VERIFIED_SENDER_PHONE",
+        "use_mock": True
     }
     
     if os.path.exists(CONFIG_PATH):
         try:
             with open(CONFIG_PATH, "r", encoding="utf-8") as f:
                 config = json.load(f)
-                # Merge with default to ensure keys exist
                 return {**default_config, **config}
         except Exception as e:
             print(f"[Mailer] Error loading config.json: {e}")
             
-    # Write default config template if not present for user convenience
     try:
+        # Create directory if not exists
+        os.makedirs(os.path.dirname(CONFIG_PATH), exist_ok=True)
         with open(CONFIG_PATH, "w", encoding="utf-8") as f:
             json.dump(default_config, f, indent=4, ensure_ascii=False)
     except:

@@ -201,7 +201,7 @@ def start_scheduler():
                                                 pass
                                                 
                                         if approval_mode == "ai":
-                                            email = req_data.get("phone")  # override recipient email
+                                            email = req_data.get("email") or req_data.get("phone")
                                             comment = req_data.get("ai_comment", "")
                                             print(f"[Scheduler] Processing scheduled send (AI mode) for {req_data.get('name')} ({req_id})")
                                             
@@ -565,7 +565,7 @@ def process_approval_and_send(req_id: str, email: str, comment: str, inspected_b
     req_data["status"] = "Approved"
     req_data["ai_comment"] = final_comment
     req_data["inspected_by"] = inspected_by
-    req_data["phone"] = email  # override recipient email
+    req_data["email"] = email  # store recipient email separately
 
     # Determine target specs
     sports = req_data.get("sports", "야구")
@@ -719,7 +719,7 @@ def approve_request(approval: ApprovalRequest):
             req_data["scheduled_at"] = approval.scheduled_at
             req_data["ai_comment"] = approval.comment
             req_data["inspected_by"] = approval.inspected_by or "representative"
-            req_data["phone"] = approval.email  # store scheduled email address
+            req_data["email"] = approval.email  # store scheduled email address
             
             with open(req_file, "w", encoding="utf-8") as f:
                 json.dump(req_data, f, indent=4, ensure_ascii=False)

@@ -5,19 +5,24 @@ import time
 import hmac
 import hashlib
 
-CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
+CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "config.json")
 
 def load_notifier_config():
     """
     Loads API key and Kakao channel configuration from config.json.
     """
     default_config = {
+        "smtp_server": "smtp.gmail.com",
+        "smtp_port": 587,
+        "smtp_user": "your_email@gmail.com",
+        "smtp_password": "your_app_password",
+        "sender_name": "PHYSICAL UP 엘리트 스포츠 랩",
         "solapi_api_key": "YOUR_SOLAPI_API_KEY",
         "solapi_api_secret": "YOUR_SOLAPI_API_SECRET",
-        "kakao_pf_id": "YOUR_KAKAO_PF_ID",  # 카카오 비즈니스 채널 플러스친구 ID (예: @physicalup)
-        "kakao_template_id": "YOUR_TEMPLATE_ID",  # 승인받은 알림톡 템플릿 ID
-        "sender_phone": "YOUR_VERIFIED_SENDER_PHONE",  # 인증된 발신자 번호 (알림톡 실패 시 대체문자 발송용)
-        "use_mock": True  # 개발 테스트 단계에서는 실제 통신 과금 차단(기본값 True)
+        "kakao_pf_id": "YOUR_PF_ID",
+        "kakao_template_id": "YOUR_TEMPLATE_ID",
+        "sender_phone": "YOUR_VERIFIED_SENDER_PHONE",
+        "use_mock": True
     }
     
     if os.path.exists(CONFIG_PATH):
@@ -28,8 +33,8 @@ def load_notifier_config():
         except Exception as e:
             print(f"[Notifier] Error loading config.json: {e}")
             
-    # Save template
     try:
+        os.makedirs(os.path.dirname(CONFIG_PATH), exist_ok=True)
         with open(CONFIG_PATH, "w", encoding="utf-8") as f:
             json.dump(default_config, f, indent=4, ensure_ascii=False)
     except:
