@@ -941,7 +941,60 @@ export default function App() {
       alert("아이 몸무게를 입력해 주세요.");
       return;
     }
-    setStep("partA");
+    
+    // 만약 이미 24개 문항이 모두 다 차 있다면 바로 결과로 이동
+    if (Object.keys(pAns).length === parentQuestions.length) {
+      handleQuickResult();
+    } else {
+      setStep("partA");
+    }
+  };
+
+  const handleQuickResult = () => {
+    if (!childName.trim()) {
+      alert("아이 이름을 입력해 주세요.");
+      return;
+    }
+    if (!phone.trim()) {
+      alert("연락처(전화번호)를 입력해 주세요.");
+      return;
+    }
+    if (birth.length !== 6 || !calcAgeFromShort(birth)) {
+      alert("올바른 생년월일 6자리를 입력해 주세요.");
+      return;
+    }
+    if (!birthTime) {
+      alert("태어난 시를 선택하거나 [태어난 시 모름]을 체크해 주세요.");
+      return;
+    }
+    if (!heightVal.trim() || parseFloat(heightVal) <= 0) {
+      alert("아이 키를 입력해 주세요.");
+      return;
+    }
+    if (!weightVal.trim() || parseFloat(weightVal) <= 0) {
+      alert("아이 몸무게를 입력해 주세요.");
+      return;
+    }
+    
+    // 채워지지 않은 문항은 2(보통)로 채움
+    const fullAns = { ...pAns };
+    parentQuestions.forEach(q => {
+      if (fullAns[q.id] === undefined) {
+        fullAns[q.id] = 2; // 보통
+      }
+    });
+    
+    setPAns(fullAns);
+    try {
+      localStorage.setItem("pu333_pans", JSON.stringify(fullAns));
+    } catch(e) {}
+    
+    const res = analyze(fullAns, {});
+    setResult(res);
+    setStep("result");
+    callAI(fullAns, {}, res, setAiAdvice, setLoading);
+    saveFreeSurvey(fullAns);
+    fetchServerAnalysis(fullAns);
   };
 
   const handleGoResult = () => {
@@ -1429,6 +1482,11 @@ function saveHtml(){
           <button onClick={handleStartTest} style={{width:"100%",padding:"16px",borderRadius:12,background:"linear-gradient(135deg,#c9a84c,#e8c76a)",color:NAVY,fontSize:14,fontWeight:800,border:"none",cursor:"pointer",boxShadow:"0 4px 20px rgba(201,168,76,0.3)",lineHeight:1.5}}>
             333TEST 시작하기<br/><span style={{fontSize:11,fontWeight:600,opacity:0.7}}>24문항 · 약 3~5분 · 무료</span>
           </button>
+          {Object.keys(pAns).length > 0 && (
+            <button onClick={handleQuickResult} style={{width:"100%",marginTop:10,padding:"14px",borderRadius:12,background:"rgba(201,168,76,0.1)",color:GOLD2,fontSize:13,fontWeight:800,border:"1.5px solid rgba(201,168,76,0.4)",cursor:"pointer",lineHeight:1.5}}>
+              🔄 임시 저장된 답변({Object.keys(pAns).length}개)으로 결과 바로보기
+            </button>
+          )}
         </div>
       </div>
       </div>
@@ -1460,7 +1518,28 @@ function saveHtml(){
               </button>
             ))}
           </div>
-          {pIdx>0&&<button onClick={()=>setPIdx(pIdx-1)} style={{marginTop:18,background:"none",border:"none",color:MUTED,fontSize:13,cursor:"pointer"}}>← 이전</button>}
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:18}}>
+            {pIdx>0 ? (
+              <button onClick={()=>setPIdx(pIdx-1)} style={{background:"none",border:"none",color:MUTED,fontSize:13,cursor:"pointer"}}>← 이전</button>
+            ) : (
+              <div/>
+            )}
+            <button onClick={handleQuickResult} style={{
+              background:"rgba(201,168,76,0.08)",
+              border:"1.5px solid rgba(201,168,76,0.35)",
+              borderRadius:8,
+              padding:"8px 14px",
+              color:GOLD2,
+              fontSize:11.5,
+              fontWeight:800,
+              cursor:"pointer",
+              display:"flex",
+              alignItems:"center",
+              gap:4
+            }}>
+              결과 바로보기 ➔
+            </button>
+          </div>
         </div>
         </div>
       </div>
