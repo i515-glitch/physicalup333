@@ -1582,11 +1582,25 @@ function saveHtml(){
     const ageInfo = birth.length===6 ? calcAgeFromShort(birth) : null;
     const ageMonths = ageInfo?.months || null;
     const gd=(ageMonths&&heightVal&&weightVal)?getGrowthData(ageMonths,parseFloat(heightVal),parseFloat(weightVal)):null;
+    
+    // 목표 체중 계산
+    const ageYears = ageInfo?.years || 10;
+    const gradeStr = result?.grade || grade || "";
+    let weightOffset = 108;
+    if (gradeStr.includes("고") || (gradeStr === "" && ageYears >= 15)) {
+      weightOffset = 100;
+    } else if (gradeStr.includes("중") || (gradeStr === "" && ageYears >= 12)) {
+      weightOffset = 105;
+    }
+    const targetW = heightVal ? Math.round((parseFloat(heightVal) - weightOffset) * 10) / 10 : 0;
+    const currentFat = parseFloat(result?.body_fat || bodyFat || 0);
+    const currentMuscle = parseFloat(result?.skeletal_muscle || skeletalMuscle || 0);
+
     const ageDisplay = ageInfo ? ageInfo.display : "";
     const nameDisplay = childName ? `${childName} 선수` : "우리 아이";
     const hTarget=90;
-    const wTarget=result.main==="저장형"?15:result.main==="소비형"?85:90;
-    const wTargetLabel=result.main==="저장형"?"상위15%관리":result.main==="소비형"?"상위15%목표":"상위10%목표";
+    const wTarget=90;
+    const wTargetLabel="상위10%목표";
     const bands=[{l:"3",p:3},{l:"10",p:10},{l:"25",p:25},{l:"50",p:50},{l:"75",p:75},{l:"90",p:90},{l:"97",p:97}];
 
     return (
@@ -1637,22 +1651,10 @@ function saveHtml(){
               <div style={{color:MUTED,fontSize:11,marginBottom:14,borderBottom:"1px solid rgba(201,168,76,0.1)",paddingBottom:10}}>{ageDisplay} · BMI {gd.bmi}</div>
 
               <div style={{display:"flex",justifyContent:"space-between",gap:12,marginBottom:16}}>
-                {(() => {
-                  const ageYears = ageInfo?.years || 10;
-                  const gradeStr = result?.grade || grade || "";
-                  let offset = 108;
-                  if (gradeStr.includes("고") || (gradeStr === "" && ageYears >= 15)) {
-                    offset = 100;
-                  } else if (gradeStr.includes("중") || (gradeStr === "" && ageYears >= 12)) {
-                    offset = 105;
-                  }
-                  const targetW = Math.round((parseFloat(heightVal) - offset) * 10) / 10;
-                  
-                  return [
-                    {label:"키",value:parseFloat(heightVal),unit:"cm",avg:gd.stdH,mine:parseFloat(heightVal),target:gd.targetH,color:"#4fcfa0",isSlug:false,targetName:"상위선수",formulaText:"또래 상위 10% 기준"},
-                    {label:"몸무게",value:parseFloat(weightVal),unit:"kg",avg:gd.stdW,mine:parseFloat(weightVal),target:targetW,color:"#4f8ef7",isSlug:false,targetName:"권장체격",formulaText:`선수 기준: 키 - ${offset}`}
-                  ];
-                })().map(ax=>{
+                {[
+                  {label:"키",value:parseFloat(heightVal),unit:"cm",avg:gd.stdH,mine:parseFloat(heightVal),target:gd.targetH,color:"#4fcfa0",isSlug:false,targetName:"상위선수",formulaText:"또래 상위 10% 기준"},
+                  {label:"몸무게",value:parseFloat(weightVal),unit:"kg",avg:gd.stdW,mine:parseFloat(weightVal),target:targetW,color:"#4f8ef7",isSlug:false,targetName:"권장체격",formulaText:`선수 기준: 키 - ${weightOffset}`}
+                ].map(ax=>{
                   const vals=[ax.avg,ax.mine,ax.target];
                   const minV=Math.min(...vals)*0.95;
                   const maxV=Math.max(...vals)*1.05;
@@ -1766,6 +1768,65 @@ function saveHtml(){
                   );
                 })}
               </div>
+
+              {/* 선수형 신체 구성 분석 (체지방/골격근) */}
+              {(currentMuscle > 0 || currentFat > 0) && (
+                <div style={{
+                  marginTop:16,padding:"12px 14px",background:"rgba(255,255,255,0.015)",
+                  borderRadius:12,border:"1px solid rgba(255,255,255,0.04)",textAlign:"left"
+                }}>
+                  <div style={{color:GOLD2,fontSize:11,fontWeight:700,marginBottom:10,display:"flex",alignItems:"center",gap:4}}>
+                    <span>💪</span>
+                    <span>선수형 신체조각 분석 (목표 체중 대비)</span>
+                  </div>
+                  
+                  {/* 골격근량 */}
+                  {currentMuscle > 0 && (() => {
+                    const idealM = Math.round((targetW * 0.50) * 10) / 10;
+                    const diffM = currentMuscle - idealM;
+                    const percentOfWeight = Math.round((currentMuscle / parseFloat(weightVal)) * 100);
+                    return (
+                      <div style={{marginBottom:12}}>
+                        <div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:WHITE,marginBottom:4}}>
+                          <span style={{color:MUTED}}>골격근량 (목표: 체중의 50%)</span>
+                          <span style={{fontWeight:800,color:diffM >= 0 ? "#4fcfa0" : GOLD}}>
+                            {diffM >= 0 ? `충족 (초과 +${diffM.toFixed(1)}kg)` : `보강 필요: ${diffM.toFixed(1)}kg`}
+                          </span>
+                        </div>
+                        <div style={{display:"flex",alignItems:"center",gap:8}}>
+                          <div style={{flex:1,height:6,background:"rgba(255,255,255,0.08)",borderRadius:3,position:"relative"}}>
+                            <div style={{position:"absolute",left:0,top:0,bottom:0,width:`${Math.min(100, (currentMuscle/idealM)*100)}%`,background:diffM >= 0 ? "#4fcfa0" : GOLD,borderRadius:3}}/>
+                          </div>
+                          <span style={{fontSize:10,color:WHITE,width:70,textAlign:"right"}}>{currentMuscle}kg / {idealM}kg</span>
+                        </div>
+                        <div style={{fontSize:9,color:MUTED,marginTop:2}}>현재 내 체중 대비 골격근 비율: {percentOfWeight}%</div>
+                      </div>
+                    );
+                  })()}
+
+                  {/* 체지방률 */}
+                  {currentFat > 0 && (() => {
+                    const idealFatPct = 13; // 13%
+                    const diffF = currentFat - idealFatPct;
+                    return (
+                      <div style={{marginTop:12}}>
+                        <div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:WHITE,marginBottom:4}}>
+                          <span style={{color:MUTED}}>체지방률 (목표: 12% ~ 15% 슬림탄탄)</span>
+                          <span style={{fontWeight:800,color:Math.abs(diffF) <= 2 ? "#4fcfa0" : (diffF > 2 ? "#f76f8e" : "#4f8ef7")}}>
+                            {Math.abs(diffF) <= 2 ? "✓ 적정 비율" : (diffF > 2 ? `관리 필요 (+${diffF.toFixed(1)}%)` : `매우 슬림 (-${Math.abs(diffF).toFixed(1)}%)`)}
+                          </span>
+                        </div>
+                        <div style={{display:"flex",alignItems:"center",gap:8}}>
+                          <div style={{flex:1,height:6,background:"rgba(255,255,255,0.08)",borderRadius:3,position:"relative"}}>
+                            <div style={{position:"absolute",left:0,top:0,bottom:0,width:`${Math.min(100, (currentFat/20)*100)}%`,background:Math.abs(diffF) <= 2 ? "#4fcfa0" : (diffF > 2 ? "#f76f8e" : "#4f8ef7"),borderRadius:3}}/>
+                          </div>
+                          <span style={{fontSize:10,color:WHITE,width:70,textAlign:"right"}}>{currentFat}% / {idealFatPct}%</span>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
 
               {/* 종합 성장 지표 진단 소견 */}
               <div style={{
