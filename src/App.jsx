@@ -1491,7 +1491,7 @@ function saveHtml(){
           <div style={{color:MUTED,fontSize:10.5,marginBottom:14,textAlign:"left",lineHeight:1.4}}>무료 성장 지표 분석 및 타고난 기질 분석을 위해 아래 정보를 입력해 주세요. (자동저장 지원)</div>
           
           {/* 이름 / 성별 */}
-          <div style={{display:"grid",gridTemplateColumns:"1.2fr 1fr",gap:8,marginBottom:8}}>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
             <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${childName?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
               <div style={{color:MUTED,fontSize:10,marginBottom:6}}>이름</div>
               <input type="text" value={childName} onChange={e=>updateName(e.target.value)} placeholder="홍길동"
@@ -1514,7 +1514,7 @@ function saveHtml(){
           </div>
 
           {/* 생년월일 / 태어난 시 */}
-          <div style={{display:"grid",gridTemplateColumns:"1.2fr 1fr",gap:8,marginBottom:8}}>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
             <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${birth.length===6?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
               <div style={{color:MUTED,fontSize:10,marginBottom:6}}>생년월일 <span style={{fontSize:8}}>(YYMMDD)</span></div>
               <input type="text" value={birth} onChange={e=>updateBirth(e.target.value.replace(/\D/g,"").slice(0,6))} placeholder="190523" maxLength={6}
