@@ -1740,14 +1740,23 @@ function saveHtml(){
                   {label:"키",value:parseFloat(heightVal),unit:"cm",avg:gd.stdH,mine:parseFloat(heightVal),target:gd.targetH,color:"#4fcfa0",isSlug:false,targetName:"상위선수",formulaText:"또래 상위 10% 기준"},
                   {label:"몸무게",value:parseFloat(weightVal),unit:"kg",avg:gd.stdW,mine:parseFloat(weightVal),target:targetW,color:"#4f8ef7",isSlug:false,targetName:"권장체격",formulaText:`선수 기준: 키 - ${weightOffset}`}
                 ].map(ax=>{
-                  const vals=[ax.avg,ax.mine,ax.target];
-                  const minV=Math.min(...vals)*0.95;
-                  const maxV=Math.max(...vals)*1.05;
+                  const univVal = ax.label === "키" ? 180 : 85;
+                  const proVal = ax.label === "키" ? 183 : 90;
+                  const majorVal = ax.label === "키" ? 190 : 98;
+
+                  const vals=[ax.avg, ax.mine, ax.target, univVal, proVal, majorVal];
+                  const minV=Math.min(...vals)*0.98;
+                  const maxV=Math.max(...vals)*1.02;
                   const range = maxV - minV || 1;
-                  const toPos=v=>Math.round(15 + ((v-minV)/range)*70);
+                  const toPos=v=>Math.round(8 + ((v-minV)/range)*80);
+                  
                   const avgPos=toPos(ax.avg);
                   const minePos=toPos(ax.mine);
                   const targetPos=toPos(ax.target);
+                  const univPos=toPos(univVal);
+                  const proPos=toPos(proVal);
+                  const majorPos=toPos(majorVal);
+
                   const diff = ax.mine - ax.target;
                   const reached = ax.label === "키" ? ax.mine >= ax.target : Math.abs(diff) <= 2;
 
@@ -1773,7 +1782,7 @@ function saveHtml(){
                       </div>
 
                       {/* 세로 그래프 트랙 */}
-                      <div style={{position:"relative",width:"100%",height:200,marginBottom:4}}>
+                      <div style={{position:"relative",width:"100%",height:210,marginBottom:4}}>
                         {/* 세로 중심선 */}
                         <div style={{position:"absolute",left:"50%",top:0,bottom:0,width:4,background:"rgba(255,255,255,0.08)",transform:"translateX(-50%)",borderRadius:2}}/>
 
@@ -1811,12 +1820,52 @@ function saveHtml(){
                           background:GOLD,zIndex:6
                         }}/>
 
-                        {/* 3. 내 아이 (우측 배치 및 강조 배지) */}
+                        {/* 3. 대학 선수 라인 */}
+                        <div style={{
+                          position: "absolute", bottom: `${univPos}%`, left: "50%",
+                          transform: "translate(-50%, 50%)", width: 10, height: 1,
+                          background: "rgba(255,255,255,0.3)", zIndex: 5
+                        }}/>
+                        <div style={{
+                          position: "absolute", bottom: `${univPos}%`, left: "calc(50% + 8px)",
+                          transform: "translateY(50%)", fontSize: "7.5px", color: "rgba(255,255,255,0.45)", whiteSpace: "nowrap"
+                        }}>
+                          대학 ({univVal}{ax.unit})
+                        </div>
+
+                        {/* 4. 프로 선수 라인 */}
+                        <div style={{
+                          position: "absolute", bottom: `${proPos}%`, left: "50%",
+                          transform: "translate(-50%, 50%)", width: 12, height: 1,
+                          background: "rgba(201,168,76,0.6)", zIndex: 5
+                        }}/>
+                        <div style={{
+                          position: "absolute", bottom: `${proPos}%`, left: "calc(50% + 8px)",
+                          transform: "translateY(50%)", fontSize: "7.5px", color: "rgba(201,168,76,0.7)", whiteSpace: "nowrap", fontWeight: 700
+                        }}>
+                          프로 ({proVal}{ax.unit})
+                        </div>
+
+                        {/* 5. 메이저 선수 라인 */}
+                        <div style={{
+                          position: "absolute", bottom: `${majorPos}%`, left: "50%",
+                          transform: "translate(-50%, 50%)", width: 14, height: 1.5,
+                          background: GOLD, zIndex: 5
+                        }}/>
+                        <div style={{
+                          position: "absolute", bottom: `${majorPos}%`, left: "calc(50% + 8px)",
+                          transform: "translateY(50%)", fontSize: "8px", color: GOLD2, whiteSpace: "nowrap", fontWeight: 900
+                        }}>
+                          메이저 ({majorVal}{ax.unit})
+                        </div>
+
+                        {/* 6. 내 아이 (우측 배치 및 강조 배지) */}
                         <div style={{
                           position:"absolute",bottom:`${minePos}%`,left:"calc(50% + 8px)",
                           transform:"translateY(50%)",textAlign:"left",whiteSpace:"nowrap",
                           background:"rgba(255,255,255,0.06)",border:`1px solid ${ax.color}`,
-                          borderRadius:6,padding:"2px 6px",boxShadow:`0 0 8px rgba(255,255,255,0.05)`
+                          borderRadius:6,padding:"2px 6px",boxShadow:`0 0 8px rgba(255,255,255,0.05)`,
+                          zIndex:10
                         }}>
                           <div style={{color:ax.color,fontSize:8,fontWeight:900,lineHeight:1}}>내 아이</div>
                           <div style={{color:WHITE,fontSize:11,fontWeight:800,marginTop:2}}>{ax.mine}{ax.unit}</div>
@@ -1826,28 +1875,8 @@ function saveHtml(){
                           position:"absolute",bottom:`${minePos}%`,left:"50%",
                           transform:"translate(-50%, 50%)",width:10,height:10,
                           borderRadius:"50%",background:ax.color,border:"2px solid #0d1b3e",
-                          boxShadow:`0 0 8px ${ax.color}`,zIndex:9
+                          boxShadow:`0 0 8px ${ax.color}`,zIndex:11
                         }}/>
-                      </div>
-
-                      {/* 성인 피지컬 목표 수치 */}
-                      <div style={{
-                        width:"100%",marginTop:12,paddingTop:10,borderTop:"1px solid rgba(255,255,255,0.06)",
-                        display:"flex",flexDirection:"column",gap:4,textAlign:"left"
-                      }}>
-                        <div style={{color:GOLD2,fontSize:10,fontWeight:800,marginBottom:3,textAlign:"center"}}>⚾ 성인 피지컬 목표</div>
-                        <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:WHITE}}>
-                          <span style={{color:MUTED}}>대학 선수:</span>
-                          <span style={{fontWeight:700}}>{ax.label === "키" ? "180cm" : "85kg"}</span>
-                        </div>
-                        <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:WHITE}}>
-                          <span style={{color:WHITE}}>KBO 프로:</span>
-                          <span style={{color:GOLD2,fontWeight:700}}>{ax.label === "키" ? "183cm" : "90kg"}</span>
-                        </div>
-                        <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:WHITE}}>
-                          <span style={{color:GOLD}}>MLB 메이저:</span>
-                          <span style={{color:GOLD,fontWeight:700}}>{ax.label === "키" ? "190cm" : "98kg"}</span>
-                        </div>
                       </div>
                     </div>
                   );
