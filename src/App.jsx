@@ -1687,15 +1687,16 @@ function saveHtml(){
           {/* 타고난 체질 분석 카드 */}
           <div style={cardStyle}>
             <div style={{color:GOLD,fontSize:12,fontWeight:700,marginBottom:4,letterSpacing:1}}>🧬 타고난 신체 기질 분석</div>
-            <div style={{color:MUTED,fontSize:11,marginBottom:14,borderBottom:"1px solid rgba(201,168,76,0.1)",paddingBottom:10}}>
+            <div style={{color:MUTED,fontSize:11,marginBottom:12,borderBottom:"1px solid rgba(201,168,76,0.1)",paddingBottom:8}}>
               {birth ? `${birth.slice(0,2)}년 ${birth.slice(2,4)}월 ${birth.slice(4,6)}일` : ""} {birthTime} 출생
             </div>
             
             {serverResult ? (
-              <div>
-                <span style={{color:MUTED,fontSize:11,display:"block",marginBottom:6}}>체질 경향성</span>
-                <div style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:8,padding:"12px 14px"}}>
-                  <span style={{color:WHITE,fontSize:13,fontWeight:800,lineHeight:1.6,whiteSpace:"pre-wrap"}}>{serverResult.constitution}</span>
+              <div style={{textAlign:"left",lineHeight:1.6,fontSize:13}}>
+                <span style={{color:GOLD2,fontWeight:800}}>선천 체질 특징: </span>
+                <span style={{color:WHITE}}>{serverResult.constitution}입니다.</span>
+                <div style={{color:MUTED,fontSize:11,marginTop:8,lineHeight:1.4}}>
+                  ※ 태어난 생년월일시를 바탕으로 분석한 선천적인 신체 에너지 대사 성향입니다.
                 </div>
               </div>
             ) : (
