@@ -1192,7 +1192,7 @@ body{background:#060a14;font-family:'Noto Sans KR',sans-serif;color:#f0f4ff;padd
           </div>
         ))}
         <div style={{textAlign:"center",marginTop:16}}>
-          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" style={{display:"inline-block",padding:"12px 28px",borderRadius:12,background:"rgba(255,0,0,0.15)",border:"1px solid rgba(255,0,0,0.3)",color:"#ff6b6b",fontSize:13,fontWeight:700,textDecoration:"none"}}>
+          <a href="https://youtube.com/@physicalup333?si=OjvKxEWW6AE-Tsgm" target="_blank" rel="noopener noreferrer" style={{display:"inline-block",padding:"12px 28px",borderRadius:12,background:"rgba(255,0,0,0.15)",border:"1px solid rgba(255,0,0,0.3)",color:"#ff6b6b",fontSize:13,fontWeight:700,textDecoration:"none"}}>
             📺 유튜브 채널 바로가기 →
           </a>
         </div>
