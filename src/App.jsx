@@ -1029,6 +1029,10 @@ export default function App() {
       alert("아이 몸무게를 입력해 주세요.");
       return;
     }
+    if (!sports.trim()) {
+      alert("운동 종목을 입력해 주세요. (예: 야구, 축구)");
+      return;
+    }
     
     // 만약 이미 24개 문항이 모두 다 차 있다면 바로 결과로 이동
     if (Object.keys(pAns).length === parentQuestions.length) {
@@ -1554,6 +1558,20 @@ function saveHtml(){
               <div style={{color:MUTED,fontSize:10,marginBottom:6}}>몸무게 (kg)</div>
               <input type="number" value={weightVal} onChange={e=>updateWeight(e.target.value)} placeholder="38"
                 style={{width:"100%",background:"transparent",border:"none",color:weightVal?GOLD2:WHITE,fontSize:14,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
+            </div>
+          </div>
+
+          {/* 운동 종목 / 세부 포지션 */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
+            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${sports?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
+              <div style={{color:MUTED,fontSize:10,marginBottom:6}}>운동 종목 <span style={{fontSize:8}}>(필수)</span></div>
+              <input type="text" value={sports} onChange={e=>setSports(e.target.value)} placeholder="예: 야구, 축구"
+                style={{width:"100%",background:"transparent",border:"none",color:sports?GOLD2:WHITE,fontSize:13,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
+            </div>
+            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${position?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
+              <div style={{color:MUTED,fontSize:10,marginBottom:6}}>포지션 <span style={{fontSize:8}}>(선택)</span></div>
+              <input type="text" value={position} onChange={e=>setPosition(e.target.value)} placeholder="예: 내야수, 공격수"
+                style={{width:"100%",background:"transparent",border:"none",color:position?GOLD2:WHITE,fontSize:13,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
             </div>
           </div>
 
