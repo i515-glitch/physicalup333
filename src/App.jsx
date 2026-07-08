@@ -1718,10 +1718,10 @@ function saveHtml(){
             )}
           </div>
 
-          {/* 3축 게이지 (완전 공개) */}
-          <div style={cardStyle}>
+          {/* 3축 게이지 (잠금 처리) */}
+          <div style={{...cardStyle,position:"relative",overflow:"hidden"}}>
             <div style={{color:GOLD,fontSize:11,marginBottom:14,fontWeight:700,letterSpacing:1,borderBottom:"1px solid rgba(201,168,76,0.15)",paddingBottom:10}}>⚾ 3축 BIO CODE 분석</div>
-            <div>
+            <div style={{filter:"blur(4.5px)",opacity:0.5,userSelect:"none"}}>
               {axes.map(ax=>(
                 <div key={ax.label} style={{marginBottom:12}}>
                   <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
@@ -1733,6 +1733,12 @@ function saveHtml(){
                   </div>
                 </div>
               ))}
+            </div>
+            {/* 자물쇠 오버레이 */}
+            <div style={{position:"absolute",inset:0,top:40,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(13,27,62,0.4)"}}>
+              <span style={{fontSize:20,marginBottom:6}}>🔒</span>
+              <span style={{color:GOLD2,fontSize:12,fontWeight:800}}>선천 · 대사 · 생활 3축 상세 레벨 잠김</span>
+              <span style={{color:MUTED,fontSize:10,marginTop:2}}>프리미엄 보고서에서 분석 수치가 공개됩니다</span>
             </div>
           </div>
 
