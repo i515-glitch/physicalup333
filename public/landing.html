@@ -432,12 +432,33 @@ function drawStaticChart(containerId, key, myVal, myExact, unit) {
 
 // ───── 2. 3D 매트릭스 큐브 자동 순환 ─────
 const cubeInfo={
-  '111':{nick:'텅빈창고',type:'burner',tip:'소화 흡수 능력이 막혀 영양이 체내에 축적되지 못하는 상태. 장내 유익균 배양과 소화효소 배합이 최우선 해결 과제입니다.'},
-  '122':{nick:'날렵한 선수',type:'burner',tip:'대사와 연소는 활발하지만 뼈대 프레임이 가벼워 마른 상태. 근육량 증가를 위한 기습 단백질 급식 관리가 유효합니다.'},
-  '222':{nick:'완벽균형형',type:'balanced',tip:'선천적 뼈대, 소화 흡수율, 환경 습관 삼박자가 완벽히 수평을 이룬 최고 효율 상태. 성장의 최적 정점기입니다.'},
-  '232':{nick:'선수 체형의 정석',type:'balanced',tip:'흡수율과 신체 가동 에너지가 뛰어나 훈련량에 따라 퍼포먼스가 직선 상승하는 최상의 엘리트형 체질입니다.'},
-  '322':{nick:'엘리트 프레임',type:'balanced',tip:'타고난 뼈대와 위장 흡수 능력이 우수해 경기장에서 기싸움으로 밀리지 않는 묵직한 하드웨어를 보유하고 있습니다.'},
-  '333':{nick:'완전저장고',type:'storer',tip:'성장 에너지가 몸집을 키우는 쪽으로만 집중되어 과지방 위험이 있습니다. 중강도 유산소 훈련 배치와 탄수화물 제한이 권장됩니다.'}
+  '111':{nick:'무한성장 기대주',main:'소비형',sub:'결핍형',type:'burner',tip:'선천 뼈대, 소화 흡수율, 활동량 모두 최하 수준입니다. 장내 미생물과 소화효소 보완을 통해 흡수 기능부터 정상화시키는 것이 최우선 과제입니다.'},
+  '112':{nick:'우리동네 골목대장',main:'소비형',sub:'결핍형',type:'burner',tip:'소화 흡수가 정체되어 체중이 늘지 않지만 활동량은 보통입니다. 유산균 섭취 및 하루 5-6회 소량 분할 식사로 흡수 필터를 뚫어주어야 합니다.'},
+  '113':{nick:'상큼발랄 팅커벨',main:'소비형',sub:'역류형',type:'burner',tip:'선천적으로 가볍고 소화 흡수력이 떨어지는 반면 활동량은 과다합니다. 과격한 유산소를 제한하고 운동 직후 단백질+미네랄을 공급해야 합니다.'},
+  '121':{nick:'출동준비 비행기',main:'소비형',sub:'결핍형',type:'burner',tip:'흡수와 대사는 보통이나 신체 프레임과 활동량이 약합니다. 식사 30분 전 미온수로 위장관 운동성을 돋우고 영양 보충을 꾸준히 늘리세요.'},
+  '122':{nick:'작은고추 매운맛',main:'소비형',sub:'버너형',type:'burner',tip:'기초대사와 신체 연소는 활발하나 타고난 뼈대가 얇고 가볍습니다. 근육 성장을 위해 식사 직후 아미노산 및 비타민 B군 보충을 권장합니다.'},
+  '123':{nick:'의지만렙 작은거인',main:'소비형',sub:'버너형',type:'burner',tip:'가벼운 뼈대에 비해 신체 연소율과 활동량이 매우 높습니다. 땀으로 손실되는 전해질과 수분을 보충하고 취침 전 칼슘 공급을 극대화하세요.'},
+  '131':{nick:'엔진빵빵 클래식카',main:'소비형',sub:'빈그릇형',type:'burner',tip:'선천 뼈대는 약하나 후천 흡수율은 양호합니다. 다만 신체 대사 순환이 다소 저하되어 있으므로 가벼운 저항 운동을 통한 순환 자극이 좋습니다.'},
+  '132':{nick:'알짜배기 깡다구',main:'소비형',sub:'버너형',type:'burner',tip:'영양 흡수율은 좋으나 타고난 골격이 얇고 활동 에너지 소모량이 큽니다. 고칼로리 밀도 간식(견과류, 아보카도)을 추가 공급해 증량을 돕습니다.'},
+  '133':{nick:'대기만성 반전매력',main:'소비형',sub:'버너형',type:'burner',tip:'골격은 가볍고 영양 연소와 활동량은 최고조에 달해 체중이 붙지 않습니다. 탄수화물/단백질 비율을 상향 조정해 소모량을 초과해 공급하세요.'},
+  '211':{nick:'비상임박 유망주',main:'소비형',sub:'결핍형',type:'burner',tip:'골격과 뼈대는 보통이지만 소화 흡수 능력이 매우 정체되어 있습니다. 유산균과 소화효소제를 식사 직전 공급하여 영양 누수를 해결하는 것이 관건입니다.'},
+  '212':{nick:'내일향한 숨고르기',main:'소비형',sub:'역류형',type:'burner',tip:'보통의 골격이나 대사 흡수 효율이 낮아 근육량이 잘 늘지 않습니다. 따뜻하고 부드러운 음식 위주로 섭취하며 차가운 식음료를 배제해야 합니다.'},
+  '213':{nick:'안절부절 바른생활',main:'소비형',sub:'역류형',type:'burner',tip:'대사 흡수 수준은 매우 낮으나 활동 자극은 심합니다. 성장기 뼈 성장에 필요한 미네랄 대사를 극대화하기 위해 아연과 비타민 D를 동시 공급하세요.'},
+  '221':{nick:'여유만만 도련님',main:'균형형',sub:'항온형',type:'balanced',tip:'선천 골격과 소화 흡수는 보통 수준이나 일상 행동량이 낮아 성장이 정체됩니다. 규칙적인 수면 루틴과 전신 코어 자극 훈련을 추가해 성장을 유도하세요.'},
+  '222':{nick:'이세계의 무게중심',main:'균형형',sub:'항온형',type:'balanced',tip:'선천 뼈대, 소화 흡수율, 생활 루틴 삼박자가 완벽히 조화를 이룬 상태입니다. 현재의 고른 영양 균형 식단과 일정한 운동량을 일정하게 유지하세요.'},
+  '223':{nick:'바른생활 부반장',main:'소비형',sub:'활화산형',type:'burner',tip:'골격과 대사는 평이하지만 엄청난 일상 소모량을 지닌 활화산형입니다. 운동 후 소모되는 글리코겐 충전을 위해 골든타임 내 가래떡, 꿀물 등을 급식하세요.'},
+  '231':{nick:'폭풍흡수 먹방러',main:'소비형',sub:'빈그릇형',type:'burner',tip:'소화 흡수율은 뛰어난 먹방 체질이지만 일상 신체 활동이 정적입니다. 섭취 영양이 체성분(근육)으로 조화롭게 합성되도록 비타민 B군 대사를 보조하세요.'},
+  '232':{nick:'뷔페 환영 보일러',main:'소비형',sub:'활화산형',type:'burner',tip:'뛰어난 후천 영양 소화력과 활발한 신체 대사를 자랑합니다. 잉여 에너지가 골격근량 증가로 온전히 이어지도록 중강도 저항성 스쿼트 훈련을 병행하세요.'},
+  '233':{nick:'노력형 디젤엔진',main:'소비형',sub:'활화산형',type:'burner',tip:'뛰어난 위장 소화 흡수율과 폭발적인 신체 연소 능력을 동시에 보유하고 있습니다. 운동선수 최적 체질이나 대사 소모량이 크므로 고단백 보충이 핵심입니다.'},
+  '311':{nick:'파업선언 장군님',main:'저장형',sub:'저장고형',type:'storer',tip:'타고난 프레임과 뼈대는 장대하나 위장 흡수 능력이 현저히 저하된 저장고 체질입니다. 장내 미생물 환경 복구 및 식사 중 수분 섭취 최소화를 권장합니다.'},
+  '312':{nick:'둑형 · 멘탈소심 거인',main:'저장형',sub:'둑형',type:'storer',tip:'선천적으로 큰 체격을 지녔으나 영양 흡수가 불안정하고 운동 자극이 부족합니다. 플라이오메트릭 점프 훈련으로 뼈 연골 성장판 혈류를 자극해야 합니다.'},
+  '313':{nick:'예민보스 모범생',main:'소비형',sub:'역류형',type:'burner',tip:'타고난 장대 골격에 비해 대사 흡수 필터가 완전히 막혀 있고 신경이 예민합니다. 위장 평활근 수축 방지를 위해 마그네슘과 따뜻한 물 공급이 필수입니다.'},
+  '321':{nick:'이중생활 천재선수',main:'저장형',sub:'저장고형',type:'storer',tip:'튼튼한 하드웨어와 적절한 신체 대사를 지녔으나 후천적 영양 흡수력이 살짝 막힌 상태입니다. 천천히 꼭꼭 씹어 먹는 습관으로 위장관 효소 분비를 유도하세요.'},
+  '322':{nick:'성장계의 엄친아',main:'저장형',sub:'둑형',type:'storer',tip:'선천 골격이 거대하고 대사 순환도 보통 수준입니다. 다만 성장의 마지막 조율을 위해 충분한 수면 시간 확보와 종합비타민 공급으로 대사를 지원하세요.'},
+  '323':{nick:'직진형 에너자이저',main:'저장형',sub:'둑형',type:'storer',tip:'장대한 골격과 엄청난 에너지를 쏟아내는 체형입니다. 체지방만 늘지 않도록 저탄고단 식단을 유지하고 가벼운 인터벌 트레이닝으로 순발력을 키우세요.'},
+  '331':{nick:'불타오른 야생마',main:'저장형',sub:'저장고형',type:'storer',tip:'뼈대도 우수하고 영양 흡수율도 높지만 신체 가동이 다소 갇혀 있습니다. 섭취한 칼로리가 체지방이 아닌 골격근으로 가도록 저항성 근력 위주의 운동을 배치하세요.'},
+  '332':{nick:'성장가능 가치주',main:'균형형',sub:'엔진형',type:'balanced',tip:'선천적 뼈대 발달과 후천 소화력 모두 장대해 먹는 대로 뼈와 근육으로 저장됩니다. 우수 선수의 뼈 미네랄 충전을 위해 칼슘과 비타민 D를 상시 처방하세요.'},
+  '333':{nick:'성장판 프리패스상',main:'균형형',sub:'엔진형',type:'balanced',tip:'선천적 체격 잠재력, 후천 영양 소화 흡수율, 신체 활동 가동성 삼박자가 모두 최상위인 엔진 체질입니다. 칼로리와 고단백 공급량을 아낌없이 보급하세요.'}
 };
 const tc={
   burner:{f:'rgba(79,207,160,0.15)',s:'rgba(79,207,160,0.5)',t:'#4fcfa0',n:'BURNER',k:'소비형'},
@@ -527,17 +548,21 @@ function showCubeInfo(code) {
   if (!d) return;
   const c = tc[d.type];
   document.getElementById('cubeInfo').innerHTML = `
-    <div style="font-family:var(--mono);font-size:32px;font-weight:700;letter-spacing:5px;color:${c.t};margin-bottom:6px;">${code}</div>
-    <div style="font-size:14px;font-weight:700;color:var(--white);margin-bottom:2px;">${c.k} · ${d.nick}</div>
-    <div style="font-family:var(--mono);font-size:9px;color:var(--muted2);margin-bottom:12px;letter-spacing:1px;">${c.n}</div>
+    <div style="font-family:var(--mono);font-size:32px;font-weight:700;letter-spacing:5px;color:${c.t};margin-bottom:4px;">${code}</div>
+    <div style="font-size:15px;font-weight:900;color:var(--white);margin-bottom:6px;">${d.nick}</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:12px;display:flex;gap:6px;font-weight:500;">
+      <span style="color:${c.t};">[중분류] ${d.main}</span>
+      <span style="color:var(--muted2)">|</span>
+      <span>[소분류] ${d.sub}</span>
+    </div>
     <div style="display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap;">
       ${[['선천(유전)',0],['대사(흡수)',1],['생활(루틴)',2]].map(([n,i])=>`<span style="font-family:'Noto Sans KR';padding:3px 8px;border-radius:4px;font-size:9px;font-weight:700;background:${c.f};color:${c.t};border:0.5px solid ${c.s};">${n} 레벨 ${code[i]}</span>`).join('')}
     </div>
     <div style="color:var(--muted);font-size:11.5px;line-height:1.8;border-top:1px solid var(--line);padding-top:10px;">${d.tip}</div>`;
 }
 
-// 자동 데모 순환
-const promoCodes = ['111', '122', '222', '232', '322', '333'];
+// 자동 데모 순환 (27가지 전체 순환)
+const promoCodes = Object.keys(cubeInfo);
 let promoIdx = 0;
 function cycleDemo() {
   const code = promoCodes[promoIdx];

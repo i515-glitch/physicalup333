@@ -1441,13 +1441,13 @@ function saveHtml(){
             <div style={{marginBottom:10}}>
               <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:10,flexWrap:"wrap"}}>
                 <div style={{display:"flex",alignItems:"center",gap:4,background:"rgba(201,168,76,0.08)",border:"1px solid rgba(201,168,76,0.3)",borderRadius:20,padding:"4px 14px"}}>
-                  <span style={{fontSize:15}}>{mi.emoji}</span>
-                  <span style={{color:GOLD2,fontSize:15,fontWeight:800}}>{result.main}</span>
+                  <span style={{fontSize:13}}>{mi.emoji}</span>
+                  <span style={{color:GOLD2,fontSize:13,fontWeight:800}}>중분류: {result.main}</span>
                 </div>
                 <div style={{width:1,height:20,background:"rgba(255,255,255,0.1)"}}/>
                 <div style={{display:"inline-block",padding:"4px 16px",borderRadius:20,background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)",position:"relative",overflow:"hidden"}}>
-                  <span style={{color:MUTED,fontSize:13,fontWeight:700,letterSpacing:1,filter:"blur(3.5px)",userSelect:"none"}}>🔒 캐릭터명 잠금</span>
-                  <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",color:GOLD,fontSize:11,fontWeight:800}}>🔒 세부 체질 잠김</div>
+                  <span style={{color:MUTED,fontSize:12,fontWeight:700,letterSpacing:1,filter:"blur(3.5px)",userSelect:"none"}}>🔒 소분류: 캐릭터명 잠금</span>
+                  <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",color:GOLD,fontSize:11,fontWeight:800}}>🔒 소분류 잠김</div>
                 </div>
               </div>
             </div>
