@@ -1221,7 +1221,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
     
-    if (targetName !== "신지오") walkAndReplace(document.body, "신지오", targetName);
+    const targetNickname = targetName.length > 2 ? targetName.substring(targetName.length - 2) : targetName;
+    const targetHeightVal = Math.round(expHeightNow + 8.0);
+    
+    // Replace text values
+    walkAndReplace(document.body, "현재 165cm", `현재 ${curHeight}cm`);
+    walkAndReplace(document.body, "벌써 175cm를 넘습니다", `벌써 ${targetHeightVal}cm를 넘습니다`);
+    walkAndReplace(document.body, "1년 안에 175cm", `1년 안에 ${targetHeightVal}cm`);
+    walkAndReplace(document.body, "177.5cm", `${geneticAdult.toFixed(1)}cm`);
+    
+    if (targetName !== "신지오") {
+        walkAndReplace(document.body, "신지오", targetName);
+        walkAndReplace(document.body, "지오", targetNickname);
+    }
     if (targetSports !== "야구") walkAndReplace(document.body, "야구", targetSports);
     if (targetPosition !== "내야수") walkAndReplace(document.body, "내야수", targetPosition);
     if (constitution && constitution !== "이화-발산형 (소양인)") {
@@ -1229,6 +1241,91 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     if (lagCause && lagCause !== "흡수력") {
         walkAndReplace(document.body, "흡수력", lagCause);
+    }
+
+    // 1. 또래 에이스 대비 피지컬 격차 테이블 동적 업데이트
+    let aceTable = null;
+    document.querySelectorAll("h3").forEach(h3 => {
+        if (h3.innerText.includes("또래 에이스 대비 피지컬 격차")) {
+            let next = h3.nextElementSibling;
+            while (next && next.tagName !== "TABLE") {
+                next = next.nextElementSibling;
+            }
+            if (next) aceTable = next;
+        }
+    });
+    if (aceTable) {
+        const rows = aceTable.querySelectorAll("tbody tr");
+        rows.forEach(row => {
+            const item = row.querySelector("td:nth-child(1)").innerText.trim();
+            const cells = row.querySelectorAll("td");
+            if (cells.length >= 4) {
+                if (item.includes("신장")) {
+                    cells[1].innerText = `${curHeight} cm`;
+                    cells[2].innerText = `${targetHeightVal} cm`;
+                    const gap = curHeight - targetHeightVal;
+                    cells[3].innerHTML = `<b style="color:${gap >= 0 ? 'var(--pos)' : 'var(--neg)'};">${gap >= 0 ? '+' : ''}${gap.toFixed(1)} cm</b>`;
+                } else if (item.includes("체중")) {
+                    cells[1].innerText = `${curWeight} kg`;
+                    const targetWeightVal = Math.round(curWeight + 10.0);
+                    cells[2].innerText = `${targetWeightVal} kg`;
+                    const gap = curWeight - targetWeightVal;
+                    cells[3].innerHTML = `<b style="color:${gap >= 0 ? 'var(--pos)' : 'var(--neg)'};">${gap >= 0 ? '+' : ''}${gap.toFixed(1)} kg</b>`;
+                } else if (item.includes("골격근량")) {
+                    cells[1].innerText = `${skeletalMuscle} kg`;
+                    const targetMuscleVal = Math.round(skeletalMuscle + 6.0);
+                    cells[2].innerText = `${targetMuscleVal} kg`;
+                    const gap = skeletalMuscle - targetMuscleVal;
+                    cells[3].innerHTML = `<b style="color:${gap >= 0 ? 'var(--pos)' : 'var(--neg)'};">${gap >= 0 ? '+' : ''}${gap.toFixed(1)} kg</b>`;
+                }
+            }
+        });
+    }
+
+    // 2. 1년 뒤 도달 약속 수치 테이블 동적 업데이트
+    let promiseTable = null;
+    document.querySelectorAll("h3").forEach(h3 => {
+        if (h3.innerText.includes("1년 뒤 도달 약속 수치")) {
+            let next = h3.nextElementSibling;
+            while (next && next.tagName !== "TABLE") {
+                next = next.nextElementSibling;
+            }
+            if (next) promiseTable = next;
+        }
+    });
+    if (promiseTable) {
+        const rows = promiseTable.querySelectorAll("tbody tr");
+        rows.forEach(row => {
+            const item = row.querySelector("td:nth-child(1)").innerText.trim();
+            const cells = row.querySelectorAll("td");
+            if (cells.length >= 4) {
+                const codeParts = biocode.split("-").map(Number);
+                const absNum = codeParts[0] || 2;
+                if (item.includes("신장")) {
+                    cells[1].innerText = `${curHeight.toFixed(1)} cm`;
+                    const minTarget = curHeight + (absNum === 1 ? 7.0 : (absNum === 3 ? 5.0 : 6.0));
+                    const maxTarget = curHeight + (absNum === 1 ? 8.5 : (absNum === 3 ? 6.0 : 7.5));
+                    cells[2].innerText = `${minTarget.toFixed(1)} ~ ${maxTarget.toFixed(1)} cm`;
+                    cells[3].innerHTML = `<b style="color:var(--pos);">+${(minTarget - curHeight).toFixed(1)} ~ +${(maxTarget - curHeight).toFixed(1)} cm</b>`;
+                } else if (item.includes("체중")) {
+                    cells[1].innerText = `${curWeight.toFixed(1)} kg`;
+                    const minTarget = curWeight + (absNum === 1 ? 10.0 : 8.0);
+                    const maxTarget = curWeight + (absNum === 1 ? 12.0 : 10.0);
+                    cells[2].innerText = `${minTarget.toFixed(1)} ~ ${maxTarget.toFixed(1)} kg`;
+                    cells[3].innerHTML = `<b style="color:var(--pos);">+${(minTarget - curWeight).toFixed(1)} ~ +${(maxTarget - curWeight).toFixed(1)} kg</b>`;
+                } else if (item.includes("골격근량")) {
+                    cells[1].innerText = `${skeletalMuscle.toFixed(1)} kg`;
+                    const minTarget = skeletalMuscle + (absNum === 1 ? 5.5 : 4.5);
+                    const maxTarget = skeletalMuscle + (absNum === 1 ? 7.2 : 6.0);
+                    cells[2].innerText = `${minTarget.toFixed(1)} ~ ${maxTarget.toFixed(1)} kg`;
+                    cells[3].innerHTML = `<b style="color:var(--pos);">+${(minTarget - skeletalMuscle).toFixed(1)} ~ +${(maxTarget - skeletalMuscle).toFixed(1)} kg</b>`;
+                } else if (item.includes("BioCode")) {
+                    cells[1].innerText = `${biocode} (${persona})`;
+                    const currentMain = biocode.split("-")[0];
+                    cells[2].innerText = `${currentMain} - 2 - 3 ➡️ ${currentMain} - 3 - 3`;
+                }
+            }
+        });
     }
 
     function calculateManAge(birthStr) {
