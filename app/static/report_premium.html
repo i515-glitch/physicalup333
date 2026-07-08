@@ -1314,13 +1314,50 @@ document.addEventListener("DOMContentLoaded", async () => {
                     cells[3].innerHTML = `<b style="color:${gap >= 0 ? 'var(--pos)' : 'var(--neg)'};">${gap >= 0 ? '+' : ''}${gap.toFixed(1)} cm</b>`;
                 } else if (item.includes("체중")) {
                     cells[1].innerText = `${curWeight} kg`;
-                    const targetWeightVal = Math.round(curWeight + 10.0);
+                    const birthStr = inputs.birth_date || "";
+                    let ageYears = 10;
+                    if (birthStr) {
+                        const birthDate = new Date(birthStr);
+                        const today = new Date();
+                        let age = today.getFullYear() - birthDate.getFullYear();
+                        if (today.getMonth() < birthDate.getMonth() || (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) {
+                            age--;
+                        }
+                        ageYears = age;
+                    }
+                    const gradeStr = inputs.grade || "";
+                    let weightOffset = 108;
+                    if (gradeStr.includes("고") || (gradeStr === "" && ageYears >= 15)) {
+                        weightOffset = 100;
+                    } else if (gradeStr.includes("중") || (gradeStr === "" && ageYears >= 12)) {
+                        weightOffset = 105;
+                    }
+                    const targetWeightVal = Math.round(curHeight - weightOffset);
                     cells[2].innerText = `${targetWeightVal} kg`;
                     const gap = curWeight - targetWeightVal;
                     cells[3].innerHTML = `<b style="color:${gap >= 0 ? 'var(--pos)' : 'var(--neg)'};">${gap >= 0 ? '+' : ''}${gap.toFixed(1)} kg</b>`;
                 } else if (item.includes("골격근량")) {
                     cells[1].innerText = `${skeletalMuscle} kg`;
-                    const targetMuscleVal = Math.round(skeletalMuscle + 6.0);
+                    const birthStr = inputs.birth_date || "";
+                    let ageYears = 10;
+                    if (birthStr) {
+                        const birthDate = new Date(birthStr);
+                        const today = new Date();
+                        let age = today.getFullYear() - birthDate.getFullYear();
+                        if (today.getMonth() < birthDate.getMonth() || (today.getMonth() === birthDate.getMonth() && today.getDate() < birthDate.getDate())) {
+                            age--;
+                        }
+                        ageYears = age;
+                    }
+                    const gradeStr = inputs.grade || "";
+                    let weightOffset = 108;
+                    if (gradeStr.includes("고") || (gradeStr === "" && ageYears >= 15)) {
+                        weightOffset = 100;
+                    } else if (gradeStr.includes("중") || (gradeStr === "" && ageYears >= 12)) {
+                        weightOffset = 105;
+                    }
+                    const targetWeightVal = Math.round(curHeight - weightOffset);
+                    const targetMuscleVal = Math.round(targetWeightVal * 0.50 * 10) / 10;
                     cells[2].innerText = `${targetMuscleVal} kg`;
                     const gap = skeletalMuscle - targetMuscleVal;
                     cells[3].innerHTML = `<b style="color:${gap >= 0 ? 'var(--pos)' : 'var(--neg)'};">${gap >= 0 ? '+' : ''}${gap.toFixed(1)} kg</b>`;
