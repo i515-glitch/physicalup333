@@ -140,7 +140,7 @@ def calculate_biocode(input_data):
     # --- 2. 대사 점수 (Metabolism Code - 35점 만점) ---
     
     # 2-1. 위장설문 (17.5점 만점)
-    digest_score = (absorption_score / 45.0) * 17.5
+    digest_score = (absorption_score / 40.0) * 17.5
     
     # 2-2. 인바디 대사 (17.5점 만점)
     muscle_ratio = (muscle / weight) * 100.0
@@ -174,10 +174,10 @@ def calculate_biocode(input_data):
     # --- 3. 생활 점수 (Behavior Code - 25점 만점) ---
     
     # 3-1. 수면/활동설문 (17.5점 만점)
-    sleep_act_score = (activity_score / 45.0) * 17.5
+    sleep_act_score = (activity_score / 40.0) * 17.5
     
     # 3-2. 위장설문 생활 가산 (2.5점 만점)
-    digest_life_score = (absorption_score / 45.0) * 2.5
+    digest_life_score = (absorption_score / 40.0) * 2.5
     
     # 3-3. 인바디 생활 가산 (5.0점 만점)
     inbody_life_score = (inbody_total_pct / 100.0) * 5.0
