@@ -967,14 +967,31 @@
       <div style="font-size: 9.5pt; font-weight: 700; color: var(--navy); margin-bottom: 5px;"><i class="fa-solid fa-bed"></i> 피지컬 운동 · 수면 관리 소견</div>
       <div class="ai-comment-workout" style="font-size: 8.8pt; color: var(--ink2); line-height: 1.6; text-align: justify; white-space: pre-wrap; letter-spacing: -0.2px;">운동 소견 로딩 실패</div>
     </div>
+  </div>
+  <div class="pf">
+    <span class="conf">Confidential</span>
+    <span class="pinfo-text">13세 · 중2 · 야구 내야수 신지오</span>
+  </div>
+</div>
 
-    <!-- 최종 합의 판결문 및 서명란 -->
-    <div class="verdict" style="margin-top:15px; padding: 10px 14px;"><div class="vq" style="font-size: 10pt; line-height: 1.6;">현재 상태는 <em>2·1·2 · 내일향한 숨고르기</em>입니다.<br>선천적 뼈대는 탄탄하나 <em>대사 흡수(지금의 몸)</em>가 유일하게 막힌 병목 현상 상태이며,<br>이 대사 필터를 뚫어내면 최종 내야수 이상형인 <em>2·3·3 · 고효율 디젤엔진</em>으로 성장할 것입니다.</div></div>
-    
-    <p class="serif" style="text-align:center;font-size:10pt;color:var(--gold-d);margin-top:10px;margin-bottom:8px;">우리는 아이의 몸을 판정하지 않습니다. 설명하고, 함께 바꿉니다.<br>유전은 60% 설계도일 뿐, 후천 40%를 1년간 함께 채우겠습니다.</p>
-    
-    <div class="seal-wrap" style="margin-top:5px;">
-    <div class="promise-board-container" style="margin-top:15px; display: block; width: 100%;">
+<div class="sheet">
+  <div class="ph">
+    <span class="crest-sm"><i></i>PHYSICAL UP</span>
+    <span class="doc-id">피지컬 최종 평결 & 처방</span>
+  </div>
+  <div class="section">
+    <div class="body">
+      <div class="chapter"><span class="cn">6</span><span class="ck">피지컬 최종 평결 및 집중 처방 · Final Verdict & Prescription</span></div>
+      <h2>피지컬 집중 처방전 — 최종 평결</h2>
+      <p class="lead">선수 맞춤형 피지컬 솔루션과 향후 1년간 집중적으로 도달해야 할 핵심 목표치입니다.</p>
+
+      <!-- 최종 합의 판결문 및 서명란 -->
+      <div class="verdict" style="margin-top:15px; padding: 12px 16px;"><div class="vq" style="font-size: 10pt; line-height: 1.6;">현재 상태는 <em>2·1·2 · 내일향한 숨고르기</em>입니다.<br>선천적 뼈대는 탄탄하나 <em>대사 흡수(지금의 몸)</em>가 유일하게 막힌 병목 현상 상태이며,<br>이 대사 필터를 뚫어내면 최종 내야수 이상형인 <em>2·3·3 · 고효율 디젤엔진</em>으로 성장할 것입니다.</div></div>
+      
+      <p class="serif" style="text-align:center;font-size:10pt;color:var(--gold-d);margin-top:15px;margin-bottom:12px;">우리는 아이의 몸을 판정하지 않습니다. 설명하고, 함께 바꿉니다.<br>유전은 60% 설계도일 뿐, 후천 40%를 1년간 함께 채우겠습니다.</p>
+
+      <div class="seal-wrap" style="margin-top:5px;">
+        <div class="promise-board-container" style="margin-top:15px; display: block; width: 100%;">
                     <!-- 1년 정량 목표 수치 패널 (v14.1 프리미엄 보드 스타일) -->
                     <div style="border:1px solid rgba(176,138,62,.4); border-radius:9px; padding:12px; background:var(--page); margin:12px 0; box-shadow:0 1px 6px rgba(0,0,0,0.05); text-align:left;">
                         <div style="font-size: 10pt; font-weight: 700; color: var(--navy); margin-bottom: 8px; text-align: center; letter-spacing: 0.5px;">🎯 향후 1년간 1차 피지컬 도달 목표치</div>
@@ -2232,39 +2249,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (nutritionEl) nutritionEl.innerHTML = parseMarkdown(nutritionPart || "영양 소견 로딩 실패");
             if (workoutEl) workoutEl.innerHTML = parseMarkdown(workoutPart || "운동 소견 로딩 실패");
 
-            const bodyParts = parts.slice(1);
-            if (bodyParts.length > 0) {
-                let paragraphsQueue = [];
-                bodyParts.forEach(part => part.split(String.fromCharCode(10)).forEach(line => { if (line.trim()) paragraphsQueue.push(line.trim()); }));
-                const MAX_CHARS_PER_PAGE = 850;
-                let currentPageNum = 10, currentSheetEl = null, currentBodyContentEl = null, currentCharsCount = 0;
-                function createNewSheet(pageNum, isFirst = false) {
-                    const sheet = document.createElement("div");
-                    sheet.className = "sheet temp-ai-sheet";
-                    sheet.innerHTML = `<div class="ph"><span class="crest-sm"><i></i>PHYSICAL UP</span><span class="doc-id">PU-333-0418 · 소견</span></div><div class="section"><div class="body" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 250mm;"><div class="page-main-body"><div class="content-area"><div class="chapter"><span class="cn">10</span><span class="ck">종합 솔루션 · 피지컬업 소견</span></div><h2 style="color: var(--gold-d); margin-bottom: 18px;">피지컬업 맞춤소견</h2><div class="ai-comment-content" style="white-space: pre-wrap; margin-top: 15px; letter-spacing: -0.2px; font-size: 10.5pt; line-height: 1.7; color: var(--ink2);"></div></div><div class="bottom-seal-area" style="display: none; margin-top: 25px; padding-top: 15px; border-top: 1px solid var(--line2);"></div></div><div class="pf" style="margin-top: auto; padding-top: 8px;"><span class="conf">Confidential</span><span class="pinfo-text">13세 · 중2 · 야구 내야수 신지오</span></div></div></div>`;
-                    return sheet;
-                }
-                let lastInsertedSheet = parentSheet;
-                paragraphsQueue.forEach(blockText => {
-                    if (!currentSheetEl || (currentCharsCount + blockText.length > MAX_CHARS_PER_PAGE)) {
-                        currentPageNum++;
-                        const newSheet = createNewSheet(currentPageNum);
-                        if (lastInsertedSheet && lastInsertedSheet.parentNode) lastInsertedSheet.parentNode.insertBefore(newSheet, lastInsertedSheet.nextSibling);
-                        lastInsertedSheet = newSheet;
-                        currentSheetEl = newSheet;
-                        currentBodyContentEl = newSheet.querySelector(".ai-comment-content");
-                        currentCharsCount = 0;
-                    }
-                    if (currentBodyContentEl) {
-                        currentBodyContentEl.innerHTML += parseMarkdown(blockText) + "<br><br>";
-                        currentCharsCount += blockText.length;
-                    }
-                });
-                if (currentSheetEl) {
-                    const bottomSeal = currentSheetEl.querySelector(".bottom-seal-area");
-                    if (bottomSeal) { bottomSeal.style.display = "block"; bottomSeal.innerHTML = `<div class="seal-wrap" style="margin-top: 15px; display: flex; justify-content: flex-end; align-items: center; gap: 15px;"><div class="seal-text" style="font-size: 8.5pt; color: var(--ink3); text-align: right;"><b>PHYSICAL UP 333</b><br>(engine v15.0)</div><div class="seal" style="width: 76px; height: 76px; border: 2.5px solid var(--neg); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--neg); transform: rotate(-10deg);"><span style="font-size: 6pt;">PHYSICAL UP</span><span style="font-size: 13pt; font-weight: 900;">333</span></div></div>`; }
-                }
-            }
+
             const sealArea = document.querySelector(".seal-wrap");
             if (sealArea) {
                 const codeParts = biocode.split("-").map(Number);
