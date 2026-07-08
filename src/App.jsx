@@ -1735,6 +1735,48 @@ function saveHtml(){
                 );
               })}
 
+              {/* 종합 성장 지표 진단 소견 */}
+              <div style={{
+                marginTop:16,padding:"12px 14px",background:"rgba(255,255,255,0.02)",
+                borderRadius:12,border:"1px solid rgba(255,255,255,0.04)",textAlign:"left"
+              }}>
+                <div style={{color:GOLD2,fontSize:11,fontWeight:700,marginBottom:8}}>📋 종합 성장 지표 진단 소견</div>
+                
+                <div style={{display:"flex",flexDirection:"column",gap:10,fontSize:13,lineHeight:1.6,color:WHITE}}>
+                  {/* 키 상태 */}
+                  <div>
+                    <span style={{color:GOLD,fontWeight:700}}>• 신장 분포: </span>
+                    {gd.hPct >= 90 ? 
+                      `또래 백분위 상위 10% 이내(최상위권)에 속합니다. 골격 성장 발달 속도가 매우 우수하며 타고난 신장 잠재력을 잘 발현하고 있습니다.` : 
+                     gd.hPct >= 75 ? 
+                      `또래 백분위 상위 25% 이내(상위권)에 속합니다. 또래 평균보다 우수한 성장 궤적을 보이고 있으며, 안정적인 골격 발달이 이루어지고 있습니다.` : 
+                     gd.hPct >= 25 ? 
+                      `또래 백분위 중간 범위(상위 25% ~ 75%)에 속하여 지극히 표준적인 성장 속도로 자라고 있습니다. 성장판 자극 운동과 균형 잡힌 영양 공급을 통해 잠재력을 더욱 끌어올려 줄 필요가 있습니다.` : 
+                      `또래 백분위 하위 25% 범위에 머물러 있어 성장이 다소 정체된 흐름을 보입니다. 성장판 혈류를 자극하는 전신 운동 및 필수 미네랄 영양의 체내 흡수율 개선이 추천되는 시점입니다.`
+                    }
+                    <div style={{color:MUTED,fontSize:11,marginTop:2}}>
+                      (또래 평균 대비 키는 {parseFloat(gd.diffH) >= 0 ? `+${gd.diffH}` : gd.diffH}cm 차이)
+                    </div>
+                  </div>
+
+                  {/* 몸무게 및 체성분 상태 */}
+                  <div style={{borderTop:"1px solid rgba(255,255,255,0.05)",paddingTop:8}}>
+                    <span style={{color:GOLD,fontWeight:700}}>• 체질량 및 체성분: </span>
+                    {parseFloat(gd.bmi) < 18.5 ? 
+                      `BMI 수치(${gd.bmi}) 기준 저체중 성향을 보입니다. 에너지 소비 대비 위장관 영양소 흡수와 단백질 합성력이 부족할 수 있으므로, 칼로리 밀도가 높은 양질의 단백질 식단과 보충 간식이 권장됩니다.` : 
+                     parseFloat(gd.bmi) < 23.0 ? 
+                      `BMI 수치(${gd.bmi}) 기준 아주 이상적인 표준 체형 및 체중 균형을 유지하고 있습니다. 근육량 증강 트레이닝과 양질의 아미노산 섭취로 질적인 피지컬 벌크업에 집중하기 좋은 상태입니다.` : 
+                     parseFloat(gd.bmi) < 25.0 ? 
+                      `BMI 수치(${gd.bmi}) 기준 과체중 경향이 보입니다. 체내 에너지가 근육 증강보다 지방 세포로 고착화되는 속도가 빠르므로, 정제 탄수화물(당류, 탄산)을 제어하고 대사 회전 속도를 높이는 유산소 활동량을 늘려야 합니다.` : 
+                      `BMI 수치(${gd.bmi}) 기준 비만(체중 과다) 범위에 해당합니다. 뼈 관절에 가해지는 물리적 로드가 늘어 성장판 스트레스를 유발하고 성조숙증 위험도를 높일 수 있으므로, 규칙적인 유산소 운동과 정밀한 식이 제한이 필수적입니다.`
+                    }
+                    <div style={{color:MUTED,fontSize:11,marginTop:2}}>
+                      (또래 평균 대비 몸무게는 {parseFloat(gd.diffW) >= 0 ? `+${gd.diffW}` : gd.diffW}kg 차이)
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           )}
 
