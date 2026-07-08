@@ -1639,8 +1639,14 @@ function saveHtml(){
               <div style={{display:"flex",justifyContent:"space-between",gap:12,marginBottom:16}}>
                 {(() => {
                   const ageYears = ageInfo?.years || 10;
-                  const targetBmi = ageYears >= 13 ? 22.0 : (ageYears >= 11 ? 20.5 : 19.5);
-                  const targetW = Math.round(targetBmi * ((parseFloat(heightVal) / 100) ** 2) * 10) / 10;
+                  const gradeStr = result?.grade || grade || "";
+                  let offset = 108;
+                  if (gradeStr.includes("고") || (gradeStr === "" && ageYears >= 15)) {
+                    offset = 100;
+                  } else if (gradeStr.includes("중") || (gradeStr === "" && ageYears >= 12)) {
+                    offset = 105;
+                  }
+                  const targetW = Math.round((parseFloat(heightVal) - offset) * 10) / 10;
                   
                   return [
                     {label:"키",value:parseFloat(heightVal),unit:"cm",avg:gd.stdH,mine:parseFloat(heightVal),target:gd.targetH,color:"#4fcfa0",isSlug:false,targetName:"상위선수"},
@@ -1744,15 +1750,15 @@ function saveHtml(){
                         <div style={{color:GOLD2,fontSize:10,fontWeight:800,marginBottom:3,textAlign:"center"}}>⚾ 성인 피지컬 목표</div>
                         <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:WHITE}}>
                           <span style={{color:MUTED}}>대학 선수:</span>
-                          <span style={{fontWeight:700}}>{ax.label === "키" ? "180cm" : "82kg"}</span>
+                          <span style={{fontWeight:700}}>{ax.label === "키" ? "180cm" : "85kg"}</span>
                         </div>
                         <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:WHITE}}>
                           <span style={{color:WHITE}}>KBO 프로:</span>
-                          <span style={{color:GOLD2,fontWeight:700}}>{ax.label === "키" ? "183cm" : "87kg"}</span>
+                          <span style={{color:GOLD2,fontWeight:700}}>{ax.label === "키" ? "183cm" : "90kg"}</span>
                         </div>
                         <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:WHITE}}>
                           <span style={{color:GOLD}}>MLB 메이저:</span>
-                          <span style={{color:GOLD,fontWeight:700}}>{ax.label === "키" ? "190cm" : "95kg"}</span>
+                          <span style={{color:GOLD,fontWeight:700}}>{ax.label === "키" ? "190cm" : "98kg"}</span>
                         </div>
                       </div>
                     </div>
