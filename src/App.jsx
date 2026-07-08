@@ -1751,12 +1751,6 @@ function saveHtml(){
                 <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6,flexWrap:"wrap"}}>
                   <span style={{fontSize:14}}>🦴</span>
                   <span style={{color:GOLD2,fontSize:12,fontWeight:700}}>신체 기질 (체격 및 근육)</span>
-                  <span style={{
-                    padding:"2px 8px",borderRadius:4,fontSize:9,fontWeight:900,
-                    background:"rgba(79,207,160,0.12)",color:"#4fcfa0",border:"1px solid rgba(79,207,160,0.3)"
-                  }}>
-                    {result.scores.store === 3 ? "단단한 체격형" : result.scores.store === 2 ? "표준 밸런스형" : "날렵한 슬림형"}
-                  </span>
                 </div>
                 <div style={{color:WHITE,fontSize:13,lineHeight:1.6.toString()}}>
                   {result.scores.store === 3 ? 
@@ -1773,12 +1767,6 @@ function saveHtml(){
                 <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6,flexWrap:"wrap"}}>
                   <span style={{fontSize:14}}>🥗</span>
                   <span style={{color:GOLD2,fontSize:12,fontWeight:700}}>장기 대사 (영양 및 소화)</span>
-                  <span style={{
-                    padding:"2px 8px",borderRadius:4,fontSize:9,fontWeight:900,
-                    background:"rgba(247,149,79,0.12)",color:"#f7954f",border:"1px solid rgba(247,149,79,0.3)"
-                  }}>
-                    {result.scores.absorb === 3 ? "강력한 흡수형" : result.scores.absorb === 2 ? "안정적인 소화형" : "민감한 관리형"}
-                  </span>
                 </div>
                 <div style={{color:WHITE,fontSize:13,lineHeight:1.6.toString()}}>
                   {result.scores.absorb === 3 ? 
@@ -1795,12 +1783,6 @@ function saveHtml(){
                 <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:6,flexWrap:"wrap"}}>
                   <span style={{fontSize:14}}>⚡</span>
                   <span style={{color:GOLD2,fontSize:12,fontWeight:700}}>성격 및 활동성 (에너지 발산)</span>
-                  <span style={{
-                    padding:"2px 8px",borderRadius:4,fontSize:9,fontWeight:900,
-                    background:"rgba(247,111,142,0.12)",color:"#f76f8e",border:"1px solid rgba(247,111,142,0.3)"
-                  }}>
-                    {result.scores.burn === 3 ? "초고속 에너자이저" : result.scores.burn === 2 ? "활발한 역동형" : "침착한 지략가형"}
-                  </span>
                 </div>
                 <div style={{color:WHITE,fontSize:13,lineHeight:1.6.toString()}}>
                   {result.scores.burn === 3 ? 
