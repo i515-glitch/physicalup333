@@ -1639,7 +1639,7 @@ function saveHtml(){
               <div style={{display:"flex",justifyContent:"space-between",gap:12,marginBottom:16}}>
                 {(() => {
                   const ageYears = ageInfo?.years || 10;
-                  const targetBmi = ageYears >= 14 ? 20.5 : (ageYears >= 12 ? 19.5 : (ageYears >= 10 ? 18.5 : 18.0));
+                  const targetBmi = ageYears >= 13 ? 22.0 : (ageYears >= 11 ? 20.5 : 19.5);
                   const targetW = Math.round(targetBmi * ((parseFloat(heightVal) / 100) ** 2) * 10) / 10;
                   
                   return [
