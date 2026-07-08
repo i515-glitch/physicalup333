@@ -1693,25 +1693,9 @@ function saveHtml(){
             
             {serverResult ? (
               <div>
-                <div style={{marginBottom:14}}>
-                  <span style={{color:MUTED,fontSize:11,display:"block",marginBottom:4}}>체질 경향성</span>
-                  <div style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:8,padding:"10px 12px"}}>
-                    <span style={{color:WHITE,fontSize:13,fontWeight:800}}>{serverResult.constitution}</span>
-                  </div>
-                </div>
-                <div>
-                  <span style={{color:MUTED,fontSize:11,display:"block",marginBottom:6}}>타고난 오행(五행) 분포</span>
-                  <div style={{display:"flex",justifyContent:"space-between",gap:6}}>
-                    {Object.entries(serverResult.five_elements).map(([name, count]) => {
-                      const colors = { "목": "#4fcfa0", "화": "#f76f8e", "토": "#f7d24f", "금": "#e5e5e5", "수": "#4f8ef7" };
-                      return (
-                        <div key={name} style={{flex:1,background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.04)",borderRadius:8,padding:"8px 4px",textAlign:"center"}}>
-                          <div style={{color:colors[name],fontSize:12,fontWeight:800,marginBottom:4}}>{name}</div>
-                          <div style={{color:WHITE,fontSize:14,fontWeight:900}}>{count}</div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                <span style={{color:MUTED,fontSize:11,display:"block",marginBottom:6}}>체질 경향성</span>
+                <div style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:8,padding:"12px 14px"}}>
+                  <span style={{color:WHITE,fontSize:13,fontWeight:800,lineHeight:1.6,whiteSpace:"pre-wrap"}}>{serverResult.constitution}</span>
                 </div>
               </div>
             ) : (
