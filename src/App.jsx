@@ -1304,7 +1304,7 @@ function saveHtml(){
                 width:"100%",background:"transparent",border:"none",color:birthTime && birthTime !== "시간 모름" ? GOLD2 : MUTED,fontSize:12,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box",textAlignLast:"center",cursor:birthTime === "시간 모름" ? "not-allowed" : "pointer"
               }}>
                 <option value="" disabled style={{background:"#0d1b3e",color:MUTED}}>태어난 시 선택</option>
-                {["자시 (23:30~01:30)","축시 (01:30~03:30)","인시 (03:30~05:30)","묘시 (05:30~07:30)","진시 (07:30~09:30)","사시 (09:30~11:30)","오시 (11:30~13:30)","미시 (13:30~15:30)","신시 (15:30~17:30)","유시 (17:30~19:30)","술시 (19:30~21:30)","해시 (21:30~23:30)"].map(op=>(
+                {["23:30 ~ 01:30","01:30 ~ 03:30","03:30 ~ 05:30","05:30 ~ 07:30","07:30 ~ 09:30","09:30 ~ 11:30","11:30 ~ 13:30","13:30 ~ 15:30","15:30 ~ 17:30","17:30 ~ 19:30","19:30 ~ 21:30","21:30 ~ 23:30"].map(op=>(
                   <option key={op} value={op} style={{background:"#0d1b3e",color:WHITE}}>{op}</option>
                 ))}
               </select>
