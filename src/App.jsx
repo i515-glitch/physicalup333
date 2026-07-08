@@ -1288,17 +1288,17 @@ function saveHtml(){
         <h1 style={{color:WHITE,fontSize:21,fontWeight:800,lineHeight:1.5,marginBottom:8}}>우리 아이 BIO CODE 찾기</h1>
         <p style={{color:MUTED,fontSize:13,lineHeight:2,marginBottom:20}}>선천(유전) · 대사(흡수) · 생활(환경)<br/>3축 점수로 BIO CODE를 측정합니다</p>
 
-        {/* 무료 성장 지표 분석 항목 */}
+        {/* 무료 성장 및 기질 분석 항목 */}
         <div style={{background:"rgba(255,255,255,0.02)",borderRadius:14,padding:"14px",marginBottom:12,border:"1px solid rgba(255,255,255,0.08)"}}>
-          <div style={{color:WHITE,fontSize:12,fontWeight:800,marginBottom:4,textAlign:"left"}}>1. 무료 성장 지표 분석 (필수)</div>
-          <div style={{color:MUTED,fontSize:10,marginBottom:12,textAlign:"left"}}>평균 및 성장판 10% 기준선 대비 성장 지표를 확인합니다.</div>
+          <div style={{color:WHITE,fontSize:12,fontWeight:800,marginBottom:4,textAlign:"left"}}>1. 무료 성장 및 기질 분석 (필수)</div>
+          <div style={{color:MUTED,fontSize:10,marginBottom:12,textAlign:"left"}}>평균 및 성장판 10% 기준선 대비 성장 지표와 사주 기질을 분석합니다.</div>
           
           <div style={{display:"grid",gridTemplateColumns:"1.2fr 1fr",gap:8,marginBottom:8}}>
             {/* 이름 */}
             <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${childName?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
               <div style={{color:MUTED,fontSize:10,marginBottom:6}}>이름</div>
               <input type="text" value={childName} onChange={e=>updateName(e.target.value)} placeholder="홍길동"
-                style={{width:"100%",background:"transparent",border:"none",color:childName?GOLD2:MUTED,fontSize:14,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
+                style={{width:"100%",background:"transparent",border:"none",color:childName?GOLD2:WHITE,fontSize:14,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
             </div>
             {/* 성별 */}
             <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${gender?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"9px 8px",textAlign:"center",display:"flex",flexDirection:"column",justifyContent:"center"}}>
@@ -1317,49 +1317,22 @@ function saveHtml(){
             </div>
           </div>
           
-          <div style={{display:"grid",gridTemplateColumns:"1.2fr 1fr 1fr",gap:8}}>
+          <div style={{display:"grid",gridTemplateColumns:"1.2fr 1fr",gap:8,marginBottom:8}}>
             {/* 생년월일 */}
-            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${birth.length===6?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 4px",textAlign:"center"}}>
+            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${birth.length===6?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
               <div style={{color:MUTED,fontSize:10,marginBottom:6}}>생년월일 <span style={{fontSize:8}}>(YYMMDD)</span></div>
               <input type="text" value={birth} onChange={e=>updateBirth(e.target.value.replace(/\D/g,"").slice(0,6))} placeholder="190523" maxLength={6}
-                style={{width:"100%",background:"transparent",border:"none",color:birth.length===6?GOLD2:MUTED,fontSize:13,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box",letterSpacing:0.5}}/>
+                style={{width:"100%",background:"transparent",border:"none",color:birth.length===6?GOLD2:WHITE,fontSize:13,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box",letterSpacing:0.5}}/>
               {birth.length===6&&(()=> {
                 const age=calcAgeFromShort(birth);
                 return age?<div style={{color:GOLD,fontSize:8,marginTop:3}}>✓ {age.display}</div>:<div style={{color:"#f76f8e",fontSize:8,marginTop:3}}>날짜 오류</div>;
               })()}
             </div>
-            {/* 키 */}
-            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${heightVal?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 4px",textAlign:"center"}}>
-              <div style={{color:MUTED,fontSize:10,marginBottom:6}}>키 (cm)</div>
-              <input type="number" value={heightVal} onChange={e=>updateHeight(e.target.value)} placeholder="145"
-                style={{width:"100%",background:"transparent",border:"none",color:heightVal?GOLD2:MUTED,fontSize:14,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
-            </div>
-            {/* 몸무게 */}
-            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${weightVal?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 4px",textAlign:"center"}}>
-              <div style={{color:MUTED,fontSize:10,marginBottom:6}}>몸무게 (kg)</div>
-              <input type="number" value={weightVal} onChange={e=>updateWeight(e.target.value)} placeholder="38"
-                style={{width:"100%",background:"transparent",border:"none",color:weightVal?GOLD2:MUTED,fontSize:14,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
-            </div>
-          </div>
-        </div>
-
-        {/* 333TEST 분석용 항목 */}
-        <div style={{background:"rgba(201,168,76,0.04)",borderRadius:14,padding:"14px",marginBottom:16,border:"1px solid rgba(201,168,76,0.2)"}}>
-          <div style={{color:GOLD,fontSize:12,fontWeight:900,marginBottom:4,textAlign:"left"}}>2. 333TEST 기질/만세력 분석 (필수)</div>
-          <div style={{color:GOLD2,fontSize:10,marginBottom:12,textAlign:"left",opacity:0.8}}>BIO CODE 판정 및 맞춤형 성장 전략 분석에 사용됩니다.</div>
-          
-          <div style={{display:"grid",gridTemplateColumns:"1.2fr 1fr",gap:8}}>
-            {/* 연락처 */}
-            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${phone?"rgba(201,168,76,0.6)":"rgba(201,168,76,0.25)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center",display:"flex",flexDirection:"column",justifyContent:"center"}}>
-              <div style={{color:MUTED,fontSize:10,marginBottom:6}}>연락처 (전화번호)</div>
-              <input type="tel" value={phone} onChange={e=>updatePhone(e.target.value)} placeholder="010-1234-5678"
-                style={{width:"100%",background:"transparent",border:"none",color:phone?GOLD2:MUTED,fontSize:13,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
-            </div>
             {/* 태어난 시 */}
-            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${birthTime && birthTime !== "시간 모름"?"rgba(201,168,76,0.6)":"rgba(201,168,76,0.25)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center",display:"flex",flexDirection:"column",justifyContent:"center"}}>
+            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${birthTime && birthTime !== "시간 모름"?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center",display:"flex",flexDirection:"column",justifyContent:"center"}}>
               <div style={{color:MUTED,fontSize:10,marginBottom:4}}>태어난 시</div>
               <select value={birthTime === "시간 모름" ? "" : birthTime} onChange={e=>updateBirthTime(e.target.value)} disabled={birthTime === "시간 모름"} style={{
-                width:"100%",background:"transparent",border:"none",color:birthTime && birthTime !== "시간 모름" ? GOLD2 : MUTED,fontSize:11,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box",textAlignLast:"center",cursor:birthTime === "시간 모름" ? "not-allowed" : "pointer"
+                width:"100%",background:"transparent",border:"none",color:birthTime && birthTime !== "시간 모름" ? GOLD2 : WHITE,fontSize:11,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box",textAlignLast:"center",cursor:birthTime === "시간 모름" ? "not-allowed" : "pointer"
               }}>
                 <option value="" disabled style={{background:"#0d1b3e",color:MUTED}}>선택</option>
                 {["23:30 ~ 01:30","01:30 ~ 03:30","03:30 ~ 05:30","05:30 ~ 07:30","07:30 ~ 09:30","09:30 ~ 11:30","11:30 ~ 13:30","13:30 ~ 15:30","15:30 ~ 17:30","17:30 ~ 19:30","19:30 ~ 21:30","21:30 ~ 23:30"].map(op=>(
@@ -1380,6 +1353,32 @@ function saveHtml(){
                 <label htmlFor="birthTimeUnknown" style={{color:MUTED,fontSize:10,cursor:"pointer",userSelect:"none"}}>태어난 시 모름</label>
               </div>
             </div>
+          </div>
+
+          {/* Row 3: 키, 몸무게 */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${heightVal?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
+              <div style={{color:MUTED,fontSize:10,marginBottom:6}}>키 (cm)</div>
+              <input type="number" value={heightVal} onChange={e=>updateHeight(e.target.value)} placeholder="145"
+                style={{width:"100%",background:"transparent",border:"none",color:heightVal?GOLD2:WHITE,fontSize:14,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
+            </div>
+            <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${weightVal?"rgba(201,168,76,0.6)":"rgba(255,255,255,0.1)"}`,borderRadius:10,padding:"10px 8px",textAlign:"center"}}>
+              <div style={{color:MUTED,fontSize:10,marginBottom:6}}>몸무게 (kg)</div>
+              <input type="number" value={weightVal} onChange={e=>updateWeight(e.target.value)} placeholder="38"
+                style={{width:"100%",background:"transparent",border:"none",color:weightVal?GOLD2:WHITE,fontSize:14,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
+            </div>
+          </div>
+        </div>
+
+        {/* 333TEST 결과 전송 항목 */}
+        <div style={{background:"rgba(201,168,76,0.04)",borderRadius:14,padding:"14px",marginBottom:16,border:"1px solid rgba(201,168,76,0.2)"}}>
+          <div style={{color:GOLD,fontSize:12,fontWeight:900,marginBottom:4,textAlign:"left"}}>2. 333TEST 결과 전송 (필수)</div>
+          <div style={{color:GOLD2,fontSize:10,marginBottom:12,textAlign:"left",opacity:0.8}}>정밀 분석이 완료되면 결과 알림을 발송할 번호입니다.</div>
+          
+          <div style={{background:"rgba(13,27,62,0.6)",border:`1px solid ${phone?"rgba(201,168,76,0.6)":"rgba(201,168,76,0.25)"}`,borderRadius:10,padding:"10px 12px",textAlign:"center"}}>
+            <div style={{color:MUTED,fontSize:10,marginBottom:6}}>연락처 (전화번호)</div>
+            <input type="tel" value={phone} onChange={e=>updatePhone(e.target.value)} placeholder="010-1234-5678"
+              style={{width:"100%",background:"transparent",border:"none",color:phone?GOLD2:WHITE,fontSize:14,fontWeight:700,textAlign:"center",outline:"none",boxSizing:"border-box"}}/>
           </div>
         </div>
 
