@@ -1669,22 +1669,22 @@ function saveHtml(){
                       </div>
                     </div>
 
-                    {/* 야구선수 나이별 피지컬 표준 (현재 나이 환산치) */}
+                    {/* 야구선수 성인 피지컬 평균 (최종 도달 목표) */}
                     {ax.label === "키" && (
                       <div style={{marginTop:8,background:"rgba(255,255,255,0.02)",borderRadius:10,padding:"10px",border:"1px solid rgba(255,255,255,0.05)"}}>
-                        <div style={{color:GOLD2,fontSize:10,fontWeight:700,marginBottom:6,textAlign:"left"}}>⚾ 야구선수 나이별 신장 표준 (현재 나이 환산치)</div>
+                        <div style={{color:GOLD2,fontSize:10,fontWeight:700,marginBottom:6,textAlign:"left"}}>⚾ 야구선수 성인 신장 평균 (최종 도달 목표)</div>
                         <div style={{display:"flex",justifyContent:"space-between",gap:6}}>
                           <div style={{flex:1,textAlign:"center"}}>
                             <div style={{color:MUTED,fontSize:9}}>대학 야구</div>
-                            <div style={{color:WHITE,fontSize:11,fontWeight:800}}>{gd.collegeH}cm</div>
+                            <div style={{color:WHITE,fontSize:11,fontWeight:800}}>180cm</div>
                           </div>
                           <div style={{flex:1,textAlign:"center",borderLeft:"1px solid rgba(255,255,255,0.08)",borderRight:"1px solid rgba(255,255,255,0.08)"}}>
                             <div style={{color:WHITE,fontSize:9,fontWeight:800}}>KBO 프로</div>
-                            <div style={{color:GOLD2,fontSize:11,fontWeight:800}}>{gd.proH}cm</div>
+                            <div style={{color:GOLD2,fontSize:11,fontWeight:800}}>183cm</div>
                           </div>
                           <div style={{flex:1,textAlign:"center"}}>
                             <div style={{color:GOLD,fontSize:9,fontWeight:800}}>MLB 메이저</div>
-                            <div style={{color:GOLD,fontSize:11,fontWeight:800}}>{gd.majorH}cm</div>
+                            <div style={{color:GOLD,fontSize:11,fontWeight:800}}>190cm</div>
                           </div>
                         </div>
                       </div>
@@ -1692,19 +1692,19 @@ function saveHtml(){
 
                     {ax.label === "몸무게" && (
                       <div style={{marginTop:8,background:"rgba(255,255,255,0.02)",borderRadius:10,padding:"10px",border:"1px solid rgba(255,255,255,0.05)"}}>
-                        <div style={{color:GOLD2,fontSize:10,fontWeight:700,marginBottom:6,textAlign:"left"}}>⚾ 야구선수 나이별 체중 표준 (현재 나이 환산치)</div>
+                        <div style={{color:GOLD2,fontSize:10,fontWeight:700,marginBottom:6,textAlign:"left"}}>⚾ 야구선수 성인 체중 평균 (최종 도달 목표)</div>
                         <div style={{display:"flex",justifyContent:"space-between",gap:6}}>
                           <div style={{flex:1,textAlign:"center"}}>
                             <div style={{color:MUTED,fontSize:9}}>대학 야구</div>
-                            <div style={{color:WHITE,fontSize:11,fontWeight:800}}>{gd.collegeW}kg</div>
+                            <div style={{color:WHITE,fontSize:11,fontWeight:800}}>82kg</div>
                           </div>
                           <div style={{flex:1,textAlign:"center",borderLeft:"1px solid rgba(255,255,255,0.08)",borderRight:"1px solid rgba(255,255,255,0.08)"}}>
                             <div style={{color:WHITE,fontSize:9,fontWeight:800}}>KBO 프로</div>
-                            <div style={{color:GOLD2,fontSize:11,fontWeight:800}}>{gd.proW}kg</div>
+                            <div style={{color:GOLD2,fontSize:11,fontWeight:800}}>87kg</div>
                           </div>
                           <div style={{flex:1,textAlign:"center"}}>
                             <div style={{color:GOLD,fontSize:9,fontWeight:800}}>MLB 메이저</div>
-                            <div style={{color:GOLD,fontSize:11,fontWeight:800}}>{gd.majorW}kg</div>
+                            <div style={{color:GOLD,fontSize:11,fontWeight:800}}>95kg</div>
                           </div>
                         </div>
                       </div>
