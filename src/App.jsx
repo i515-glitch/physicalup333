@@ -1637,10 +1637,16 @@ function saveHtml(){
               <div style={{color:MUTED,fontSize:11,marginBottom:14,borderBottom:"1px solid rgba(201,168,76,0.1)",paddingBottom:10}}>{ageDisplay} · BMI {gd.bmi}</div>
 
               <div style={{display:"flex",justifyContent:"space-between",gap:12,marginBottom:16}}>
-                {[
-                  {label:"키",value:parseFloat(heightVal),unit:"cm",avg:gd.stdH,mine:parseFloat(heightVal),target:gd.targetH,color:"#4fcfa0",isSlug:false},
-                  {label:"몸무게",value:parseFloat(weightVal),unit:"kg",avg:gd.stdW,mine:parseFloat(weightVal),target:gd.targetW90,color:"#4f8ef7",isSlug:false}
-                ].map(ax=>{
+                {(() => {
+                  const ageYears = ageInfo?.years || 10;
+                  const targetBmi = ageYears >= 14 ? 20.5 : (ageYears >= 12 ? 19.5 : (ageYears >= 10 ? 18.5 : 18.0));
+                  const targetW = Math.round(targetBmi * ((parseFloat(heightVal) / 100) ** 2) * 10) / 10;
+                  
+                  return [
+                    {label:"키",value:parseFloat(heightVal),unit:"cm",avg:gd.stdH,mine:parseFloat(heightVal),target:gd.targetH,color:"#4fcfa0",isSlug:false,targetName:"상위선수"},
+                    {label:"몸무게",value:parseFloat(weightVal),unit:"kg",avg:gd.stdW,mine:parseFloat(weightVal),target:targetW,color:"#4f8ef7",isSlug:false,targetName:"권장체격"}
+                  ];
+                })().map(ax=>{
                   const vals=[ax.avg,ax.mine,ax.target];
                   const minV=Math.min(...vals)*0.95;
                   const maxV=Math.max(...vals)*1.05;
@@ -1649,7 +1655,8 @@ function saveHtml(){
                   const avgPos=toPos(ax.avg);
                   const minePos=toPos(ax.mine);
                   const targetPos=toPos(ax.target);
-                  const reached=ax.isSlug?ax.mine<=ax.target:ax.mine>=ax.target;
+                  const diff = ax.mine - ax.target;
+                  const reached = ax.label === "키" ? ax.mine >= ax.target : Math.abs(diff) <= 2;
 
                   return (
                     <div key={ax.label} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",background:"rgba(255,255,255,0.015)",borderRadius:14,padding:"12px 6px",border:"1px solid rgba(255,255,255,0.04)"}}>
@@ -1657,18 +1664,17 @@ function saveHtml(){
                       <div style={{width:"100%",textAlign:"center",marginBottom:14,borderBottom:"1px solid rgba(255,255,255,0.04)",paddingBottom:8}}>
                         <div style={{color:WHITE,fontSize:13,fontWeight:900,marginBottom:3}}>{ax.label}</div>
                         <div style={{fontSize:10,fontWeight:800}}>
-                          {reached
-                            ? <span style={{color:"#4fcfa0"}}>
-                                {ax.label === "몸무게" && result.main === "저장형" ? "✓ 적정 체중" : "🏆 목표 충족!"}
-                              </span>
-                            : <span style={{color:GOLD}}>
-                                {ax.label === "키" 
-                                  ? `대비 -${Math.abs(ax.target-ax.mine).toFixed(1)}${ax.unit}` 
-                                  : (result.main === "저장형" 
-                                      ? `초과 +${Math.abs(ax.target-ax.mine).toFixed(1)}${ax.unit}` 
-                                      : `대비 -${Math.abs(ax.target-ax.mine).toFixed(1)}${ax.unit}`)}
-                              </span>
-                          }
+                          {ax.label === "키" ? (
+                            reached
+                              ? <span style={{color:"#4fcfa0"}}>🏆 상위선수 기준 충족!</span>
+                              : <span style={{color:GOLD}}>대비 -{Math.abs(diff).toFixed(1)}cm</span>
+                          ) : (
+                            reached
+                              ? <span style={{color:"#4fcfa0"}}>✓ 적정 체형 (±2kg)</span>
+                              : diff < -2
+                                ? <span style={{color:GOLD}}>보강 필요: -{Math.abs(diff).toFixed(1)}kg</span>
+                                : <span style={{color:"#f76f8e"}}>조절 필요: +{Math.abs(diff).toFixed(1)}kg</span>
+                          )}
                         </div>
                       </div>
 
@@ -1700,13 +1706,7 @@ function saveHtml(){
                           <div style={{
                             color:GOLD,fontSize:8,fontWeight:900,lineHeight:1
                           }}>
-                            {ax.label === "키" 
-                              ? "목표" 
-                              : (result.main === "저장형" 
-                                  ? "권장" 
-                                  : (result.main === "소비형" 
-                                      ? "목표" 
-                                      : "목표"))}
+                            {ax.targetName}
                           </div>
                           <div style={{color:GOLD,fontSize:10,fontWeight:700,marginTop:2}}>{ax.target}{ax.unit}</div>
                         </div>
