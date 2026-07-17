@@ -23,7 +23,10 @@ def load_notifier_config():
         "kakao_pf_id": "YOUR_PF_ID",
         "kakao_template_id": "YOUR_TEMPLATE_ID",
         "sender_phone": "YOUR_VERIFIED_SENDER_PHONE",
-        "use_mock": True
+        "use_mock": True,
+        "telegram_bot_token": "YOUR_TELEGRAM_BOT_TOKEN",
+        "telegram_chat_id": "YOUR_TELEGRAM_CHAT_ID",
+        "use_telegram": False
     }
     
     if os.path.exists(CONFIG_PATH):
@@ -122,4 +125,43 @@ def send_kakao_alimtalk(to_phone, student_name, biocode, report_url):
             return False
     except Exception as e:
         print(f"[Notifier] Failed to communicate with Solapi API: {e}")
+        return False
+
+def send_telegram_alert(student_name, sports, phone, grade, gender):
+    """
+    Sends real-time admin notification via Telegram Bot API when a new survey is submitted.
+    """
+    config = load_notifier_config()
+    token = config.get("telegram_bot_token")
+    chat_id = config.get("telegram_chat_id")
+    
+    if not config.get("use_telegram") or token == "YOUR_TELEGRAM_BOT_TOKEN":
+        print("\n--- [MOCK TELEGRAM ADMIN ALERT] ---")
+        print(f"Content: [Physical UP 333] 새로운 무료 피지컬 상담 신청! {student_name}({gender}/{grade}) - 종목: {sports} - 연락처: {phone}")
+        print("-----------------------------------\n")
+        return True
+
+    text = (
+        f"🔔 [신청접수] Physical UP 333\n"
+        f"새로운 무료 피지컬 상담 신청이 도착했습니다!\n\n"
+        f"👤 이름: {student_name} ({gender})\n"
+        f"🏫 학년: {grade}\n"
+        f"⚾️ 종목: {sports}\n"
+        f"📞 연락처: {phone}\n"
+        f"⏰ 접수시각: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    )
+    
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    payload = {"chat_id": chat_id, "text": text}
+    
+    try:
+        response = requests.post(url, json=payload, timeout=5)
+        if response.status_code == 200:
+            print("[Notifier] Telegram admin alert sent successfully.")
+            return True
+        else:
+            print(f"[Notifier] Telegram failed: {response.text}")
+            return False
+    except Exception as e:
+        print(f"[Notifier] Telegram exception: {e}")
         return False

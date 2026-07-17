@@ -707,7 +707,7 @@ function showCubeInfo(code){
 // 유튜브
 const SHEET_ID="1OMyEfRy0pbpqHf33iZTYQc07xknM5gcZ6s7J_mAf9wg";
 const YT_URL="https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?tqx=out:json&headers=1&sheet=youtube";
-const CHANNEL="야구아들 살찌우기 !!";
+const CHANNEL="피지컬업 - 마른선수 성장연구소";
 function parseGviz(t){const m=t.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);?\s*$/);if(!m)return[];const d=JSON.parse(m[1]);const cols=d.table.cols.map(c=>c.label);return(d.table.rows||[]).map(r=>{const o={};cols.forEach((c,i)=>o[c]=(r.c[i]&&r.c[i].v!=null)?String(r.c[i].v).trim():'');return o;}).filter(r=>r.title);}
 function getYtId(url){if(!url)return null;const m=url.match(/(?:v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);return m?m[1]:null;}
 

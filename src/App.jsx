@@ -629,7 +629,7 @@ async function callAI(pAns,kAns,res,setAiAdvice,setLoading) {
   }, 500);
 }
 
-const IS_PROMO_ACTIVE = new Date() < new Date('2026-08-01T00:00:00');
+const IS_PROMO_ACTIVE = true; // 상시 무료 상담 및 설문 수집 모드로 고정
 
 // ─── 메인 컴포넌트 ────────────────────────────────────────────────────────────
 export default function App() {
@@ -2681,7 +2681,7 @@ function saveHtml(){
           )}
 
           <button onClick={reset} style={{width:"100%",padding:"14px",borderRadius:12,background:"rgba(201,168,76,0.06)",color:MUTED,fontSize:14,border:"1px solid rgba(201,168,76,0.2)",cursor:"pointer",marginBottom:4}}>🔄 처음부터 다시하기</button>
-          <p style={{color:"#1a2a3a",fontSize:11,textAlign:"center",marginTop:14,lineHeight:1.7}}>문항에 따라 결과는 다를 수 있으며 재미있는 참고용입니다.<br/>보다 완벽한 BIO CODE 결과는 유료 서비스로 제공해 드릴 예정입니다.</p>
+          <p style={{color:"#4a6080",fontSize:11,textAlign:"center",marginTop:14,lineHeight:1.7}}>문항에 따라 결과는 다를 수 있으며 재미있는 참고용입니다.<br/>보다 정밀한 맞춤 피드백과 운동 가이드북은 무료 1:1 상담 이벤트 기간 동안 무료로 받아보실 수 있습니다.</p>
           </div>
         </div>
         </div>

@@ -486,6 +486,19 @@ def online_apply(request: AnalysisRequest):
         with open(file_path, "w", encoding="utf-8") as f:
             json.dump(req_data, f, indent=4, ensure_ascii=False)
             
+        # 🔔 Send Telegram Alert to Admin
+        try:
+            from app.notifier import send_telegram_alert
+            send_telegram_alert(
+                student_name=request.name,
+                sports=request.sports,
+                phone=request.phone,
+                grade=request.grade,
+                gender=request.gender
+            )
+        except Exception as alert_err:
+            print(f"[Alert Error] Failed to send telegram admin notification: {alert_err}")
+            
         return {
             "success": True, 
             "id": req_id, 
@@ -1344,6 +1357,114 @@ def get_favicon():
 
 # Mount static files (must be mounted after root get, otherwise it overrides root)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+
+# ── Daily Telegram Report Scheduler ───────────────────────────────────────────
+def send_daily_summary_to_telegram():
+    """
+    어제 하루 동안 접수된 총 신청 건수를 집계하여 텔레그램으로 전송합니다.
+    """
+    from datetime import datetime, timedelta
+    
+    # 1. 어제 날짜 범위 구하기 (어제 00:00:00 ~ 23:59:59)
+    today = datetime.now().date()
+    yesterday = today - timedelta(days=1)
+    
+    yesterday_start = datetime.combine(yesterday, datetime.min.time()).timestamp() * 1000
+    yesterday_end = datetime.combine(yesterday, datetime.max.time()).timestamp() * 1000
+    
+    # 2. requests 디렉토리 내의 json 파일 스캔 및 카운트
+    total_count = 0
+    if os.path.exists(REQUESTS_DIR):
+        for filename in os.listdir(REQUESTS_DIR):
+            if filename.endswith(".json"):
+                file_path = os.path.join(REQUESTS_DIR, filename)
+                try:
+                    with open(file_path, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+                    
+                    # 신청 생성 시점의 timestamp 기준
+                    timestamp = data.get("timestamp", 0)
+                    if yesterday_start <= timestamp <= yesterday_end:
+                        total_count += 1
+                except:
+                    pass
+                    
+    # 3. 텔레그램 알림 메시지 빌드 및 발송
+    from app.notifier import load_notifier_config
+    import requests
+    
+    config = load_notifier_config()
+    token = config.get("telegram_bot_token")
+    chat_id = config.get("telegram_chat_id")
+    
+    if not config.get("use_telegram") or token == "YOUR_TELEGRAM_BOT_TOKEN":
+        print(f"\n--- [MOCK TELEGRAM DAILY REPORT] 어제({yesterday.strftime('%Y-%m-%d')}) 실적: 총 {total_count}건 ---\n")
+        return True
+        
+    text = (
+        f"📊 [데일리 실적 보고] Physical UP 333\n"
+        f"어제 하루 동안 접수된 무료 상담 신청 현황입니다.\n\n"
+        f"📅 기준 날짜: {yesterday.strftime('%Y-%m-%d')} (어제)\n"
+        f"📈 신규 접수 건수: 총 {total_count} 건\n\n"
+        f"※ 상세 데이터 검수 및 2차 코멘트는 관리자 웹페이지를 확인해 주세요! 🏆"
+    )
+    
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    try:
+        res = requests.post(url, json={"chat_id": chat_id, "text": text}, timeout=5)
+        return res.status_code == 200
+    except Exception as e:
+        print(f"[Daily Report] Telegram error: {e}")
+        return False
+
+def start_daily_report_scheduler():
+    """
+    매일 아침 06:00에 데일리 리포트를 발송하는 백그라운드 데몬 쓰레드를 구동합니다.
+    """
+    import threading
+    import time
+    from datetime import datetime, timedelta
+    
+    def scheduler_loop():
+        print("[Scheduler] 데일리 리포트 스케줄러가 성공적으로 작동을 시작했습니다. (타겟: 매일 오전 06:00)")
+        while True:
+            try:
+                now = datetime.now()
+                # 목표 시간: 오늘 오전 06:00:00
+                target_time = now.replace(hour=6, minute=0, second=0, microsecond=0)
+                
+                # 이미 오늘 6시가 지났다면, 내일 오전 6시를 타겟으로 지정
+                if now >= target_time:
+                    target_time += timedelta(days=1)
+                
+                # 다음 아침 6시까지 대기해야 하는 초(seconds) 계산
+                sleep_seconds = (target_time - now).total_seconds()
+                
+                # 1분(60초) 단위로 안전하게 sleep 돌며 체크
+                while sleep_seconds > 0:
+                    time.sleep(min(60, sleep_seconds))
+                    sleep_seconds = (target_time - datetime.now()).total_seconds()
+                
+                # 아침 6:00 정각 도달 시 요약 메시지 전송!
+                print(f"[Scheduler] 오전 6:00 도달. 어제 실적 요약 발송을 시도합니다. (시각: {datetime.now()})")
+                send_daily_summary_to_telegram()
+                
+                # 전송 후 중복 실행 방지를 위해 10초 강제 대기
+                time.sleep(10)
+                
+            except Exception as loop_err:
+                print(f"[Scheduler Error] 스케줄러 루프 중 예외 발생: {loop_err}")
+                time.sleep(60) # 에러 발생 시 1분 후 재시도
+                
+    t = threading.Thread(target=scheduler_loop, daemon=True)
+    t.start()
+
+@app.on_event("startup")
+def startup_event():
+    # 1. 06:00 데일리 보고 스케줄러 쓰레드 작동 개시
+    start_daily_report_scheduler()
+
 
 def open_browser():
     webbrowser.open(f"http://127.0.0.1:{PORT}")
